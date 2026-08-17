@@ -108,6 +108,12 @@ Other people have published prep material for this certification track. Both of 
 
 Treat anything from a community repo, this one included, as secondary to the official exam guide. Cross-check before you memorise.
 
+## Using this yourself
+
+The plan is written for one person's starting point: strong on architecture and Claude Code from daily work, weaker on integration depth, evaluation practice, governance and the consulting side. Re-rate the confidence column in `study-plan.md` before you follow the hour allocations. The structure holds for anyone, the weighting does not.
+
+The dates in the plan and the countdown in the hub are anchored to a specific sitting. Shift them to yours.
+
 ## The hub
 
 `index.html` is self-contained, no build step and no network calls at runtime. Four tabs:
@@ -135,4 +141,6 @@ Model behaviour, MCP spec revisions and regulatory dates all move. Re-check anyt
 
 ## Licence
 
-Personal study material. The question bank is original work written against public documentation; it is not derived from any exam.
+[CC BY 4.0](LICENSE). Share and adapt it, with credit.
+
+Unofficial study material, not produced or endorsed by Anthropic. The question bank is original work written against public documentation; it is not derived from, and does not reproduce, any actual exam content.

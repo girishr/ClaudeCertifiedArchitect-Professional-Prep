@@ -4,7 +4,7 @@
 
 ## Read this before day 1: the eligibility gate
 
-Anthropic's certification FAQ states that certification is available to people at Claude Partner Network organisations, and that **registration requires a work email on a recognised company domain. Personal email addresses will not work.** So step zero is not studying, it is confirming that Fingent is in the Claude Partner Network and that your Fingent address gets you into the Partner Academy. If it is not, sorting that out is a lead time you need to know about today, not in week three. Joining at the Registered entry level is free, but it is an organisation-level action, not something you can do on your own account.
+Anthropic's certification FAQ states that certification is available to people at Claude Partner Network organisations, and that **registration requires a work email on a recognised company domain. Personal email addresses will not work.** So step zero is not studying, it is confirming that your employer is in the Claude Partner Network and that your work address gets you into the Partner Academy. If it is not, sorting that out is a lead time you need to know about on day one, not in week three. Joining at the Registered entry level is free, but it is an organisation-level action, not something you can do on your own account.
 
 ## The exam you are preparing for
 
@@ -26,7 +26,9 @@ One more thing the FAQ confirms and most guides skip: retakes wait 14, then 30, 
 
 ## Domain weightings, and what they mean for your time
 
-| # | Domain | Weight | Questions (approx) | Your confidence | Hours to spend |
+The "confidence" column below is filled in for the author of this plan: strong on the architecture and Claude Code side from day-to-day work, weaker on integration depth, evaluation practice, governance and the consulting half of the role. **Re-rate it honestly for yourself before you use the hours.** If your weak set is different, move the hours, not the plan structure.
+
+| # | Domain | Weight | Questions (approx) | Confidence | Hours to spend |
 |---|---|---|---|---|---|
 | 3 | Integration | 19% | 12 | Weak | 11 |
 | 1 | Solution Design & Architecture | 17% | 11 | Stronger | 6 |
@@ -36,7 +38,7 @@ One more thing the FAQ confirms and most guides skip: retakes wait 14, then 30, 
 | 2 | Claude Models, Prompting & Context Engineering | 13% | 8 | Stronger | 5 |
 | 7 | Developer Productivity & Operational Enablement | 7% | 4 | Stronger | 3 |
 
-Your four weak domains are 63% of the exam. That is where the plan puts its weight. Domains 1, 2 and 7 are the ones your day job already covers, so they get review passes rather than study blocks.
+Those four weak domains are 63% of the exam. That is where the plan puts its weight. Domains 1, 2 and 7 are the ones an experienced architect's day job already covers, so they get review passes rather than study blocks.
 
 Do not try to convert 720 into "questions I can miss". A scaled score is not a percentage of items correct, and with a floor of 100 the arithmetic does not work the way it looks. The useful version of the same thought is structural: losing one weak domain outright is probably survivable, losing two is not.
 
