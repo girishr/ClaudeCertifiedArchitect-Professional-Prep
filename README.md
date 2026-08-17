@@ -2,15 +2,20 @@
 
 Study material for the Anthropic **Claude Certified Architect - Professional** (CCAR-P) exam: a three-week plan, notes for all seven domains, a 75-question scenario bank, eight hands-on labs, and a single-file web hub that ties them together.
 
-## Start here
+## Contents
 
 | File | What it is |
 |---|---|
 | [`study-plan.md`](study-plan.md) | Three-week day-by-day plan, weighted to the domain split. Read the eligibility section first |
 | [`index.html`](index.html) | The prep hub: plan tracker, practice engine, per-domain scoring. Open it in a browser |
-| [`notes/`](notes/) | Domain notes with decision heuristics, distractor traps and one-line recalls |
+| [`notes/01-solution-design-models-devprod.md`](notes/01-solution-design-models-devprod.md) | Domains 1, 2 and 7: solution design and architecture, Claude models and prompting and context engineering, developer productivity |
+| [`notes/02-integration-evals.md`](notes/02-integration-evals.md) | Domains 3 and 4: integration and MCP, evaluation and testing and optimisation. The two heaviest domains |
+| [`notes/03-governance-stakeholder.md`](notes/03-governance-stakeholder.md) | Domains 5 and 6: governance and safety and risk, stakeholder communication and lifecycle |
 | [`labs.md`](labs.md) | Eight time-boxed builds, 60 to 150 minutes each |
 | [`questions.json`](questions.json) | The question bank, with explanations and per-distractor notes |
+| [`tools/`](tools/) | `build_hub.py` and the HTML template that generate `index.html` |
+
+Each notes file follows the same shape per domain: a framing paragraph on what the exam is really testing, comparative tables, decision heuristics, a common-distractors list, and a set of one-line recalls for the final week.
 
 ## Before you plan anything: eligibility
 
@@ -44,6 +49,64 @@ Confirmed on Anthropic's own certification pages:
 | 6 | Stakeholder Communication & Lifecycle Management | 14% |
 | 2 | Claude Models, Prompting & Context Engineering | 13% |
 | 7 | Developer Productivity & Operational Enablement | 7% |
+
+## Key links
+
+### Registration and official exam material
+
+- [Anthropic Partner Academy - CCAR-P certification](https://anthropic-partners.skilljar.com/claude-certified-architect-professional-certification) - purchase and exam access
+- [Certification FAQ](https://anthropic-partners.skilljar.com/page/faq-certifications) - eligibility, scoring, retake policy, renewal
+- [Pearson VUE - Anthropic](https://www.pearsonvue.com/us/en/anthropic.html) - scheduling, online proctoring and test centres
+- [Anthropic Academy](https://anthropic.skilljar.com/) - the free course catalogue that overlaps the exam blueprints
+
+### Documentation to work from
+
+- [Claude platform docs](https://platform.claude.com/docs/) - the primary reference for everything in Domains 2, 3 and 4
+- [Model overview](https://platform.claude.com/docs/en/docs/about-claude/models/overview) and [pricing](https://platform.claude.com/docs/en/docs/about-claude/pricing) - model selection questions turn on these tradeoffs
+- [Prompt caching](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching) - breakpoints, TTLs, invalidation. Frequently examined
+- [Extended and adaptive thinking](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking) and [effort](https://platform.claude.com/docs/en/build-with-claude/effort)
+- [Structured outputs](https://platform.claude.com/docs/en/docs/build-with-claude/structured-outputs)
+- [Batch processing](https://platform.claude.com/docs/en/docs/build-with-claude/batch-processing) - the standard cost lever for async work
+- [Tool search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool) - the answer to capability bloat
+- [Agent Skills](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) - progressive disclosure
+- [MCP connector](https://platform.claude.com/docs/en/agents-and-tools/mcp-connector)
+- [Claude Code docs](https://code.claude.com/docs/) - Domain 7. See [settings](https://code.claude.com/docs/en/settings), [memory](https://code.claude.com/docs/en/memory), [hooks](https://code.claude.com/docs/en/hooks), [MCP](https://code.claude.com/docs/en/mcp), [headless](https://code.claude.com/docs/en/headless), [monitoring](https://code.claude.com/docs/en/monitoring-usage)
+
+### Model Context Protocol
+
+- [MCP specification](https://modelcontextprotocol.io/specification/latest) - read the current revision, not a blog summary
+- [Authorization chapter](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization) - OAuth 2.1, resource indicators, audience validation
+- [Spec release notes, 2026-07-28](https://blog.modelcontextprotocol.io/posts/2026-07-28/) - statelessness, `server/discover`, and the Sampling / Roots / Logging deprecations. Most study material still describes the old model
+
+### Anthropic engineering posts
+
+These are the source of the architectural vocabulary the exam uses.
+
+- [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents) - the pattern catalogue for Domain 1
+- [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system) - orchestrator-workers in practice, and the token cost multipliers
+- [Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) - compaction, note-taking, just-in-time retrieval
+- [Writing tools for agents](https://www.anthropic.com/engineering/writing-tools-for-agents) - tool description and schema design for Domain 3
+- [Contextual retrieval](https://www.anthropic.com/news/contextual-retrieval) - the RAG quality ladder and its measured failure-rate reductions
+- [Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp) - the context-cost argument for progressive discovery
+
+### Governance, safety and compliance
+
+- [Anthropic Usage Policy](https://www.anthropic.com/legal/aup) - including the high-risk use case requirements and their consumer-facing scope
+- [API and data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention) - zero data retention scope and its exclusions
+- [Data residency](https://platform.claude.com/docs/en/manage-claude/data-residency) - `inference_geo` and workspace geo
+- [Anthropic certifications](https://privacy.claude.com/en/articles/10015870-what-certifications-has-anthropic-obtained) - SOC 2, ISO 27001, ISO 42001, HIPAA readiness
+- [Trust Center](https://trust.anthropic.com/)
+- [EU AI Act regulatory framework](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) - note the Digital Omnibus deferral of the high-risk dates
+- [GDPR Article 22](https://gdpr-info.eu/art-22-gdpr/) - automated decision-making safeguards
+
+## Community study repos
+
+Other people have published prep material for this certification track. Both of the repos below are **unofficial and target Foundations (CCAR-F), not Professional**, so their domain split is the five-domain Foundations blueprint rather than the seven domains above. Useful for the shared ground on agentic architecture, tool design and MCP, less so for the Professional-only material on governance, stakeholder communication and lifecycle management.
+
+- [paullarionov/claude-certified-architect](https://github.com/paullarionov/claude-certified-architect) - Foundations study guides in eleven languages, markdown and PDF, plus HTML practical tests covering tool design, MCP integration, structured output, context management and reliability
+- [dnacenta/claude-certified-architect](https://github.com/dnacenta/claude-certified-architect) - Foundations study guide with per-domain guides, code examples and anti-patterns, exam scenarios, decision frameworks, practice questions and a four-week plan. Published as both a site and a PDF
+
+Treat anything from a community repo, this one included, as secondary to the official exam guide. Cross-check before you memorise.
 
 ## The hub
 
