@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-P Prep Hub</title>
+<style>
+:root {
+  color-scheme: light;
+  --surface-1: #fcfcfb;
+  --plane: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --seq-100: #cde2fb;
+  --seq-250: #86b6ef;
+  --seq-450: #2a78d6;
+  --seq-600: #184f95;
+  --series-1: #2a78d6;
+  --good: #0ca30c;
+  --warning: #fab219;
+  --critical: #d03b3b;
+  --success-text: #006300;
+  --ghost: rgba(11,11,11,0.04);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-1: #1a1a19;
+  --plane: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255,255,255,0.10);
+  --seq-100: #184f95;
+  --seq-250: #256abf;
+  --seq-450: #3987e5;
+  --seq-600: #86b6ef;
+  --series-1: #3987e5;
+  --good: #0ca30c;
+  --warning: #fab219;
+  --critical: #d03b3b;
+  --success-text: #0ca30c;
+  --ghost: rgba(255,255,255,0.06);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--plane);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.wrap { max-width: 1020px; margin: 0 auto; padding: 24px 20px 80px; }
+header.top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
+}
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.sub { color: var(--text-secondary); font-size: 13px; margin: 0; }
+.countdown {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; text-align: right; min-width: 150px;
+}
+.countdown .num { font-size: 26px; font-weight: 650; line-height: 1.1; }
+.countdown .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+button, select {
+  font-family: inherit; font-size: 13px; color: var(--text-primary);
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 12px; cursor: pointer;
+}
+button:hover, select:hover { background: var(--ghost); }
+button.primary { background: var(--series-1); color: #fff; border-color: transparent; font-weight: 550; }
+button.primary:hover { filter: brightness(1.08); background: var(--series-1); }
+button:disabled { opacity: .45; cursor: default; }
+nav.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--grid); margin-bottom: 22px; flex-wrap: wrap; }
+nav.tabs button {
+  border: none; background: none; border-radius: 0; padding: 9px 14px;
+  border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 14px;
+}
+nav.tabs button[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--series-1); font-weight: 600; }
+.card {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; margin-bottom: 16px;
+}
+.card h2 { font-size: 16px; margin: 0 0 10px; }
+.card h3 { font-size: 14px; margin: 18px 0 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .05em; }
+.meter { height: 8px; background: var(--grid); border-radius: 4px; overflow: hidden; }
+.meter > i { display: block; height: 100%; background: var(--series-1); border-radius: 4px; transition: width .25s; }
+.meter-row { display: flex; align-items: center; gap: 12px; margin: 6px 0 14px; }
+.meter-row .meter { flex: 1; }
+.meter-row .val { font-size: 13px; color: var(--text-secondary); font-variant-numeric: tabular-nums; min-width: 74px; text-align: right; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.day { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--grid); align-items: flex-start; }
+.day:last-child { border-bottom: none; }
+.day input { margin-top: 4px; width: 16px; height: 16px; accent-color: var(--series-1); cursor: pointer; }
+.day .d-meta { min-width: 108px; color: var(--muted); font-size: 12px; }
+.day .d-meta b { display: block; color: var(--text-primary); font-size: 13px; font-weight: 600; }
+.day .d-body b { font-weight: 600; }
+.day.done .d-body { color: var(--muted); text-decoration-color: var(--muted); }
+.day.done .d-body b { text-decoration: line-through; }
+.pill {
+  display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-secondary); background: var(--ghost); margin-right: 6px;
+}
+.controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.q-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.q-scenario { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; }
+.q-stem { font-weight: 600; margin-bottom: 14px; }
+.opt {
+  display: flex; gap: 10px; align-items: flex-start; padding: 11px 13px; margin-bottom: 8px;
+  border: 1px solid var(--border); border-radius: 9px; cursor: pointer; background: var(--surface-1);
+}
+.opt:hover { background: var(--ghost); }
+.opt input { margin-top: 3px; accent-color: var(--series-1); }
+.opt .k { font-weight: 650; min-width: 16px; }
+.opt.correct { border-color: var(--good); background: color-mix(in srgb, var(--good) 9%, transparent); }
+.opt.wrong { border-color: var(--critical); background: color-mix(in srgb, var(--critical) 9%, transparent); }
+.expl { border-left: 3px solid var(--series-1); padding: 10px 0 10px 13px; margin-top: 14px; font-size: 14px; }
+.expl h4 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.expl ul { margin: 8px 0 0; padding-left: 18px; }
+.expl li { margin-bottom: 4px; color: var(--text-secondary); }
+.timer { font-variant-numeric: tabular-nums; font-weight: 650; font-size: 15px; }
+.timer.low { color: var(--critical); }
+.bar-row { display: grid; grid-template-columns: 220px 1fr 58px; gap: 12px; align-items: center; margin-bottom: 9px; }
+.bar-track { position: relative; height: 20px; background: var(--grid); border-radius: 4px; }
+.bar-fill { height: 100%; border-radius: 0 4px 4px 0; background: var(--seq-450); }
+.bar-target { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--baseline); left: 72%; }
+.bar-label { font-size: 13px; color: var(--text-secondary); }
+.bar-val { font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; color: var(--text-primary); }
+.legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin: 10px 0 16px; align-items: center; }
+.legend .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; background: var(--seq-450); margin-right: 6px; vertical-align: -1px; }
+.hero { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 6px; }
+.hero .stat .n { font-size: 30px; font-weight: 650; line-height: 1.15; }
+.hero .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.note { font-size: 12.5px; color: var(--muted); }
+.hidden { display: none; }
+[title] { cursor: help; }
+@media (max-width: 640px) {
+  .bar-row { grid-template-columns: 1fr; gap: 4px; }
+  .day { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <h1>Claude Certified Architect - Professional</h1>
+    <p class="sub">3-week prep hub. 120 minutes, pass mark 720 on a 100-1000 scale.</p>
+  </div>
+  <div style="display:flex; gap:10px; align-items:flex-start;">
+    <div class="countdown">
+      <div class="num" id="cd-num">-</div>
+      <div class="lbl" id="cd-lbl">days to exam</div>
+    </div>
+    <button id="theme-btn" title="Toggle light and dark">Dark</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="plan">Study plan</button>
+  <button role="tab" aria-selected="false" data-tab="practice">Practice</button>
+  <button role="tab" aria-selected="false" data-tab="results">Results</button>
+  <button role="tab" aria-selected="false" data-tab="brief">Exam brief</button>
+</nav>
+
+<!-- ================= PLAN ================= -->
+<section id="tab-plan">
+  <div class="card">
+    <h2>Progress</h2>
+    <div class="meter-row">
+      <div class="meter"><i id="plan-meter" style="width:0%"></i></div>
+      <div class="val" id="plan-val">0 of 21</div>
+    </div>
+    <p class="note">Tick days as you finish them. Progress is held for this session only, so note where you stopped before closing.</p>
+  </div>
+  <div id="plan-weeks"></div>
+</section>
+
+<!-- ================= PRACTICE ================= -->
+<section id="tab-practice" class="hidden">
+  <div class="card" id="practice-setup">
+    <h2>Start a set</h2>
+    <div class="controls">
+      <select id="mode">
+        <option value="drill">Domain drill - instant feedback</option>
+        <option value="quick">Quick set - 20 questions, timed</option>
+        <option value="mock">Full mock - 63 questions, 120 minutes</option>
+      </select>
+      <select id="domain-pick"></select>
+      <button class="primary" id="start-btn">Start</button>
+    </div>
+    <p class="note">75 scenario questions, weighted to the published domain split. Drills show the answer as you go. Quick sets and mocks hold everything back until you finish, which is the only way to get an honest score.</p>
+  </div>
+
+  <div class="card hidden" id="practice-run">
+    <div class="q-head">
+      <div><span class="pill" id="q-domain"></span><span class="pill" id="q-diff"></span><span class="pill" id="q-type"></span></div>
+      <div style="display:flex; gap:14px; align-items:center;">
+        <span class="note" id="q-count"></span>
+        <span class="timer hidden" id="q-timer"></span>
+        <button id="quit-btn">End set</button>
+      </div>
+    </div>
+    <div class="meter" style="margin-bottom:16px"><i id="q-meter" style="width:0%"></i></div>
+    <p class="q-scenario" id="q-scenario"></p>
+    <p class="q-stem" id="q-stem"></p>
+    <div id="q-options"></div>
+    <div class="expl hidden" id="q-expl"></div>
+    <div style="margin-top:16px; display:flex; gap:10px;">
+      <button class="primary" id="submit-btn">Submit</button>
+      <button id="next-btn" class="hidden">Next</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="practice-done">
+    <h2>Set complete</h2>
+    <div id="done-summary"></div>
+    <div style="margin-top:14px; display:flex; gap:10px;">
+      <button class="primary" id="review-btn">Review every question</button>
+      <button id="again-btn">New set</button>
+    </div>
+    <div id="review-area" style="margin-top:20px"></div>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section id="tab-results" class="hidden">
+  <div class="card">
+    <h2>Where you stand</h2>
+    <div class="hero">
+      <div class="stat"><div class="n" id="r-score">-</div><div class="l">estimated scaled score</div></div>
+      <div class="stat"><div class="n" id="r-acc">-</div><div class="l">overall accuracy</div></div>
+      <div class="stat"><div class="n" id="r-answered">-</div><div class="l">questions attempted</div></div>
+    </div>
+    <p class="note" id="r-verdict"></p>
+  </div>
+  <div class="card">
+    <h2>Accuracy by domain</h2>
+    <div class="legend">
+      <span><span class="swatch"></span>accuracy</span>
+      <span>vertical line marks the 72% pass mark</span>
+    </div>
+    <div id="r-bars"></div>
+    <h3>Table view</h3>
+    <table>
+      <thead><tr><th>Domain</th><th class="num">Weight</th><th class="num">Attempted</th><th class="num">Correct</th><th class="num">Accuracy</th></tr></thead>
+      <tbody id="r-table"></tbody>
+    </table>
+    <p class="note" style="margin-top:12px">The scaled score is a rough linear estimate from your accuracy, weighted by the published domain split. Treat it as a signal, not a prediction.</p>
+  </div>
+</section>
+
+<!-- ================= BRIEF ================= -->
+<section id="tab-brief" class="hidden">
+  <div class="card">
+    <h2>Exam facts</h2>
+    <table>
+      <tbody>
+        <tr><th>Code</th><td>CCAR-P</td></tr>
+        <tr><th>Questions</th><td>Reported as 63 by third-party guides. Not confirmed by Anthropic - check the official exam guide</td></tr>
+        <tr><th>Time</th><td>120 minutes, about 1.9 minutes per question</td></tr>
+        <tr><th>Types</th><td>Single answer plus multiple response. The exact mix is not published</td></tr>
+        <tr><th>Scoring</th><td>Scaled score from 100 to 1000, pass at 720. A scaled score is not a percentage of items correct, so do not convert it into questions you can miss</td></tr>
+        <tr><th>Cost</th><td>175 USD</td></tr>
+        <tr><th>Delivery</th><td>Pearson VUE, online proctored or test centre. Closed book</td></tr>
+        <tr><th>Validity</th><td>12 months, free on-time renewal via a non-proctored assessment</td></tr>
+        <tr><th>Retakes</th><td>Wait 14 days, then 30, then 90. Four attempts per rolling 12 months</td></tr>
+        <tr><th>Register</th><td>Anthropic Partner Academy on Skilljar, then schedule with Pearson VUE. Requires a work email at a Claude Partner Network organisation - personal addresses are rejected</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:12px">Time, pass mark, price, validity, retake policy and delivery are confirmed on Anthropic's own certification pages. The question count and the domain weightings below are not - they come from third-party prep sites citing an exam guide version. Download the real guide from the Academy and re-derive your hour allocations from it.</p>
+  </div>
+  <div class="card">
+    <h2>Domain weightings</h2>
+    <table>
+      <thead><tr><th>Domain</th><th class="num">Weight</th><th class="num">Questions</th></tr></thead>
+      <tbody id="brief-domains"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Exam technique</h2>
+    <ul style="margin:0; padding-left:20px; color:var(--text-secondary)">
+      <li>Read the last sentence first, then the scenario. The ask is usually narrower than the setup suggests.</li>
+      <li>Find the binding constraint: a latency SLA, a compliance regime, a budget, a team maturity level, a residency rule. The right answer respects it.</li>
+      <li>On Select TWO, the two answers usually sit at different layers. Two from the same layer is a warning sign.</li>
+      <li>Distractors are real techniques applied at the wrong time. If two answers both look right, work out which constraint separates them.</li>
+      <li>Flag anything over 3 minutes and move on. A 10-minute reserve beats a perfect answer on question 12.</li>
+      <li>On governance and stakeholder questions, when in doubt pick the option that preserves the ability to undo.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<script>
+const QUESTIONS = __QUESTIONS__;
+const PLAN = __PLAN__;
+
+const DOMAIN_WEIGHTS = {
+  "Integration": 19,
+  "Solution Design & Architecture": 17,
+  "Evaluation, Testing & Optimization": 16,
+  "Governance, Safety & Risk Management": 14,
+  "Stakeholder Communication & Lifecycle Management": 14,
+  "Claude Models, Prompting & Context Engineering": 13,
+  "Developer Productivity & Operational Enablement": 7
+};
+const EXAM_DATE = new Date("2026-09-05T00:00:00");
+
+// ---------- theme ----------
+const themeBtn = document.getElementById("theme-btn");
+themeBtn.onclick = () => {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+  themeBtn.textContent = dark ? "Dark" : "Light";
+  renderResults();
+};
+
+// ---------- tabs ----------
+document.querySelectorAll("nav.tabs button").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll("nav.tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+    ["plan","practice","results","brief"].forEach(t =>
+      document.getElementById("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab));
+    if (b.dataset.tab === "results") renderResults();
+  };
+});
+
+// ---------- countdown ----------
+(function () {
+  const days = Math.ceil((EXAM_DATE - new Date()) / 86400000);
+  const el = document.getElementById("cd-num");
+  if (days > 0) { el.textContent = days; }
+  else if (days === 0) { el.textContent = "Today"; document.getElementById("cd-lbl").textContent = "exam day"; }
+  else { el.textContent = Math.abs(days); document.getElementById("cd-lbl").textContent = "days since target"; }
+})();
+
+// ---------- plan ----------
+const doneDays = new Set();
+function renderPlan() {
+  const host = document.getElementById("plan-weeks");
+  host.innerHTML = "";
+  PLAN.forEach(week => {
+    const card = document.createElement("div");
+    card.className = "card";
+    const h = document.createElement("h2");
+    h.textContent = week.title;
+    card.appendChild(h);
+    const p = document.createElement("p");
+    p.className = "note";
+    p.textContent = week.goal;
+    p.style.marginTop = "-4px";
+    card.appendChild(p);
+    week.days.forEach(d => {
+      const row = document.createElement("label");
+      row.className = "day" + (doneDays.has(d.n) ? " done" : "");
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = doneDays.has(d.n);
+      cb.onchange = () => { cb.checked ? doneDays.add(d.n) : doneDays.delete(d.n); renderPlan(); };
+      const meta = document.createElement("div");
+      meta.className = "d-meta";
+      meta.innerHTML = "<b>Day " + d.n + "</b>" + d.date;
+      const body = document.createElement("div");
+      body.className = "d-body";
+      body.innerHTML = "<b>" + d.focus + "</b><br>" + d.work;
+      row.append(cb, meta, body);
+      card.appendChild(row);
+    });
+    host.appendChild(card);
+  });
+  const pct = Math.round(doneDays.size / 21 * 100);
+  document.getElementById("plan-meter").style.width = pct + "%";
+  document.getElementById("plan-val").textContent = doneDays.size + " of 21";
+}
+renderPlan();
+
+// ---------- brief domains ----------
+document.getElementById("brief-domains").innerHTML =
+  Object.entries(DOMAIN_WEIGHTS).sort((a,b) => b[1]-a[1])
+    .map(([d,w]) => "<tr><td>"+d+"</td><td class='num'>"+w+"%</td><td class='num'>"+Math.round(w/100*63)+"</td></tr>").join("");
+
+// ---------- practice ----------
+const domainSel = document.getElementById("domain-pick");
+domainSel.innerHTML = "<option value='all'>All domains</option>" +
+  Object.keys(DOMAIN_WEIGHTS).map(d => "<option value=\"" + d + "\">" + d + "</option>").join("");
+document.getElementById("mode").onchange = e => {
+  domainSel.disabled = e.target.value !== "drill";
+  domainSel.style.opacity = domainSel.disabled ? .5 : 1;
+};
+
+const stats = {};
+Object.keys(DOMAIN_WEIGHTS).forEach(d => stats[d] = { seen: 0, right: 0 });
+
+let session = null, timerId = null;
+
+function shuffle(a) { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+document.getElementById("start-btn").onclick = () => {
+  const mode = document.getElementById("mode").value;
+  let pool = QUESTIONS;
+  if (mode === "drill" && domainSel.value !== "all") pool = pool.filter(q => q.domain === domainSel.value);
+  let n = mode === "mock" ? 63 : mode === "quick" ? 20 : pool.length;
+  const items = shuffle(pool).slice(0, Math.min(n, pool.length));
+  session = { mode, items, i: 0, answers: [], instant: mode === "drill", endsAt: null };
+  if (mode !== "drill") {
+    const mins = mode === "mock" ? 120 : 38;
+    session.endsAt = Date.now() + mins * 60000;
+    document.getElementById("q-timer").classList.remove("hidden");
+    timerId = setInterval(tick, 1000); tick();
+  } else {
+    document.getElementById("q-timer").classList.add("hidden");
+  }
+  document.getElementById("practice-setup").classList.add("hidden");
+  document.getElementById("practice-done").classList.add("hidden");
+  document.getElementById("practice-run").classList.remove("hidden");
+  renderQuestion();
+};
+
+function tick() {
+  if (!session || !session.endsAt) return;
+  const left = session.endsAt - Date.now();
+  const t = document.getElementById("q-timer");
+  if (left <= 0) { t.textContent = "0:00"; finish(); return; }
+  const m = Math.floor(left/60000), s = Math.floor(left%60000/1000);
+  t.textContent = m + ":" + String(s).padStart(2,"0");
+  t.classList.toggle("low", left < 10*60000);
+}
+
+function renderQuestion() {
+  const q = session.items[session.i];
+  document.getElementById("q-domain").textContent = q.domain;
+  document.getElementById("q-diff").textContent = q.difficulty;
+  document.getElementById("q-type").textContent = q.type === "multi" ? "Select " + (q.selectCount === 3 ? "THREE" : "TWO") : "Single answer";
+  document.getElementById("q-count").textContent = "Question " + (session.i+1) + " of " + session.items.length;
+  document.getElementById("q-meter").style.width = (session.i / session.items.length * 100) + "%";
+  document.getElementById("q-scenario").textContent = q.scenario;
+  document.getElementById("q-stem").textContent = q.question;
+  const host = document.getElementById("q-options");
+  host.innerHTML = "";
+  q.options.forEach(o => {
+    const lab = document.createElement("label");
+    lab.className = "opt"; lab.dataset.key = o.key;
+    const inp = document.createElement("input");
+    inp.type = q.type === "multi" ? "checkbox" : "radio";
+    inp.name = "opt"; inp.value = o.key;
+    const k = document.createElement("span"); k.className = "k"; k.textContent = o.key;
+    const t = document.createElement("span"); t.textContent = o.text;
+    lab.append(inp, k, t);
+    host.appendChild(lab);
+  });
+  document.getElementById("q-expl").classList.add("hidden");
+  document.getElementById("submit-btn").classList.remove("hidden");
+  document.getElementById("submit-btn").disabled = false;
+  document.getElementById("next-btn").classList.add("hidden");
+}
+
+document.getElementById("submit-btn").onclick = () => {
+  const q = session.items[session.i];
+  const picked = [...document.querySelectorAll("#q-options input:checked")].map(i => i.value);
+  if (!picked.length) return;
+  const ok = picked.length === q.correct.length && picked.every(p => q.correct.includes(p));
+  session.answers.push({ q, picked, ok });
+  stats[q.domain].seen++; if (ok) stats[q.domain].right++;
+  if (session.instant) { showFeedback(q, picked, ok); }
+  else { advance(); }
+};
+
+function showFeedback(q, picked, ok) {
+  document.querySelectorAll("#q-options .opt").forEach(el => {
+    const k = el.dataset.key;
+    el.querySelector("input").disabled = true;
+    if (q.correct.includes(k)) el.classList.add("correct");
+    else if (picked.includes(k)) el.classList.add("wrong");
+  });
+  const e = document.getElementById("q-expl");
+  e.innerHTML = "<h4>" + (ok ? "Correct" : "Not quite - answer: " + q.correct.join(", ")) + "</h4><p>" + q.explanation + "</p>" +
+    "<ul>" + Object.entries(q.distractorNotes || {}).map(([k,v]) => "<li><b>" + k + ":</b> " + v + "</li>").join("") + "</ul>" +
+    (q.reference ? "<p class='note'><a href='" + q.reference + "' target='_blank' rel='noopener'>Reference</a></p>" : "");
+  e.classList.remove("hidden");
+  document.getElementById("submit-btn").classList.add("hidden");
+  document.getElementById("next-btn").classList.remove("hidden");
+}
+
+document.getElementById("next-btn").onclick = advance;
+function advance() {
+  session.i++;
+  if (session.i >= session.items.length) finish();
+  else renderQuestion();
+}
+
+document.getElementById("quit-btn").onclick = finish;
+
+function finish() {
+  if (timerId) { clearInterval(timerId); timerId = null; }
+  document.getElementById("practice-run").classList.add("hidden");
+  document.getElementById("practice-done").classList.remove("hidden");
+  const a = session.answers, right = a.filter(x => x.ok).length;
+  const pct = a.length ? Math.round(right/a.length*100) : 0;
+  const scaled = Math.round(pct/100*1000);
+  const verdict = a.length < 10 ? "Too few questions to read anything into."
+    : scaled >= 800 ? "Comfortably clear of the pass mark."
+    : scaled >= 720 ? "Above the pass mark, with no margin to spare."
+    : scaled >= 620 ? "Close. Two weak domains are usually all that separates this from a pass."
+    : "Well short. Work the weakest domain before taking another timed set.";
+  const byDom = {};
+  a.forEach(x => { byDom[x.q.domain] = byDom[x.q.domain] || {s:0,r:0}; byDom[x.q.domain].s++; if (x.ok) byDom[x.q.domain].r++; });
+  document.getElementById("done-summary").innerHTML =
+    "<div class='hero'><div class='stat'><div class='n'>" + scaled + "</div><div class='l'>scaled, pass 720</div></div>" +
+    "<div class='stat'><div class='n'>" + right + " / " + a.length + "</div><div class='l'>correct</div></div></div>" +
+    "<p class='note'>" + verdict + "</p>" +
+    "<table><thead><tr><th>Domain</th><th class='num'>Correct</th><th class='num'>Accuracy</th></tr></thead><tbody>" +
+    Object.entries(byDom).map(([d,v]) => "<tr><td>"+d+"</td><td class='num'>"+v.r+" / "+v.s+"</td><td class='num'>"+Math.round(v.r/v.s*100)+"%</td></tr>").join("") +
+    "</tbody></table>";
+  document.getElementById("review-area").innerHTML = "";
+}
+
+document.getElementById("again-btn").onclick = () => {
+  document.getElementById("practice-done").classList.add("hidden");
+  document.getElementById("practice-setup").classList.remove("hidden");
+};
+
+document.getElementById("review-btn").onclick = () => {
+  const host = document.getElementById("review-area");
+  if (host.innerHTML) { host.innerHTML = ""; return; }
+  host.innerHTML = session.answers.map((x,i) => {
+    const q = x.q;
+    return "<div style='border-top:1px solid var(--grid); padding:16px 0'>" +
+      "<div><span class='pill'>" + (i+1) + "</span><span class='pill'>" + q.domain + "</span>" +
+      "<span class='pill' style='color:" + (x.ok ? "var(--success-text)" : "var(--critical)") + "'>" + (x.ok ? "correct" : "wrong") + "</span></div>" +
+      "<p class='q-scenario'>" + q.scenario + "</p><p class='q-stem'>" + q.question + "</p>" +
+      "<ul style='padding-left:18px'>" + q.options.map(o =>
+        "<li style='margin-bottom:4px;color:" + (q.correct.includes(o.key) ? "var(--success-text)" : x.picked.includes(o.key) ? "var(--critical)" : "var(--text-secondary)") + "'>" +
+        "<b>" + o.key + "</b> " + o.text + (q.correct.includes(o.key) ? " (correct)" : x.picked.includes(o.key) ? " (you picked this)" : "") + "</li>").join("") + "</ul>" +
+      "<div class='expl'><p>" + q.explanation + "</p><ul>" +
+      Object.entries(q.distractorNotes || {}).map(([k,v]) => "<li><b>"+k+":</b> "+v+"</li>").join("") + "</ul>" +
+      (q.reference ? "<p class='note'><a href='"+q.reference+"' target='_blank' rel='noopener'>Reference</a></p>" : "") + "</div></div>";
+  }).join("");
+};
+
+// ---------- results ----------
+function renderResults() {
+  const rows = Object.entries(DOMAIN_WEIGHTS).sort((a,b) => b[1]-a[1]);
+  let seen = 0, right = 0, weighted = 0, wsum = 0;
+  rows.forEach(([d,w]) => {
+    seen += stats[d].seen; right += stats[d].right;
+    if (stats[d].seen) { weighted += (stats[d].right/stats[d].seen) * w; wsum += w; }
+  });
+  const acc = seen ? right/seen : 0;
+  const scaled = wsum ? Math.round(weighted/wsum*1000) : 0;
+  document.getElementById("r-score").textContent = seen ? scaled : "-";
+  document.getElementById("r-acc").textContent = seen ? Math.round(acc*100) + "%" : "-";
+  document.getElementById("r-answered").textContent = seen || "-";
+  document.getElementById("r-verdict").textContent = !seen
+    ? "No questions attempted yet. Start a drill in the Practice tab."
+    : seen < 20 ? "Only " + seen + " questions in. Attempt at least 40 before reading much into the split."
+    : scaled >= 720 ? "Weighted estimate is above the pass mark. Keep the weakest domain moving."
+    : "Weighted estimate is below 720. The two shortest bars below are where the marks are.";
+
+  const bars = rows.map(([d,w]) => {
+    const s = stats[d], pct = s.seen ? Math.round(s.right/s.seen*100) : 0;
+    const label = s.seen ? pct + "%" : "-";
+    return "<div class='bar-row'>" +
+      "<div class='bar-label' title='" + d + "'>" + d.replace(" & ", " and ") + " <span style='color:var(--muted)'>" + w + "%</span></div>" +
+      "<div class='bar-track' title='" + d + ": " + (s.seen ? s.right + " of " + s.seen + " correct" : "not attempted") + "'>" +
+        "<div class='bar-fill' style='width:" + pct + "%'></div><div class='bar-target'></div></div>" +
+      "<div class='bar-val'>" + label + "</div></div>";
+  }).join("");
+  document.getElementById("r-bars").innerHTML = bars;
+  document.getElementById("r-table").innerHTML = rows.map(([d,w]) => {
+    const s = stats[d];
+    return "<tr><td>"+d+"</td><td class='num'>"+w+"%</td><td class='num'>"+s.seen+"</td><td class='num'>"+s.right+"</td><td class='num'>"+(s.seen?Math.round(s.right/s.seen*100)+"%":"-")+"</td></tr>";
+  }).join("");
+}
+renderResults();
+</script>
+</body>
+</html>
