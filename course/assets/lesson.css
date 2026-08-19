@@ -1,0 +1,338 @@
+/* Shared stylesheet for the CCAR-P teaching workspace.
+   Every lesson and reference document links this file, so they read as one course.
+   Tufte-influenced: generous measure, restrained rules, sidenotes, prints well. */
+
+:root {
+  color-scheme: light;
+  --paper:      #fffef9;
+  --ink:        #16150f;
+  --ink-soft:   #4a4840;
+  --ink-faint:  #8a877b;
+  --rule:       #e2ded0;
+  --accent:     #2a78d6;
+  --accent-dim: #cde2fb;
+  --good:       #0f7a2e;
+  --bad:        #b4342f;
+  --flag:       #fdf6dd;
+  --code-bg:    #f4f1e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper:      #16150f;
+    --ink:        #f4f1e6;
+    --ink-soft:   #c8c4b4;
+    --ink-faint:  #8a877b;
+    --rule:       #33312a;
+    --accent:     #6da7ec;
+    --accent-dim: #1d3350;
+    --good:       #4bb96a;
+    --bad:        #e07671;
+    --flag:       #262316;
+    --code-bg:    #201e17;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 17px; }
+
+body {
+  margin: 0 auto;
+  padding: 4rem 2rem 8rem;
+  max-width: 46rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Charter, Georgia, serif;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead { margin-bottom: 3rem; }
+.eyebrow {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 .6rem;
+}
+h1 {
+  font-size: 2.1rem;
+  line-height: 1.15;
+  font-weight: 600;
+  margin: 0 0 .7rem;
+  letter-spacing: -.01em;
+}
+.standfirst {
+  font-size: 1.12rem;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin: 0 0 1.4rem;
+}
+.meta {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .78rem;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: .55rem 0;
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- structure ---------- */
+
+h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 3rem 0 .9rem;
+  line-height: 1.25;
+}
+h2 .num {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .78rem;
+  color: var(--accent);
+  display: block;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: .3rem;
+}
+h3 { font-size: 1.06rem; font-weight: 600; margin: 2rem 0 .5rem; }
+p { margin: 0 0 1.1rem; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+strong { font-weight: 600; }
+hr { border: none; border-top: 1px solid var(--rule); margin: 3rem 0; }
+
+ul, ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
+li { margin-bottom: .4rem; }
+
+/* ---------- sidenote ---------- */
+
+.sidenote {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .82rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  border-left: 2px solid var(--accent-dim);
+  padding: .1rem 0 .1rem 1rem;
+  margin: 1.6rem 0;
+}
+.sidenote b { color: var(--ink); }
+
+/* ---------- callout ---------- */
+
+.flag {
+  background: var(--flag);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  margin: 1.8rem 0;
+  font-size: .95rem;
+}
+.flag .label {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .7rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: .45rem;
+}
+.flag p:last-child { margin-bottom: 0; }
+
+/* ---------- tables ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.6rem 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .84rem;
+  line-height: 1.45;
+}
+caption {
+  caption-side: top;
+  text-align: left;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-bottom: .5rem;
+}
+th {
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--ink);
+  padding: .45rem .7rem .45rem 0;
+  vertical-align: bottom;
+}
+td {
+  border-bottom: 1px solid var(--rule);
+  padding: .55rem .7rem .55rem 0;
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: 1.5px solid var(--ink); }
+
+/* ---------- code ---------- */
+
+code {
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: .84em;
+  background: var(--code-bg);
+  padding: .1em .35em;
+  border-radius: 3px;
+}
+pre {
+  background: var(--code-bg);
+  padding: 1rem 1.1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: .8rem;
+  line-height: 1.5;
+}
+pre code { background: none; padding: 0; }
+
+/* ---------- footer nav ---------- */
+
+.course-nav {
+  margin-top: 4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .85rem;
+}
+.course-nav h3 {
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 .7rem;
+  font-weight: 600;
+}
+.course-nav ul { list-style: none; padding: 0; }
+.course-nav li { margin-bottom: .35rem; }
+.ask {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .88rem;
+  background: var(--accent-dim);
+  color: var(--ink);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  margin: 2.5rem 0 0;
+}
+.ask p { margin: 0; }
+
+/* ---------- print ---------- */
+
+@media print {
+  :root {
+    --paper: #fff; --ink: #000; --ink-soft: #333; --ink-faint: #666;
+    --rule: #ccc; --accent: #000; --accent-dim: #eee; --flag: #f7f7f7;
+    --code-bg: #f2f2f2;
+  }
+  body { padding: 0; max-width: none; font-size: 11pt; }
+  h2 { break-after: avoid; }
+  table, .flag, .quiz { break-inside: avoid; }
+  .quiz-reveal, .ask { display: none; }
+  a::after { content: " (" attr(href) ")"; font-size: .75em; color: #666; word-break: break-all; }
+  a[href^="#"]::after { content: ""; }
+}
+
+@media (max-width: 34rem) {
+  html { font-size: 16px; }
+  body { padding: 2rem 1.1rem 5rem; }
+  h1 { font-size: 1.6rem; }
+  table { font-size: .78rem; }
+}
+
+/* ---------- quiz component (assets/quiz.js) ---------- */
+
+.quiz {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 1.3rem 1.4rem;
+  margin: 2rem 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .9rem;
+}
+.quiz .scenario { color: var(--ink-soft); margin-bottom: .8rem; }
+.quiz .stem { font-weight: 600; margin-bottom: .3rem; }
+.quiz-hint {
+  font-size: .75rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 .8rem;
+}
+.quiz .options { list-style: none; padding: 0; margin: .9rem 0 0; counter-reset: opt; }
+.quiz .options li {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: .6rem .8rem .6rem 2.2rem;
+  margin-bottom: .5rem;
+  cursor: pointer;
+  position: relative;
+  transition: background .12s, border-color .12s;
+}
+.quiz .options li::before {
+  content: attr(data-key);
+  position: absolute;
+  left: .8rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+.quiz .options li:hover { background: var(--code-bg); }
+.quiz .options li.chosen { border-color: var(--ink-faint); }
+.quiz .options li.is-right {
+  border-color: var(--good);
+  background: color-mix(in srgb, var(--good) 8%, transparent);
+  cursor: default;
+}
+.quiz .options li.is-right::before { color: var(--good); }
+.quiz .options li.is-wrong {
+  border-color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 8%, transparent);
+  cursor: default;
+}
+.quiz .options li.is-wrong::before { color: var(--bad); }
+.quiz .options li.is-idle { opacity: .62; cursor: default; }
+.quiz .options li.is-idle:hover { background: none; }
+.quiz .why {
+  display: block;
+  margin-top: .45rem;
+  font-size: .8rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.quiz-status { margin: 1rem 0 0; font-weight: 600; }
+.quiz-status.right { color: var(--good); }
+.quiz-status.wrong { color: var(--bad); }
+.quiz .verdict {
+  margin-top: .9rem;
+  padding-top: .9rem;
+  border-top: 1px solid var(--rule);
+  font-size: .86rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.quiz .verdict b { color: var(--ink); }
+.scoreboard {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .82rem;
+  color: var(--ink-faint);
+  text-align: right;
+  margin-top: 1rem;
+}
+
+@media print {
+  .quiz .options li { opacity: 1 !important; cursor: default; }
+  .quiz .why { display: block; }
+  .quiz .verdict { display: block !important; }
+}

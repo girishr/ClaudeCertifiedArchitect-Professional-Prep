@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference: Pattern Selection</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">CCAR-P Reference &middot; Domain 1</p>
+  <h1>Pattern Selection</h1>
+  <p class="standfirst">One page. What to build, and the constraint that decides it.</p>
+  <div class="meta">
+    <span>Solution Design &amp; Architecture</span>
+    <span>17% of the exam</span>
+    <span>Print me</span>
+  </div>
+</header>
+
+<h2>The decision, in one line</h2>
+
+<p>Pick the <strong>least complex architecture that clears the binding constraint</strong>.
+Anthropic's stated position: start with a single augmented LLM call, add complexity only
+when simpler solutions demonstrably underperform.</p>
+
+<div class="flag">
+  <span class="label">The line the exam tests</span>
+  <p>Workflow or agent is decided by <strong>predictability of the path</strong>, not
+  difficulty of the task. A hard task with a fixed sequence is still a workflow.</p>
+</div>
+
+<h2>The three tiers</h2>
+
+<table>
+  <caption>Escalate only when forced</caption>
+  <thead>
+    <tr><th>Tier</th><th>What it is</th><th>Who controls flow</th><th>Pick when</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Augmented LLM</strong></td>
+      <td>One call plus retrieval, tools, memory</td>
+      <td>Nobody, it is one call</td>
+      <td>Task fits in one call. Always the baseline you must beat</td>
+    </tr>
+    <tr>
+      <td><strong>Workflow</strong></td>
+      <td>LLMs and tools on predefined code paths</td>
+      <td>You, in code</td>
+      <td>Steps known ahead. You need predictable cost, latency, auditability</td>
+    </tr>
+    <tr>
+      <td><strong>Agent</strong></td>
+      <td>Model directs its own process and tool use</td>
+      <td>The model, at runtime</td>
+      <td>You genuinely cannot predict the number or order of steps</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>The six patterns</h2>
+
+<table>
+  <caption>All six are workflows except the last</caption>
+  <thead>
+    <tr><th>Pattern</th><th>Use when</th><th>Do not use when</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Prompt chaining</strong></td>
+      <td>Fixed subtasks in sequence. Trading latency for accuracy. You want a programmatic gate between steps</td>
+      <td>Subtasks unknown ahead. Tight latency budget. A single call already passes eval</td>
+    </tr>
+    <tr>
+      <td><strong>Routing</strong></td>
+      <td>Distinct input categories handled better separately, and classification is accurate. Cheap model for easy cases</td>
+      <td>Categories blur, so misroutes poison everything downstream. One prompt handles all cases without loss</td>
+    </tr>
+    <tr>
+      <td><strong>Parallelisation: sectioning</strong></td>
+      <td>Independent subtasks run concurrently for wall clock. Guardrail call alongside the main call</td>
+      <td>Subtasks depend on each other's output. That is chaining</td>
+    </tr>
+    <tr>
+      <td><strong>Parallelisation: voting</strong></td>
+      <td>Multiple perspectives raise confidence. False negatives are expensive: security review, content safety</td>
+      <td>Cost sensitive. Or one objectively correct answer a single call already gets</td>
+    </tr>
+    <tr>
+      <td><strong>Orchestrator-workers</strong></td>
+      <td>You cannot predict the subtasks. Decomposition depends on the input itself</td>
+      <td>Subtask set is fixed and known. Use sectioning, which is cheaper and skips the planner hop</td>
+    </tr>
+    <tr>
+      <td><strong>Evaluator-optimizer</strong></td>
+      <td>Clear articulable criteria exist <em>and</em> iteration measurably improves output</td>
+      <td>Criteria vague or subjective. Model cannot tell good from bad here. Latency forbids rounds</td>
+    </tr>
+    <tr>
+      <td><strong>Autonomous agent</strong></td>
+      <td>Open-ended, step count unpredictable, model acts on environment feedback in a loop</td>
+      <td>Path can be hardcoded. Failures costly and irreversible. You cannot sandbox or checkpoint</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Favourite exam trap</span>
+  <p><strong>Sectioning vs orchestrator-workers.</strong> Sectioning: <em>you</em> decide
+  the split, in code, before runtime. Orchestrator-workers: <em>the model</em> decides
+  the split, at runtime, from the input. If the scenario tells you the subtasks, it is
+  sectioning and the orchestrator is overbuilt.</p>
+</div>
+
+<h2>Multi-agent economics</h2>
+
+<p>Numbers from Anthropic's
+<a href="https://www.anthropic.com/engineering/multi-agent-research-system">multi-agent research system</a>.
+Carry these.</p>
+
+<table>
+  <tbody>
+    <tr><td>Single agent token use</td><td>~<strong>4x</strong> a chat interaction</td></tr>
+    <tr><td>Multi-agent token use</td><td>~<strong>15x</strong> a chat interaction</td></tr>
+    <tr><td>Lead Opus + Sonnet subagents vs single-agent Opus</td><td><strong>90.2%</strong> better on an internal breadth-first research eval</td></tr>
+    <tr><td>Subagents spawned in parallel, typically</td><td><strong>3 to 5</strong></td></tr>
+    <tr><td>Subagent returns</td><td><strong>1,000 to 2,000 tokens</strong> after burning tens of thousands</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Multi-agent wins</strong> on breadth-first tasks with heavy parallelism, where
+information exceeds one context window and value per task is high.
+<strong>Multi-agent loses</strong> on shared context, tight interdependencies, real-time
+coordination, and most coding work, where agents cannot see each other's edits.</p>
+
+<h2>Reliability, checkpoints, the human</h2>
+
+<ul>
+  <li><strong>Human checkpoints go at irreversible or high blast-radius actions.</strong>
+    Money movement, production writes, external communications, permanent deletions. Not
+    at every step, which destroys the efficiency case you sold.</li>
+  <li><strong>Resumable checkpointing beats restart-from-scratch.</strong> Persist the
+    plan to external memory so a truncated context window does not lose the task.</li>
+  <li><strong>Pair model adaptability with deterministic safeguards:</strong> retries,
+    timeouts, circuit breakers, regular checkpoints. Telling the agent a tool is failing
+    and letting it adapt works surprisingly well.</li>
+  <li><strong>Rainbow deployments</strong> shift traffic gradually so long-running agents
+    are not killed mid-run by a deploy.</li>
+  <li><strong>Guardrail calls run in parallel</strong> with the main call, not serially,
+    when latency matters.</li>
+  <li><strong>Instrument decision patterns and interaction structure</strong>, not just
+    final outputs. Non-determinism makes output-only logs useless for debugging.</li>
+</ul>
+
+<h2>Reading a scenario</h2>
+
+<ol>
+  <li>Read the last sentence first. The ask is narrower than the setup.</li>
+  <li>Find the <strong>binding constraint</strong>: latency SLA, compliance regime,
+    budget, team maturity, volume, reversibility.</li>
+  <li>Ask: is the path predictable? If yes, workflow. Stop escalating.</li>
+  <li>If two answers both look right, one is right under a slightly different
+    constraint. Work out which constraint separates them.</li>
+  <li>Watch for absolutes. "Always" and "never" are usually wrong in a domain of
+    tradeoffs, unless the absolute is a hard compliance rule.</li>
+</ol>
+
+<div class="course-nav">
+  <h3>Related</h3>
+  <ul>
+    <li><a href="glossary.html">Reference: Glossary</a></li>
+    <li><a href="../lessons/0001-workflow-or-agent.html">Lesson 0001: Workflow or agent</a></li>
+    <li><a href="https://www.anthropic.com/engineering/building-effective-agents">Primary source: Building effective agents</a></li>
+  </ul>
+</div>
+
+</body>
+</html>

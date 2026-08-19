@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference: Glossary</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">CCAR-P Reference</p>
+  <h1>Glossary</h1>
+  <p class="standfirst">The course speaks this vocabulary. Where a term is contested, the
+  Anthropic usage wins.</p>
+  <div class="meta">
+    <span>Growing document</span>
+    <span>Domain 1 and 2 terms so far</span>
+  </div>
+</header>
+
+<h2><span class="num">Architecture</span>Shapes and tiers</h2>
+
+<table>
+  <tbody>
+    <tr><td><strong>Augmented LLM</strong></td><td>A single model call with retrieval, tools and memory attached. The baseline every other architecture must beat before you are allowed to build it.</td></tr>
+    <tr><td><strong>Workflow</strong></td><td>LLMs and tools orchestrated through <em>predefined code paths</em>. You wrote the path. Predictable cost, latency and audit trail.</td></tr>
+    <tr><td><strong>Agent</strong></td><td>The model dynamically directs its own process and tool use. The path is decided at runtime, by the model.</td></tr>
+    <tr><td><strong>Prompt chaining</strong></td><td>Fixed sequence of calls, each consuming the last. Optional programmatic gate between steps.</td></tr>
+    <tr><td><strong>Routing</strong></td><td>Classify the input, then dispatch to a specialised downstream path. Only safe when classification is accurate.</td></tr>
+    <tr><td><strong>Sectioning</strong></td><td>Parallelisation where <em>you</em> split the work in code before runtime. Independent subtasks, concurrent execution.</td></tr>
+    <tr><td><strong>Voting</strong></td><td>Parallelisation where the same task runs N times and you aggregate. Buys confidence at N times the cost.</td></tr>
+    <tr><td><strong>Orchestrator-workers</strong></td><td>A lead model decomposes the task <em>at runtime</em> and delegates to workers. Use only when the subtask set genuinely depends on the input.</td></tr>
+    <tr><td><strong>Evaluator-optimizer</strong></td><td>One call generates, another critiques against criteria, loop until good enough. Needs articulable criteria.</td></tr>
+    <tr><td><strong>Blast radius</strong></td><td>How much damage a wrong action does before anyone notices. Drives where the human checkpoint goes.</td></tr>
+    <tr><td><strong>Binding constraint</strong></td><td>The one requirement in a scenario that eliminates otherwise-good answers. Usually latency, compliance, cost, reversibility or team maturity.</td></tr>
+    <tr><td><strong>Rainbow deployment</strong></td><td>Gradual traffic shift across versions so long-running agents are not killed mid-run by a deploy.</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">Models</span>Reasoning and cost controls</h2>
+
+<table>
+  <tbody>
+    <tr><td><strong>Adaptive thinking</strong></td><td><code>thinking: {type: "adaptive"}</code>. Supported from Claude 4.6 onward. The model decides per request whether to think at all.</td></tr>
+    <tr><td><strong>Extended thinking</strong></td><td>The older <code>type: "enabled"</code> plus <code>budget_tokens</code>. Deprecated on 4.6, returns a 400 on 4.7+.</td></tr>
+    <tr><td><strong>Effort</strong></td><td><code>output_config.effort</code>. Five levels: <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, <code>max</code>. <strong>Default is <code>high</code></strong>, and setting it explicitly is identical to omitting it.</td></tr>
+    <tr><td><strong>Prompt caching</strong></td><td>Reuse of a static prefix across calls. Up to 4 breakpoints. Writes cost 1.25x (5 min) or 2x (1 hour); reads cost 0.1x. Order: tools, then system, then messages.</td></tr>
+    <tr><td><strong>Cache minimum</strong></td><td>Shortest cacheable prefix, and it varies by model: 512, 1,024, 2,048 or 4,096 tokens. Below it, caching is skipped silently with no error.</td></tr>
+    <tr><td><strong>Batch API</strong></td><td>Asynchronous processing at 50% off input and output. Most complete inside an hour, 24 hour ceiling. Wrong answer for anything interactive.</td></tr>
+    <tr><td><strong>Context rot</strong></td><td>Degradation of recall as context grows. Attention is a finite budget, so more context is not free.</td></tr>
+    <tr><td><strong>Compaction</strong></td><td>Summarising conversation history to reclaim context window while preserving the thread.</td></tr>
+    <tr><td><strong>Just-in-time retrieval</strong></td><td>Fetching context when needed rather than stuffing it up front. The counter-move to context rot.</td></tr>
+    <tr><td><strong>Progressive disclosure</strong></td><td>Exposing capability metadata cheaply and loading the body only on use. How Skills and tool search keep context small.</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">Exam</span>Terms of art</h2>
+
+<table>
+  <tbody>
+    <tr><td><strong>CCAR-P</strong></td><td>Claude Certified Architect - Professional. 120 minutes, scaled score 100 to 1000, pass mark 720.</td></tr>
+    <tr><td><strong>Scaled score</strong></td><td>Not a percentage of items correct. Do not convert 720 into "questions I can miss".</td></tr>
+    <tr><td><strong>Distractor</strong></td><td>A wrong option. On this exam they are real techniques applied at the wrong time, not nonsense.</td></tr>
+    <tr><td><strong>Multiple response</strong></td><td>"Select TWO" or "Select THREE". The correct answers usually sit at different layers, one architectural and one operational.</td></tr>
+  </tbody>
+</table>
+
+<div class="course-nav">
+  <h3>Related</h3>
+  <ul>
+    <li><a href="pattern-selection.html">Reference: Pattern Selection</a></li>
+    <li><a href="../lessons/0001-workflow-or-agent.html">Lesson 0001: Workflow or agent</a></li>
+  </ul>
+</div>
+
+</body>
+</html>

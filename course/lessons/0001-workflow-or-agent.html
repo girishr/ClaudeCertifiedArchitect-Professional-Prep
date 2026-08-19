@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0001 &middot; Workflow or Agent</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Claude Platform &amp; Solution Design &middot; Lesson 0001</p>
+  <h1>Workflow or agent?</h1>
+  <p class="standfirst">The most common wrong answer in Domain 1 is an architecture that
+  would work, built one tier more complex than the scenario justifies.</p>
+  <div class="meta">
+    <span>~15 minutes</span>
+    <span>Domain 1, 17% of the exam</span>
+    <span>5 drills</span>
+  </div>
+</header>
+
+<p>You already build agentic systems. So this lesson is not about what an agent
+<em>is</em>. It is about the one judgement the exam keeps testing and that experienced
+builders keep getting wrong under time pressure: <strong>knowing when not to build
+one</strong>.</p>
+
+<p>The win by the end of this page: given a scenario, you name the right tier in under
+thirty seconds, and you can say out loud which constraint made the decision.</p>
+
+<h2><span class="num">Knowledge</span>Three tiers, and only one line between them</h2>
+
+<p>Anthropic's position in
+<a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a>
+is unusually blunt for a vendor: start with a single augmented LLM call, and add
+complexity <em>only when simpler solutions demonstrably underperform</em>. Not when it
+would be more interesting. Not when the client asked for an agent.</p>
+
+<table>
+  <caption>Escalate only when forced</caption>
+  <thead>
+    <tr><th>Tier</th><th>Who decides the path</th><th>You get</th><th>You pay</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Augmented LLM</strong></td>
+      <td>Nobody, it is one call</td>
+      <td>Cheapest, fastest, trivially auditable</td>
+      <td>Cannot handle multi-step work</td>
+    </tr>
+    <tr>
+      <td><strong>Workflow</strong></td>
+      <td>You, in code, before runtime</td>
+      <td>Predictable cost, latency and audit trail</td>
+      <td>You must know the steps in advance</td>
+    </tr>
+    <tr>
+      <td><strong>Agent</strong></td>
+      <td>The model, at runtime</td>
+      <td>Handles genuinely unpredictable work</td>
+      <td>Variable cost and latency, harder to debug and audit</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The whole lesson in one sentence</span>
+  <p>The workflow/agent line is <strong>predictability of the path</strong>, not
+  difficulty of the task. A hard task with a fixed sequence is still a workflow.</p>
+</div>
+
+<p>That distinction does the heavy lifting because exam scenarios are written to make
+hard tasks <em>feel</em> like they need agents. A 40,000-claim insurance backlog sounds
+like it needs autonomy. If 85% of those claims follow one of three known paths, it needs
+a router and three prompt chains, and the agent answer is the trap.</p>
+
+<div class="sidenote">
+  <b>Why this bites experienced people.</b> If you build agents daily, agentic solutions
+  are cheap for you to imagine and therefore feel proportionate. The exam is scored by
+  someone asking whether a mid-sized client should pay for variable latency and a harder
+  audit story. Read every scenario as if you are defending the design to a CFO.
+</div>
+
+<h3>The escalation test</h3>
+
+<p>Run these in order. Stop at the first "no".</p>
+
+<ol>
+  <li><strong>Does a single augmented call pass eval?</strong> If yes, ship it. You are done.</li>
+  <li><strong>Do you know the steps before runtime?</strong> If yes, it is a workflow. Pick the pattern that fits the shape.</li>
+  <li><strong>Can the path be hardcoded at all?</strong> If no, and the model must act on environment feedback in a loop, now you have an agent.</li>
+</ol>
+
+<p>Then one veto, applied last: <strong>if failures are costly and irreversible and you
+cannot sandbox or checkpoint, do not hand the path to the model</strong> regardless of
+how unpredictable it is. Unpredictability argues for an agent. Irreversibility argues
+louder against one.</p>
+
+<h2><span class="num">Skill</span>Five scenarios, thirty seconds each</h2>
+
+<p>Read the last sentence first, find the binding constraint, then answer. Feedback is
+immediate, and the reason matters more than the score.</p>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A national insurer has 40,000 first-notice-of-loss submissions
+  backed up. Roughly 60% are auto glass claims that follow one fixed path, 25% are
+  property claims needing a different fixed set of checks, and 15% are liability claims
+  that always go to a human adjuster. There is a hard 8 second SLA on the customer
+  acknowledgement.</p>
+  <p class="stem">Which architecture gives the best accuracy per dollar for the automatable share?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Categories are known, fixed and distinct, so classification is reliable and each path is a cheap chain.">Classify the submission, then route it to a fixed per-category prompt pipeline.</li>
+    <li data-key="B" data-why="An agent would work, but the path is fully predictable and the 8 second SLA cannot absorb variable planning hops.">Give one agent every claim-handling tool and let it choose the sequence.</li>
+    <li data-key="C" data-why="Voting triples cost for no gain when categories are distinct and one call already gets each right.">Run all three category pipelines and select the highest reported confidence score.</li>
+    <li data-key="D" data-why="Chaining refinement passes trades latency for accuracy, which is the wrong trade under a hard 8 second budget.">Chain five refinement passes so the final answer reaches its maximum accuracy.</li>
+  </ol>
+  <div class="verdict" hidden><b>The binding constraint was the 8 second SLA</b>, and the
+  giveaway was that the categories were enumerated for you. When a scenario tells you the
+  categories, it is telling you classification is tractable. Routing plus fixed chains is
+  the cheapest thing that clears the bar.</div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A platform team wants Claude to apply a cross-cutting API change
+  across a monorepo. Which files need touching is not known until the codebase is
+  inspected, and it differs on every run. There is no latency pressure, the job runs
+  nightly, and every change lands in a reviewable pull request.</p>
+  <p class="stem">Which pattern fits?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Sectioning needs you to know the split in advance, and here the file set is discovered per run.">Split the work in code and run each file edit concurrently.</li>
+    <li data-key="B" data-why="Right. Decomposition depends on the input itself, which is exactly the orchestrator-workers case.">Let a lead model decompose at runtime and delegate to workers.</li>
+    <li data-key="C" data-why="A fixed sequence cannot express a file set that changes on every single run.">Chain a fixed sequence of passes over the whole repository once.</li>
+    <li data-key="D" data-why="Routing picks between known handlers, and the problem here is discovery rather than dispatch.">Route each request to one specialised prompt chosen by a classifier.</li>
+  </ol>
+  <div class="verdict" hidden>Note what made this safe as well as correct: <b>no latency
+  pressure and a pull request gate</b>. Unpredictable decomposition argues for the
+  orchestrator, and the reviewable PR removes the irreversibility veto.</div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A compliance team reviews each vendor contract on four fixed axes:
+  data residency, liability cap, termination rights and subprocessor disclosure. Every
+  contract gets all four. The reviews do not depend on each other, and the team wants the
+  turnaround as fast as possible.</p>
+  <p class="stem">Which pattern fits?</p>
+  <ol class="options">
+    <li data-key="A" data-why="A planner adds a hop and a token bill to decide a split you already know is always the same four.">Orchestrator-workers, so the planner can decide the split at runtime.</li>
+    <li data-key="B" data-why="Right. Fixed independent subtasks running concurrently is the definition of sectioning.">Sectioning, because the four subtasks are already known before runtime.</li>
+    <li data-key="C" data-why="Critique loops help when quality is the bottleneck, but here wall clock is the stated goal.">Evaluator-optimizer, so each draft is critiqued before it is accepted.</li>
+    <li data-key="D" data-why="Voting buys confidence at double cost, and nothing here says accuracy is currently failing.">Voting, because running each subtask twice raises confidence in results.</li>
+  </ol>
+  <div class="verdict" hidden>This is the <b>favourite trap in Domain 1</b>. Sectioning
+  and orchestrator-workers both fan out, so they look interchangeable. Sectioning:
+  <em>you</em> decide the split, in code. Orchestrator-workers: <em>the model</em> decides
+  it, at runtime. If the scenario lists the subtasks, the orchestrator is overbuilt.</div>
+</div>
+
+<div class="quiz" data-answer="A,C">
+  <p class="scenario">You are deciding whether to escalate from a workflow to an
+  autonomous agent.</p>
+  <p class="stem">Which signals genuinely justify the escalation?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Unpredictable step count is the primary reason the path cannot live in code.">The number of steps varies unpredictably with each input.</li>
+    <li data-key="B" data-why="Difficulty is not the test. A hard task with a fixed sequence is still a workflow.">The task is difficult and requires careful multi-step reasoning.</li>
+    <li data-key="C" data-why="Right. Acting on environment feedback in a loop is the other defining agent condition.">The model must react to feedback from its environment.</li>
+    <li data-key="D" data-why="A stakeholder naming a technology is a discovery problem, not an architecture input.">The stakeholder asked specifically for an agentic AI solution.</li>
+    <li data-key="E" data-why="More context is a context engineering lever, and it argues for retrieval rather than autonomy.">The output quality improves when you add more context.</li>
+  </ol>
+  <div class="verdict" hidden>Both correct answers describe <b>the path being
+  undecidable in advance</b>. Everything else describes a task being hard, a person being
+  opinionated, or context being short, and none of those move you up a tier. Option D is
+  worth sitting with: the exam grades the consulting half too, and the right response
+  there is to re-run discovery, not to build what was named.</div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A procurement agent researches suppliers, appends findings to an
+  internal notes record, drafts an outreach email and sends it. The team wants the
+  efficiency case to survive: a human gate on every step would erase the savings that
+  justified the project.</p>
+  <p class="stem">Where does the human checkpoint go?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Gating everything is the failure mode the scenario explicitly warns you against.">Before every tool call the agent makes, without any exceptions.</li>
+    <li data-key="B" data-why="Right. Sending is the one irreversible, externally visible action in the sequence.">Before the outbound email send, which cannot be undone afterwards.</li>
+    <li data-key="C" data-why="Sampling after the fact catches drift but arrives too late to stop a bad email.">After the run completes, when a reviewer samples the transcripts.</li>
+    <li data-key="D" data-why="An internal note is reversible and low blast radius, so it does not earn a gate.">Before the internal note update, which touches the shared record.</li>
+  </ol>
+  <div class="verdict" hidden>The rule to carry: <b>checkpoints go at irreversible or
+  high blast-radius actions</b>. Money movement, production writes, external
+  communications, permanent deletions. Everywhere else, log and sample. When two
+  governance options both look defensible, pick the one that preserves the ability to
+  undo.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>Recognition is not retention. Before you move on, answer these from memory, out loud
+or on paper. No scrolling up.</p>
+
+<ol>
+  <li>State the workflow/agent dividing line in one sentence.</li>
+  <li>Name the three escalation questions, in order.</li>
+  <li>What single condition vetoes an agent even when the path is unpredictable?</li>
+  <li>Give the one-line difference between sectioning and orchestrator-workers.</li>
+  <li>Name three action types that earn a human checkpoint.</li>
+</ol>
+
+<p>Anything you could not produce cleanly is the thing to re-read. Anything you produced
+easily, leave alone until the spaced review in Lesson 0003.</p>
+
+<h2><span class="num">Source</span>Read this next</h2>
+
+<p><strong>Primary source:
+<a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a></strong>,
+Anthropic engineering. Twenty minutes, and it is the document the exam's vocabulary comes
+from. Read it once now for the three tiers, then again after Lesson 0002 for the pattern
+catalogue.</p>
+
+<p>When you read it, notice how often the argument is <em>against</em> complexity. That
+editorial stance is itself examinable.</p>
+
+<div class="ask">
+  <p><strong>I am your teacher for this, so ask.</strong> If a drill felt like a coin
+  flip, say which one and we will pull the constraint apart. If you disagree with an
+  answer, argue it, since the disagreements are usually where the interesting distinction
+  lives. And if you want the next lesson pitched harder or softer, say so and I will move
+  it.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a> - the one-page cheat sheet for this domain</li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a> - shared vocabulary for the whole course</li>
+    <li>Next: Lesson 0002, the six patterns and their traps <em>(not yet written)</em></li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
