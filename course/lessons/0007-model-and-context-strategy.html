@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0007 &middot; Model and Context Strategy</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Claude Platform &amp; Solution Design &middot; Lesson 0007</p>
+  <h1>Model and context strategy</h1>
+  <p class="standfirst">Two budgets and one decision. Which tier your evals clear, and what
+  actually earns a place in the context window.</p>
+  <div class="meta">
+    <span>~20 minutes</span>
+    <span>Domain 2, 13% of the exam</span>
+    <span>5 drills</span>
+  </div>
+</header>
+
+<p>This is the first Domain 2 lesson, and it is the one where the exam stops asking about
+shapes and starts asking about numbers. Tier, thinking mode, effort, cache breakpoints,
+batch discounts, window management. The individual facts are easy. The scoring happens on
+whether you reach for the right lever when a scenario gives you a latency SLA and a cost
+target at the same time.</p>
+
+<p>The win by the end of this page: given a workload profile, you name the tier and the two
+knobs, and you can say which context in a long-running agent should never have been loaded
+in the first place.</p>
+
+<h2><span class="num">Knowledge</span>The tier ladder and the two knobs</h2>
+
+<table>
+  <caption>Current tiers, from the <a href="https://platform.claude.com/docs/en/docs/about-claude/models/overview">models overview</a></caption>
+  <thead>
+    <tr><th>Model</th><th>Positioning</th><th>Context / output</th><th>Per MTok in / out</th><th>Latency</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Claude Fable 5</strong></td><td>Long-running agents, highest capability</td><td>1M / 128k</td><td>$10 / $50</td><td>Slower</td></tr>
+    <tr><td><strong>Claude Opus 5</strong></td><td>Complex agentic coding and enterprise work</td><td>1M / 128k</td><td>$5 / $25</td><td>Moderate</td></tr>
+    <tr><td><strong>Claude Sonnet 5</strong></td><td>Best speed and intelligence combination</td><td>1M / 128k</td><td>$2 / $10</td><td>Fast</td></tr>
+    <tr><td><strong>Claude Haiku 4.5</strong></td><td>Fastest, near-frontier intelligence</td><td>200k / 64k</td><td>$1 / $5</td><td>Fastest</td></tr>
+  </tbody>
+</table>
+
+<p>Anthropic's own advice on
+<a href="https://platform.claude.com/docs/en/docs/about-claude/models/choosing-a-model">choosing a model</a>
+is worth quoting because it contradicts the reflex: "Tuning effort is often a better lever
+than switching models." Start at the default and move the knob before you move the tier.
+The other line to remember is the multi-model pattern, where a cheap tier handles the bulk
+of tokens and a frontier tier handles the hard minority. That is routing, from Lesson 0001,
+applied to cost rather than to task type.</p>
+
+<h3>Thinking and effort</h3>
+
+<p>These are two separate parameters and the exam will try to conflate them.</p>
+
+<ul>
+  <li><strong>Adaptive thinking</strong> is <code>thinking: {type: "adaptive"}</code>,
+  supported from Claude 4.6 onward. The model decides per request whether to think, and how
+  much.</li>
+  <li><strong>Extended thinking</strong> is the older <code>type: "enabled"</code> with
+  <code>budget_tokens</code>. It is <strong>deprecated on 4.6</strong>, where requests still
+  succeed, and <strong>4.7 and later reject it with a 400</strong>. On 4.5 and earlier it is
+  the only mode there is, and <code>type: "adaptive"</code> is what 400s there
+  (<a href="https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking">extended thinking</a>).</li>
+  <li><strong>Effort</strong> is <code>output_config.effort</code>, with
+  <strong>five</strong> levels: <code>low</code>, <code>medium</code>, <code>high</code>,
+  <code>xhigh</code>, <code>max</code>. <strong>The default is <code>high</code></strong>,
+  and setting it explicitly is identical to omitting the parameter
+  (<a href="https://platform.claude.com/docs/en/build-with-claude/effort">effort</a>).</li>
+</ul>
+
+<p>Effort is a behavioural signal, not a token cap. It shapes every token in the response,
+including tool calls and preamble, so at low effort Claude batches operations into fewer
+calls and skips the commentary. The migration is mechanical: remove
+<code>budget_tokens</code>, set thinking to adaptive, and control depth with effort.</p>
+
+<h3>Prompt caching mechanics</h3>
+
+<table>
+  <caption>From <a href="https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching">prompt caching</a></caption>
+  <tbody>
+    <tr><td><strong>Breakpoints</strong></td><td>Up to 4 per request</td></tr>
+    <tr><td><strong>Prefix order</strong></td><td>tools, then system, then messages. Each level builds on the previous, so a change high up invalidates everything below it</td></tr>
+    <tr><td><strong>Write cost</strong></td><td>1.25x base input for the 5 minute TTL, 2x for the 1 hour TTL</td></tr>
+    <tr><td><strong>Read cost</strong></td><td>0.1x base input</td></tr>
+    <tr><td><strong>Minimum prefix</strong></td><td>512, 1,024, 2,048 or 4,096 tokens depending on the model. Opus 5 and Sonnet 5 are 512 and 1,024; Haiku 4.5 is 4,096</td></tr>
+    <tr><td><strong>Below the minimum</strong></td><td>Processed without caching. <strong>No error is returned.</strong> Check <code>cache_creation_input_tokens</code> and <code>cache_read_input_tokens</code> in the usage block; both zero means it silently did nothing</td></tr>
+  </tbody>
+</table>
+
+<p>The break-even is straightforward arithmetic. A 5 minute write costs 1.25x and a read
+costs 0.1x, so one reuse inside the window already pays for the write. The 1 hour TTL at 2x
+needs a little more traffic to justify, and it is the right call when the gaps between calls
+are longer than five minutes but the prefix is stable all day.</p>
+
+<h3>The Batch API</h3>
+
+<p><a href="https://platform.claude.com/docs/en/docs/build-with-claude/batch-processing">Batch processing</a>
+charges 50% of standard prices. Most batches finish inside an hour, results become available
+when everything completes or after 24 hours, and anything unfinished at 24 hours expires. A
+batch holds up to 100,000 requests or 256 MB. Results stay downloadable for 29 days. Caching
+stacks with the discount, though hits are best effort and land between 30% and 98%. It is
+the right answer for asynchronous volume and the wrong answer for anything a person is
+waiting on.</p>
+
+<h3>Context as a budget</h3>
+
+<p><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>
+makes the argument you need: models have a finite <strong>attention budget</strong> and every
+token spends some of it. <strong>Context rot</strong> is the measured consequence, where
+recall of anything in the window degrades as the window fills. A million token window does
+not repeal this, it just raises the ceiling on how much you can spend before it shows.</p>
+
+<p>Four moves, and the exam wants you to pick between them rather than list them:</p>
+
+<ul>
+  <li><strong>Compaction.</strong> Summarise a conversation nearing the limit and reinitiate
+  a fresh window from the summary. For long sessions that must continue.</li>
+  <li><strong>Structured note-taking.</strong> Persist notes outside the window and pull them
+  back when relevant. For state that must survive compaction.</li>
+  <li><strong>Just-in-time retrieval.</strong> Keep lightweight identifiers such as file
+  paths or stored queries in context and load the bodies at runtime through tools. The
+  counter-move to pre-loading everything.</li>
+  <li><strong>Progressive disclosure.</strong> Expose capability metadata cheaply and load
+  the body only on use, so the agent discovers context incrementally through exploration.</li>
+</ul>
+
+<div class="flag">
+  <span class="label">The whole lesson in one sentence</span>
+  <p>Pick the cheapest tier your evals clear and tune effort before you tune the tier, then
+  treat the context window as <strong>a budget you spend</strong> rather than a container
+  you fill.</p>
+</div>
+
+<div class="sidenote">
+  <b>Why this bites experienced people.</b> If you have shipped RAG systems, stuffing feels
+  like diligence: more context, more grounding, better answer. The million token window makes
+  that instinct cheap to act on and expensive to hold. The second trap is caching. The prefix
+  is invalidated by anything above the breakpoint that changes, so the harmless-looking
+  timestamp or user ID at the top of a system prompt quietly costs you every cache read you
+  thought you were getting, and nothing in the response tells you off.
+</div>
+
+<h2><span class="num">Skill</span>Five scenarios, name the lever</h2>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A retailer's product question widget answers shopper queries on the
+  product page. Median response has to land under 1.5 seconds at peak, the questions are
+  short and factual, and the current build runs Claude Opus 5 at default effort. Cost per
+  session is running at three times the target.</p>
+  <p class="stem">What is the first change to make?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Short factual questions plus a hard latency budget point down the ladder, and evals confirm it.">Move to a faster tier and lower effort, then re-run the eval.</li>
+    <li data-key="B" data-why="Raising effort is correct when evals show reasoning failures, and here it costs both levers.">Keep Opus 5 but raise effort to xhigh, cutting the retry rate.</li>
+    <li data-key="C" data-why="Batch is the right move for asynchronous volume, and a shopper is waiting on this one.">Send the traffic through the Batch API for the fifty percent discount.</li>
+    <li data-key="D" data-why="Evaluator-optimizer buys quality by spending latency, which is the constraint already under pressure.">Add a second Opus 5 call that critiques and rewrites each answer.</li>
+  </ol>
+  <div class="verdict" hidden><b>Two constraints pointing the same way is a gift.</b> Latency
+  and cost both argue downward here, so the tier move is unambiguous. The order matters
+  though: change the tier, then re-run the eval set, then decide whether effort needs to come
+  back up. Anthropic's own line is that effort is usually the better lever, but that holds
+  when only cost is failing.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A freight operator reconciles 380,000 customs declarations against
+  invoices each night. The job starts at 10pm and results are needed by 6am. Nothing is
+  interactive. The shared instruction block is roughly 300 tokens and every declaration body
+  is different. Finance wants the cost down before the next quarter.</p>
+  <p class="stem">Which change gives the largest saving with the least design risk?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Eight hours of slack with nobody waiting is precisely the batch workload profile.">Submit the work through the Batch API, which charges fifty percent less.</li>
+    <li data-key="B" data-why="A three hundred token prefix sits below every model minimum, so caching is silently skipped.">Cache the shared instruction prefix and pay ten percent on later reads.</li>
+    <li data-key="C" data-why="Low effort saves tokens but trades accuracy on a reconciliation that auditors will eventually sample.">Drop effort to low across the run and accept the capability reduction.</li>
+    <li data-key="D" data-why="Sectioning buys wall clock time, and the binding constraint here is cost rather than latency.">Split each declaration across three parallel workers and merge their outputs after.</li>
+  </ol>
+  <div class="verdict" hidden>The 300 token detail was the trap. <b>Below the model minimum,
+  caching does nothing and reports nothing</b>, so the option that normally saves the most
+  saves zero here. Batch takes 50% off everything with no prompt changes at all. The volume
+  needs four batches given the 100,000 request cap, which is a scheduling detail rather than
+  a design risk.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A hospital's triage summariser has run for a year on Claude Opus 4.5
+  with thinking type enabled and a 10,000 token budget. The team is upgrading to a 4.7 model
+  this sprint. The staging deploy returns a 400 on every single request and the on-call
+  engineer has reverted twice.</p>
+  <p class="stem">What is the minimal correct fix?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. This is the documented migration: adaptive thinking plus effort replaces the explicit token budget.">Set thinking type to adaptive, drop budget_tokens, and set depth with output_config effort.</li>
+    <li data-key="B" data-why="Budget tuning was the correct lever on 4.5 and earlier, where extended thinking is the only mode.">Keep thinking type enabled and lower budget_tokens until the request fits the window.</li>
+    <li data-key="C" data-why="Disabling thinking removes reasoning the triage summary depends on, and effort cannot restore that.">Set thinking type to disabled and raise output_config effort to max for parity.</li>
+    <li data-key="D" data-why="Pinning a model version is legitimate during a freeze, and the fix here is a two-line change.">Pin the deployment to Claude Opus 4.5 permanently and revisit the upgrade later.</li>
+  </ol>
+  <div class="verdict" hidden>Learn the version boundary as a pair, because the exam tests
+  both directions. <b>4.6 deprecates extended thinking but still accepts it. 4.7 and later
+  reject it with a 400. 4.5 and earlier reject adaptive with a 400.</b> The one model where
+  you legitimately set both is Opus 4.5, where effort shapes the response and
+  <code>budget_tokens</code> sets thinking depth.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A newsroom tool prepends a 30,000 token style guide and archive index
+  to every request, then appends the reporter's current draft. Volume is steady through the
+  working day with calls every few seconds. The team set one cache breakpoint after the
+  draft and the usage block shows no cache reads at all.</p>
+  <p class="stem">Why is the cache not hitting?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Prefixes build tools, then system, then messages, so the marker must sit above volatile text.">The breakpoint sits after text that changes each request, invalidating the prefix.</li>
+    <li data-key="B" data-why="Thirty thousand tokens clears every minimum, though that check matters for short system prompts.">The style guide sits below the model minimum, so caching is skipped.</li>
+    <li data-key="C" data-why="Four is the ceiling rather than a requirement, and one well-placed breakpoint is usually enough.">Only one breakpoint was set, and four are required for any hit.</li>
+    <li data-key="D" data-why="Calls every few seconds keep refreshing the five minute window, so expiry is not the cause.">The five minute window expired between requests, so every write went cold.</li>
+  </ol>
+  <div class="verdict" hidden><b>A cache breakpoint marks the end of a prefix, not the
+  beginning.</b> Everything above it has to be byte-stable, so putting the marker after the
+  draft means the cached prefix includes the draft and therefore never repeats. The fix is
+  one line: move the breakpoint to the end of the static block. Then confirm it worked by
+  reading the usage fields, because failure is silent either way.</div>
+</div>
+
+<div class="quiz" data-answer="A,B">
+  <p class="scenario">A tax authority's caseworker agent runs for hours per session, calling
+  six tools and accumulating full document bodies in the transcript. Accuracy on facts stated
+  early in a session has been falling as sessions get longer. The team's fix so far has been
+  moving to a one million token window, which bought a little time and then stopped helping.</p>
+  <p class="stem">Which two moves actually address the failure?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Compaction reclaims the window while preserving the thread the agent has been following.">Compact the transcript into a summary and restart with that summary.</li>
+    <li data-key="B" data-why="Right. Just-in-time retrieval keeps identifiers in context and defers the expensive document bodies.">Return file references from tools and load bodies only when needed.</li>
+    <li data-key="C" data-why="Effort changes how hard the model works, not how reliably it recalls a crowded window.">Raise output_config effort to max so the model reasons more carefully.</li>
+    <li data-key="D" data-why="A larger window is right when content genuinely must co-exist, and it worsens rot here.">Move to a larger context window and load every document upfront.</li>
+    <li data-key="E" data-why="Caching lowers the bill for a stable prefix and does nothing for recall accuracy.">Add a one hour cache breakpoint so the transcript costs less.</li>
+  </ol>
+  <div class="verdict" hidden>The failure signature is <b>context rot</b>, and the giveaway
+  is that a bigger window helped briefly then stopped. That pattern means the problem scales
+  with occupancy rather than with the ceiling. Compaction shrinks what is already there, and
+  just-in-time retrieval stops it arriving. Option E is the one to sit with: it is a real
+  optimisation, aimed at the wrong quantity.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>From memory. No scrolling up.</p>
+
+<ol>
+  <li>Name the five effort levels and say which one is the default.</li>
+  <li>State what 4.6, 4.7 and 4.5 each do with extended thinking and adaptive thinking.</li>
+  <li>Give the cache write and read multipliers, both TTLs, and the breakpoint limit.</li>
+  <li>What happens when a prefix falls below the model's cache minimum?</li>
+  <li>Name the four context management moves and the one condition each is for.</li>
+</ol>
+
+<p>The version boundary in question two is the highest-value item on this page and the one
+most likely to appear verbatim. If it did not come out cleanly, go back and read that bullet
+list again before anything else.</p>
+
+<h2><span class="num">Source</span>Read this next</h2>
+
+<p><strong>Primary source:
+<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a></strong>,
+Anthropic engineering. Twenty-five minutes. The parameter facts on this page you can look up
+in a table when you need them; the argument in this essay is the part you have to actually
+absorb, because it reframes context from something you supply into something you spend. It
+is also the source of the exam's vocabulary for this domain: attention budget, context rot,
+compaction, just-in-time retrieval.</p>
+
+<p>Read it with SpecPilot in mind. Most of what it describes as good agent design is a
+guardrail decision that a layer above Claude Code either makes for the user or exposes to
+them.</p>
+
+<div class="ask">
+  <p><strong>I am your teacher for this, so ask.</strong> If any of the numbers on this page
+  look wrong against something you have seen in production, say so and we will check the docs
+  together, because this area moves faster than the rest of the syllabus. Argue with the
+  drills if the constraint felt ambiguous. And tell me whether you want the next lesson
+  pitched harder or softer.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a> - the one-page cheat sheet for this domain</li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a> - shared vocabulary for the whole course</li>
+    <li><a href="0006-delivery-routes.html">Lesson 0006: Delivery routes</a> - the governance half of the same course</li>
+    <li><a href="0001-workflow-or-agent.html">Lesson 0001: Workflow or agent</a> - the architecture decision these knobs sit inside</li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

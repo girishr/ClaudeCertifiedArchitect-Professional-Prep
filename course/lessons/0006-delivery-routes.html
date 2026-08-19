@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0006 &middot; Delivery Routes</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Claude Platform &amp; Solution Design &middot; Lesson 0006</p>
+  <h1>Delivery routes and the governance constraint</h1>
+  <p class="standfirst">Three routes to production, and the one you pick decides who counts
+  as a user. Almost every compliance obligation the exam tests hangs off that single
+  classification.</p>
+  <div class="meta">
+    <span>~18 minutes</span>
+    <span>Domain 1, 17% of the exam</span>
+    <span>5 drills</span>
+  </div>
+</header>
+
+<p>Lesson 0001 was about picking the right architecture. This one is about the question
+that gets asked immediately afterwards and that most people answer by instinct: who is on
+the other end of it. Get the route wrong and a technically correct design collects the
+wrong obligations, or none at all.</p>
+
+<p>The win by the end of this page: read a scenario, name the route in one sentence, and
+say which specific governance controls it drags in. That is a lot of exam surface for a
+short lesson, because the route is upstream of residency, retention, audit and human
+review all at once.</p>
+
+<h2><span class="num">Knowledge</span>Three routes, one classification</h2>
+
+<p>The routes are not architectures. Any of them can be a workflow or an agent. They
+describe <em>where the model output ends up</em>, and that is the only thing the
+compliance questions care about.</p>
+
+<table>
+  <caption>Who is on the other end</caption>
+  <thead>
+    <tr><th>Route</th><th>Who touches Claude</th><th>What ships</th><th>The question you will be asked</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>User-facing</strong></td>
+      <td>End users, directly</td>
+      <td>The model, live, in the product</td>
+      <td>What did the user see, and who checked it first?</td>
+    </tr>
+    <tr>
+      <td><strong>Build-time</strong></td>
+      <td>Your own engineers</td>
+      <td>The artefact, not the model</td>
+      <td>What left the building, and what came back in?</td>
+    </tr>
+    <tr>
+      <td><strong>Enterprise delivery</strong></td>
+      <td>Staff or a client's system</td>
+      <td>Claude embedded in production</td>
+      <td>Whose data crossed which boundary, and can you prove it?</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The whole lesson in one sentence</span>
+  <p>Name the route before you name the controls, because the route decides <strong>who
+  counts as the user</strong>, and every obligation below keys off that one fact.</p>
+</div>
+
+<h3>The governance deltas, concretely</h3>
+
+<p>These are the five places the route actually changes your answer. The numbers are worth
+memorising because the distractors are built from adjacent true facts.</p>
+
+<table>
+  <caption>What changes when the route changes</caption>
+  <thead>
+    <tr><th>Control</th><th>What the docs actually say</th><th>Which route it bites</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Data residency</strong></td>
+      <td>Per-request <code>inference_geo</code>, or a workspace default via
+      <code>default_inference_geo</code> and <code>allowed_inference_geos</code>. Only
+      <code>us</code> and <code>global</code> are currently available. Workspace geo is
+      set at creation and cannot be changed afterwards
+      (<a href="https://platform.claude.com/docs/en/manage-claude/data-residency">data residency</a>)</td>
+      <td>Enterprise delivery, above all</td>
+    </tr>
+    <tr>
+      <td><strong>Retention</strong></td>
+      <td>Commercial default is deletion of inputs and outputs within 30 days
+      (<a href="https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data">privacy centre</a>).
+      Flagged content can be held up to 2 years regardless of any arrangement</td>
+      <td>All three, and forgotten in build-time</td>
+    </tr>
+    <tr>
+      <td><strong>Zero data retention</strong></td>
+      <td>Nothing stored at rest after the response returns, but the scope is narrow. Batch
+      processing, the Files API, code execution and managed agents are all outside it
+      (<a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention">API and data retention</a>)</td>
+      <td>Enterprise delivery and regulated user-facing</td>
+    </tr>
+    <tr>
+      <td><strong>Audit logging</strong></td>
+      <td>Yours to build. Anthropic retains for its own purposes, not for your evidence
+      pack. Under ZDR there is nothing on Anthropic's side to subpoena, which cuts both ways</td>
+      <td>Enterprise delivery</td>
+    </tr>
+    <tr>
+      <td><strong>Human review and disclosure</strong></td>
+      <td>The Usage Policy high-risk measures, below</td>
+      <td>User-facing, specifically</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>The Usage Policy rule that keeps appearing</h3>
+
+<p>The <a href="https://www.anthropic.com/legal/aup">Usage Policy</a> names seven high-risk
+categories: legal, healthcare, insurance, finance, employment and housing, academic testing
+and admissions, and media or professional journalistic content. For those, two additional
+measures are required:</p>
+
+<ul>
+  <li><strong>Human in the loop.</strong> A qualified professional in that field must review
+  the content or decision before it is disseminated or finalised.</li>
+  <li><strong>Disclosure.</strong> You must tell people you are using AI to help produce the
+  advice, at minimum at the beginning of each session.</li>
+</ul>
+
+<p>Now read the scope clause, because that is the examinable part. Both measures are written
+against advice or decisions <em>directly affecting individuals or consumers</em>, and
+outputs <em>presented directly to individuals or consumers</em>. A pure business-to-business
+tool, where a trained underwriter reads the output and makes the call, does not trip the
+disclosure requirement in the same way. Flip that same tool into a customer app and both
+measures attach immediately.</p>
+
+<div class="sidenote">
+  <b>Why this bites experienced people.</b> Build-time feels ungoverned, because no customer
+  ever sees a model output and there is no disclosure banner to write. The exposure did not
+  disappear, it moved: source code leaving the building, secrets pasted into prompts,
+  transcripts sitting in default 30 day retention, and feedback submissions retained for
+  five years. Different obligations, not fewer. If you run Claude Code across fifty
+  developers, this is your route, and someone will eventually ask you to describe it.
+</div>
+
+<h3>The three-question read</h3>
+
+<ol>
+  <li><strong>Does the model output reach someone outside your engineering team?</strong>
+  If no, it is build-time and the governance surface is your SDLC.</li>
+  <li><strong>Is that someone a consumer or an individual being decided about?</strong> If
+  yes, it is user-facing and the high-risk measures may attach.</li>
+  <li><strong>Is Claude running inside a production system holding someone else's
+  data?</strong> If yes, it is enterprise delivery and residency, retention and audit
+  become contract terms rather than preferences.</li>
+</ol>
+
+<h2><span class="num">Skill</span>Five scenarios, name the route first</h2>
+
+<p>In each one, find the sentence that tells you who reads the output. Then answer.</p>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A motor insurer is launching a claims assistant inside its customer
+  app. Policyholders describe the incident in their own words and Claude returns a coverage
+  assessment and an indicative settlement figure, displayed in the app. Legal has approved
+  the model. Nobody has written the operating rules yet.</p>
+  <p class="stem">What does Anthropic's Usage Policy require before this ships?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Consumer-facing insurance decisions trigger both measures: qualified review before finalisation, and disclosure at session start.">A qualified professional reviews each assessment, and the app discloses AI use.</li>
+    <li data-key="B" data-why="ZDR is the correct control when the binding constraint is storage, and no retention requirement appears here.">A zero data retention agreement covering every inference the claims assistant makes.</li>
+    <li data-key="C" data-why="Audit logging is your own obligation to design, and the Usage Policy states no retention period.">An audit log capturing every prompt and response for seven complete years.</li>
+    <li data-key="D" data-why="Residency answers a data-location question, and this scenario names no jurisdiction at all.">A workspace geo pinned so inference never leaves the insurer's home country.</li>
+  </ol>
+  <div class="verdict" hidden><b>Insurance claims processing is a named high-risk
+  category</b>, and the output goes straight to the policyholder. That combination is the
+  only one that fires both measures. Note what the policy does not say: it sets no retention
+  period, no log format and no residency rule. Those are real controls that belong to other
+  questions.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A retailer's platform team is running Claude Code to migrate 900
+  services off a deprecated payments SDK. Generated code goes through the normal pull
+  request process before release. No shopper ever sees a model output. The security team
+  asks which compliance work the project inherits.</p>
+  <p class="stem">Which route is this, and where does the governance work actually land?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. The model never ships, so the exposure is source code, secrets in prompts and stored transcripts.">Build-time, so governance lands on code review, secret handling and transcript retention.</li>
+    <li data-key="B" data-why="Correct the moment a shopper reads a model output, which is exactly what never happens here.">User-facing, so governance lands on AI disclosure, review gates and consumer redress.</li>
+    <li data-key="C" data-why="Enterprise delivery describes Claude running inside a production system, not a one-off migration.">Enterprise delivery, so governance lands on tenant isolation, uptime targets and residency.</li>
+    <li data-key="D" data-why="Tempting, but transcripts persist thirty days by default and prompts routinely carry credentials.">Build-time, so no governance lands anywhere beyond the existing normal release process.</li>
+  </ol>
+  <div class="verdict" hidden><b>Build-time is the route people forget to govern</b>, because
+  the absence of an end user reads as the absence of risk. The right answer is not "nothing
+  applies", it is "different things apply". Under commercial terms Anthropic does not train
+  on your code, but retention, telemetry and feedback submissions are still yours to
+  configure.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A German bank will embed Claude in its internal credit memo system.
+  The regulator's stated condition is that inference must run inside the EU and be provable
+  per request. Procurement wants a yes or no this week so the contract can be signed.</p>
+  <p class="stem">What is the honest answer to give the regulator today?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. The docs state only us and global are available, so an EU-only promise cannot be made.">No. Inference geo currently offers only us and global, so EU-only is unavailable.</li>
+    <li data-key="B" data-why="The parameter works exactly this way and echoes back where inference ran, but no eu value exists.">Yes. Set inference_geo to eu per request and read the confirmation field back.</li>
+    <li data-key="C" data-why="Workspace geo is fixed at creation and immutable, and us is currently its only available value.">Yes. Create the workspace with an EU workspace geo, which pins everything permanently.</li>
+    <li data-key="D" data-why="ZDR governs storage after the response returns, and inference still runs somewhere physical.">Yes. Enable zero data retention, so nothing persists anywhere and residency turns moot.</li>
+  </ol>
+  <div class="verdict" hidden>Two things to carry. First, <b>residency and retention are
+  different controls</b> and answering one with the other is the classic trap. Second, the
+  consulting half of the exam rewards the architect who says "that constraint cannot be met
+  with this control today" rather than the one who invents a parameter value. Escalate to
+  the account team, do not sign.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A hospital group operates under a zero data retention arrangement. It
+  wants to summarise 200,000 discharge notes overnight. An engineer proposes the Batch API
+  to collect the 50% discount, reasoning that the job is asynchronous anyway and cost is the
+  only open question.</p>
+  <p class="stem">What is wrong with the proposal?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Async storage is required for batching, so the endpoint sits outside the ZDR feature list.">Batch processing is not ZDR eligible and carries twenty-nine day result retention.</li>
+    <li data-key="B" data-why="A single batch takes one hundred thousand requests, so two batches clear this volume comfortably.">Batch throughput cannot reach two hundred thousand requests in one overnight window.</li>
+    <li data-key="C" data-why="Caching and batch discounts do stack, though hits inside a batch are best effort only.">Batch discounts never stack with prompt caching, so the saving disappears entirely.</li>
+    <li data-key="D" data-why="Results stay downloadable for twenty-nine days; the twenty-four hour limit applies to processing.">Batch results expire completely after one hour, too short for overnight jobs.</li>
+  </ol>
+  <div class="verdict" hidden><b>ZDR is a feature-scoped promise, not an account-wide
+  one.</b> Batch, the Files API, code execution and managed agents all sit outside it, each
+  for the same structural reason: they need to store something to work at all. When a
+  scenario pairs a retention commitment with a convenience feature, check the eligibility
+  table before you check the price.</div>
+</div>
+
+<div class="quiz" data-answer="A,B">
+  <p class="scenario">A council piloted Claude internally, with caseworkers drafting housing
+  benefit decision letters from model output. It now wants residents to query their own
+  eligibility in a self-service portal, using the same model and the same prompts, and to
+  drop the caseworker step so the projected savings actually materialise.</p>
+  <p class="stem">Which two requirements does the Usage Policy impose on the new design?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Disclosure is required at minimum at the beginning of each session with the resident.">Disclosure of AI involvement at the beginning of every resident session.</li>
+    <li data-key="B" data-why="Right. Benefit eligibility is a subjective decision affecting individuals, so review stays mandatory.">Qualified professional review before any eligibility answer is shown to residents.</li>
+    <li data-key="C" data-why="ZDR answers a storage question, and nothing in the scenario raises retention as a concern.">A zero data retention arrangement covering every call the portal makes.</li>
+    <li data-key="D" data-why="Tier selection follows the workload profile, and audience size is not part of that profile.">A different model tier, because public traffic demands deeper reasoning capacity.</li>
+    <li data-key="E" data-why="Residency depends on where data may physically sit, not on who ends up reading the output.">Immutable workspace geo pinning, because residents are individuals rather than staff.</li>
+  </ol>
+  <div class="verdict" hidden>The council's plan is <b>the exact move the policy is written
+  to stop</b>: dropping human review at the moment the output starts reaching individuals.
+  Notice that the model, the prompts and the architecture are unchanged. Only the route
+  flipped, and the obligations arrived with it. That is the whole skill this lesson is
+  training.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>From memory, out loud or on paper. No scrolling up.</p>
+
+<ol>
+  <li>Name the three delivery routes and say what ships in each.</li>
+  <li>State the two Usage Policy high-risk measures, and the scope clause that limits them.</li>
+  <li>Name four features that fall outside zero data retention, and the reason they share.</li>
+  <li>Which residency values are currently available, and which setting is immutable?</li>
+  <li>Give the default commercial retention period, and the one case that overrides it.</li>
+</ol>
+
+<p>The residency and ZDR-scope answers are the ones that decay fastest, because they are
+lists rather than principles. Re-read those two rows if either came out fuzzy.</p>
+
+<h2><span class="num">Source</span>Read this next</h2>
+
+<p><strong>Primary source:
+<a href="https://www.anthropic.com/legal/aup">Anthropic Usage Policy</a></strong>, the
+High-Risk Use Case Requirements section specifically. Ten minutes, and it is short enough to
+read in full. Read it for the exact wording of "individuals or consumers", because that
+phrase is doing all the work: it is what separates a regulated consumer product from a B2B
+tool that happens to operate in the same industry, and the exam builds distractors out of
+exactly that gap.</p>
+
+<p>Then, when you have twenty more minutes, the
+<a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention">API and data retention</a>
+feature eligibility table. It is a lookup table, not an argument, and it is the densest page
+of examinable facts in this domain.</p>
+
+<div class="ask">
+  <p><strong>I am your teacher for this, so ask.</strong> Governance is the area where the
+  scenario wording matters most, so if a drill felt like it hinged on one ambiguous clause,
+  bring it and we will take the clause apart. If you think a route classification is wrong,
+  argue it, since real projects genuinely straddle two routes and the interesting part is
+  what you do then. Say if you want the next one pitched harder or softer.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a> - the one-page cheat sheet for this domain</li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a> - shared vocabulary for the whole course</li>
+    <li><a href="0005-platform-entry-points.html">Lesson 0005: Platform entry points</a> - which front door, as opposed to which audience</li>
+    <li><a href="0007-model-and-context-strategy.html">Lesson 0007: Model and context strategy</a> - next, and the first Domain 2 lesson</li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

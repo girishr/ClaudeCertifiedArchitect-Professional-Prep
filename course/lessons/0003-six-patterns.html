@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0003 &middot; The six patterns, and their traps</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Claude Platform &amp; Solution Design &middot; Lesson 0003</p>
+  <h1>The six patterns, and their traps</h1>
+  <p class="standfirst">Everyone learns the six shapes in an afternoon. The exam tests the
+  preconditions, which is where a pattern that looks right stops being allowed.</p>
+  <div class="meta">
+    <span>~20 minutes</span>
+    <span>Domain 1, 17% of the exam</span>
+    <span>5 drills</span>
+  </div>
+</header>
+
+<p>Reference architectures are the easy half of Domain 1. You can name all six from
+<a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a>
+already. The hard half is that most questions give you two patterns whose shape fits, and
+the separation is a precondition sitting in one clause of the scenario: how accurate the
+classifier is, whether anyone can write down what good looks like, whether the subtask
+list exists before runtime.</p>
+
+<p>The win by the end of this page: for any scenario you name the pattern and, in the same
+breath, the precondition you just checked. That second half is what turns a guess into an
+answer you can defend.</p>
+
+<h2><span class="num">Knowledge</span>Shape suggests it, precondition permits it</h2>
+
+<p>Anthropic frames these as building blocks rather than a taxonomy: "these building
+blocks aren't prescriptive. They're common patterns that developers can shape and combine
+to fit different use cases." Read the middle column as what the scenario looks like, and
+the third as the thing that has to be true before you are allowed to say it.</p>
+
+<table>
+  <caption>Six patterns, six preconditions</caption>
+  <thead>
+    <tr><th>Pattern</th><th>Scenario shape</th><th>Precondition</th><th>The trap</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Prompt chaining</strong></td>
+      <td>Fixed steps in sequence, each consuming the last</td>
+      <td>Latency budget can absorb the extra hops</td>
+      <td>Chaining when one call already passes eval</td>
+    </tr>
+    <tr>
+      <td><strong>Routing</strong></td>
+      <td>Distinct input categories handled better apart</td>
+      <td>Classification is accurate, by model or classical classifier</td>
+      <td>Categories that blur, so misroutes poison everything downstream</td>
+    </tr>
+    <tr>
+      <td><strong>Sectioning</strong></td>
+      <td>Independent subtasks you can name right now</td>
+      <td>The subtasks genuinely do not depend on each other</td>
+      <td>Being read as orchestrator-workers, or vice versa</td>
+    </tr>
+    <tr>
+      <td><strong>Voting</strong></td>
+      <td>Same task run several times, results aggregated</td>
+      <td>A miss costs more than the extra calls do</td>
+      <td>Paying N times for an answer one call gets right</td>
+    </tr>
+    <tr>
+      <td><strong>Orchestrator-workers</strong></td>
+      <td>The subtask set depends on the input itself</td>
+      <td>You can absorb variable cost and latency</td>
+      <td>Using it when the scenario lists the subtasks</td>
+    </tr>
+    <tr>
+      <td><strong>Autonomous agent</strong></td>
+      <td>Step count unpredictable, model acts on feedback</td>
+      <td>Sandbox, stopping conditions, and trust in its decisions</td>
+      <td>Using it where the path could have been hardcoded</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The whole lesson in one sentence</span>
+  <p>The shape of the scenario <strong>suggests</strong> a pattern; the precondition
+  <strong>permits</strong> it, and a distractor is usually a pattern whose shape fits and
+  whose precondition fails.</p>
+</div>
+
+<h3>Sectioning versus orchestrator-workers</h3>
+
+<p>Lesson 0001 flagged this as the domain's favourite trap, so it is worth stating in
+Anthropic's own words. The difference from parallelisation is "flexibility: subtasks
+aren't pre-defined, but determined by the orchestrator based on the specific input".</p>
+
+<p>Both fan out. Both look identical on a whiteboard. The whole distinction is
+<strong>who decides the split and when</strong>. In sectioning you decide it, in code,
+before anything runs, so cost and latency are known before the first token. In
+orchestrator-workers a lead model decides it at runtime from the input, which is the only
+reason to pay for the planning hop.</p>
+
+<p>The scenario tells you which one every time, usually in a single clause. "Every
+contract gets the same four checks" is sectioning. "Which analyses are needed depends on
+what is in the folder" is the orchestrator. If a scenario enumerates the subtasks for you,
+it has already ruled the orchestrator out.</p>
+
+<p>The price matters too. Anthropic's
+<a href="https://www.anthropic.com/engineering/multi-agent-research-system">multi-agent research system</a>
+measured agent interactions at roughly <strong>4x</strong> the tokens of a chat exchange
+and multi-agent systems at about <strong>15x</strong>, which is only worth it when value
+per task is high. It bought a 90.2% improvement over single-agent Opus on a breadth-first
+research eval, and the same post is blunt that most coding work is a poor fit, because the
+subtasks are interdependent and agents cannot see each other's edits.</p>
+
+<div class="sidenote">
+  <b>Why this bites experienced people.</b> If you have built orchestration before, fan-out
+  reads as orchestration by reflex, and a planner feels like good engineering rather than a
+  line item. Under exam time pressure the fastest correction is mechanical: before you
+  answer orchestrator-workers, find the sentence that says the subtasks vary. If you cannot
+  point at it, it is sectioning.
+</div>
+
+<h3>Two preconditions that do most of the eliminating</h3>
+
+<p><strong>Routing needs accurate classification.</strong> The stated condition is
+"distinct categories that are better handled separately, and where classification can be
+handled accurately, either by an LLM or a more traditional classification model or
+algorithm". This one is unforgiving because the error is silent and upstream. A misrouted
+input gets a confident, well-formatted answer to the wrong question, and nothing
+downstream can rescue it. If a scenario gives you a classifier accuracy number, that number
+is the answer.</p>
+
+<p><strong>Evaluator-optimizer needs articulable criteria.</strong> It is "particularly
+effective when we have clear evaluation criteria, and when iterative refinement provides
+measurable value", with two signs of fit: "that LLM responses can be demonstrably improved
+when a human articulates their feedback; and second, that the LLM can provide such
+feedback". Both, not either. A team that cannot agree what good looks like does not get a
+critique loop, they get a definition exercise. And when the criteria are code-checkable, a
+validator is cheaper than a critic.</p>
+
+<h2><span class="num">Skill</span>Five scenarios, name the precondition too</h2>
+
+<p>Read the last sentence first, find the clause that eliminates options, then answer. Say
+the precondition out loud before you click.</p>
+
+<div class="quiz" data-answer="C">
+  <p class="scenario">A streaming platform screens user-uploaded clips against a short list
+  of prohibited content before publication. A miss reaches millions of viewers and draws a
+  regulator letter; a false alarm costs a moderator two minutes. Volume is 40,000 clips a
+  day and the per-clip budget is generous.</p>
+  <p class="stem">Which pattern fits?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Refinement improves a draft, and it does not supply the second opinion needed.">Chain three refinement passes so each verdict reaches its highest accuracy.</li>
+    <li data-key="B" data-why="Right when categories differ, but every clip here needs the same checks.">Route each clip to a specialised prompt chosen by cheap classification.</li>
+    <li data-key="C" data-why="Right. Expensive false negatives plus a generous budget is exactly the voting case.">Run several independent checks per clip and escalate any single flag.</li>
+    <li data-key="D" data-why="Letting the model choose which safety checks run gives away the guarantee.">Let an autonomous agent decide which checks each individual clip warrants.</li>
+  </ol>
+  <div class="verdict" hidden>Voting is the one pattern whose precondition is economic
+  rather than structural: <b>a miss must cost more than the extra calls</b>. Here the
+  asymmetry is stated twice, in the regulator letter and in the two wasted minutes, and the
+  budget line removes the usual objection. Flip the cost asymmetry and voting becomes an
+  expensive way to be equally right.</div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A commercial insurer underwrites bespoke policies. Each submission
+  arrives as a folder of documents, and which analyses are needed depends on what is in the
+  folder. The underwriters cannot list them in advance. Turnaround is measured in days and
+  every step is logged to the policy file.</p>
+  <p class="stem">Which pattern fits?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Sectioning needs the split known in advance, and here the folder decides it.">Sectioning, splitting the folder into four fixed analyses run concurrently.</li>
+    <li data-key="B" data-why="Right. Decomposition depends on the input itself, which orchestrator-workers exists for.">Orchestrator-workers, letting a lead model decide the analyses per submission.</li>
+    <li data-key="C" data-why="Right if submissions fell into four known types, but these are bespoke.">Routing, dispatching each submission to one of four underwriting prompts.</li>
+    <li data-key="D" data-why="Critique loops polish a draft and cannot discover which analyses are missing.">Evaluator-optimizer, critiquing each draft analysis until a reviewer accepts it.</li>
+  </ol>
+  <div class="verdict" hidden>"Cannot list them in advance" is the clause, and it is the
+  only one that matters. <b>Days of turnaround is what makes the answer affordable</b>,
+  since the planner hop and the variable token bill have somewhere to hide. Put this same
+  submission under a two second SLA and the correct answer changes to a fixed split that
+  covers the common case.</div>
+</div>
+
+<div class="quiz" data-answer="D">
+  <p class="scenario">A government helpline wants routing across eleven benefit schemes. A
+  pilot on 2,000 real calls put classifier accuracy at 71%, and a misrouted caller receives
+  a confident answer about the wrong scheme, which they then act on. Budget allows one
+  significant change before launch.</p>
+  <p class="stem">What should you do first?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Monitoring finds misroutes after citizens have acted on the wrong advice.">Ship routing anyway and monitor misroute rates closely after go-live.</li>
+    <li data-key="B" data-why="Right when drafts need polish, but no critic can rescue a misroute.">Add an evaluator-optimizer loop critiquing each answer before it goes.</li>
+    <li data-key="C" data-why="Handing eleven tools to an agent replaces one accuracy problem with several.">Replace routing with an autonomous agent holding eleven scheme tools.</li>
+    <li data-key="D" data-why="Right. Routing's precondition is accurate classification, so fix it or avoid it.">Fix classification first, or serve one prompt covering eleven schemes.</li>
+  </ol>
+  <div class="verdict" hidden>When a scenario hands you an accuracy figure, it is not
+  colour, it is the question. <b>Routing's error mode is silent and upstream</b>, so the
+  damage is done before any downstream component sees the work. The consulting instinct is
+  the same as the architectural one here: fix the input to the pattern, or drop the pattern
+  and take the small quality loss of one general prompt.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A retailer generates product descriptions inside the page render
+  path, with a 400ms end-to-end budget. A single call passes the quality eval at 94% and
+  the content team wants 97%. Someone has proposed a three-step draft, critique and rewrite
+  chain to close the gap.</p>
+  <p class="stem">What do you tell them?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Chaining trades latency for accuracy, so move it off the render path.">Keep the existing single call, running the chain nightly for backlog.</li>
+    <li data-key="B" data-why="Correct in a batch pipeline, but three serial calls cannot fit 400ms.">Adopt the chain, since three percentage points of quality justify latency.</li>
+    <li data-key="C" data-why="Three times the cost for a task that one call already gets right.">Adopt voting, running three parallel calls and picking the best description.</li>
+    <li data-key="D" data-why="Planning hops add latency to decide a sequence that never actually varies.">Adopt an orchestrator that plans the description steps for each product.</li>
+  </ol>
+  <div class="verdict" hidden>Chaining's whole proposition is that it "trades off latency
+  for higher accuracy", so a hard interactive budget rules it out by definition, not by
+  judgement. <b>The move is to keep the pattern and change where it runs.</b> Precomputed
+  overnight, the same chain buys the three points with no latency cost at all, which is the
+  answer the content team actually wanted.</div>
+</div>
+
+<div class="quiz" data-answer="B,D">
+  <p class="scenario">A bank drafts credit memos with Claude and someone has proposed
+  wrapping the drafting step in an evaluator-optimizer loop. Memos are produced overnight,
+  so extra rounds cost nothing in wall clock, and the credit team is split on whether the
+  current drafts are actually weak.</p>
+  <p class="stem">Which two facts would justify building the loop?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Model tier tells you nothing about whether critique improves the draft.">The drafting model is already the largest, most expensive tier.</li>
+    <li data-key="B" data-why="Right. The first sign of fit is a human who can articulate the feedback.">Reviewers can articulate, in writing, what makes a memo good.</li>
+    <li data-key="C" data-why="Headroom removes an objection but never creates value on its own.">The overnight window has spare capacity for several extra rounds.</li>
+    <li data-key="D" data-why="Right. The second sign of fit is the model supplying that same feedback.">A critic model reproduces those judgements on held-out test memos.</li>
+    <li data-key="E" data-why="This argues against the loop, since the criteria are not yet agreed.">Three reviewers each defined quality differently when asked last year.</li>
+  </ol>
+  <div class="verdict" hidden>Anthropic names both signs and they are conjunctive: a human
+  can articulate the feedback, <em>and</em> the model can provide it. Option C is the
+  seductive one, because latency headroom is usually the blocker and its absence feels like
+  permission. <b>Cheap is not the same as valuable.</b> Option E is the state the bank is
+  actually in, and it points at a definition exercise rather than an architecture.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>Recognition is not retention. Answer these from memory, out loud or on paper. No
+scrolling up.</p>
+
+<ol>
+  <li>Name the six patterns and the scenario shape each one answers.</li>
+  <li>Give the one-line difference between sectioning and orchestrator-workers.</li>
+  <li>State routing's precondition, and what the failure looks like when it is missing.</li>
+  <li>State both signs of fit for evaluator-optimizer, and why one alone is not enough.</li>
+  <li>Give the two token multipliers from the multi-agent post and what they buy.</li>
+</ol>
+
+<p>Question 2 is the one to be word-perfect on. If it comes out fuzzy, that is the trap
+sitting armed.</p>
+
+<h2><span class="num">Source</span>Read this next</h2>
+
+<p><strong>Primary source:
+<a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a></strong>,
+Anthropic engineering. This is the second read that Lesson 0001 promised, and it is a
+different read: skip the tiers and go straight to the six pattern sections, and for each
+one write down its "when to use this workflow" sentence in your own words. Those sentences
+are the preconditions, and they are the examinable part.</p>
+
+<p>If you have twenty spare minutes after it, the
+<a href="https://www.anthropic.com/engineering/multi-agent-research-system">multi-agent research system</a>
+post is orchestrator-workers as a field report, including the parts that did not work.</p>
+
+<div class="ask">
+  <p><strong>I am your teacher for this, so use me.</strong> If two options felt equally
+  defensible, name the drill and we will find the constraint that separates them. Argue
+  with any answer you think is wrong, since that is usually where the sharper distinction
+  is hiding. And tell me if this pitched too soft or too hard, and the next one moves.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a> - the one-page cheat sheet for this domain</li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a> - shared vocabulary for the whole course</li>
+    <li><a href="0001-workflow-or-agent.html">Lesson 0001: Workflow or agent</a> - which tier, and the predictability test</li>
+    <li><a href="0002-splitting-the-work.html">Lesson 0002: Splitting the work</a> - Claude, system and human responsibilities</li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

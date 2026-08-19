@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0002 &middot; Splitting the work</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Claude Platform &amp; Solution Design &middot; Lesson 0002</p>
+  <h1>Splitting the work: Claude, system, human</h1>
+  <p class="standfirst">A business request arrives as one blob. Your first move is not
+  picking a pattern, it is cutting the blob into three piles and defending the cuts.</p>
+  <div class="meta">
+    <span>~18 minutes</span>
+    <span>Domain 1, 17% of the exam</span>
+    <span>5 drills</span>
+  </div>
+</header>
+
+<p>Lesson 0001 was about which tier to build. This one runs earlier in the conversation.
+Before there is an architecture there is a sentence from a stakeholder, usually something
+like "we want AI to handle claims", and the whole job is deciding which parts of "handle"
+belong to a model, which belong to ordinary code, and which stay with a person who can be
+named in an audit.</p>
+
+<p>The win by the end of this page: given an ambiguous request, you draw three boundaries
+out loud, you can say what breaks if each one moves, and you can hand the result to an
+implementation team you will never sit with.</p>
+
+<h2><span class="num">Knowledge</span>Three owners, one rule for choosing</h2>
+
+<p>The rule is a cost ladder. <strong>Give each job to the cheapest owner that can do it
+correctly and prove it later.</strong> Code is cheapest and most provable. Claude is next.
+A human is the most expensive owner you have, and also the only one who can be
+accountable, which is why you spend that budget deliberately rather than by default.</p>
+
+<table>
+  <caption>Who should own a job</caption>
+  <thead>
+    <tr><th>Owner</th><th>Give it</th><th>Because</th><th>The tell in a scenario</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Deterministic code</strong></td>
+      <td>Exact lookups, arithmetic, format validation, thresholds, retries, logging</td>
+      <td>Reproducible, testable, near free per call, still true in three years</td>
+      <td>A published list, a schema, a formula, a regulator, high volume</td>
+    </tr>
+    <tr>
+      <td><strong>Claude</strong></td>
+      <td>Messy language, fuzzy classification, synthesis, drafting, judgement over unstructured input</td>
+      <td>No rule set covers the tail, and sensible people would write different rules</td>
+      <td>"Free text", "varies", "unstructured", "edge cases", "however the customer phrases it"</td>
+    </tr>
+    <tr>
+      <td><strong>Human</strong></td>
+      <td>Irreversible actions, contested judgement, the signature on a decision</td>
+      <td>Someone has to be answerable, and able to stop the thing</td>
+      <td>An appeal, a regulator, money movement, an external send, a permanent delete</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The whole lesson in one sentence</span>
+  <p>Give each job to the <strong>cheapest owner that can do it correctly and prove it
+  later</strong>, and code is cheaper than Claude, which is cheaper than a human.</p>
+</div>
+
+<h3>What code should have kept</h3>
+
+<p>Anthropic's own guidance keeps pushing work down the ladder. The
+<a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices">Skill authoring best practices</a>
+page argues for pre-written utility scripts over model-generated code because they are
+"more reliable than generated code", save tokens, and "ensure consistency across uses".
+<a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for agents</a>
+makes the same move at the tool boundary: consolidate operations so you "offload agentic
+computation from the agent's context back into the tool calls themselves". And when it
+comes to grading,
+<a href="https://platform.claude.com/docs/en/test-and-evaluate/define-success">Define success criteria</a>
+ranks code-based grading as the fastest, most reliable and most scalable option, with
+human grading marked avoid if possible.</p>
+
+<p>So the first failure mode is asking a model to do work a database query, a regex or a
+subtraction would do exactly. It is slower, it costs per call, it drifts between model
+versions, and it cannot be re-run on audit to produce the same answer. If the scenario
+tells you a list is published, a format is standardised or a threshold is written in
+policy, that job has already been assigned and it is not to Claude.</p>
+
+<h3>The opposite failure, which is more expensive</h3>
+
+<p>The second failure mode is over-constraining: pinning the model inside a rule engine
+until it is only filling slots. You know you have done it when a growing share of real
+inputs falls outside the rules and lands in a manual queue. The rules were never going to
+cover the tail, which is exactly the part you bought a model for. Deleting rules is the
+fix, not adding more.</p>
+
+<div class="sidenote">
+  <b>Why this bites experienced people.</b> Ten years of shipping teaches you that a
+  service you do not have to maintain is a service that cannot break, so "Claude can just
+  do that" feels like a simplification. On this exam it reads as a control weakness. A
+  regex a graduate can read beats a prompt that works 99% of the time, because the regex
+  is identical next year and costs nothing at a million calls a day.
+</div>
+
+<h3>Where the human actually goes</h3>
+
+<p>Anthropic's
+<a href="https://www.anthropic.com/news/our-framework-for-developing-safe-and-trustworthy-agents">framework for safe and trustworthy agents</a>
+puts it as keeping humans in control while enabling autonomy: humans "should retain
+control over how their goals are pursued, particularly before high-stakes decisions are
+made". Two tests decide it.</p>
+
+<ol>
+  <li><strong>Reversibility and blast radius.</strong> Can this be undone, and how much
+  damage lands before anyone notices? Refunds, production writes, outbound messages and
+  deletions fail this test. Internal notes and draft artefacts pass it.</li>
+  <li><strong>Accountability.</strong> Is there a decision someone must own by name,
+  because it can be appealed, audited or defended in court? A regulated denial has a
+  clinician's name on it. No confidence score substitutes for that.</li>
+</ol>
+
+<p>Anything failing neither test does not earn a gate. Gate everything and you destroy
+the efficiency case that funded the project, which is a design error, not caution.</p>
+
+<h3>Writing the boundary down</h3>
+
+<p>The deliverable is not a diagram. A diagram shows wiring without saying who decides.
+Give the build team a row per step with these columns, and the system becomes buildable
+by people you will never meet.</p>
+
+<table>
+  <caption>The handoff table</caption>
+  <thead>
+    <tr><th>Column</th><th>Why the build team needs it</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Step</strong></td><td>One named unit of work, small enough to test on its own</td></tr>
+    <tr><td><strong>Owner</strong></td><td>Code, Claude or human. Exactly one of the three, never "both"</td></tr>
+    <tr><td><strong>Input</strong></td><td>What arrives, and from where. Names the upstream contract</td></tr>
+    <tr><td><strong>Output contract</strong></td><td>Shape and validation. This is what lets code check the model's work</td></tr>
+    <tr><td><strong>Failure behaviour</strong></td><td>Retry, fall back, or stop and escalate. Silence here becomes an outage</td></tr>
+    <tr><td><strong>Gate</strong></td><td>Blank, or the named human role that must approve before it proceeds</td></tr>
+  </tbody>
+</table>
+
+<p>In Claude Code terms these columns already have homes, which is worth knowing because
+the exam likes concrete mechanisms. The
+<a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Agent SDK loop</a> puts the
+code gate in a <code>PreToolUse</code> hook that can block a call before it runs, the human
+gate in permission modes and the approval callback, and the deterministic stop in
+<code>max_turns</code> and <code>max_budget_usd</code>. Hooks run in your process, not the
+model's context, which is the point: the guarantee is not something the model can talk its
+way past.</p>
+
+<h2><span class="num">Skill</span>Five requests, three piles each</h2>
+
+<p>Read the last sentence first, find the constraint that eliminates options, then answer.
+The reason matters more than the score.</p>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A retail bank screens 2 million payments a day for sanctions
+  exposure. The list is published by the regulator, changes weekly, and every hit must be
+  reproducible on audit years later. Analysts separately want a plain-English note
+  explaining why an unusual payment pattern looks odd.</p>
+  <p class="stem">How should the work split?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Exact, auditable, high-volume matching is code work, and the pattern note is not.">Code matches the list, Claude writes the pattern note, analysts decide.</li>
+    <li data-key="B" data-why="A model matching a published list is slower, dearer and not reproducible on audit.">Claude matches the list and drafts the note, analysts review everything.</li>
+    <li data-key="C" data-why="Right if there were no judgement call, but a written narrative is not a rules output.">Code matches the list and writes the note, skipping analyst review.</li>
+    <li data-key="D" data-why="Inverted. The model does the exact work and code does the judgement, which is backwards.">Claude matches the list, code writes the note, analysts approve everything.</li>
+  </ol>
+  <div class="verdict" hidden><b>The binding constraint was reproducible on audit years
+  later.</b> That phrase assigns the matching step before you finish reading. Published
+  list plus exact match plus enormous volume is the clearest code job in the whole domain,
+  and the only work left for a model is the part with no correct answer written down.</div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A health payer wants faster prior authorisation. Approvals follow
+  published clinical policy. Denials are regulated: a named clinician must own each one,
+  and the member can appeal it. Volume is 12,000 requests a week and the medical directors
+  are already at capacity.</p>
+  <p class="stem">Which split survives an appeal?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Sampling after the fact cannot supply the named accountable clinician an appeal needs.">Claude issues approvals and denials, clinicians sample ten percent afterwards each week.</li>
+    <li data-key="B" data-why="Right. Deterministic policy sits in code and accountability for the denial stays human.">Claude drafts the case, code applies policy thresholds, a clinician signs denials.</li>
+    <li data-key="C" data-why="Correct at low volume, but 12,000 weekly requests would swamp the capacity stated.">Clinicians review every request, with Claude summarising the notes for them first.</li>
+    <li data-key="D" data-why="Pure rules miss clinical nuance, and code cannot personally own a regulated denial.">Code issues approvals and denials, with Claude explaining each outcome to members.</li>
+  </ol>
+  <div class="verdict" hidden>Two constraints were doing work at once. <b>The appeal right
+  forces a named human onto the denial path</b>, and the capacity line forbids a human on
+  every path. That is the shape of most real governance answers: a gate on the branch that
+  can be contested, automation everywhere else.</div>
+</div>
+
+<div class="quiz" data-answer="B,E">
+  <p class="scenario">A freight forwarder is putting a Claude assistant over its shipment
+  tracking stack. Five jobs are currently drafted as model calls. Margin per shipment is
+  thin and the platform moves 90,000 shipments a month.</p>
+  <p class="stem">Which two jobs should move out of the model and into ordinary code?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Messy natural language with fuzzy boundaries is precisely what the model earns.">Deciding which of six exception templates fits a garbled driver message.</li>
+    <li data-key="B" data-why="Right. Arithmetic over structured feeds is exact, cheap and reproducible in code.">Recomputing arrival times from the carrier distance table and traffic feed.</li>
+    <li data-key="C" data-why="Condensing free text is judgement, and no deterministic rule writes that paragraph.">Summarising a fortnight of delay notes into a paragraph for customers.</li>
+    <li data-key="D" data-why="Goodwill calls turn on tone and context, which a rules table handles badly.">Judging whether a damage photo description warrants a goodwill credit offer.</li>
+    <li data-key="E" data-why="Right. A fixed format is a regex, and a regex never quietly invents digits.">Extracting the container number, whose format is fixed by ISO standards.</li>
+  </ol>
+  <div class="verdict" hidden>Both answers share a property: <b>there is exactly one
+  correct output and a rule already defines it</b>. Volume and thin margin sharpen the
+  point but do not create it. The three you left with Claude all have the opposite
+  property, which is that two reasonable people would produce different output and neither
+  would be wrong.</div>
+</div>
+
+<div class="quiz" data-answer="C">
+  <p class="scenario">A council triages housing repair reports from residents. The team
+  built a 180-rule decision tree and now uses Claude only to fill fixed slots inside it.
+  Six months on, 40% of reports fall outside the tree and drop into a manual queue that
+  takes eleven days to clear.</p>
+  <p class="stem">What is the correct change?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Rules chase the tail forever, which is how the manual queue reached eleven days.">Extend the decision tree with rules covering the forty percent that escaped.</li>
+    <li data-key="B" data-why="Autonomy is not the fix when eligibility rules are published, stable and auditable.">Replace the whole triage stack with an autonomous agent holding repair tools.</li>
+    <li data-key="C" data-why="Right. Give the model the messy language and keep the auditable rules in code.">Let Claude classify the free text, keeping code for eligibility and dispatch.</li>
+    <li data-key="D" data-why="Right where a good answer needs confirming, but the tree cannot produce one.">Retain the existing decision tree, adding a second model voting on outputs.</li>
+  </ol>
+  <div class="verdict" hidden>This is the <b>over-constraining failure</b>, and the tell
+  is always the same: a manual queue that grows. The model was hired for the tail and then
+  forbidden from touching it. Note what does not move, though. Eligibility and dispatch
+  stay in code, because they are published policy and the council has to show its
+  working.</div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">You have agreed the split for a retailer's returns assistant. An
+  offshore team of nine builds it next sprint and you will not be in their standups. Two
+  steps in the flow are irreversible: issuing the refund and writing off stock.</p>
+  <p class="stem">What do you hand them?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Rules living only in a prompt cannot be unit tested, gated or audited later.">A system prompt describing every rule, so the model applies them consistently.</li>
+    <li data-key="B" data-why="Right. Owner, contract, failure behaviour and gate are what a team can actually build.">A table naming each step's owner, contract, failure behaviour and approval gate.</li>
+    <li data-key="C" data-why="Useful alongside, and necessary once wiring starts, but it never names who decides.">An architecture diagram showing the services, queues and model calls in order.</li>
+    <li data-key="D" data-why="Examples sharpen one component and say nothing at all about the refund gate.">A prompt library with tested examples covering the common returns cases seen.</li>
+  </ol>
+  <div class="verdict" hidden>The consulting half of this exam is graded too, and this is
+  what it looks like. <b>A boundary you cannot hand over is a boundary you have not
+  drawn.</b> The two irreversible steps are why the gate column exists: a team that never
+  meets you should be unable to build the refund path without noticing it needs an
+  approver.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>Recognition is not retention. Answer these from memory, out loud or on paper. No
+scrolling up.</p>
+
+<ol>
+  <li>State the ownership rule in one sentence.</li>
+  <li>Name four kinds of work that belong in code rather than a model call.</li>
+  <li>What two tests put a step in front of a human?</li>
+  <li>Describe the over-constraining failure and the tell that you have hit it.</li>
+  <li>Name the six columns of the handoff table.</li>
+</ol>
+
+<p>Anything you could not produce cleanly is the thing to re-read. Anything that came out
+easily, leave alone until the spaced review.</p>
+
+<h2><span class="num">Source</span>Read this next</h2>
+
+<p><strong>Primary source:
+<a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">How the agent loop works</a></strong>,
+Claude Agent SDK docs. Fifteen minutes. Read it as the three-way split made concrete in a
+shipped system: hooks are the code gate, permission modes and the approval callback are
+the human gate, <code>max_turns</code> and <code>max_budget_usd</code> are the
+deterministic stop that no amount of model reasoning can argue past.</p>
+
+<p>It is also the closest thing to a spec for what SpecPilot sits on top of, so read it
+with both hats on. The question worth carrying out of it: for each guarantee your product
+offers, is it enforced in your process or merely requested in a prompt?</p>
+
+<div class="ask">
+  <p><strong>I am your teacher for this, so use me.</strong> If a drill came down to a coin
+  flip, name it and we will pull the constraint apart together. If you think an answer is
+  wrong, argue it, because the arguments are where the useful distinctions turn up. And if
+  this pitched too soft or too hard, say which and the next one moves.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a> - the one-page cheat sheet for this domain</li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a> - shared vocabulary for the whole course</li>
+    <li><a href="0001-workflow-or-agent.html">Lesson 0001: Workflow or agent</a> - which tier, and the predictability test</li>
+    <li><a href="0003-six-patterns.html">Lesson 0003: The six patterns, and their traps</a> - pattern selection and its preconditions</li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0004 &middot; Multi-agent economics</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Claude Platform &amp; Solution Design &middot; Lesson 0004</p>
+  <h1>When multi-agent pays, and when it burns money</h1>
+  <p class="standfirst">A lead agent with subagents is the most expensive architecture in
+  the catalogue and sometimes the only one that works. The exam wants you to know which
+  situation you are in before you spend.</p>
+  <div class="meta">
+    <span>~18 minutes</span>
+    <span>Domain 1, 17% of the exam</span>
+    <span>5 drills</span>
+  </div>
+</header>
+
+<p>Lesson 0001 gave you the escalation ladder up to a single agent. This lesson covers
+the last rung, and it is the one with a price tag attached. Multi-agent is not a harder
+version of agent. It is a different bet: you are paying roughly four times more tokens
+again for the chance to explore several directions at once.</p>
+
+<p>The win by the end of this page: you can say the cost multiplier out loud, name the
+two or three properties of the task that justify it, and spot the scenarios where fanning
+out actively makes the answer worse.</p>
+
+<h2><span class="num">Knowledge</span>The multiplier, and what buys it back</h2>
+
+<p>The numbers come from Anthropic's
+<a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a>,
+and they are the numbers the exam is written against.</p>
+
+<table>
+  <caption>Token cost relative to a chat interaction</caption>
+  <thead>
+    <tr><th>Shape</th><th>Roughly costs</th><th>What you are buying</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Chat interaction</strong></td>
+      <td>1x, the baseline</td>
+      <td>One turn, one context, no tools</td>
+    </tr>
+    <tr>
+      <td><strong>Single agent</strong></td>
+      <td>About 4x</td>
+      <td>A tool loop and multi-step work in one context</td>
+    </tr>
+    <tr>
+      <td><strong>Multi-agent</strong></td>
+      <td>About 15x</td>
+      <td>Several context windows explored in parallel</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>What the 15x buys is measurable. A lead running Claude Opus 4 with Claude Sonnet 4
+subagents <strong>outperformed single-agent Opus 4 by 90.2%</strong> on Anthropic's
+internal research eval. Token usage on its own explained 80% of the performance variance
+on BrowseComp, and parallel tool calling
+<strong>cut research time by up to 90% on complex queries</strong>. So the spend is not
+waste. It is the mechanism.</p>
+
+<div class="flag">
+  <span class="label">The whole lesson in one sentence</span>
+  <p>Multi-agent buys you <strong>parallel context windows</strong>, so it only pays when
+  the work genuinely splits into independent lines of enquiry and the answer is worth
+  fifteen times a chat.</p>
+</div>
+
+<h3>Why parallel context is the real product</h3>
+
+<p>A subagent runs in its own window with its own tools and its own trajectory. It can
+read far more than the lead ever could, then hand back a condensed result. Anthropic's
+wording: subagents "facilitate compression by operating in parallel with their own
+context windows, exploring different aspects of the question simultaneously before
+condensing the most important tokens for the lead research agent". Claude Code's
+<a href="https://code.claude.com/docs/en/sub-agents">subagent documentation</a> makes the
+same trade concrete: the subagent does the noisy work in its own context and
+<em>"returns only the summary"</em>. Tens of thousands of tokens of searching can come
+back as a few paragraphs.</p>
+
+<p>The second effect is separation of concerns: "distinct tools, prompts, and exploration
+trajectories", which "reduces path dependency". Two subagents are less likely to make the
+same wrong turn than one agent making two passes.</p>
+
+<h3>The fit test</h3>
+
+<table>
+  <caption>Where it wins and where it loses</caption>
+  <thead>
+    <tr><th>Multi-agent wins when</th><th>Multi-agent loses when</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>The query is breadth-first, with several independent directions to pursue at once</td>
+      <td>Every agent needs to share the same context</td>
+    </tr>
+    <tr>
+      <td>The work parallelises heavily and wall clock matters</td>
+      <td>There are many dependencies between the agents' work</td>
+    </tr>
+    <tr>
+      <td>The information to read exceeds a single context window</td>
+      <td>The agents would have to coordinate in real time, which they are not yet good at</td>
+    </tr>
+    <tr>
+      <td>There are numerous complex tools to interface with</td>
+      <td>Most coding work, which has fewer truly parallelisable tasks than research</td>
+    </tr>
+    <tr>
+      <td>The value of the task is high enough to pay for the performance</td>
+      <td>Cost or latency is the binding constraint rather than coverage</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>That last left-hand row is the one to memorise verbatim, because it is the sentence
+the exam paraphrases: "multi-agent systems require tasks where the value of the task is
+high enough to pay for the increased performance". Value per task, not difficulty per
+task.</p>
+
+<h3>Sizing, once you have decided</h3>
+
+<p>Anthropic embeds explicit scaling rules in the lead agent's prompt, and they are
+examinable as a rubric:</p>
+
+<ul>
+  <li><strong>Simple fact-finding:</strong> 1 agent, 3 to 10 tool calls.</li>
+  <li><strong>Direct comparison:</strong> 2 to 4 subagents, 10 to 15 calls each.</li>
+  <li><strong>Complex research:</strong> more than 10 subagents with clearly divided responsibilities.</li>
+</ul>
+
+<p>In steady state a lead typically spins up <strong>3 to 5 subagents in parallel</strong>,
+each using 3 or more tools in parallel of its own. If a scenario describes a lead
+spawning one subagent, or twenty for a lookup, the sizing is the defect.</p>
+
+<div class="sidenote">
+  <b>Why this bites experienced people.</b> If you run Claude Code all day, spawning
+  subagents feels free, because you are watching wall clock rather than a bill and your
+  own tasks are usually worth the tokens. Two things break that intuition on the exam.
+  First, most of what you delegate is coding work, which is the weakest case for
+  fan-out. Second, the parallelism you like is often really about keeping your main
+  context clean, and that is a context engineering win you can get from a single
+  subagent, not a reason to build a multi-agent architecture for a client.
+</div>
+
+<h3>Doing the arithmetic out loud</h3>
+
+<p>The examinable skill is the sentence, not the number. Practise saying it in this
+shape:</p>
+
+<ol>
+  <li><strong>Baseline.</strong> "A single agent on this is roughly 4x a chat turn."</li>
+  <li><strong>Proposal.</strong> "Fanning out to four subagents puts us near 15x."</li>
+  <li><strong>Return.</strong> "We buy coverage across four independent sources and around
+  a 90% cut in wall clock."</li>
+  <li><strong>Threshold.</strong> "Each report drives a decision worth six figures, so the
+  token delta is noise."</li>
+  <li><strong>Veto check.</strong> "Nothing here needs shared state between the branches."</li>
+</ol>
+
+<p>If step 4 is uncomfortable to say, the answer is a single agent. If step 5 fails, the
+answer is a single agent regardless of how large step 4 is.</p>
+
+<h2><span class="num">Skill</span>Five scenarios, thirty seconds each</h2>
+
+<p>Find the binding constraint first. In this lesson it is usually value per task,
+shared state, or the clock.</p>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A pharmaceutical strategy team needs a competitive landscape for one
+  therapeutic area. The material sits in trial registries, regulatory filings, patent
+  databases and conference abstracts, and no one knows in advance which of them will carry
+  the answer. Each finished landscape feeds an investment decision in the tens of millions.
+  Turnaround expected inside a working day.</p>
+  <p class="stem">Which architecture earns its token bill here?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Independent sources, unknown yield per source, and enormous value per task. This is the textbook breadth-first case.">One lead agent spawning parallel subagents, one per independent source stream.</li>
+    <li data-key="B" data-why="Correct when the question is narrow and one source clearly holds the answer, but four archives will not fit one window.">A single agent working every source in sequence inside one context.</li>
+    <li data-key="C" data-why="A fixed chain works when the sources are stable and each one always contributes, which the scenario denies.">A coded workflow chaining one retrieval pass per already known source.</li>
+    <li data-key="D" data-why="Refinement loops raise the quality of what you already have and do nothing about missing coverage.">A chain refining the single draft through five successive critique passes.</li>
+  </ol>
+  <div class="verdict" hidden>Two things made this safe to spend on: <b>the sources are
+  independent and the value per task is enormous</b>. Say the arithmetic out loud and it
+  is not close. Fifteen times a chat turn against a decision worth tens of millions is a
+  rounding error, and the day-long window absorbs the fan-out.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A retail bank triages card disputes as they arrive in the mobile app.
+  Roughly 70% are duplicate charges, 20% are merchant description mismatches and 10% are
+  suspected fraud that always goes to an investigator. The customer must see an outcome
+  status within 3 seconds, and volume runs to 12,000 disputes a day.</p>
+  <p class="stem">Which shape should the architecture take?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Enumerated categories plus a hard 3 second budget rules out anything with a planning hop in front of it.">Classify the dispute, then route it into small fixed per-category handlers.</li>
+    <li data-key="B" data-why="Correct for an open-ended investigation with a day to run, but 15x tokens at 12,000 a day and 3 seconds is indefensible twice over.">A lead agent delegating each dispute check to three parallel subagents.</li>
+    <li data-key="C" data-why="Reasonable if the categories were unknown and the SLA were minutes, but here the path is already fully mapped.">One agent holding all the dispute tooling and choosing its sequence.</li>
+    <li data-key="D" data-why="Critique loops trade latency for quality, and latency is precisely the resource this scenario has none of.">An evaluator critiquing each drafted outcome until a confidence bar clears.</li>
+  </ol>
+  <div class="verdict" hidden><b>Two constraints both point the same way</b>, which is the
+  tell. High volume kills the multiplier and a tight SLA kills the extra hop. When cost
+  per task and latency both bind, you are being asked to come down the ladder, not go up
+  it. Notice the scenario also enumerated the categories for you.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A logistics platform wants to migrate 300 service files off a
+  deprecated internal client. Every one of those files imports the same shared type
+  definitions, and the migration changes those definitions. The job runs nightly, lands in
+  a reviewable pull request, and there is no deadline pressure at all.</p>
+  <p class="stem">How should the work be executed?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. The shared type definitions are exactly the dependency that makes fan-out produce conflicting edits nobody reconciles.">One agent editing sequentially, so each edit sees the previous ones.</li>
+    <li data-key="B" data-why="Correct when the files are genuinely disjoint, which they are not: every slice touches the same shared definitions.">Ten subagents in parallel, each owning a disjoint slice of files.</li>
+    <li data-key="C" data-why="Replanning between rounds adds lead tokens without fixing the real problem, which is that the edits interact.">A lead agent replanning the split after every subagent reports back.</li>
+    <li data-key="D" data-why="Competing drafts buy diversity of approach, and the difficulty here is coordination rather than a shortage of ideas.">Three subagents drafting competing rewrites, with a judge picking one winner.</li>
+  </ol>
+  <div class="verdict" hidden>Anthropic's own line is that <b>"most coding tasks involve
+  fewer truly parallelizable tasks than research"</b>. Subagents run in isolated context
+  windows and return only summaries, so parallel editors cannot see each other's changes.
+  A shared file that all of them must modify converts parallelism from a speed-up into a
+  merge problem. No deadline pressure removes the only argument for the risk.</div>
+</div>
+
+<div class="quiz" data-answer="A,C">
+  <p class="scenario">A hospital group is weighing a multi-agent design and wants the
+  justification in writing before it approves the budget.</p>
+  <p class="stem">Which signals genuinely justify paying the multi-agent multiplier?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Breadth-first work with independent directions is the primary case Anthropic makes for fanning out.">Independent lines of enquiry that can be pursued at once.</li>
+    <li data-key="B" data-why="Difficulty is not the test, exactly as in Lesson 0001. Hard and sequential still means one agent.">The task is hard and needs careful multi-step reasoning throughout.</li>
+    <li data-key="C" data-why="Right. Information exceeding one context window is the condition parallel windows exist to solve.">The material to read exceeds any single agent's context window.</li>
+    <li data-key="D" data-why="This is the classic disqualifier. Dependencies between steps mean shared context, which fan-out destroys.">Every step depends on state the previous step just wrote.</li>
+    <li data-key="E" data-why="Reproducibility argues for a coded workflow, and multi-agent is the least reproducible option available.">The output has to be reproducible across two identical runs.</li>
+  </ol>
+  <div class="verdict" hidden>Both right answers describe <b>work that genuinely splits</b>.
+  Everything else describes a task being hard, tightly coupled, or needing determinism,
+  and each of those argues down the ladder rather than up it. Option D is the one to hold
+  onto: shared state is the single cleanest veto on multi-agent, and scenarios bury it in
+  a clause about one step using the previous step's output.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A transport authority has shortlisted two bidders for a depot
+  contract and wants a side-by-side on price, delivery record, subcontractor exposure and
+  financial health. The comparison is a direct one between two named organisations, the
+  research budget is real but not tight, and the panel meets on Friday.</p>
+  <p class="stem">How should the lead agent size the work?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Anthropic's rubric puts direct comparisons at two to four subagents with ten to fifteen calls each.">Two to four subagents, roughly ten to fifteen tool calls each.</li>
+    <li data-key="B" data-why="That is the rubric for simple fact-finding, and a four-axis comparison of two bidders is more than a lookup.">One agent working alone, roughly three to ten tool calls total.</li>
+    <li data-key="C" data-why="Ten or more subagents is the complex research tier, and spending it on two named bidders wastes the budget.">More than ten subagents, each with a clearly divided research brief.</li>
+    <li data-key="D" data-why="Correct if the four axes had fixed known sources, but supplier due diligence discovers where the answers live.">A workflow calling one fixed retrieval prompt for each named bidder.</li>
+  </ol>
+  <div class="verdict" hidden>The rubric is worth committing to memory because it is
+  unusually crisp: <b>1 agent for lookups, 2 to 4 subagents for comparisons, 10 or more
+  for genuinely open research</b>. Oversizing is a real exam answer, not just an
+  inefficiency. A lead that spawns twenty subagents to compare two bidders is failing the
+  same cost-benefit test as one that refuses to fan out at all.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>From memory, out loud or on paper. No scrolling up.</p>
+
+<ol>
+  <li>State the two token multipliers, single agent and multi-agent, against a chat turn.</li>
+  <li>What did the Opus lead with Sonnet subagents beat, by how much, on what?</li>
+  <li>Name the four task properties that make multi-agent the right call.</li>
+  <li>Name the single condition that vetoes multi-agent no matter how large the task.</li>
+  <li>Give the subagent sizing rubric for the three tiers of question.</li>
+</ol>
+
+<p>Anything that came out mushy is the thing to re-read. The rubric in question 5 is the
+one people skip and then lose a mark on.</p>
+
+<h2><span class="num">Source</span>Read this next</h2>
+
+<p><strong>Primary source:
+<a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a></strong>,
+Anthropic engineering. Half an hour, and it is where every number in this lesson comes
+from. Read it for the economics section and the prompt engineering rules for the lead
+agent, then skim the production reliability part, which seeds Domain 5.</p>
+
+<p>Read it as a cost argument rather than a capability showcase. The most examinable
+sentence in the whole piece is the one saying multi-agent needs tasks whose value is high
+enough to pay for the performance.</p>
+
+<div class="ask">
+  <p><strong>I am your teacher for this, so ask.</strong> If a drill felt like a coin
+  flip, say which one and we will pull the constraint apart. If you disagree with an
+  answer, argue it, since the disagreements are usually where the interesting distinction
+  lives. And if you want the next lesson pitched harder or softer, say so and I will move
+  it.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a> - the one-page cheat sheet for this domain</li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a> - shared vocabulary for the whole course</li>
+    <li><a href="0001-workflow-or-agent.html">Lesson 0001: Workflow or agent?</a> - the ladder this lesson sits on top of</li>
+    <li><a href="0003-six-patterns.html">Lesson 0003: The six patterns</a> - the catalogue this is the expensive end of</li>
+    <li><a href="0005-platform-entry-points.html">Lesson 0005: Platform entry points</a> - which surface the solution ships through</li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

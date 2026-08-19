@@ -19,19 +19,32 @@
 
 ## Course structure decision
 
-The official Lesson 1, "Claude Platform & Solution Design", is 238 minutes and spans
-exam Domains 1 and 2. That is far too much for one sitting. This track breaks it into
-tightly-scoped lessons, each one tangible win:
+The official Lesson 1, "Claude Platform & Solution Design", is 238 minutes and spans exam
+Domains 1 and 2. Too much for one sitting, so this track breaks it into short lessons,
+each one tangible win.
 
-| # | Lesson | Covers | Status |
+**Restructured 19 Aug 2026.** The first plan was invented from the domain list. Then the
+gated course page gave up its **learning objectives**, which are the real syllabus, and
+two of them were missing from my plan entirely: platform entry points, and delivery
+routes. The sequence now follows Anthropic's published objectives rather than my guess.
+See learning record 0002.
+
+| # | Lesson | Official objective it covers | Status |
 |---|---|---|---|
-| 0001 | Workflow or agent | The three tiers, the predictability test | Written |
-| 0002 | The six patterns, and their traps | Pattern selection, sectioning vs orchestrator-workers | Planned |
-| 0003 | Multi-agent economics | 4x/15x, when breadth beats cost | Planned |
-| 0004 | Where the human goes | Checkpoints, reversibility, blast radius | Planned |
-| 0005 | Model routing under a latency SLA | Tier selection, adaptive thinking, effort | Planned |
-| 0006 | Context engineering | Compaction, retrieval over stuffing, caching | Planned |
-| 0007 | Architecture to business value | SLAs, cost per task, the CFO conversation | Planned |
+| 0001 | Workflow or agent | Selecting between augmented calls, workflows, and agents | Written |
+| 0002 | Splitting the work | Breaking requests into Claude, system, and human responsibilities | Written |
+| 0003 | The six patterns, and their traps | Picking appropriate reference architectures | Written |
+| 0004 | When multi-agent pays | Reference architectures, the expensive end | Written |
+| 0005 | Platform entry points | Identifying platform entry points | Written |
+| 0006 | Delivery routes and governance | User-facing vs build-time vs enterprise delivery routes | Written |
+| 0007 | Model and context strategy | Making model and context decisions | Written |
+
+Course 1 is complete. Courses 2 to 5 of the official path are still unwritten:
+Enterprise Integration & Production (158 min), Responsible AI, Safety & Risk (114 min),
+Stakeholder Engagement, Lifecycle & GTM (178 min), Team Enablement & Operational
+Productivity (45 min).
+
+`index.html` at the workspace root is the front door and every lesson links back to it.
 
 ## Open questions to revisit
 

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0005 &middot; Platform entry points</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Claude Platform &amp; Solution Design &middot; Lesson 0005</p>
+  <h1>Platform entry points</h1>
+  <p class="standfirst">Same architecture, five different front doors. The exam tests
+  whether you can match a scenario's user, governance posture and team maturity to the
+  surface the solution ships through.</p>
+  <div class="meta">
+    <span>~18 minutes</span>
+    <span>Domains 1 and 2, 30% of the exam</span>
+    <span>5 drills</span>
+  </div>
+</header>
+
+<p>Lessons 0001 and 0004 settled what to build. This one settles where it lives. The
+distinction matters commercially: the same routing workflow costs nothing to deliver as
+an Enterprise connector and costs a quarter of engineering time to deliver as a bespoke
+Agent SDK service, and the difference between those two is usually who the user is rather
+than what the model does.</p>
+
+<p>The win by the end of this page: given a scenario, you name the entry point, name the
+governance story it comes with, and spot the sentence that quietly ruled out one of the
+others.</p>
+
+<h2><span class="num">Knowledge</span>Six front doors</h2>
+
+<table>
+  <caption>Entry points, and what each one commits you to</caption>
+  <thead>
+    <tr>
+      <th>Entry point</th>
+      <th>Who uses it</th>
+      <th>Build cost</th>
+      <th>Governance you inherit</th>
+      <th>What it rules out</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Claude.ai and Claude Desktop</strong></td>
+      <td>End users, non-technical</td>
+      <td>Seats, not engineering</td>
+      <td>SSO, domain capture, role-based permissions, managed policy settings, Compliance API on Enterprise</td>
+      <td>Embedding in your own product, custom UX, per-request control</td>
+    </tr>
+    <tr>
+      <td><strong>Messages API</strong></td>
+      <td>Your application, via your engineers</td>
+      <td>You build everything, including the tool loop</td>
+      <td>Whatever you log; Console workspaces, API keys, usage dashboard</td>
+      <td>Getting an agent loop for free</td>
+    </tr>
+    <tr>
+      <td><strong>Claude Agent SDK</strong></td>
+      <td>Your application, agentic</td>
+      <td>Library in your process, Python or TypeScript</td>
+      <td>Permissions, hooks, your own infrastructure and logging</td>
+      <td>Other languages as a library; claude.ai login for third-party products</td>
+    </tr>
+    <tr>
+      <td><strong>Claude Code</strong></td>
+      <td>Developers, interactively or in CI</td>
+      <td>Install and configure, no application to write</td>
+      <td>Managed policy settings, OpenTelemetry metrics and events, Compliance API session transcripts</td>
+      <td>Non-developer users, non-repository work</td>
+    </tr>
+    <tr>
+      <td><strong>Managed Agents</strong></td>
+      <td>Your application, long-running work</td>
+      <td>REST calls, Anthropic runs the harness</td>
+      <td>Session records you can delete; beta, with limited ZDR and HIPAA BAA coverage</td>
+      <td>Regulated workloads needing full BAA or ZDR today</td>
+    </tr>
+    <tr>
+      <td><strong>MCP server</strong></td>
+      <td>Every client above, not a user</td>
+      <td>One integration, reused by all hosts</td>
+      <td>Transport-level auth, OAuth on remote servers, org controls on connector tools</td>
+      <td>Being the application; it serves context, it does not decide anything</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The whole lesson in one sentence</span>
+  <p>Pick the entry point from <strong>who the user is and what evidence the auditor
+  needs</strong>, not from how sophisticated the architecture is.</p>
+</div>
+
+<h3>The three that get confused</h3>
+
+<p><strong>Messages API versus Agent SDK.</strong> The
+<a href="https://platform.claude.com/docs/en/api/overview">Messages API</a> is one
+endpoint, <code>POST /v1/messages</code>, with client SDKs in Python, TypeScript, C#, Go,
+Java, PHP and Ruby. You write the tool loop. The
+<a href="https://code.claude.com/docs/en/agent-sdk/overview">Agent SDK</a> is the Claude
+Code agent loop as a library, "programmable in Python and TypeScript", and it hands you
+built-in tools, hooks, subagents, MCP, permissions, sessions, skills and memory loading.
+The docs draw the line as: use the Client SDK if you are "calling the API directly and
+implementing the tool loop yourself", use the Agent SDK for "building an agent without
+implementing the tool loop yourself". Two things constrain the choice. The Agent SDK is a
+library for Python and TypeScript only; from any other language you run the CLI as a
+subprocess with <code>-p</code> and <code>--output-format json</code>. And Anthropic does
+not permit third-party products to offer claude.ai login or subscription rate limits, so
+a product you ship on the Agent SDK authenticates with API keys.</p>
+
+<p><strong>Claude Code as a product surface.</strong>
+<a href="https://code.claude.com/docs/en/headless">Headless mode</a> makes Claude Code a
+component rather than a terminal: <code>claude -p "..."</code> with
+<code>--output-format json</code> or <code>stream-json</code>,
+<code>--json-schema</code> for structured output, <code>--allowedTools</code> to
+pre-approve, and a permission mode baseline. In CI, <code>--bare</code> skips
+auto-discovery of hooks, plugins, MCP servers and CLAUDE.md so the run is identical on
+every machine, and <code>--permission-mode dontAsk</code> denies anything not explicitly
+allowed. The same engine runs in
+<a href="https://code.claude.com/docs/en/github-actions">GitHub Actions</a>, which checks
+that the triggering user has write access and rejects bot actors, and can authenticate
+through OIDC workload identity federation so no long-lived key sits in the repository.</p>
+
+<p><strong>MCP is an integration surface, not an application.</strong> The
+<a href="https://modelcontextprotocol.io/docs/learn/architecture">architecture overview</a>
+is explicit that a host such as Claude Code or Claude Desktop creates one client per
+server, and that "MCP focuses solely on the protocol for context exchange, it does not
+dictate how AI applications use LLMs or manage the provided context". A server exposes
+three primitives: tools, resources and prompts. Stdio transport serves one local client;
+Streamable HTTP serves many remote clients and supports bearer tokens, API keys and
+OAuth. So the question "should we build an MCP server" is never an alternative to "should
+we build an application". It is the answer to "how many clients need this same data".</p>
+
+<h3>The governance column is usually the deciding one</h3>
+
+<p>Enterprise is where the audit story lives. The
+<a href="https://platform.claude.com/docs/en/manage-claude/compliance-api">Compliance API</a>
+gives programmatic access to organisation activity for compliance and SIEM feeds, and it
+covers claude.ai organisations including chats, files and projects, Cowork sessions,
+Claude Code sessions, and the user directory. Console customers get the Activity Feed
+only. For Claude Code specifically,
+<a href="https://code.claude.com/docs/en/monitoring-usage">OpenTelemetry export</a> gives
+metrics such as token and cost usage, tool permission decisions and commit counts, plus
+event logs, with prompt and response content <em>redacted by default</em> until an admin
+explicitly turns it on. Managed settings can lock that configuration so a developer
+cannot override it locally.</p>
+
+<div class="sidenote">
+  <b>Why this bites experienced people.</b> If you build on Claude Code every day, it is
+  the surface you reach for, and it is genuinely the cheapest way to ship agentic
+  behaviour to developers. But roughly half of exam scenarios put a non-developer in front
+  of the system: an underwriter, a caseworker, a clinician. The moment the user does not
+  live in a repository, Claude Code is the wrong door no matter how well it would do the
+  work. Read the first sentence of every scenario for the user's job title before you read
+  anything else.
+</div>
+
+<h2><span class="num">Skill</span>Five scenarios, thirty seconds each</h2>
+
+<p>The binding constraint in this lesson is usually the user, the regulator, or the size
+of the team you have.</p>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A broadcaster keeps its rights-clearance data in one internal
+  service. Three groups need it: the newsroom team who work in Claude Desktop, the
+  platform engineers who work in Claude Code, and a scheduling application the company is
+  building itself. The data model changes about once a month and all three must stay in
+  step.</p>
+  <p class="stem">What should the integration team build?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Three hosts and one data source is precisely the case MCP exists for, and one server tracks the monthly schema change.">One remote MCP server, with all three clients pointed at it.</li>
+    <li data-key="B" data-why="Correct if the goal were an agentic product of its own, but a service wrapping data is not something to add a loop to.">One Agent SDK service wrapping the database, called by each client.</li>
+    <li data-key="C" data-why="This is the integration count MCP was designed to remove, and monthly schema drift makes three copies expensive.">Three bespoke integrations, one for each client, sharing a REST layer.</li>
+    <li data-key="D" data-why="Reasonable for stable reference material, but exported knowledge goes stale between exports and reaches only one surface.">A nightly catalogue export loaded into a shared project knowledge base.</li>
+  </ol>
+  <div class="verdict" hidden>The tell is <b>the client count, not the sophistication of
+  the task</b>. MCP is an integration surface: one server, many hosts, each host creating
+  its own client. Streamable HTTP is the transport that serves many remote clients and
+  carries OAuth. If a scenario names two or more places the same data has to appear, the
+  answer is a server rather than a second application.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A health insurer wants an agent that reads a claimant's full document
+  bundle overnight and produces a coverage summary. A run takes about forty minutes across
+  many tool calls and needs persistent session state. The insurer's contract requires a
+  signed HIPAA business associate agreement covering everything the workload touches, and
+  it has a competent platform team.</p>
+  <p class="stem">Which entry point should the design assume?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. The team can run the loop themselves, and self-hosting keeps the workload inside the coverage the insurer has already contracted for.">The Agent SDK, running the agent loop inside your own infrastructure.</li>
+    <li data-key="B" data-why="Correct for exactly this workload shape without the BAA clause, but it is beta with limited HIPAA BAA and ZDR coverage.">Managed Agents, so Anthropic runs the harness, sandbox and session state.</li>
+    <li data-key="C" data-why="Fine for repository-shaped automation, but claim bundles are not a codebase and the users are not developers.">Claude Code headless, invoked overnight from your existing scheduler and runners.</li>
+    <li data-key="D" data-why="Workable, but it means hand-rolling a tool loop, session state and compaction the Agent SDK already provides.">The Messages API alone, with your service implementing the whole loop.</li>
+  </ol>
+  <div class="verdict" hidden>This is the archetype of a <b>quiet disqualification</b>.
+  Every clue in the scenario points at Managed Agents, long-running, stateful, no harness
+  to build, right up until the compliance clause. Managed Agents is in beta with limited
+  Zero Data Retention and HIPAA BAA coverage because of its stateful design. One sentence
+  about a regulator can override four sentences about fit.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A bank is rolling AI-assisted development out to 400 engineers. The
+  regulator has asked for evidence of which changes were AI-assisted, what the model was
+  permitted to run, and proof that individual engineers cannot loosen the policy on their
+  own machines. The bank already has an SIEM and a central OpenTelemetry collector.</p>
+  <p class="stem">What is the defensible configuration?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Managed settings cannot be overridden locally, OTel feeds the SIEM, and the Compliance API covers Claude Code sessions.">Enterprise Claude Code with managed policy settings and Compliance API export.</li>
+    <li data-key="B" data-why="Correct for a handful of individual developers, but per-developer keys give no central policy the engineer cannot change.">Console API keys per developer, with the usage dashboard for review.</li>
+    <li data-key="C" data-why="Plausible if the bank were shipping a product, but it makes each team responsible for an audit trail the regulator wants uniform.">Agent SDK wrappers per team, each logging into separate private stores.</li>
+    <li data-key="D" data-why="Desktop suits non-technical staff, and self-attestation is exactly the evidence a regulator asked to be replaced.">Claude Desktop seats with connectors, and quarterly attestation from each lead.</li>
+  </ol>
+  <div class="verdict" hidden>Three requirements, three features, and they map one to one:
+  <b>which changes were AI-assisted goes to OpenTelemetry, what the model could run goes
+  to managed policy settings, and cannot be overridden locally is the whole point of
+  managed settings</b>. Remember the default: prompt and response content is redacted in
+  telemetry until an admin explicitly enables it, which is usually the answer to the
+  privacy objection that follows.</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A retailer regenerates category copy for 40 million product records
+  every weekend. Nothing is interactive, nothing is agentic, and the whole job simply has
+  to be finished before Monday trading. The finance director has already flagged the
+  projected inference spend as the reason the project might not go ahead.</p>
+  <p class="stem">Which entry point should the proposal name?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Asynchronous tolerance plus extreme volume is the case the Batches API exists for, at half the token price.">The Message Batches API, accepting the asynchronous turnaround for half price.</li>
+    <li data-key="B" data-why="Correct when results are needed immediately, but paying full price for a job with a weekend to run wastes the discount.">The Messages API synchronously, fanning out across your own worker pool.</li>
+    <li data-key="C" data-why="Print mode suits repository tasks and CI gates, not forty million rows of catalogue data.">Claude Code headless in CI, one print-mode invocation per product record.</li>
+    <li data-key="D" data-why="Managed Agents fits long stateful runs, and this is a stateless single-turn transform repeated many times.">Managed Agents on a cron schedule, one session per catalogue partition.</li>
+  </ol>
+  <div class="verdict" hidden>The examinable point is that <b>entry point selection is a
+  cost lever, not only an architecture one</b>. Batch processing is a 50% discount for
+  work that can wait, and a weekend window is the clearest possible signal that it can.
+  When the scenario names a finance objection and a generous deadline in the same
+  paragraph, it is pointing at batch.</div>
+</div>
+
+<div class="quiz" data-answer="A,C">
+  <p class="scenario">A benefits agency wants 900 caseworkers to be able to ask questions
+  about policy guidance and their own case notes. The caseworkers are not technical, the
+  agency has no spare engineering capacity, the deadline is six weeks, and everything the
+  caseworkers do is subject to freedom of information requests and a records retention
+  schedule.</p>
+  <p class="stem">Which two moves fit the constraints?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. Seats need no engineering, suit non-technical users, and connectors reach the case system without a build.">Enterprise seats for the caseworkers, plus a connector to case records.</li>
+    <li data-key="B" data-why="Correct with a platform team and a longer runway, but this agency has neither, which is stated twice.">A bespoke Agent SDK application, built and hosted by the department.</li>
+    <li data-key="C" data-why="Right. The Compliance API is the programmatic route to chats, files and projects for retention and disclosure.">Compliance API pulls into the agency records retention and disclosure pipeline.</li>
+    <li data-key="D" data-why="Permission modes are real and dontAsk is the right CI setting, but caseworkers are not developers in a repository.">Claude Code licences for caseworkers, with permission modes locked to dontAsk.</li>
+    <li data-key="E" data-why="A sound pattern when you own the screens and have engineers, and this agency has explicitly said it does not.">A direct Messages API integration written into the case management screens.</li>
+  </ol>
+  <div class="verdict" hidden>Both right answers avoid writing software. <b>Team maturity
+  and capacity are architecture inputs</b>, not excuses, and the exam grades the consulting
+  half. Note also that the two answers are different kinds of thing: one is the surface the
+  users touch, the other is the evidence the auditor gets. A complete entry-point answer
+  usually names both.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>From memory, out loud or on paper. No scrolling up.</p>
+
+<ol>
+  <li>Give the one-line difference between the Messages API and the Agent SDK.</li>
+  <li>Name two things Claude Code gives an enterprise that per-developer API keys do not.</li>
+  <li>Which surfaces does the Compliance API cover, and who is eligible for the full one?</li>
+  <li>Name the two MCP transports and which one serves many clients.</li>
+  <li>State the compliance limitation on Managed Agents and why it exists.</li>
+</ol>
+
+<p>Question 5 is the one that shows up as a disqualifying clause in scenarios, so make
+sure it comes out cleanly.</p>
+
+<h2><span class="num">Source</span>Read this next</h2>
+
+<p><strong>Primary source:
+<a href="https://code.claude.com/docs/en/agent-sdk/overview">Agent SDK overview</a></strong>,
+Claude Code documentation. Ten minutes, and its first table is the cleanest official
+statement of the whole decision: Agent SDK, Claude Code CLI, Client SDK, Managed Agents,
+and the sentence that distinguishes each. Read that table, then follow the headless page
+for the CI half.</p>
+
+<p>Everything else in this lesson hangs off it. If you memorise one artefact for this
+objective, memorise those four rows and the reason each exists.</p>
+
+<div class="ask">
+  <p><strong>I am your teacher for this, so ask.</strong> If a drill felt like a coin
+  flip, say which one and we will pull the constraint apart. If you disagree with an
+  answer, argue it, since the disagreements are usually where the interesting distinction
+  lives. And if you want the next lesson pitched harder or softer, say so and I will move
+  it.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a> - the one-page cheat sheet for this domain</li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a> - shared vocabulary for the whole course</li>
+    <li><a href="0001-workflow-or-agent.html">Lesson 0001: Workflow or agent?</a> - the tier decision that comes first</li>
+    <li><a href="0003-six-patterns.html">Lesson 0003: The six patterns</a> - the shape you are choosing a door for</li>
+    <li><a href="0004-multi-agent-economics.html">Lesson 0004: Multi-agent economics</a> - when fanning out earns its bill</li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
