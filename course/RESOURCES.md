@@ -18,7 +18,7 @@ conflicts with another.
 | [CCAR-P Prep Course](https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional) | Primary | Free, 733 min, five lessons. Lesson 1 "Claude Platform & Solution Design" (238 min) is what this teaching track shadows | Path page read; course content behind enrolment |
 | [Certification FAQ](https://anthropic-partners.skilljar.com/page/faq-certifications) | Primary | Confirms 120 min, 100-1000 scale, 720 pass, retake ladder, Partner Network eligibility | Read |
 | [CCAR-P certification page](https://anthropic-partners.skilljar.com/claude-certified-architect-professional-certification) | Primary | 175 USD, purchase and access | Read |
-| Official Exam Guide PDF | Primary | The real domain blueprint. Everything else about weightings is third-party guesswork | **Not yet obtained.** Highest-value missing resource |
+| [Official Exam Guide PDF](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F6nizmqk8tpzpfjvt6qmmav7rh%2Fpublic%2F1783542810%2FClaude+Certified+Architect+%E2%80%93+Professional+Exam+Guide.pdf) | Primary | The real domain blueprint. Linked from the certifications page, no login needed | **Obtained 20 Aug 2026.** Confirms 63 items, 120 min, 100-1000 scale, 720 pass, and all seven domain weightings exactly as this repo had them |
 | [Pearson VUE - Anthropic](https://www.pearsonvue.com/us/en/anthropic.html) | Primary | Scheduling and proctoring | Read |
 
 ## Primary: platform documentation
@@ -66,7 +66,7 @@ not Professional, so their five-domain split is the wrong blueprint.
 |---|---|---|
 | [paullarionov/claude-certified-architect](https://github.com/paullarionov/claude-certified-architect) | Secondary | Foundations guides in eleven languages, HTML practical tests |
 | [dnacenta/claude-certified-architect](https://github.com/dnacenta/claude-certified-architect) | Secondary | Foundations guide, anti-patterns, four-week plan |
-| Third-party exam guide sites | Secondary | Sole source for the 63-question count and seven-domain weightings. They copy each other |
+| Third-party exam guide sites | Secondary | Were the sole source for the question count and weightings until the official guide turned up. Both matched. No longer needed |
 
 ## Communities
 
@@ -81,8 +81,10 @@ Wisdom comes from arguing these calls with people who have shipped them.
 
 ## Gaps to close
 
-1. **The official Exam Guide PDF.** Everything about domain weighting is currently
-   third-party. This is the single highest-value item.
-2. **The prep course itself.** 12.2 hours of official material sitting behind
-   enrolment.
-3. **A practitioner to argue with.** No community contact made yet.
+1. ~~The official Exam Guide PDF.~~ **Closed 20 Aug 2026.** It was linked from the
+   certifications page all along, no login required. Lesson: check the policies and
+   certifications pages before assuming a document is gated.
+2. ~~The prep course itself.~~ **Enrolled.** 733 minutes across five courses, and it is
+   now the spine of the study plan rather than a footnote.
+3. **A practitioner to argue with.** No community contact made yet. This is the only
+   real gap left, and it is the one that produces wisdom rather than knowledge.

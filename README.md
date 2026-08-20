@@ -1,18 +1,21 @@
 # Claude Certified Architect - Professional: Prep Kit
 
-Study material for the Anthropic **Claude Certified Architect - Professional** (CCAR-P) exam: a three-week plan, notes for all seven domains, a 75-question scenario bank, eight hands-on labs, and a single-file web hub that ties them together.
+Study material for the Anthropic **Claude Certified Architect - Professional** (CCAR-P) exam.
+
+The spine is Anthropic's own free [prep course](https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional), 733 minutes across five courses. Everything here is built to sit around it: a day-by-day plan, a seven-lesson drill track, notes for all seven domains, a 75-question scenario bank, eight hands-on labs, and a single-file web hub. None of it replaces the official course.
 
 ## Contents
 
 | File | What it is |
 |---|---|
-| [`study-plan.md`](study-plan.md) | Three-week day-by-day plan, weighted to the domain split. Read the eligibility section first |
+| [`study-plan.md`](study-plan.md) | **Start here.** Day-by-day plan built around Anthropic's official prep course, with this repo's material slotted in around it |
 | [`index.html`](index.html) | The prep hub: plan tracker, practice engine, per-domain scoring. Open it in a browser |
 | [`notes/01-solution-design-models-devprod.md`](notes/01-solution-design-models-devprod.md) | Domains 1, 2 and 7: solution design and architecture, Claude models and prompting and context engineering, developer productivity |
 | [`notes/02-integration-evals.md`](notes/02-integration-evals.md) | Domains 3 and 4: integration and MCP, evaluation and testing and optimisation. The two heaviest domains |
 | [`notes/03-governance-stakeholder.md`](notes/03-governance-stakeholder.md) | Domains 5 and 6: governance and safety and risk, stakeholder communication and lifecycle |
 | [`labs.md`](labs.md) | Eight time-boxed builds, 60 to 150 minutes each |
 | [`questions.json`](questions.json) | The question bank, with explanations and per-distractor notes |
+| [`course/`](course/) | A seven-lesson teaching track shadowing official Course 1, with 35 scenario drills. Open [`course/index.html`](course/index.html) |
 | [`tools/`](tools/) | `build_hub.py` and the HTML template that generate `index.html` |
 
 Each notes file follows the same shape per domain: a framing paragraph on what the exam is really testing, comparative tables, decision heuristics, a common-distractors list, and a set of one-line recalls for the final week.
@@ -23,8 +26,6 @@ Anthropic's certification FAQ states that certification is available to people a
 
 ## Exam facts
 
-Confirmed on Anthropic's own certification pages:
-
 | Item | Detail |
 |---|---|
 | Code | CCAR-P |
@@ -34,11 +35,15 @@ Confirmed on Anthropic's own certification pages:
 | Delivery | Pearson VUE, online proctored or test centre. Closed book |
 | Validity | 12 months, free on-time renewal via a non-proctored assessment |
 | Retakes | 14 days, then 30, then 90. Four attempts per rolling 12 months |
-| Prerequisites | None. You can sit Professional without holding Foundations |
+| Items | 63 |
+| Types | Multiple choice and multiple response. Each item states how many to select |
+| Prerequisites | None. "There are no mandatory prerequisites or courses required to sit this exam" |
 
-**Not confirmed by Anthropic:** the 63-question count and the seven domain weightings below. Those come only from third-party prep sites citing "Exam Guide v1.0, July 2026", and those sites copy each other. Download the real exam guide from the Academy and re-derive your hour allocations from it.
+All of the above is from Anthropic's own [CCAR-P Exam Guide](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F6nizmqk8tpzpfjvt6qmmav7rh%2Fpublic%2F1783542810%2FClaude+Certified+Architect+%E2%80%93+Professional+Exam+Guide.pdf) (PDF), obtained 20 Aug 2026. Earlier versions of this repo flagged the question count and weightings as third-party guesswork. The official guide confirms both exactly.
 
-## Domain weightings (third-party sourced)
+## Domain weightings (official)
+
+From the official exam guide.
 
 | # | Domain | Weight |
 |---|---|---|

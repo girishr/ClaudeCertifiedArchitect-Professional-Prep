@@ -1,34 +1,59 @@
-# CCAR-P: 3-Week Study Plan
+# CCAR-P: Study Plan
 
-**Target exam date: Saturday 5 September 2026** (day 20). Book it now, on day 1. An unbooked exam slips.
+**Today: Thursday 20 August 2026. Target exam date: Saturday 5 September 2026.** Seventeen study days, counting today.
 
-## Read this before day 1: the eligibility gate
+## How to actually use this
 
-Anthropic's certification FAQ states that certification is available to people at Claude Partner Network organisations, and that **registration requires a work email on a recognised company domain. Personal email addresses will not work.** So step zero is not studying, it is confirming that your employer is in the Claude Partner Network and that your work address gets you into the Partner Academy. If it is not, sorting that out is a lead time you need to know about on day one, not in week three. Joining at the Registered entry level is free, but it is an organisation-level action, not something you can do on your own account.
+There is one spine and three supports. Get this right and the rest is scheduling.
 
-## The exam you are preparing for
+| | What it is | When |
+|---|---|---|
+| **The spine** | [Anthropic's official CCAR-P Prep Course](https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional). Free, 733 minutes, five courses | Every study day. This is where the knowledge comes from |
+| Support 1 | The `course/` lessons in this repo. 35 scenario drills | Straight after the matching official course, same evening |
+| Support 2 | The `notes/` files | Week 3 revision, not week 1 reading |
+| Support 3 | `questions.json` and the hub. 75 questions | Calibration. Domain drills as you go, one full mock at the end |
+
+Watching alone will not get you to 720. Twelve hours of video builds recognition, and the exam tests decisions under time pressure. The drills exist to close exactly that gap.
+
+## The five official courses
+
+"Course 1" and "Course 2" below mean the five lessons inside the official prep path. Here they are with their real names, their length, and the exam domains each one buys you.
+
+| # | Official course | Length | Exam domains it covers | Weight |
+|---|---|---|---|---|
+| 1 | Claude Platform & Solution Design | 238 min | 1 Solution Design, 2 Models/Prompting/Context | 30% |
+| 2 | Enterprise Integration & Production | 158 min | 3 Integration, 4 Evaluation & Testing | 35% |
+| 3 | Responsible AI, Safety & Risk for Architects | 114 min | 5 Governance, Safety & Risk | 14% |
+| 4 | Stakeholder Engagement, Lifecycle & GTM | 178 min | 6 Stakeholder Communication & Lifecycle | 14% |
+| 5 | Team Enablement & Operational Productivity | 45 min | 7 Developer Productivity | 7% |
+
+Courses 1 and 2 are 54% of the video and 65% of the exam. They come first.
+
+The course lists six prerequisite courses (Claude 101, Claude Code in Action, AI Fluency, Building with the Claude API, Introduction to MCP, AI Capabilities and Limitations). Skim the list and skip anything covering ground you already work in daily. Most of it will be a skip.
+
+## Exam facts, confirmed
+
+Every line below now comes from **Anthropic's own [CCAR-P Exam Guide PDF](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F6nizmqk8tpzpfjvt6qmmav7rh%2Fpublic%2F1783542810%2FClaude+Certified+Architect+%E2%80%93+Professional+Exam+Guide.pdf)**, not third-party guesswork.
 
 | Item | Detail |
 |---|---|
-| Name | Claude Certified Architect - Professional (CCAR-P) |
-| Format | 63 scenario-based questions, all scored |
-| Time | 120 minutes, about 1.9 minutes per question |
-| Question types | Single-answer multiple choice, plus roughly 25% multiple-response ("Select TWO/THREE") |
-| Scoring | Scaled score from 100 to 1000, pass mark 720 |
+| Items | 63 |
+| Time | 120 minutes |
+| Types | Multiple choice and multiple response. Each item states how many to select |
+| Scoring | Scaled 100 to 1,000, pass at **720** |
+| Validity | 12 months from award |
 | Cost | 175 USD |
-| Delivery | Pearson VUE, online proctored or test centre. Closed book, no Claude, no docs |
-| Validity | 12 months, free on-time renewal via a non-proctored assessment |
-| Registration | Anthropic Partner Academy on Skilljar, then schedule through Pearson VUE |
+| Delivery | Pearson VUE, online proctored or test centre. Closed book |
+| Retakes | 14 days, then 30, then 90. Four attempts per rolling 12 months |
+| Prerequisites | None. "There are no mandatory prerequisites or courses required to sit this exam" |
 
-The 120 minutes, the 720 pass mark on a 100 to 1000 scale, the 175 USD price, the 12-month validity and the Pearson VUE delivery are all confirmed on Anthropic's own certification pages and FAQ. The **63-question count and the domain weightings below are not**. They come only from third-party prep sites citing "Exam Guide v1.0, July 2026", and those sites copy each other freely. Download the real exam guide from the Academy on day 1 and re-derive the hour allocations from it before you commit three weeks to this split.
+Recommended experience per the guide: 3+ years systems architecture or platform engineering, 6+ months hands-on Claude or comparable LLM production experience, and end-to-end delivery experience. You clear all three.
 
-One more thing the FAQ confirms and most guides skip: retakes wait 14, then 30, then 90 days, capped at four attempts per rolling 12 months. That is a good reason not to sit it early to "see what it's like".
+## Domain weightings, confirmed
 
-## Domain weightings, and what they mean for your time
+The official blueprint matches what this repo was already built on, so the hour allocations below stand.
 
-The "confidence" column below is filled in for the author of this plan: strong on the architecture and Claude Code side from day-to-day work, weaker on integration depth, evaluation practice, governance and the consulting half of the role. **Re-rate it honestly for yourself before you use the hours.** If your weak set is different, move the hours, not the plan structure.
-
-| # | Domain | Weight | Questions (approx) | Confidence | Hours to spend |
+| # | Domain | Weight | Items | Confidence | Hours |
 |---|---|---|---|---|---|
 | 3 | Integration | 19% | 12 | Weak | 11 |
 | 1 | Solution Design & Architecture | 17% | 11 | Stronger | 6 |
@@ -38,90 +63,97 @@ The "confidence" column below is filled in for the author of this plan: strong o
 | 2 | Claude Models, Prompting & Context Engineering | 13% | 8 | Stronger | 5 |
 | 7 | Developer Productivity & Operational Enablement | 7% | 4 | Stronger | 3 |
 
-Those four weak domains are 63% of the exam. That is where the plan puts its weight. Domains 1, 2 and 7 are the ones an experienced architect's day job already covers, so they get review passes rather than study blocks.
+Those four weak domains are 63% of the exam.
 
-Do not try to convert 720 into "questions I can miss". A scaled score is not a percentage of items correct, and with a floor of 100 the arithmetic does not work the way it looks. The useful version of the same thought is structural: losing one weak domain outright is probably survivable, losing two is not.
+Do not try to convert 720 into "questions I can miss". A scaled score is not a percentage of items correct, and with a floor of 100 the arithmetic does not work the way it looks. The structural version: losing one weak domain outright is probably survivable, losing two is not.
 
-## How to use the three assets together
+## The scheduling problem
 
-- **Notes** are for the first pass and for the final week's re-reads. Read the "what the exam is really testing" framing and the "common distractors" list first, then the body.
-- **Labs** are for building judgement you cannot get from reading. Do the five priority labs even if you skip everything else.
-- **Question bank** is for calibration. Do not burn it all in week 1. Split it: a diagnostic on day 1, domain-specific sets as you finish each domain, and two full mocks in week 3.
+The SpecPilot web launch is targeted for **Wednesday 26 August**, which sits in the middle of these sixteen days. Launch week will take your evenings whether you plan for it or not.
 
-## Week 1: cover the ground
+So this plan front-loads. The heavy lifting happens before the 26th, launch week is deliberately near-empty, and the second sprint picks up afterwards. Do not try to run both at full intensity, and do not schedule the exam earlier to "get it out of the way" - the retake ladder starts at 14 days and there is no second attempt before the launch settles.
 
-Roughly 2.5 hours on weekdays, 5 on the weekend.
+## Sprint 1: before the launch
 
-| Day | Date | Focus | Work |
+**Thu 20 to Tue 25 August. Six days, roughly 2 hours a night.** This is the expensive stretch. It buys 65% of the exam.
+
+| Day | Date | Official course | Then |
 |---|---|---|---|
-| 1 | Mon 17 Aug | Setup and diagnostic | Register on the Partner Academy, download the official exam guide, book the Pearson VUE slot for 5 Sep. Take a 25-question mixed diagnostic from the bank, untimed. Record your per-domain score. |
-| 2 | Tue 18 Aug | Integration part 1 | Notes: Integration, sections on mechanism choice and MCP architecture. Read the MCP spec overview alongside it. |
-| 3 | Wed 19 Aug | Integration part 2 | Notes: tool design, capability bloat, auth and security. Then Lab 1 (build an MCP server, break the tool descriptions). |
-| 4 | Thu 20 Aug | Integration part 3 | Notes: RAG pipeline design and observability. Read Anthropic's contextual retrieval post. Do 14 Integration questions from the bank. |
-| 5 | Fri 21 Aug | Evals part 1 | Notes: eval set construction, grading methods, metrics selection. |
-| 6 | Sat 22 Aug | Evals part 2 + lab | Notes: agent-specific evaluation, rollout strategies, root-cause diagnosis, optimisation levers. Then Lab 4 (build an eval harness with a CI gate). Do 12 Evals questions. |
-| 7 | Sun 23 Aug | Governance | Notes: Domain 5 end to end. Build your own regulation-to-control mapping table from memory, then check it against the notes. Do 11 Governance questions. |
+| 1 | Thu 20 Aug | Course 1, first third (~80 min) | Course lessons 0001 and 0002 |
+| 2 | Fri 21 Aug | Course 1, second third (~80 min) | Course lessons 0003 and 0004 |
+| 3 | Sat 22 Aug | Course 1, final third (~78 min) | Course lessons 0005, 0006, 0007. Then 13 Domain 1 questions |
+| 4 | Sun 23 Aug | Course 2, first half (~80 min) | Notes: Integration, mechanism choice and MCP architecture |
+| 5 | Mon 24 Aug | Course 2, second half (~78 min) | Notes: Evals. Then 14 Integration questions |
+| 6 | Tue 25 Aug | Catch up on anything slipped | 12 Evals questions. Then stop and launch |
 
-**End of week 1 checkpoint:** you should be able to explain, without notes, when MCP beats a direct API integration, and name four grading methods with the situation each suits.
+**Checkpoint:** you should be able to say, without notes, when MCP beats a direct API integration, and name four grading methods with the situation each suits.
 
-## Week 2: close the weak gaps
+## Launch week: protected
 
-Roughly 2.5 hours on weekdays, 5 on the weekend.
+**Wed 26 to Fri 28 August. Three days, 30 minutes a night maximum.** No new heavy material.
 
-| Day | Date | Focus | Work |
+| Day | Date | Work |
+|---|---|---|
+| 7 | Wed 26 Aug | Launch day. Course 5 (45 min) only if the launch is calm. Otherwise nothing |
+| 8 | Thu 27 Aug | Course 5 if not done. Otherwise re-read one-line recalls from the Domain 1 notes |
+| 9 | Fri 28 Aug | 5 Domain 7 questions. Small domain, do not overinvest |
+
+Course 5 sits here on purpose: 45 minutes, 7% of the exam, the least demanding thing in the path.
+
+## Sprint 2: the consulting half
+
+**Sat 29 August to Wed 2 September. Five days, back to 2 hours.** This is the half that technically strong candidates underestimate. Course 4 is the second-longest in the whole path, which tells you how seriously Anthropic weights it.
+
+| Day | Date | Official course | Then |
 |---|---|---|---|
-| 8 | Mon 24 Aug | Stakeholder and lifecycle | Notes: Domain 6 end to end. This is the domain most likely to be underestimated. Do 10 Stakeholder questions. |
-| 9 | Tue 25 Aug | Integration security | Lab 2 (OAuth, scoping, least privilege, prompt-injection test). Re-read the injection and confused-deputy sections. |
-| 10 | Wed 26 Aug | Retrieval judgement | Lab 3 (RAG eval: recall@k, naive vs contextual chunking vs reranking, when long context wins). |
-| 11 | Thu 27 Aug | Solution design review | Notes: Domain 1. Focus on the pattern-selection table and the "when a workflow beats an agent" rules. Do 13 Design questions. |
-| 12 | Fri 28 Aug | Models and context | Notes: Domain 2. Prompt caching mechanics, model routing, context management. Do 10 Models questions. |
-| 13 | Sat 29 Aug | Guardrails lab | Lab 7 (layered guardrails, HITL gates, audit logging, compliance control mapping). Then Lab 6 if you have energy left (caching, routing, batch, measure before and after). |
-| 14 | Sun 30 Aug | Consulting artifacts | Lab 8 (mock discovery, ADR, success metrics, phased rollout, exec one-pager). Then re-read the Domain 6 distractor list. |
+| 10 | Sat 29 Aug | Course 3, all of it (114 min) | Notes: Governance Domain 5. Rebuild the regulation-to-control table from memory |
+| 11 | Sun 30 Aug | Course 4, first half (~90 min) | 11 Governance questions |
+| 12 | Mon 31 Aug | Course 4, second half (~88 min) | Notes: Stakeholder Domain 6 |
+| 13 | Tue 1 Sep | Any official course material still outstanding | 10 Stakeholder questions. Then Lab 8, the consulting artifact lab |
+| 14 | Wed 2 Sep | Notes: Domain 2, models and context. Light | 10 Models questions |
 
-**End of week 2 checkpoint:** re-score the day 1 diagnostic questions you got wrong. If any weak domain is still under 60%, week 3 buys it a dedicated re-read block.
+**Checkpoint:** every official course finished. If any weak domain is still under 60% on the drills, the taper below buys it a repair block.
 
-## Week 3: calibrate and consolidate
+## Taper: calibrate, do not cram
 
-Roughly 2.5 hours on weekdays, 4 on the weekend. No new material after day 18.
+**Thu 3 to Sat 5 September.** No new material.
 
-| Day | Date | Focus | Work |
-|---|---|---|---|
-| 15 | Mon 31 Aug | Dev productivity | Notes: Domain 7. Claude Code at team scale, settings precedence, hooks, subagents. Do 5 questions. Small domain, do not overinvest. |
-| 16 | Tue 1 Sep | Full mock 1 | 63 questions, 120 minutes, timed, no notes, no breaks. Score it. Do not review yet. |
-| 17 | Wed 2 Sep | Mock 1 review | Review every wrong answer AND every right answer you were unsure of. For each, write one line on why the distractor was tempting. This is the highest-value session in the plan. |
-| 18 | Thu 3 Sep | Targeted repair | Re-read notes for the two domains that scored worst in the mock. Redo those domain question sets. |
-| 19 | Fri 4 Sep | Full mock 2 + recalls | Mock 2 in the morning if you can, otherwise a 30-question timed set. Evening: read every "one-line recalls" list across all three notes files, twice. |
-| 20 | Sat 5 Sep | Exam day | Light re-read of the recalls and distractor lists in the morning. Nothing new. Sit the exam. |
-| 21 | Sun 6 Sep | Buffer | Reserve day if you need to move the exam. Keep it free. |
+| Day | Date | Work |
+|---|---|---|
+| 15 | Thu 3 Sep | **Full mock 1.** 63 questions, 120 minutes, timed, no notes, no breaks. Score it and stop. Do not review today |
+| 16 | Fri 4 Sep | **Mock review**, morning if you can. Every wrong answer and every right answer you were unsure of, one line each on why the distractor was tempting. Evening: all one-line recalls across the three notes files, twice. This is the highest-value day in the plan |
+| 17 | Sat 5 Sep | **Exam.** Light re-read of recalls and distractor lists in the morning. Nothing new |
 
-## Daily session shape
+Mock 2 is deliberately cut. With sixteen days and a launch inside them, one mock properly reviewed beats two mocks skimmed.
 
-A 2.5 hour weekday session that works:
+## The daily shape
 
-1. 10 min: re-read yesterday's "one-line recalls"
-2. 60 min: new material or lab
-3. 15 min: break, away from the screen
-4. 45 min: questions on what you just covered
-5. 20 min: write your own one-line summary of anything you got wrong
+A two-hour evening that works:
 
-The last step is the one people skip and the one that moves the score.
+1. 10 min: re-read yesterday's one-line recalls
+2. 60-80 min: the official course segment
+3. 10 min: break, away from the screen
+4. 30 min: the matching drills from `course/`, or the domain question set
+5. 10 min: write your own one-line summary of anything you got wrong
+
+Step 5 is the one people skip and the one that moves the score.
 
 ## Exam technique
 
-- Read the last sentence of the question first, then the scenario. The scenario is long and the actual ask is often narrower than it looks.
-- Find the binding constraint. Almost every question has one: a latency SLA, a compliance regime, a budget, a team maturity level, a data residency requirement. The right answer is the one that respects it. The best-sounding answer that violates it is the trap.
-- On "Select TWO", the two correct answers usually sit at different layers, for example one architectural and one operational. Two answers from the same layer is a warning sign.
-- Watch for absolutes. "Always", "never" and "all" are usually wrong in a domain built on tradeoffs. Watch for the reverse trap too: sometimes the absolute is correct because it is a hard compliance rule.
-- Distractors here are real techniques applied at the wrong time. If two answers both look right, one of them is right for a slightly different scenario. Work out which constraint separates them.
-- Budget 1.9 minutes per question. Flag anything over 3 minutes and move on. A 10-minute reserve at the end is worth more than a perfect answer on question 12.
-- Governance and stakeholder questions often have a "do the reversible thing first" answer. When in doubt on those two domains, pick the option that preserves the ability to undo.
+- Read the last sentence first, then the scenario. The ask is narrower than the setup.
+- Find the binding constraint: a latency SLA, a compliance regime, a budget, a team maturity level, a residency rule. The right answer respects it. The best-sounding answer that violates it is the trap.
+- Each item states how many responses to select, so read that line before the options. On a select-two, the correct answers usually sit at different layers, one architectural and one operational.
+- Distractors are real techniques applied at the wrong time. If two answers both look right, one is right under a slightly different constraint. Work out which constraint separates them.
+- Watch for absolutes. "Always" and "never" are usually wrong in a domain of tradeoffs, unless the absolute is a hard compliance rule.
+- Budget under two minutes per item. Flag anything over three and move on. A ten-minute reserve at the end beats a perfect answer on question 12.
+- On governance and stakeholder items, when in doubt pick the option that preserves the ability to undo.
 
-## What to do if you fall behind
+## If you fall behind
 
 Cut in this order:
 
-1. Labs 5 and 6 (nice to have, your day job partly covers them)
-2. Domain 1, 2 and 7 study blocks, keep only the question sets
-3. Mock 2
+1. All labs except Lab 8
+2. The `notes/` re-reads for Domains 1, 2 and 7, keeping only the question sets
+3. Course 5, and accept the 7%
 
-Never cut: the day 17 mock review, the four weak-domain notes, and Labs 2, 3, 4, 7, 8.
+Never cut: the day 16 mock review, the official Courses 2 and 4, and the drills on your four weak domains.
