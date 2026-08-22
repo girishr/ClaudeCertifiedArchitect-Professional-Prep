@@ -59,11 +59,15 @@ guide.
 
 ## Secondary: third-party prep
 
-Useful for shape, unreliable for detail. Both community repos target **Foundations**,
-not Professional, so their five-domain split is the wrong blueprint.
+Useful for shape and extra reps, unreliable for detail. Three of the four target
+**Foundations**, not Professional, so their five-domain split is the wrong blueprint and
+they carry nothing on governance, stakeholder communication or lifecycle management,
+which together are 28% of the Professional paper. CertSafari is the exception.
 
 | Resource | Trust | Note |
 |---|---|---|
+| [CertSafari - Anthropic](https://certsafari.com/anthropic) | Secondary | The only third-party bank covering **CCAR-P directly**. Exam-style questions with explanations, free, no signup, refreshed every three weeks. Best of the third-party options |
+| [Claude Certification Guide - mock exam](https://claudecertificationguide.com/mock-exam) | Secondary | Free timed mock, 28 in 56 min or 60 in 120, scored to 1,000 with a 720 pass mark. **Foundations, not Professional**: five-domain blueprint, 60 items not 63. Use for timing practice, not domain calibration. Question sourcing undisclosed |
 | [paullarionov/claude-certified-architect](https://github.com/paullarionov/claude-certified-architect) | Secondary | Foundations guides in eleven languages, HTML practical tests |
 | [dnacenta/claude-certified-architect](https://github.com/dnacenta/claude-certified-architect) | Secondary | Foundations guide, anti-patterns, four-week plan |
 | Third-party exam guide sites | Secondary | Were the sole source for the question count and weightings until the official guide turned up. Both matched. No longer needed |

@@ -69,7 +69,7 @@ Do not try to convert 720 into "questions I can miss". A scaled score is not a p
 
 ## The scheduling problem
 
-The SpecPilot web launch is targeted for **Wednesday 26 August**, which sits in the middle of these sixteen days. Launch week will take your evenings whether you plan for it or not.
+The SpecPilot web launch is targeted for **Wednesday 26 August**, which sits in the middle of these seventeen days. Launch week will take your evenings whether you plan for it or not.
 
 So this plan front-loads. The heavy lifting happens before the 26th, launch week is deliberately near-empty, and the second sprint picks up afterwards. Do not try to run both at full intensity, and do not schedule the exam earlier to "get it out of the way" - the retake ladder starts at 14 days and there is no second attempt before the launch settles.
 
@@ -124,7 +124,16 @@ Course 5 sits here on purpose: 45 minutes, 7% of the exam, the least demanding t
 | 16 | Fri 4 Sep | **Mock review**, morning if you can. Every wrong answer and every right answer you were unsure of, one line each on why the distractor was tempting. Evening: all one-line recalls across the three notes files, twice. This is the highest-value day in the plan |
 | 17 | Sat 5 Sep | **Exam.** Light re-read of recalls and distractor lists in the morning. Nothing new |
 
-Mock 2 is deliberately cut. With sixteen days and a launch inside them, one mock properly reviewed beats two mocks skimmed.
+Mock 2 is deliberately cut. With seventeen days and a launch inside them, one mock properly reviewed beats two mocks skimmed.
+
+## Extra reps, if you want them
+
+This repo's 75 questions plus the 35 course drills is enough. If you burn through them and want more:
+
+- [CertSafari - Anthropic](https://certsafari.com/anthropic) - free, no signup, and the only third-party bank that covers CCAR-P directly rather than Foundations
+- [Claude Certification Guide mock exam](https://claudecertificationguide.com/mock-exam) - free timed mock. It is built for **Foundations**, 60 items and a five-domain split, so use it to rehearse working against the clock, not to judge where you stand by domain
+
+Neither is a substitute for the official course. If time is tight, drop these before you drop anything on days 15 and 16.
 
 ## The daily shape
 

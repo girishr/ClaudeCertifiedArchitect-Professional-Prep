@@ -104,14 +104,23 @@ These are the source of the architectural vocabulary the exam uses.
 - [EU AI Act regulatory framework](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) - note the Digital Omnibus deferral of the high-risk dates
 - [GDPR Article 22](https://gdpr-info.eu/art-22-gdpr/) - automated decision-making safeguards
 
-## Community study repos
+## Third-party practice and community material
 
-Other people have published prep material for this certification track. Both of the repos below are **unofficial and target Foundations (CCAR-F), not Professional**, so their domain split is the five-domain Foundations blueprint rather than the seven domains above. Useful for the shared ground on agentic architecture, tool design and MCP, less so for the Professional-only material on governance, stakeholder communication and lifecycle management.
+All of the below is **unofficial**. Useful for extra reps, never as a substitute for the official exam guide or the prep course.
+
+### Practice question banks
+
+- [CertSafari - Anthropic](https://certsafari.com/anthropic) - the only third-party bank here that covers **CCAR-P directly**. Exam-style questions with explanations, free, no signup. Says it refreshes every three weeks and checks itself against the current exam guides. Worth using for extra reps once you have exhausted this repo's 75
+- [Claude Certification Guide - mock exam](https://claudecertificationguide.com/mock-exam) - free timed mock, either 28 questions in 56 minutes or a full 60 in 120, scored out of 1,000 with a 720 pass mark. **It targets Foundations (CCAR-F), not Professional**, so it runs the five-domain Foundations blueprint and its 60-item format rather than your 63. Good for timing practice and for the shared architecture ground, wrong for domain-level calibration. The site does not say where its questions come from
+
+### Community study repos
+
+Both repos below are **unofficial and target Foundations (CCAR-F), not Professional**, so their domain split is the five-domain Foundations blueprint rather than the seven domains above. Useful for the shared ground on agentic architecture, tool design and MCP, less so for the Professional-only material on governance, stakeholder communication and lifecycle management.
 
 - [paullarionov/claude-certified-architect](https://github.com/paullarionov/claude-certified-architect) - Foundations study guides in eleven languages, markdown and PDF, plus HTML practical tests covering tool design, MCP integration, structured output, context management and reliability
 - [dnacenta/claude-certified-architect](https://github.com/dnacenta/claude-certified-architect) - Foundations study guide with per-domain guides, code examples and anti-patterns, exam scenarios, decision frameworks, practice questions and a four-week plan. Published as both a site and a PDF
 
-Treat anything from a community repo, this one included, as secondary to the official exam guide. Cross-check before you memorise.
+One thing to watch across all four: three of them are built for Foundations, whose five-domain blueprint has no equivalent of the Professional-only weight in governance, stakeholder communication and lifecycle management. That is 28% of your exam that Foundations material simply does not cover. Treat anything third party, this repo included, as secondary to the official exam guide, and cross-check before you memorise.
 
 ## Using this yourself
 
