@@ -36,7 +36,7 @@ come before you build: <strong>what work Claude owns, what shape that work takes
 reference architecture it fits, and which model and context strategy keep it accurate and
 affordable</strong>. Getting them out of order is the reliable path to an expensive pivot.</p>
 
-<h2><span class="num">1</span>Four properties you design around</h2>
+<h2><span class="num n">1</span>Four properties you design around</h2>
 
 <p>Start here, because it explains why every later answer is what it is. Four properties of
 the model shape everything downstream. None are defects awaiting a fix. They are material
@@ -97,7 +97,7 @@ accident.</p>
   <div class="verdict" hidden>This is <b>non-determinism</b> misread as stability, and it is the module's own worked failure. The eval set is not bureaucracy, it is the only instrument that can make a claim about behaviour you cannot observe exhaustively.</div>
 </div>
 
-<h2><span class="num">2</span>Three layers, seven primitives</h2>
+<h2><span class="num n">2</span>Three layers, seven primitives</h2>
 
 <p>Two vocabularies, both of which the exam expects you to keep straight. Muddled
 architecture conversations almost always trace back to collapsing one of them.</p>
@@ -145,7 +145,7 @@ distinction that should have ruled it out on sight.</p>
   makes the later patterns compositions of parts you already named.
 </div>
 
-<h2><span class="num">3</span>Decomposition: the move before architecture</h2>
+<h2><span class="num n">3</span>Decomposition: the move before architecture</h2>
 
 <p>Every solution has <strong>three owners</strong>, and assigning them early is the whole
 game. Architects who collapse all three into "what Claude does" produce systems that are
@@ -202,7 +202,7 @@ belong to Claude:</p>
   <div class="verdict" hidden>The module names this <b>the most common reference architecture mistake</b>: retrieval applied to live state. The symptoms are stale chunks, answers that shift with each index refresh, and results contradicting the database. Any scenario about status, balance, inventory or availability is testing this.</div>
 </div>
 
-<h2><span class="num">4</span>Pattern selection</h2>
+<h2><span class="num n">4</span>Pattern selection</h2>
 
 <p>Three patterns, positioned on two axes: how predictable the path is, and how much
 autonomy you hand the model.</p>
@@ -277,7 +277,7 @@ available.</p>
   <div class="verdict" hidden>Several factors point the same way here, which is common. The exam wants the <b>tightest</b> one. "Reconstruct why any claim was decided" is a hard regulatory requirement, and an agent's trajectory is exactly what current tooling cannot alert on.</div>
 </div>
 
-<h2><span class="num">5</span>Multi-agent and orchestration</h2>
+<h2><span class="num n">5</span>Multi-agent and orchestration</h2>
 
 <p>Two roles. The <strong>orchestrator</strong> owns the goal: it decomposes, delegates and
 synthesises, and never does the sub-task work itself. <strong>Subagents</strong> own scoped
@@ -310,7 +310,7 @@ each, then synthesised.</p>
   it.</strong> Fan-out needs completeness accounting or nothing reports the missing piece.</p>
 </div>
 
-<h2><span class="num">6</span>Reference architectures</h2>
+<h2><span class="num n">6</span>Reference architectures</h2>
 
 <p>References, not blueprints. Understand them well enough to generalise, adapt the shape
 that fits, and recognise when a workload draws on more than one.</p>
@@ -332,7 +332,7 @@ one for the composed system. Reach for a second pattern when two parts of the pr
 in genuinely different ways. If you are reaching for a second because you have not decided
 what problem you are solving, that is a deferred decision, not an applied pattern.</p>
 
-<h2><span class="num">7</span>RAG pipeline design</h2>
+<h2><span class="num n">7</span>RAG pipeline design</h2>
 
 <p>Chunking is chosen by <strong>what the corpus is</strong>. Indexing is chosen by
 <strong>how queries are phrased</strong>. Those are two separate decisions.</p>
@@ -365,7 +365,7 @@ maintenance</strong>. Smaller chunks and hybrid indexing raise quality and laten
 Larger chunks and dense-only lower latency and maintenance but miss exact matches. There is
 no universal right point, only one you can defend for this corpus and these queries.</p>
 
-<h2><span class="num">8</span>Model and context strategy</h2>
+<h2><span class="num n">8</span>Model and context strategy</h2>
 
 <p>Four terms that get conflated, and conflating them produces architecture mistakes:</p>
 
@@ -446,7 +446,7 @@ standard, you are writing acceptance criteria after the build.</p>
   <div class="verdict" hidden>Two lessons. First, the criterion was set <b>before</b> the data, so the team did not have to negotiate with itself. Second, stratifying by document type surfaced the salvage move. A single overall score of 0.86 would have hidden both the failure and the fix.</div>
 </div>
 
-<h2><span class="num">9</span>Prompting as architecture</h2>
+<h2><span class="num n">9</span>Prompting as architecture</h2>
 
 <p>At enterprise scale a prompt is an asset you design, not a sentence you type.</p>
 
@@ -488,7 +488,7 @@ above the fixed instruction block. The prefix changed every request. The fix was
   </tbody>
 </table>
 
-<h2><span class="num">10</span>Entry points, interfaces, routes, constraints</h2>
+<h2><span class="num n">10</span>Entry points, interfaces, routes, constraints</h2>
 
 <p>Three decisions in sequence: which entry point fits the work, which build-time interface
 suits the team, which delivery route fits the partner's cloud commitments.</p>
@@ -582,7 +582,7 @@ Assured Workloads after commercial release.</p>
 
 <p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
 
-<h2><span class="num">11</span>The five takeaways</h2>
+<h2><span class="num n">11</span>The five takeaways</h2>
 
 <ol>
   <li><strong>Decomposition comes before architecture.</strong> Split the work across Claude, systems and humans first, driven by how the model behaves on each piece.</li>
@@ -596,7 +596,7 @@ Assured Workloads after commercial release.</p>
 start at the middle tier, choose by the work. The module's editorial position matches the
 engineering blog's: complexity has to earn its place.</p>
 
-<h2><span class="num">12</span>Close the page</h2>
+<h2><span class="num n">12</span>Close the page</h2>
 
 <p>From memory, out loud or on paper.</p>
 

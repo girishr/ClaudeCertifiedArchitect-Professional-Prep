@@ -99,6 +99,17 @@ h2 .num {
   text-transform: uppercase;
   margin-bottom: .3rem;
 }
+/* Numeric kicker: a section number belongs on the same line as its heading.
+   A lone digit stacked above the title reads as an orphan, not a label. */
+h2 .num.n {
+  display: inline;
+  font-size: .82em;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0 .5em 0 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
 h3 { font-size: 1.06rem; font-weight: 600; margin: 2rem 0 .5rem; }
 p { margin: 0 0 1.1rem; }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
