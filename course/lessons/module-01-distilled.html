@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1 Distilled</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">CCAR-P &middot; Official Course 1, distilled</p>
+  <h1>Claude Platform &amp; Solution Design</h1>
+  <p class="standfirst">Everything Module 1 teaches, in one pass. Built to replace 34 screens and 238 minutes, not to sit alongside them.</p>
+  <div class="meta">
+    <span>~45 minutes</span>
+    <span>Exam Domains 1 and 2, 30%</span>
+    <span>9 drills</span>
+  </div>
+</header>
+
+<div class="flag">
+  <span class="label">What this is</span>
+  <p>The module's substance, reorganised and written from scratch. Same decisions, same
+  tables, same failure cases, in a fraction of the reading. Where the course spends a
+  screen building up to a rule, this states the rule and shows you where it bites.</p>
+</div>
+
+<p>The module has one spine, and it is worth naming before anything else. Four decisions
+come before you build: <strong>what work Claude owns, what shape that work takes, which
+reference architecture it fits, and which model and context strategy keep it accurate and
+affordable</strong>. Getting them out of order is the reliable path to an expensive pivot.</p>
+
+<h2><span class="num">1</span>Four properties you design around</h2>
+
+<p>Start here, because it explains why every later answer is what it is. Four properties of
+the model shape everything downstream. None are defects awaiting a fix. They are material
+properties, the way a structural engineer designs around what steel does.</p>
+
+<p>The trap in each is the same: the characteristic that makes Claude capable in one
+situation is what makes it fail in another.</p>
+
+<table>
+  <caption>Property, consequence, mitigation</caption>
+  <thead><tr><th>Property</th><th>What it means for your design</th><th>The mitigation</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Non-determinism</strong></td>
+      <td>The same input can produce different output across runs. You cannot certify behaviour you observed once</td>
+      <td>Evaluation frameworks. A demo running clean five times is not evidence of determinism</td>
+    </tr>
+    <tr>
+      <td><strong>Context as a finite resource</strong></td>
+      <td>The window is a hard edge with a fixed token budget. What goes in, in what order, and what is left out are design decisions affecting both capability and cost</td>
+      <td>Deliberate context strategy, covered in section 6</td>
+    </tr>
+    <tr>
+      <td><strong>Confidence is not validity</strong></td>
+      <td>A wrong answer arrives in the same fluent, assured tone as a right one</td>
+      <td>Human-in-the-loop placement and verification, as architecture rather than afterthought</td>
+    </tr>
+    <tr>
+      <td><strong>Knowledge and capability boundaries</strong></td>
+      <td>Reliable on topics that are common, recent and consistent in training data. Unreliable on rare, private or fast-changing ones</td>
+      <td>Retrieval, tools, MCP, web search. Make an external system the source of truth instead of the model</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The module's own failure case is worth carrying: a team watched a demo run cleanly five
+times, concluded the behaviour was deterministic, and shipped a financial reconciliation
+pipeline with no checks around model output. In week two the same statement reprocessed to
+a different categorisation. Nothing had changed in the input. An analyst found it by
+accident.</p>
+
+<div class="flag">
+  <span class="label">The line to carry</span>
+  <p>The four properties are present whether your architecture acknowledges them or not.
+  A system that ignores them does not throw an error. It drifts quietly, and the gap is
+  found in an audit or by an angry user, never by the system itself.</p>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A team demos a document classifier to a steering group. It runs correctly on the same twelve sample documents four times in a row. The sponsor asks whether they can now skip building an evaluation set, since the behaviour is clearly stable.</p>
+  <p class="stem">What is the right response?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Sample size is not the issue. A hundred clean runs still would not establish determinism in a non-deterministic system.">Agree once the sample size is raised to a hundred documents.</li>
+    <li data-key="B" data-why="Right. Repeated observation cannot certify a non-deterministic system, which is precisely why eval frameworks exist.">Refuse, because repeated observation cannot certify a system that is non-deterministic.</li>
+    <li data-key="C" data-why="Temperature reduces variation without eliminating it, and it does not turn observation into certification.">Agree provided the temperature setting is first lowered to exactly zero.</li>
+    <li data-key="D" data-why="Logging tells you what happened after the fact. It is not a substitute for a graded eval set.">Agree if production logging captures every single classification for later review.</li>
+  </ol>
+  <div class="verdict" hidden>This is <b>non-determinism</b> misread as stability, and it is the module's own worked failure. The eval set is not bureaucracy, it is the only instrument that can make a claim about behaviour you cannot observe exhaustively.</div>
+</div>
+
+<h2><span class="num">2</span>Three layers, seven primitives</h2>
+
+<p>Two vocabularies, both of which the exam expects you to keep straight. Muddled
+architecture conversations almost always trace back to collapsing one of them.</p>
+
+<h3>The three layers</h3>
+
+<p>These are not alternatives. <strong>Every deployment involves all three</strong>, and each
+is a different conversation with a different stakeholder.</p>
+
+<table>
+  <thead><tr><th>Layer</th><th>What it is</th><th>Chosen for</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Entry point</strong></td><td>What a person or system interacts with. The wrapper deciding who can talk to Claude and how</td><td>The user and the work</td><td>Claude.ai, Claude Code, a custom app on the API</td></tr>
+    <tr><td><strong>Build-time interface</strong></td><td>How an engineer programs against Claude. The layer your code is written to</td><td>The engineering team and the integration</td><td>Direct API, SDKs, MCP, Agent SDK</td></tr>
+    <tr><td><strong>Delivery route</strong></td><td>Where API traffic terminates, and so whose infrastructure runs it</td><td>Cloud commitments and compliance posture</td><td>Anthropic direct, Bedrock, Vertex, Foundry</td></tr>
+  </tbody>
+</table>
+
+<p>A decision in one layer rarely dictates the others. The module's failure case: a retail
+banking proposal put Claude Code in front of branch staff because "it's all Claude". True
+at the model level, false at the wrapper level, and collapsing the layers erased the
+distinction that should have ruled it out on sight.</p>
+
+<h3>The seven primitives</h3>
+
+<p>Every pattern later in the module is an assembly of these. Learn them as one job each.</p>
+
+<table>
+  <thead><tr><th>Primitive</th><th>Job</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Tools</strong></td><td>Act</td><td>A function the model can call to take an action or fetch a result from your code</td></tr>
+    <tr><td><strong>MCP</strong></td><td>Connect</td><td>A protocol exposing a set of tools so multiple Claude clients reach the same entry points</td></tr>
+    <tr><td><strong>Subagents</strong></td><td>Isolate, parallelise</td><td>Hand a scoped sub-task to a separate context, for isolation or concurrency</td></tr>
+    <tr><td><strong>Hooks</strong></td><td>Guarantee</td><td>Deterministic code firing on defined events to enforce a rule the model cannot skip</td></tr>
+    <tr><td><strong>Skills</strong></td><td>Package a procedure</td><td>A versioned, reusable unit of instructions plus optional scripts</td></tr>
+    <tr><td><strong>Agent Teams</strong></td><td>Coordinate peers</td><td>Multiple agents as peers, each owning part of a larger goal</td></tr>
+    <tr><td><strong>Dynamic Workflows</strong></td><td>Compose at runtime</td><td>Assemble workflow steps at runtime rather than fixing them in advance</td></tr>
+  </tbody>
+</table>
+
+<div class="sidenote">
+  <b>Why the inventory matters.</b> The module's failure case is a design review where
+  someone said "we'll use an agent" and five people heard five different architectures.
+  Twenty minutes lost before anyone noticed. The primitives are the shared vocabulary that
+  makes the later patterns compositions of parts you already named.
+</div>
+
+<h2><span class="num">3</span>Decomposition: the move before architecture</h2>
+
+<p>Every solution has <strong>three owners</strong>, and assigning them early is the whole
+game. Architects who collapse all three into "what Claude does" produce systems that are
+slower, more expensive and harder to debug.</p>
+
+<table>
+  <thead><tr><th>Owner</th><th>What belongs there</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Claude</strong></td><td>Work benefiting from language understanding, summarisation, planning, drafting, or tool-mediated action</td></tr>
+    <tr><td><strong>Existing systems</strong></td><td>Anything the partner already paid to make reliable: the order-status service, the policy engine, the rules table, the database of record</td></tr>
+    <tr><td><strong>Humans</strong></td><td>Judgement calls, exception paths, approvals, and any moment where being right matters more than being fast</td></tr>
+  </tbody>
+</table>
+
+<p>For each piece, decide not whether Claude <em>can</em> do it but whether Claude
+<em>should own</em> it. Three tests:</p>
+
+<ul>
+  <li><strong>Reversibility.</strong> Can a wrong call be undone?</li>
+  <li><strong>Stakes.</strong> What does a wrong call cost?</li>
+  <li><strong>Accountability.</strong> Who must answer for it?</li>
+</ul>
+
+<div class="flag">
+  <span class="label">The framing shift the module is building toward</span>
+  <p>Stop asking "where can Claude help?" Ask <strong>"where do the four properties argue
+  for Claude over the system that already does this right?"</strong> That reframing is the
+  single most portable idea in Module 1.</p>
+</div>
+
+<p>The worked example is a claims triage assistant that reads a claim, decides priority,
+looks up policy coverage, and emails the adjuster. Four steps, and only one and a half
+belong to Claude:</p>
+
+<table>
+  <thead><tr><th>Step</th><th>Owner</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Read the claim</td><td>Claude</td><td>Pattern-rich language work, and a constrained output schema puts steerability on your side</td></tr>
+    <tr><td>Decide priority</td><td>Existing system</td><td>Looks like a language task, is not. Priority is a deterministic rule living in the partner's rule engine, not in training data</td></tr>
+    <tr><td>Look up coverage</td><td>Existing system</td><td>Same problem, higher stakes. Coverage tables change and the model cannot know when its version went stale</td></tr>
+    <tr><td>Email the adjuster</td><td>Split</td><td>Drafting is Claude. Sending is the email system. Above a value threshold, a human approves</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-answer="C">
+  <p class="scenario">A logistics partner wants an assistant that answers driver questions. One frequent question is "what is the current status of shipment 88214?" The team proposes indexing the shipment database nightly into a vector store so the assistant can answer from retrieval.</p>
+  <p class="stem">What is wrong with the proposal?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Chunking is a real design axis but irrelevant here. No chunking strategy makes a nightly snapshot current.">The chunking strategy was never matched to the structure of these records.</li>
+    <li data-key="B" data-why="Refresh frequency treats the symptom. Hourly indexing is still a snapshot and still wrong between refreshes.">The nightly refresh interval is too long and should instead run hourly.</li>
+    <li data-key="C" data-why="Right. Live state belongs to the system that owns it, reached by tool call, never by retrieval over a snapshot.">Shipment status is live state, so it needs a tool call instead.</li>
+    <li data-key="D" data-why="Embedding quality would matter for a semantic corpus. It cannot make stale data fresh.">The embedding model is not tuned for these short structured identifier records.</li>
+  </ol>
+  <div class="verdict" hidden>The module names this <b>the most common reference architecture mistake</b>: retrieval applied to live state. The symptoms are stale chunks, answers that shift with each index refresh, and results contradicting the database. Any scenario about status, balance, inventory or availability is testing this.</div>
+</div>
+
+<h2><span class="num">4</span>Pattern selection</h2>
+
+<p>Three patterns, positioned on two axes: how predictable the path is, and how much
+autonomy you hand the model.</p>
+
+<table>
+  <thead><tr><th>Pattern</th><th>Where control flow lives</th><th>Use when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Augmented LLM</strong></td><td>Nowhere, it is one bounded call</td><td>Task is well defined, output is verifiable, no reason to split the work</td></tr>
+    <tr><td><strong>Workflow</strong></td><td>Your code</td><td>Error cost is real, observability matters, steps can be determined in advance</td></tr>
+    <tr><td><strong>Agent</strong></td><td>Inside the model</td><td>The path cannot be enumerated in advance, and an inconsistent output is acceptable and recoverable</td></tr>
+  </tbody>
+</table>
+
+<p>Agents in production are bound by constrained tool entry points, per-turn budgets,
+explicit permissions and stopping criteria. The module is blunt that these are not
+options: they are what keeps an agent from becoming a liability.</p>
+
+<h3>Four workflow sub-patterns</h3>
+
+<table>
+  <thead><tr><th>Sub-pattern</th><th>Shape</th><th>Earns its place when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Chaining</strong></td><td>Step 2 consumes step 1's output, linear</td><td>Clean stage handoffs: extract, then classify, then summarise</td></tr>
+    <tr><td><strong>Routing</strong></td><td>A classifier picks the downstream path</td><td>Inputs vary in kind and each kind needs different handling</td></tr>
+    <tr><td><strong>Parallelisation</strong></td><td>Concurrent calls, results aggregated or voted</td><td>Sub-tasks are independent, so sequencing buys nothing</td></tr>
+    <tr><td><strong>Evaluator-optimizer</strong></td><td>Generate, grade, revise, loop to a criterion or retry limit</td><td>Quality is verifiable but one attempt is not reliable enough</td></tr>
+  </tbody>
+</table>
+
+<h3>The five-factor decision, in sequence</h3>
+
+<p>Walk the factors in order. For each, ask which patterns it rules out. <strong>The first
+factor that rules a pattern out is the deciding one.</strong></p>
+
+<table>
+  <thead><tr><th>Factor</th><th>Augmented LLM</th><th>Workflow</th><th>Agent</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Predictability</strong></td><td>Low, single bounded task</td><td>Low, you wrote the path</td><td>High, unpredictable by design</td></tr>
+    <tr><td><strong>Error cost</strong></td><td>Medium, no step-level guards</td><td>Low, deterministic guards between steps</td><td>High, full output distribution across turns</td></tr>
+    <tr><td><strong>Observability</strong></td><td>Medium, easy to log, opaque inside</td><td>Low, logs like code</td><td>High, trajectory reads as a transcript and tooling rarely alerts on it</td></tr>
+    <tr><td><strong>Latency budget</strong></td><td>Low, fastest</td><td>Medium, predictable but additive</td><td>High, open ended, budget the worst case</td></tr>
+    <tr><td><strong>Cost</strong></td><td>Low, fewest tokens</td><td>Medium, scales with steps</td><td>High, iterative reasoning and growing context</td></tr>
+  </tbody>
+</table>
+
+<div class="sidenote">
+  <b>A correction worth absorbing.</b> The module is explicit that agents are not
+  automatically more expensive than workflows. What drives cost is context accumulation and
+  call count. A badly designed workflow can cost more than a well-designed agent. Design
+  beats the pattern label.
+</div>
+
+<h3>Before you reach for fine-tuning</h3>
+
+<p>The instinct when prompting feels unreliable is to fine-tune. On Claude that is usually
+wrong. The sequence: <strong>optimise the prompt, then add tools or retrieval, then move to
+a stronger pattern such as evaluator-optimizer, and only then consider fine-tuning</strong>.
+Fine-tuning fits very high volume where inference cost binds, latency-critical work where a
+smaller specialised model wins, or a stubborn output-format problem. Outside those it locks
+you to a model version for little return. Note that fine-tuning Claude is not broadly
+available.</p>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A healthcare claims processor handles three document types through fixed, well-understood steps. Regulators require the operations team to reconstruct why any given claim was decided the way it was. Volume is high and per-claim cost is under scrutiny.</p>
+  <p class="stem">Which factor decides the pattern here, and what does it decide?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Cost matters at volume but it does not eliminate a pattern on its own here, and it is not the tightest constraint.">Cost, which rules out the agent and selects one augmented call.</li>
+    <li data-key="B" data-why="Right. A regulatory reconstruction requirement is an observability constraint, and only a workflow logs like ordinary code.">Observability, which rules out the agent and selects a structured workflow.</li>
+    <li data-key="C" data-why="Predictability does point at a workflow, but the binding constraint is the reconstruction requirement, which is stricter.">Predictability, which rules out the agent and selects a structured workflow.</li>
+    <li data-key="D" data-why="Nothing in the scenario states a user-visible deadline, so latency is not the tightest factor.">Latency, which rules out the workflow and selects one augmented call.</li>
+  </ol>
+  <div class="verdict" hidden>Several factors point the same way here, which is common. The exam wants the <b>tightest</b> one. "Reconstruct why any claim was decided" is a hard regulatory requirement, and an agent's trajectory is exactly what current tooling cannot alert on.</div>
+</div>
+
+<h2><span class="num">5</span>Multi-agent and orchestration</h2>
+
+<p>Two roles. The <strong>orchestrator</strong> owns the goal: it decomposes, delegates and
+synthesises, and never does the sub-task work itself. <strong>Subagents</strong> own scoped
+sub-tasks, each in its own context.</p>
+
+<p>Three things must be designed rather than assumed: how work is decomposed, how each
+result is structured so it can be combined, and how the orchestrator resolves conflicts and
+gaps.</p>
+
+<p>The common shape is <strong>fan-out</strong>: a work item too large for one context, such
+as a 400-file audit or a 200-document corpus, split into independent units, one subagent
+each, then synthesised.</p>
+
+<h3>The recovery asymmetry</h3>
+
+<table>
+  <thead><tr><th>Failure</th><th>Recoverable?</th><th>Design response</th></tr></thead>
+  <tbody>
+    <tr><td>Subagent returns malformed or empty result</td><td>Yes</td><td>Validate each result, retry or re-route, record the gap rather than failing the run</td></tr>
+    <tr><td>Two subagents conflict</td><td>Yes</td><td>Give the orchestrator an explicit conflict rule, or escalate to a human</td></tr>
+    <tr><td>Orchestrator loses the goal or synthesis state</td><td>Often not</td><td>Protect orchestrator state, checkpoint so a failed run resumes rather than restarts</td></tr>
+    <tr><td>Traces fragment across agents</td><td>Cross-cutting</td><td>Propagate a shared trace identifier so one run is reconstructable end to end</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The dangerous failure</span>
+  <p>The silent one. A subagent drops a unit and the orchestrator synthesises a confident,
+  complete-looking answer over incomplete work. <strong>Validate coverage, do not assume
+  it.</strong> Fan-out needs completeness accounting or nothing reports the missing piece.</p>
+</div>
+
+<h2><span class="num">6</span>Reference architectures</h2>
+
+<p>References, not blueprints. Understand them well enough to generalise, adapt the shape
+that fits, and recognise when a workload draws on more than one.</p>
+
+<table>
+  <thead><tr><th>Architecture</th><th>Good looks like</th><th>Where projects go wrong</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Agent</strong></td><td>Model works toward a goal choosing tools and order, autonomy checked by limited tools and a turn budget</td><td>Unbounded autonomy: state-changing tools, no review, no turn limit, no measure of goal completion</td></tr>
+    <tr><td><strong>RAG</strong></td><td>A stable corpus chunked and indexed, relevant chunks retrieved as context</td><td>Answering about live state. The index is a snapshot</td></tr>
+    <tr><td><strong>Document pipeline (evaluator-optimizer)</strong></td><td>Structured extraction against a schema, validated, exceptions routed</td><td>No exception path, so low-confidence extractions flow through as if clean</td></tr>
+    <tr><td><strong>Ticket triage (routing)</strong></td><td>Classify intent, then route to retrieval, a transactional API, or a human approval layer</td><td>Retrieval for live order status, no human escalation path, jumping to an agent before measuring the routed workflow</td></tr>
+    <tr><td><strong>Coding agent</strong></td><td>Agentic investigation, then deterministic edit, test and review steps</td><td>Commits without a human gate, no regression tracking per language or framework, treating it as a conversation rather than a pipeline</td></tr>
+  </tbody>
+</table>
+
+<p>Combining two architectures roughly doubles the surface area you maintain, and each
+carries its own eval contract, so you need separate eval sets per architecture rather than
+one for the composed system. Reach for a second pattern when two parts of the problem break
+in genuinely different ways. If you are reaching for a second because you have not decided
+what problem you are solving, that is a deferred decision, not an applied pattern.</p>
+
+<h2><span class="num">7</span>RAG pipeline design</h2>
+
+<p>Chunking is chosen by <strong>what the corpus is</strong>. Indexing is chosen by
+<strong>how queries are phrased</strong>. Those are two separate decisions.</p>
+
+<table>
+  <thead><tr><th>Chunking</th><th>Earns its place when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Fixed-size</strong> (uniform spans with overlap)</td><td>Homogeneous unstructured text with weak natural boundaries. Simplest to operate</td></tr>
+    <tr><td><strong>Semantic</strong> (meaning boundaries)</td><td>Prose where a retrieved chunk must stand alone to answer well</td></tr>
+    <tr><td><strong>Hierarchical</strong> (preserve document structure)</td><td>Contracts, manuals, policies, where section context carries meaning</td></tr>
+  </tbody>
+</table>
+
+<table>
+  <thead><tr><th>Indexing</th><th>Matches</th><th>Earns its place when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Dense</strong> (embeddings)</td><td>Semantic similarity</td><td>Queries phrased differently from the source: paraphrase, intent, concept</td></tr>
+    <tr><td><strong>Sparse</strong> (keyword, BM25)</td><td>Exact terms</td><td>Queries hinging on specific tokens: part numbers, statute citations, error codes</td></tr>
+    <tr><td><strong>Hybrid</strong></td><td>Both, combined</td><td>Mixed query patterns, the common production case</td></tr>
+  </tbody>
+</table>
+
+<p>When hybrid returns two ranked lists they must be merged, and <strong>reciprocal rank
+fusion</strong> is the standard low-tuning default: score each result by its rank in each
+list, favouring items ranking well in both. For an architect the point is that combining
+dense and sparse has a known, defensible answer.</p>
+
+<p>Every retrieval design trades among <strong>retrieval quality, latency and
+maintenance</strong>. Smaller chunks and hybrid indexing raise quality and latency together.
+Larger chunks and dense-only lower latency and maintenance but miss exact matches. There is
+no universal right point, only one you can defend for this corpus and these queries.</p>
+
+<h2><span class="num">8</span>Model and context strategy</h2>
+
+<p>Four terms that get conflated, and conflating them produces architecture mistakes:</p>
+
+<ul>
+  <li><strong>Context window.</strong> The model's active attention space. Outside it, nothing exists to the model. Resets between calls unless your application manages continuity</li>
+  <li><strong>Retrieval.</strong> External knowledge fetched at query time. It augments the window, it does not replace it</li>
+  <li><strong>Persistent application state.</strong> Owned by your system. Order status, balances. Reachable only by tool call</li>
+  <li><strong>Summaries and memory layers.</strong> Application-managed continuity. The model has no native memory between calls. This is an architectural choice, not a model capability</li>
+</ul>
+
+<h3>Model selection</h3>
+
+<p><strong>Sonnet is the default starting point.</strong> Move up to Opus only when an eval
+set says Sonnet misses your quality bar. Move down to Haiku only when an eval set confirms
+the tradeoff is acceptable. Measured, never reflexive.</p>
+
+<h3>The working-memory cliff</h3>
+
+<p>Working memory has the hardest edge of the four properties: things work until they do
+not, and the transition is abrupt. <strong>Do not budget the full window.</strong> Budget the
+largest realistic conversation, plus retrieved context, plus system prompt, plus scratch,
+plus margin. The window is a ceiling, not a target, and designing toward the ceiling means
+hitting it in production. Measure token counts from the API usage field rather than
+estimating from characters.</p>
+
+<h3>Four context strategies</h3>
+
+<table>
+  <thead><tr><th>Strategy</th><th>Earns its place</th><th>Breaks down when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Monolithic</strong></td><td>Bounded tasks with predictable input, stable prefixes that benefit from caching, single-shot Q&amp;A, reasoning needing all material at once</td><td>Context accumulates turn over turn. Cost and latency scale with length, and attention degrades well before the hard limit</td></tr>
+    <tr><td><strong>Progressive</strong></td><td>Multi-turn dialogue, agent loops depending on recent state, staged workflows. <strong>The right default for most production work</strong></td><td>Long-range coherence, decisions depending on detail dropped earlier. Caching is harder and the exact input at step N is not reconstructable</td></tr>
+    <tr><td><strong>Retrieval</strong></td><td>Corpora too large for context, sources changing faster than redeployment, citation requirements</td><td>Synthesis across many independently scored documents, chunking that splits tables or code, recall failures where the right document never enters top-k</td></tr>
+    <tr><td><strong>Compaction</strong></td><td>Long-running agents where the full transcript is wasteful but recent state matters, phase transitions that can checkpoint</td><td>Summaries dropping load-bearing detail. The summariser is itself a model call, compaction is largely one-way, and measuring fidelity is unsolved</td></tr>
+  </tbody>
+</table>
+
+<p>Production systems combine them. A long-running coding agent uses a monolithic cached
+prefix at session start, progressive recent state during work, just-in-time retrieval on
+discovery, and compaction once early exploration crowds the window. No single strategy
+carries that workload.</p>
+
+<div class="flag">
+  <span class="label">Four questions that design a context system</span>
+  <p>What does the model need at the <em>start</em>? That is the monolithic baseline. What
+  does it need from <em>recent steps</em>? The progressive window. What might it need
+  <em>on demand</em>? The retrieval layer. What earlier material can be
+  <em>compressed</em> without losing decision-relevant detail? The compaction policy.
+  Context strategy and context sizing are separate decisions, and treating them as one is
+  where most designs go wrong.</p>
+</div>
+
+<h3>Extended thinking, and gating model changes</h3>
+
+<p>Extended thinking adds a billed reasoning pass before the answer. Thinking tokens bill at
+the output rate and add latency. On Claude 4.6 and later, <strong>adaptive thinking with the
+effort parameter</strong> is the recommended control rather than a token budget. The older
+<code>budget_tokens</code> is deprecated on 4.6 and removed on Sonnet 5, where it returns a
+400.</p>
+
+<p>The decision rule: run evals <em>without</em> it first. Enable it only from a measured
+accuracy gap, never from the assumption that it cannot hurt.</p>
+
+<p>Any model change is a behaviour change, so treat a swap as a release. You need three
+things: a curated test set covering the real distribution, a grading function, and
+<strong>a delta threshold set in advance</strong>. Set it after and you are not setting a
+standard, you are writing acceptance criteria after the build.</p>
+
+<div class="quiz" data-answer="A">
+  <p class="scenario">A document pipeline on Sonnet is over budget. The team builds a 250-document eval set stratified by document type and scores a Haiku migration. Sonnet averages 0.94, Haiku 0.86, with two document types at 0.71 and 0.74. The rollback criterion, agreed beforehand, was that no single document type may fall below 0.85.</p>
+  <p class="stem">What is the right call?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Right. The criterion rejects the migration as proposed, and stratification reveals a partial migration a single average would have hidden.">Reject the migration, then route only the two weak types to Sonnet.</li>
+    <li data-key="B" data-why="This renegotiates a threshold after seeing data, which destroys the point of setting one in advance.">Accept it, since the overall average of 0.86 remains close to target.</li>
+    <li data-key="C" data-why="Prompt work may help, but the decision the criterion demands right now is rejection of the migration as proposed.">Accept it provisionally and improve the two weak types by better prompting.</li>
+    <li data-key="D" data-why="A larger sample does not change a result already stratified and already below an agreed line.">Rerun the evaluation on a much larger sample before deciding either way.</li>
+  </ol>
+  <div class="verdict" hidden>Two lessons. First, the criterion was set <b>before</b> the data, so the team did not have to negotiate with itself. Second, stratifying by document type surfaced the salvage move. A single overall score of 0.86 would have hidden both the failure and the fix.</div>
+</div>
+
+<h2><span class="num">9</span>Prompting as architecture</h2>
+
+<p>At enterprise scale a prompt is an asset you design, not a sentence you type.</p>
+
+<p>A <strong>system prompt</strong> built for reuse has structure: role and scope, the
+constraints the model must hold, and an output contract naming the response shape. Reused at
+scale, ambiguity is a defect multiplied across every request.</p>
+
+<p>A <strong>template</strong> is a system prompt with parameterised slots and fixed
+scaffolding, designed so the scaffolding carries the safety guarantees and filling a slot
+cannot remove a constraint. The safe path becomes the default path.</p>
+
+<p><strong>Description</strong>, one of the four AI Fluency competencies, is the discipline of
+naming the scope, the format and the constraints. The failure to watch for is
+<strong>underspecification</strong>: where the prompt is silent the model improvises, and
+improvises differently each time. Read a prompt for what it fails to say.</p>
+
+<h3>Caching mechanics</h3>
+
+<table>
+  <tbody>
+    <tr><td><strong>Cache breakpoints</strong></td><td>Caching works on a stable prefix. Mark the boundary between fixed and variable, and keep the fixed part genuinely fixed</td></tr>
+    <tr><td><strong>Content ordering</strong></td><td><strong>Static before dynamic, always.</strong> The large unchanging block first, per-request content after the breakpoint</td></tr>
+    <tr><td><strong>TTL selection</strong></td><td>Match cache lifetime to how often fixed content changes and how often the prompt is called</td></tr>
+    <tr><td><strong>When not to</strong></td><td>Writing to cache has its own cost. Infrequent calls or a small fixed portion can cost more than they save</td></tr>
+  </tbody>
+</table>
+
+<p>The module's failure case is a cache that never hit, because per-request content sat
+above the fixed instruction block. The prefix changed every request. The fix was reordering.</p>
+
+<h3>Library or Skill</h3>
+
+<table>
+  <thead><tr><th>Consideration</th><th>Prompt library</th><th>Skill</th></tr></thead>
+  <tbody>
+    <tr><td>Repeatability</td><td>Assembled and often tweaked per use</td><td>A stable procedure run the same way every time</td></tr>
+    <tr><td>Distribution</td><td>One codebase or team</td><td>Across teams or products needing the same procedure</td></tr>
+    <tr><td>Governance</td><td>Lightweight, engineers own the fragments</td><td>Needs versioning, approval and rollback, which Skills carry</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">10</span>Entry points, interfaces, routes, constraints</h2>
+
+<p>Three decisions in sequence: which entry point fits the work, which build-time interface
+suits the team, which delivery route fits the partner's cloud commitments.</p>
+
+<h3>Entry points</h3>
+
+<table>
+  <thead><tr><th>Entry point</th><th>For</th><th>Core tradeoff</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Claude.ai</strong> (web, mobile, desktop)</td><td>Knowledge workers using Claude as a thinking partner. No code. Consumer tiers, or Claude for Work with Team and Enterprise tiers</td><td>Zero build cost against zero embedding. You get what Anthropic ships</td></tr>
+    <tr><td><strong>Claude Code</strong></td><td>Engineers doing real development in terminal, IDE, desktop or web</td><td>Purpose-built for engineering, and the wrong shape for anything else</td></tr>
+    <tr><td><strong>Claude Cowork</strong></td><td>Non-developers needing actions on local files and applications</td><td>Real system actions against supervision overhead. Permission scoping matters more than in chat</td></tr>
+    <tr><td><strong>Claude in Chrome</strong></td><td>Work anchored in web applications</td><td>Browser-scoped</td></tr>
+    <tr><td><strong>Claude for Excel</strong></td><td>Analysts and finance, where the spreadsheet is the working tool</td><td>Spreadsheet-scoped</td></tr>
+  </tbody>
+</table>
+
+<h3>Build-time interfaces</h3>
+
+<table>
+  <thead><tr><th>Interface</th><th>Use when</th><th>Tradeoff</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Direct API</strong></td><td>You need a feature the SDK has not exposed, or prefer raw HTTP</td><td>Maximum control, maximum responsibility</td></tr>
+    <tr><td><strong>SDKs</strong></td><td>Default for embedding Claude in a product</td><td>Ergonomics against control. Abstractions move at Anthropic's cadence</td></tr>
+    <tr><td><strong>MCP</strong></td><td>The same tool entry point must be reachable from two or more clients</td><td>Reusability against complexity. One client only means overhead with no payback</td></tr>
+    <tr><td><strong>Agent SDK</strong></td><td>Claude must act over multiple turns inside the partner's own product</td><td>Managed loop against fine-grained control</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Keeping them straight</span>
+  <p><strong>API and SDK</strong> are the same entry point, different ergonomics.
+  <strong>MCP and API tool use</strong> are different layers, not alternatives: MCP is how a
+  tool is exposed and discovered across clients, API tool use is how Claude calls it in a
+  request. <strong>The Agent SDK</strong> runs the loop; the Anthropic SDK does not. One
+  request, one response: API or SDK. Reusable across clients: MCP. Multi-turn inside the
+  partner's product: Agent SDK.</p>
+</div>
+
+<h3>Claude Code layers: shaping and governing</h3>
+
+<p>Two distinct groups, and getting the split right is what makes an agent both useful and
+safe. <strong>Shaping</strong> what the agent knows and does: CLAUDE.md, Skills, subagents,
+MCP servers. <strong>Governing</strong> what it may touch: hooks, permission boundaries and
+approval flows, sandboxing and restricted execution. Permissions govern what the agent is
+allowed to touch; hooks govern what must happen before or after an action.</p>
+
+<h3>Delivery routes</h3>
+
+<p>The model behaves the same on every route. What differs is which cloud account the spend
+lands in, which identity system authenticates, which region traffic terminates in, and which
+procurement contract is already signed. <strong>The rule is not technical capability, it is
+what the partner has already committed to.</strong></p>
+
+<p>Anthropic first-party when there is no binding cloud commitment or the partner wants new
+features the day they ship. Bedrock, Vertex or Foundry when the partner already lives in
+that cloud. One tradeoff: CSP routes tend to lag the first-party API on new features by
+weeks.</p>
+
+<h3>When constraints decide for you</h3>
+
+<p>Some decisions are not yours. Attorney-client privilege, HIPAA, GDPR and residency,
+FedRAMP, or an internal policy rule entry points in or out <em>before</em> cost or
+ergonomics enter the conversation. Claude.ai consumer tiers are what this hits most often.
+API or SDK behind the partner's own gateway, with logging, retention and identity controls
+they own, is what usually survives regulated review.</p>
+
+<p>Two details worth carrying: a HIPAA BAA covering one configuration <strong>does not
+extend to another</strong>, and beta features are generally excluded unless explicitly
+listed. Government routes run on a model lag, so the newest models reach GovCloud and
+Assured Workloads after commercial release.</p>
+
+<div class="flag">
+  <span class="label">How to phrase it</span>
+  <p><strong>Name the governing constraint when you recommend an entry point, and let the
+  constraint eliminate options before preferences do.</strong> That sentence is the Domain 6
+  skill hiding inside a Domain 1 decision.</p>
+</div>
+
+<div class="quiz" data-answer="C">
+  <p class="scenario">A European insurer wants Claude embedded in an internal claims tool. Their engineering team works in Python, they hold a large committed AWS agreement, and their data protection officer requires that model execution be pinned to a named EU region with DPA terms inherited from an existing contract.</p>
+  <p class="stem">Which combination fits, and what decides it?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Claude.ai cannot be embedded in another product, and the consumer surface rarely survives this kind of review.">Claude.ai with Enterprise controls, because strong governance features are clearly needed.</li>
+    <li data-key="B" data-why="The first-party API is the default only when no procurement or residency constraint pulls the other way. Here one does.">Python SDK on the first-party API, because the team writes Python.</li>
+    <li data-key="C" data-why="Right. Residency plus an existing AWS commitment decides the route, and the SDK follows from the team's language.">Python SDK on AWS Bedrock, because residency and procurement together decide.</li>
+    <li data-key="D" data-why="MCP is a sharing convention across clients. Nothing here says a second client needs the same tools.">MCP server on Bedrock, because tools should be reusable across clients.</li>
+  </ol>
+  <div class="verdict" hidden>Work the three decisions in order and notice which is <b>forced</b>. The entry point is a custom internal tool. The interface follows the team's language. The route is decided by residency and procurement, not preference. The DPO's requirement eliminates options before anything else is considered.</div>
+</div>
+
+<p class="scoreboard" data-quiz-score>Answer the drills to see your score.</p>
+
+<h2><span class="num">11</span>The five takeaways</h2>
+
+<ol>
+  <li><strong>Decomposition comes before architecture.</strong> Split the work across Claude, systems and humans first, driven by how the model behaves on each piece.</li>
+  <li><strong>Choosing a pattern is choosing how much autonomy to grant.</strong> Five factors decide it, and the tightest constraint wins.</li>
+  <li><strong>Reach for a tested reference architecture before inventing one.</strong> Combine only when parts break differently. Never substitute retrieval for live state.</li>
+  <li><strong>Start with Sonnet and treat every swap as a release.</strong> Eval set, grading function, rollback criterion set in advance. Progressive context outlasts monolithic.</li>
+  <li><strong>Pick the entry point by the work, not the shelf.</strong> The right recommendation is the one whose tradeoff you can name out loud as you make it.</li>
+</ol>
+
+<p>Notice how much of that is restraint. Decompose before designing, use the known shape,
+start at the middle tier, choose by the work. The module's editorial position matches the
+engineering blog's: complexity has to earn its place.</p>
+
+<h2><span class="num">12</span>Close the page</h2>
+
+<p>From memory, out loud or on paper.</p>
+
+<ol>
+  <li>Name the four properties and one design consequence of each.</li>
+  <li>Name the three layers, and who you would discuss each one with.</li>
+  <li>Name as many of the seven primitives as you can, one job each.</li>
+  <li>What three tests decide whether Claude should own a piece of work?</li>
+  <li>Name the five factors for pattern choice, and say which one decides.</li>
+  <li>What is the most common reference architecture mistake, and how do you spot it?</li>
+  <li>Name the four context strategies and the four questions that select among them.</li>
+  <li>What three things must exist before you ship a model swap?</li>
+</ol>
+
+<div class="ask">
+  <p><strong>Ask me anything that did not land.</strong> If a drill felt like a coin flip,
+  name it and we will take the constraint apart. If you want any section expanded into its
+  own lesson with more drills, say which. And when you are ready, I can do the same
+  distillation for Course 2, Enterprise Integration and Production, which covers Domains 3
+  and 4 and is 35% of the exam.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="../reference/module-01-companion.html">Module 1 Companion</a> - the official course, mapped screen by screen</li>
+    <li><a href="../reference/pattern-selection.html">Reference: Pattern Selection</a></li>
+    <li><a href="../reference/glossary.html">Reference: Glossary</a></li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
