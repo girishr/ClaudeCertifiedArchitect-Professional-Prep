@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1 Companion</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">CCAR-P &middot; Official Course 1 companion</p>
+  <h1>Claude Platform &amp; Solution Design</h1>
+  <p class="standfirst">A map of the real module, what each section is actually training, and where our own track had holes in it.</p>
+  <div class="meta">
+    <span>34 screens</span>
+    <span>12 sections</span>
+    <span>11 checkpoints</span>
+    <span>238 minutes</span>
+  </div>
+</header>
+
+<div class="flag">
+  <span class="label">What this document is</span>
+  <p>This is a companion, not a copy. The course text is Anthropic's, and it stays there.
+  What follows is the structure, the decision each section trains, and my own synthesis of
+  the ground it covers, written so you can read the module faster and know what to hold on
+  to. Read the module. Use this to steer.</p>
+</div>
+
+<h2><span class="num">Shape</span>How the module is built</h2>
+
+<p>It is reading, not video. Screens carry a type tag, and the mix tells you what the
+course thinks matters: <strong>16 Teaching screens, 11 Checkpoints, 5 Watch Outs and 2
+Exercises</strong>. Roughly every third screen asks you to do something.</p>
+
+<p>The <strong>Watch Out</strong> screens are the highest-value pages in the module. Each
+one is a real architecture that failed, with the failure traced back to the decision that
+caused it. That is exactly the shape of an exam distractor, so read those twice.</p>
+
+<table>
+  <caption>The twelve sections</caption>
+  <thead>
+    <tr><th>#</th><th>Section</th><th>Screens</th><th>The decision it trains</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>01</td><td>Module Introduction</td><td>1</td><td>Frames the four decisions that come before you build</td></tr>
+    <tr><td>02</td><td>How Claude Behaves</td><td>1</td><td>The four model properties you design around, not fix</td></tr>
+    <tr><td>03</td><td>Platform Map &amp; Primitives</td><td>4</td><td>Three layers, then the seven primitives you assemble from</td></tr>
+    <tr><td>04</td><td>Decomposition</td><td>4</td><td>Splitting work across Claude, systems and humans</td></tr>
+    <tr><td>05</td><td>Pattern Selection</td><td>5</td><td>Augmented call vs workflow vs agent, plus multi-agent</td></tr>
+    <tr><td>06</td><td>Reference Architectures</td><td>3</td><td>Reaching for a known shape before inventing one</td></tr>
+    <tr><td>07</td><td>RAG Pipeline Design</td><td>2</td><td>Chunking and indexing against the corpus and the queries</td></tr>
+    <tr><td>08</td><td>Model &amp; Context Strategy</td><td>3</td><td>Tier choice, the context cliff, progressive vs monolithic</td></tr>
+    <tr><td>09</td><td>Prompting as Architecture</td><td>4</td><td>System prompts, templates, caching, libraries vs Skills</td></tr>
+    <tr><td>10</td><td>Entry Points &amp; Governance</td><td>3</td><td>Entry point, build-time interface, delivery route, constraints</td></tr>
+    <tr><td>11</td><td>Assembly &amp; Recap</td><td>3</td><td>One full design, end to end, then the takeaways</td></tr>
+    <tr><td>12</td><td>Module Complete</td><td>1</td><td>Certificate</td></tr>
+  </tbody>
+</table>
+
+<div class="sidenote">
+  <b>Budget your time by screen weight, not section count.</b> Two screens carry a fifth
+  of the module between them: S21 on model and context strategy, and S28 on entry points
+  and governance. S28 alone is the longest screen in the module by a wide margin. Section
+  10 looks small in the contents list and is not.
+</div>
+
+<h2><span class="num">New</span>Three things our track missed entirely</h2>
+
+<p>I built our seven lessons from Anthropic's published learning objectives before the
+module was readable. Most of it holds. Three pieces were not visible from the objectives
+and are not in our lessons at all.</p>
+
+<h3>1. The four properties you design around (S02)</h3>
+
+<p>The module opens by naming four properties of the model and treating each as a force
+to design around rather than a defect to fix, the way a structural engineer designs around
+the properties of a material. Each is presented as a capability, its matching limitation,
+and the mitigation.</p>
+
+<table>
+  <thead><tr><th>Property</th><th>The design consequence to carry</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Non-determinism</strong></td><td>The same input can produce different output. Anything that must be identical every time belongs in code, and anything probabilistic needs a validation layer rather than trust</td></tr>
+    <tr><td><strong>Context as a finite resource</strong></td><td>The window is a budget you spend, not a container you fill. More context is not free, and this is what makes context strategy an architecture decision rather than a tuning detail</td></tr>
+    <tr><td><strong>Confidence is not validity</strong></td><td>Fluent and wrong looks identical to fluent and right. Self-reported confidence is not a quality signal, which kills a whole family of plausible designs that route on it</td></tr>
+    <tr><td><strong>Knowledge and capability boundaries</strong></td><td>The model does not know what it was never given. Retrieval, tools and grounding exist to move a task inside the boundary</td></tr>
+  </tbody>
+</table>
+
+<p>This framing is worth adopting because it explains <em>why</em> later answers are right.
+A guardrail is not bureaucracy, it is the mitigation for confidence-is-not-validity. A
+deterministic check in code is the mitigation for non-determinism.</p>
+
+<h3>2. Seven primitives, not six patterns (S05)</h3>
+
+<p>Our lessons went straight to the six workflow patterns. The module first inventories
+the <strong>parts</strong> you assemble from, which is a different and more useful level:
+<strong>Tools, MCP, Subagents, Hooks, Skills, Agent Teams and Dynamic Workflows</strong>,
+one job each.</p>
+
+<p>Patterns are how you arrange primitives. Being able to name the primitive a scenario
+needs is a distinct skill from naming the pattern, and the checkpoint "Match the primitive
+to the job" tests exactly that.</p>
+
+<h3>3. Prompting as architecture (S24 to S27)</h3>
+
+<p>A whole section with no equivalent in our track. It treats prompts as durable assets
+rather than text you write once: system-prompt architecture for enterprise reuse,
+templates that enforce consistency and safety, technique selection by task complexity,
+behavioural differences across models, caching mechanics, and the decision between a
+modular prompt library and a versioned Skill.</p>
+
+<p>That last one is a genuine architecture call and reads like exam material: when does
+reusable prompt content become a Skill rather than a library entry.</p>
+
+<h2><span class="num">Map</span>Our lessons against the real module</h2>
+
+<table>
+  <caption>Where our track holds, and where it does not</caption>
+  <thead><tr><th>Module section</th><th>Our lesson</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>02 How Claude Behaves</td><td>none</td><td><strong>Gap.</strong> Foundational, and it explains the reasoning behind later answers</td></tr>
+    <tr><td>03 Platform Map</td><td>0005 Platform entry points</td><td>Partial. We have the entry points, not the seven primitives</td></tr>
+    <tr><td>04 Decomposition</td><td>0002 Splitting the work</td><td>Good match. The module adds reversibility, stakes and accountability as the delegation test</td></tr>
+    <tr><td>05 Pattern Selection</td><td>0001, 0003</td><td>Good match. The module adds a five-factor sequence for choosing</td></tr>
+    <tr><td>05 Multi-agent</td><td>0004 Multi-agent economics</td><td>Good match, and ours carries the cost numbers the module does not dwell on</td></tr>
+    <tr><td>06 Reference Architectures</td><td>0003, 0004</td><td>Partial. The module is firmer that you reach for a known shape first</td></tr>
+    <tr><td>07 RAG Pipeline Design</td><td>none here</td><td><strong>Gap in this track.</strong> Covered in <code>notes/02-integration-evals.md</code>, but we filed it under Integration and it lives in Course 1</td></tr>
+    <tr><td>08 Model &amp; Context Strategy</td><td>0007</td><td>Good match</td></tr>
+    <tr><td>09 Prompting as Architecture</td><td>none</td><td><strong>Gap.</strong> Four screens, no coverage</td></tr>
+    <tr><td>10 Entry Points &amp; Governance</td><td>0005, 0006</td><td>Good match, and the biggest screen in the module</td></tr>
+  </tbody>
+</table>
+
+<p>So: seven lessons, four solid matches, three partials, three gaps. Read the module for
+the gaps, use our lessons to drill the matches.</p>
+
+<h2><span class="num">Traps</span>The five Watch Out cases</h2>
+
+<p>Each is a failure story. Read the setup, stop, and decide what you would have done
+before reading the diagnosis. That is the drill.</p>
+
+<table>
+  <thead><tr><th>Screen</th><th>The failure</th><th>The lesson underneath</th></tr></thead>
+  <tbody>
+    <tr><td>S08</td><td>A deterministic check quietly drifted</td><td>A rule that must hold every time was handed to a probabilistic system. Non-determinism, applied to the wrong job</td></tr>
+    <tr><td>S12</td><td>The team wanted flexibility and got non-determinism</td><td>Autonomy was granted to buy adaptability, and unpredictability came with it. You cannot take one without the other</td></tr>
+    <tr><td>S14</td><td>Fan-out hid a dropped unit</td><td>Parallel work needs completeness accounting. Nothing reported the missing piece because nothing was counting</td></tr>
+    <tr><td>S17</td><td>Retrieval reached for instead of a tool call</td><td>Named as the most common mistake in the module: retrieval applied to live state. Retrieval answers from a corpus, a tool call answers from the system of record</td></tr>
+    <tr><td>S22</td><td>Defaulting to Opus everywhere, 7x cost overrun</td><td>Tier choice is a design decision with a bill attached, not a quality preference</td></tr>
+    <tr><td>S29</td><td>Claude Code picked outside engineering</td><td>Entry point chosen from what was on the shelf rather than from the work and the user</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The one to memorise</span>
+  <p><strong>Retrieval applied to live state.</strong> The module calls this the most common
+  mistake. If a scenario needs the current value of something, that is a tool call against
+  the system of record. RAG answers from a corpus that was true when it was indexed. Any
+  question involving balances, inventory, status or availability is testing this.</p>
+</div>
+
+<h2><span class="num">Recap</span>The module's own five takeaways</h2>
+
+<p>From the closing screen, in the course's own framing. If you remember nothing else,
+these five.</p>
+
+<ol>
+  <li><strong>Decomposition comes before architecture.</strong> Split the work first, then pick a shape.</li>
+  <li><strong>Choosing a pattern is choosing how much autonomy to grant.</strong> Not how clever the solution is.</li>
+  <li><strong>Reach for a tested reference architecture before inventing one.</strong> The industry has already paid to learn these.</li>
+  <li><strong>Start with Sonnet and treat every model swap as a release.</strong> Gate it with an eval before it ships.</li>
+  <li><strong>Pick the entry point by the work it has to do</strong>, not by what is already on the shelf.</li>
+</ol>
+
+<p>Notice how much of this is restraint. Decompose before designing, use the known shape,
+start at the middle tier, choose by the work. The module's editorial position is the same
+as the engineering blog's: complexity has to earn its place.</p>
+
+<h2><span class="num">Retrieval</span>Close the page</h2>
+
+<p>From memory, no scrolling.</p>
+
+<ol>
+  <li>Name the four properties an architect designs around, and one design consequence of each.</li>
+  <li>Name as many of the seven primitives as you can, with the job each does.</li>
+  <li>What are the three owners in a decomposition, and what three tests decide what Claude gets?</li>
+  <li>What is the most common mistake the module names, and how do you spot it in a scenario?</li>
+  <li>What is the default starting model, and what has to happen before you change it?</li>
+  <li>Name the three layers in the platform map.</li>
+</ol>
+
+<p>Anything you cannot produce cleanly is the section to re-read, not the whole module.</p>
+
+<h2><span class="num">Plan</span>How to work through it</h2>
+
+<ol>
+  <li><strong>Read S02 slowly.</strong> One screen, and it is the frame for everything after it.</li>
+  <li><strong>Skim S03 and S05</strong>, but write the seven primitives out by hand. The checkpoint tests recall of them.</li>
+  <li><strong>Do our lessons 0002, 0001 and 0003</strong> after sections 04 and 05. That is where our drills line up best.</li>
+  <li><strong>Slow down at S28.</strong> Longest screen in the module, and it feeds Domains 1 and 6 both.</li>
+  <li><strong>Treat every Watch Out as a drill.</strong> Cover the diagnosis, decide, then read.</li>
+  <li><strong>Do S31 properly.</strong> The contract-review design is a full end-to-end scenario and the closest thing in the module to an exam question.</li>
+</ol>
+
+<div class="ask">
+  <p><strong>Ask me as you go.</strong> When you finish a section, tell me which one and I
+  will drill you on it before you move on. If a checkpoint answer feels wrong to you, argue
+  it with me, because that is usually where the real distinction is hiding. And when you
+  hit the three gaps above, say so and I will write the missing lessons.</p>
+</div>
+
+<div class="course-nav">
+  <h3>Course</h3>
+  <ul>
+    <li><a href="../index.html"><strong>Course index</strong></a> - all seven lessons in order</li>
+    <li><a href="pattern-selection.html">Reference: Pattern Selection</a></li>
+    <li><a href="glossary.html">Reference: Glossary</a></li>
+    <li><a href="../MISSION.md">Mission</a> &middot; <a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+</div>
+
+</body>
+</html>
