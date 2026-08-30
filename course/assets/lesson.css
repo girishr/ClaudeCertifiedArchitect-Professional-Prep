@@ -3,6 +3,20 @@
    Tufte-influenced: generous measure, restrained rules, sidenotes, prints well. */
 
 :root {
+  color-scheme: dark;
+  --paper:      #16150f;
+  --ink:        #f4f1e6;
+  --ink-soft:   #c8c4b4;
+  --ink-faint:  #8a877b;
+  --rule:       #33312a;
+  --accent:     #6da7ec;
+  --accent-dim: #1d3350;
+  --good:       #4bb96a;
+  --bad:        #e07671;
+  --flag:       #262316;
+  --code-bg:    #201e17;
+}
+:root[data-theme="light"] {
   color-scheme: light;
   --paper:      #fffef9;
   --ink:        #16150f;
@@ -15,22 +29,6 @@
   --bad:        #b4342f;
   --flag:       #fdf6dd;
   --code-bg:    #f4f1e6;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --paper:      #16150f;
-    --ink:        #f4f1e6;
-    --ink-soft:   #c8c4b4;
-    --ink-faint:  #8a877b;
-    --rule:       #33312a;
-    --accent:     #6da7ec;
-    --accent-dim: #1d3350;
-    --good:       #4bb96a;
-    --bad:        #e07671;
-    --flag:       #262316;
-    --code-bg:    #201e17;
-  }
 }
 
 * { box-sizing: border-box; }

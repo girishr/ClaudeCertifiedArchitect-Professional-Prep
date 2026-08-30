@@ -1,21 +1,47 @@
+<img src="assets/badge.png" alt="Claude Certified Architect Professional" width="110" align="right">
+
 # Claude Certified Architect - Professional: Prep Kit
 
 Study material for the Anthropic **Claude Certified Architect - Professional** (CCAR-P) exam.
 
-The spine is Anthropic's own free [prep course](https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional), 733 minutes across five courses. Everything here is built to sit around it: a day-by-day plan, a seven-lesson drill track, notes for all seven domains, a 75-question scenario bank, eight hands-on labs, and a single-file web hub. None of it replaces the official course.
+*Unofficial. Not produced, endorsed or reviewed by Anthropic. The badge above is Anthropic's credential mark, shown to identify the exam this material is for.*
+
+## Start here
+
+### [Module 1 Distilled](course/lessons/module-01-distilled.html)
+
+**Anthropic's official Course 1 is 34 screens and 238 minutes. This is the whole of it in one pass, in about 45 minutes.** Read that and you have the module.
+
+It covers exam **Domains 1 and 2, 30% of the paper**: the four model properties you design around, the three platform layers and seven primitives, decomposition and the delegation tests, pattern selection with its five-factor sequence, multi-agent orchestration, the five reference architectures, RAG chunking and indexing, model selection and the four context strategies, prompting as architecture, and entry points, delivery routes and regulated-industry constraints. Five scenario drills throughout.
+
+Then, to drill the individual decisions harder: **[the seven-lesson course](course/index.html)**, 35 scenario drills with immediate per-option feedback.
+
+**[Open the web hub](https://girishr.github.io/ClaudeCertifiedArchitect-Professional-Prep/)** for all of it plus the practice engine, the plan tracker and per-domain scoring.
+
+| Read this | If you want |
+|---|---|
+| [Module 1 Distilled](course/lessons/module-01-distilled.html) | The official Course 1 without sitting through it. **Start here** |
+| [The seven lessons](course/index.html) | To drill one decision at a time, harder |
+| [Pattern Selection](course/reference/pattern-selection.html) | A one-page revision sheet that prints well |
+| [Module 1 Companion](course/reference/module-01-companion.html) | To work through the real course, mapped screen by screen |
+| [study-plan.md](study-plan.md) | The day-by-day schedule to exam day |
+
+---
+
+The spine of the study plan is Anthropic's own free [prep course](https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional), 733 minutes across five courses. The rest of this repo sits around it: a day-by-day plan, notes for all seven domains, a 75-question scenario bank, eight hands-on labs, and a single-file web hub.
 
 ## Contents
 
 | File | What it is |
 |---|---|
-| [`study-plan.md`](study-plan.md) | **Start here.** Day-by-day plan built around Anthropic's official prep course, with this repo's material slotted in around it |
+| [`study-plan.md`](study-plan.md) | Day-by-day plan built around Anthropic's official prep course, with this repo's material slotted in around it |
 | [`index.html`](index.html) | The prep hub: plan tracker, practice engine, per-domain scoring. Open it in a browser |
 | [`notes/01-solution-design-models-devprod.md`](notes/01-solution-design-models-devprod.md) | Domains 1, 2 and 7: solution design and architecture, Claude models and prompting and context engineering, developer productivity |
 | [`notes/02-integration-evals.md`](notes/02-integration-evals.md) | Domains 3 and 4: integration and MCP, evaluation and testing and optimisation. The two heaviest domains |
 | [`notes/03-governance-stakeholder.md`](notes/03-governance-stakeholder.md) | Domains 5 and 6: governance and safety and risk, stakeholder communication and lifecycle |
 | [`labs.md`](labs.md) | Eight time-boxed builds, 60 to 150 minutes each |
 | [`questions.json`](questions.json) | The question bank, with explanations and per-distractor notes |
-| [`course/`](course/) | A seven-lesson teaching track shadowing official Course 1, with 35 scenario drills. Open [`course/index.html`](course/index.html) |
+| [`course/`](course/) | **The course.** [Module 1 Distilled](course/lessons/module-01-distilled.html) plus seven drill lessons and three reference documents. Open [`course/index.html`](course/index.html) |
 | [`tools/`](tools/) | `build_hub.py` and the HTML template that generate `index.html` |
 
 Each notes file follows the same shape per domain: a framing paragraph on what the exam is really testing, comparative tables, decision heuristics, a common-distractors list, and a set of one-line recalls for the final week.
