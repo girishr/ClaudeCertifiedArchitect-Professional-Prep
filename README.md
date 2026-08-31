@@ -4,8 +4,6 @@
 
 Study material for the Anthropic **Claude Certified Architect - Professional** (CCAR-P) exam.
 
-*Unofficial. Not produced, endorsed or reviewed by Anthropic. The badge above is Anthropic's credential mark, shown to identify the exam this material is for.*
-
 ## Start here
 
 ### [Module 1 Distilled](course/lessons/module-01-distilled.html)
