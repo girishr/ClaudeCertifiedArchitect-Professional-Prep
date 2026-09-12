@@ -1,0 +1,218 @@
+/* Security Print - the shared visual world for the CCAR-P prep kit.
+ *
+ * Loaded by assets/nav.js on every page, before nav.css and before any page's
+ * own stylesheet, so one file owns the palette, the type and the base surfaces.
+ *
+ * The world is certificate and banknote printing: two inks on a tinted stock,
+ * hairline rules, engraved numerals, plate serials. Square corners, no shadows,
+ * no gradients, no fill that is not ink. Dark is the steel plate; light is
+ * tinted safety stock.
+ */
+
+/* ---- 1. the type, self-hosted ---------------------------------------- */
+
+@font-face {
+  font-family: "Bodoni Moda VF";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url(fonts/bodoni-moda-latin-wght-normal.woff2) format("woff2-variations");
+}
+@font-face {
+  font-family: "Bodoni Moda VF";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url(fonts/bodoni-moda-latin-wght-italic.woff2) format("woff2-variations");
+}
+@font-face {
+  font-family: "Archivo VF";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(fonts/archivo-latin-wght-normal.woff2) format("woff2-variations");
+}
+@font-face {
+  font-family: "Faustina VF";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 800;
+  src: url(fonts/faustina-latin-wght-normal.woff2) format("woff2-variations");
+}
+@font-face {
+  font-family: "Faustina VF";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 300 800;
+  src: url(fonts/faustina-latin-wght-italic.woff2) format("woff2-variations");
+}
+@font-face {
+  font-family: "Chivo Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(fonts/chivo-mono-latin-400-normal.woff2) format("woff2");
+}
+@font-face {
+  font-family: "Chivo Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url(fonts/chivo-mono-latin-600-normal.woff2) format("woff2");
+}
+
+/* ---- 2. the two inks and the two stocks ------------------------------ */
+
+:root {
+  /* Dark is the default: the engraved steel plate. */
+  color-scheme: dark;
+
+  --plate:      #0c1310;   /* the ground */
+  --paper:      #0c1310;   /* lesson.css name for the same thing */
+  --sheet:      #111a16;   /* a plate face raised off the ground */
+  --sheet-2:    #16211c;   /* a second level, for table stripes and wells */
+
+  --ink:        #eef1ea;
+  --ink-soft:   #b6c2b8;
+  --ink-faint:  #7d8a82;
+
+  --rule:       #2a352f;   /* hairline */
+  --rule-firm:  #46544c;   /* the plate line */
+
+  --tint:       #3ba57c;   /* intaglio green, ink one */
+  --oxblood:    #c9636a;   /* ink two */
+  --gold:       #c9a24a;   /* the seal and the pass mark, nothing else */
+  --ink-fill:   #17624a;   /* a block of solid ink, printed */
+  --ink-fill-t: #eef1ea;   /* what sits on it */
+
+  --accent:     #3ba57c;   /* lesson.css name for ink one */
+  --accent-dim: #143024;
+  --good:       #3ba57c;
+  --bad:        #c9636a;
+  --flag:       #16211c;
+  --code-bg:    #0f1815;
+  --quiet:      rgba(238, 241, 234, .05);
+
+  --ui:   "Archivo VF", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --read: "Faustina VF", "Iowan Old Style", Charter, Georgia, serif;
+  --cut:  "Bodoni Moda VF", "Bodoni 72", Didot, Georgia, serif;
+  --num:  "Chivo Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+:root[data-theme="light"] {
+  /* Light is tinted safety stock, not white and not cream. */
+  color-scheme: light;
+
+  --plate:      #e4e7dd;
+  --paper:      #e4e7dd;
+  --sheet:      #eef0e8;
+  --sheet-2:    #dde1d5;
+
+  --ink:        #101a15;
+  --ink-soft:   #3d4a43;
+  --ink-faint:  #6a776f;
+
+  --rule:       #b9c0b3;
+  --rule-firm:  #8d978a;
+
+  --tint:       #0e6b4d;
+  --oxblood:    #8c1f2d;
+  --gold:       #8a6d1e;
+  --ink-fill:   #0e6b4d;
+  --ink-fill-t: #f1f3ec;
+
+  --accent:     #0e6b4d;
+  --accent-dim: #c9dcd1;
+  --good:       #0e6b4d;
+  --bad:        #8c1f2d;
+  --flag:       #dde1d5;
+  --code-bg:    #dde1d5;
+  --quiet:      rgba(16, 26, 21, .05);
+}
+
+/* ---- 3. the surfaces the browser draws, themed ----------------------- */
+
+::selection {
+  background: var(--tint);
+  color: var(--plate);
+}
+:root[data-theme="light"] ::selection {
+  background: var(--tint);
+  color: #fff;
+}
+
+:root {
+  accent-color: var(--tint);
+  caret-color: var(--oxblood);
+  scrollbar-color: var(--rule-firm) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--rule-firm);
+  border: 3px solid var(--plate);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+:where(a, button, select, input, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+a { text-underline-offset: .18em; text-decoration-thickness: 1px; }
+
+/* Figures line up. Everywhere, not only in tables. */
+table, .serial, .fig, time, .num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- 4. shared print-shop primitives --------------------------------- */
+
+/* A serial strip: small, tracked, monospaced, the way a plate is numbered. */
+.serial {
+  font-family: var(--num);
+  font-size: .66rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* The plate line: the heavy rule a sheet is printed under. */
+.plateline {
+  border: 0;
+  border-top: 2px solid var(--rule-firm);
+  margin: 0;
+}
+
+/* Engraved display lettering. */
+.cut {
+  font-family: var(--cut);
+  font-weight: 700;
+  letter-spacing: -.012em;
+  text-wrap: balance;
+}
+
+/* Nothing in this world is rounded, including the geometry drawn in SVG. */
+figure.diagram rect, svg rect { rx: 0; ry: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+@media print {
+  :root {
+    --plate: #fff; --paper: #fff; --sheet: #fff; --sheet-2: #fff;
+    --ink: #000; --ink-soft: #222; --ink-faint: #555;
+    --rule: #bbb; --rule-firm: #000;
+    --tint: #04503a; --oxblood: #6d1622; --gold: #6a5316;
+    --ink-fill: #04503a; --ink-fill-t: #fff;
+    --accent: #04503a; --flag: #fff; --code-bg: #fff;
+  }
+}

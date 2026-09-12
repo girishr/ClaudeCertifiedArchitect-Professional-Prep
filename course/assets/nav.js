@@ -23,10 +23,14 @@
   function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
-  /* The menu's own stylesheet, so a page only needs this one script tag. */
-  var link = document.createElement("link");
-  link.rel = "stylesheet"; link.href = COURSE + "assets/nav.css";
-  (document.head || document.documentElement).appendChild(link);
+  /* The shared visual world, then the menu's own stylesheet, so a page needs
+     only this one script tag. print.css comes first: it owns the palette and
+     the type that everything after it reads from. */
+  ["assets/print.css", "assets/nav.css"].forEach(function (href) {
+    var link = document.createElement("link");
+    link.rel = "stylesheet"; link.href = COURSE + href;
+    (document.head || document.documentElement).appendChild(link);
+  });
 
   /* ---- 1. settings before paint ---------------------------------------- */
   var theme = get(KEY_THEME);

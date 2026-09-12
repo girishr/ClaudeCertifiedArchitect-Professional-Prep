@@ -3,37 +3,11 @@
    Tufte-influenced: generous measure, restrained rules, sidenotes, prints well. */
 
 :root {
-  /* Two measures, not one. Prose stays at a readable line length; tables get the
-     full page, because this course is mostly five-column comparison tables and
-     they were the reason the page felt cramped. */
+  --prose: 28rem;
+  /* Palette and type live in print.css, loaded by nav.js before this file.
+     These two are this stylesheet's own: the page and the prose measure. */
   --page:    62rem;
-  --measure: 48rem;
-  color-scheme: dark;
-  --paper:      #16150f;
-  --ink:        #f4f1e6;
-  --ink-soft:   #c8c4b4;
-  --ink-faint:  #8a877b;
-  --rule:       #33312a;
-  --accent:     #6da7ec;
-  --accent-dim: #1d3350;
-  --good:       #4bb96a;
-  --bad:        #e07671;
-  --flag:       #262316;
-  --code-bg:    #201e17;
-}
-:root[data-theme="light"] {
-  color-scheme: light;
-  --paper:      #fffef9;
-  --ink:        #16150f;
-  --ink-soft:   #4a4840;
-  --ink-faint:  #8a877b;
-  --rule:       #e2ded0;
-  --accent:     #2a78d6;
-  --accent-dim: #cde2fb;
-  --good:       #0f7a2e;
-  --bad:        #b4342f;
-  --flag:       #fdf6dd;
-  --code-bg:    #f4f1e6;
+  --measure: 40rem;
 }
 
 * { box-sizing: border-box; }
@@ -46,7 +20,7 @@ body {
   max-width: var(--page);
   background: var(--paper);
   color: var(--ink);
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Charter, Georgia, serif;
+  font-family: var(--read);
   line-height: 1.62;
   -webkit-font-smoothing: antialiased;
 }
@@ -55,7 +29,7 @@ body {
 
 .masthead { margin-bottom: 3rem; }
 .eyebrow {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .72rem;
   letter-spacing: .14em;
   text-transform: uppercase;
@@ -76,7 +50,7 @@ h1 {
   margin: 0 0 1.4rem;
 }
 .meta {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .78rem;
   color: var(--ink-faint);
   border-top: 1px solid var(--rule);
@@ -96,7 +70,7 @@ h2 {
   line-height: 1.25;
 }
 h2 .num {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .78rem;
   color: var(--accent);
   display: block;
@@ -127,7 +101,7 @@ li { margin-bottom: .4rem; }
 /* ---------- sidenote ---------- */
 
 .sidenote {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .82rem;
   line-height: 1.5;
   color: var(--ink-soft);
@@ -142,13 +116,13 @@ li { margin-bottom: .4rem; }
 .flag {
   background: var(--flag);
   border: 1px solid var(--rule);
-  border-radius: 4px;
+  border-radius: 0;
   padding: 1rem 1.2rem;
   margin: 1.8rem 0;
   font-size: .95rem;
 }
 .flag .label {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .7rem;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -164,14 +138,14 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: 1.6rem 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .84rem;
   line-height: 1.45;
 }
 caption {
   caption-side: top;
   text-align: left;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .72rem;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -195,16 +169,16 @@ tr:last-child td { border-bottom: 1.5px solid var(--ink); }
 /* ---------- code ---------- */
 
 code {
-  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-family: var(--num);
   font-size: .84em;
   background: var(--code-bg);
   padding: .1em .35em;
-  border-radius: 3px;
+  border-radius: 0;
 }
 pre {
   background: var(--code-bg);
   padding: 1rem 1.1rem;
-  border-radius: 4px;
+  border-radius: 0;
   overflow-x: auto;
   font-size: .8rem;
   line-height: 1.5;
@@ -217,7 +191,7 @@ pre code { background: none; padding: 0; }
   margin-top: 4rem;
   padding-top: 1.4rem;
   border-top: 1px solid var(--rule);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .85rem;
 }
 .course-nav h3 {
@@ -231,11 +205,11 @@ pre code { background: none; padding: 0; }
 .course-nav ul { list-style: none; padding: 0; }
 .course-nav li { margin-bottom: .35rem; }
 .ask {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .88rem;
   background: var(--accent-dim);
   color: var(--ink);
-  border-radius: 4px;
+  border-radius: 0;
   padding: 1rem 1.2rem;
   margin: 2.5rem 0 0;
 }
@@ -268,11 +242,11 @@ pre code { background: none; padding: 0; }
 
 .quiz {
   border: 1px solid var(--rule);
-  border-left: 3px solid var(--accent);
-  border-radius: 4px;
+  border-left: 1px solid var(--accent);
+  border-radius: 0;
   padding: 1.3rem 1.4rem;
   margin: 2rem 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .9rem;
 }
 .quiz .scenario { color: var(--ink-soft); margin-bottom: .8rem; }
@@ -287,7 +261,7 @@ pre code { background: none; padding: 0; }
 .quiz .options { list-style: none; padding: 0; margin: .9rem 0 0; counter-reset: opt; }
 .quiz .options li {
   border: 1px solid var(--rule);
-  border-radius: 4px;
+  border-radius: 0;
   padding: .6rem .8rem .6rem 2.2rem;
   margin-bottom: .5rem;
   cursor: pointer;
@@ -338,7 +312,7 @@ pre code { background: none; padding: 0; }
 }
 .quiz .verdict b { color: var(--ink); }
 .scoreboard {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .82rem;
   color: var(--ink-faint);
   text-align: right;
@@ -356,7 +330,7 @@ pre code { background: none; padding: 0; }
    The full menu is assets/nav.js. */
 
 .crumb {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .78rem;
   color: var(--ink-faint);
   margin: 0 0 1rem;
@@ -366,9 +340,9 @@ pre code { background: none; padding: 0; }
 
 .toc {
   border: 1px solid var(--rule);
-  border-radius: 4px;
+  border-radius: 0;
   margin: 0 0 2.4rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .85rem;
   background: var(--flag);
 }
@@ -408,13 +382,13 @@ pre code { background: none; padding: 0; }
   display: flex;
   gap: 1rem;
   margin: 3.5rem 0 1rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .88rem;
 }
 .pager a {
   flex: 1 1 0;
   border: 1px solid var(--rule);
-  border-radius: 4px;
+  border-radius: 0;
   padding: .8rem 1rem;
   text-decoration: none;
   color: var(--ink);
@@ -431,7 +405,7 @@ pre code { background: none; padding: 0; }
 }
 .pager .next { text-align: right; margin-left: auto; }
 .pager-up {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .8rem;
   color: var(--ink-faint);
   text-align: center;
@@ -455,11 +429,8 @@ pre code { background: none; padding: 0; }
 .masthead,
 .crumb,
 .toc,
-body > p,
 body > h2,
 body > h3,
-body > ul,
-body > ol,
 body > hr,
 body > .flag,
 body > .sidenote,
@@ -468,6 +439,11 @@ body > .ask,
 body > .course-nav,
 .pager,
 .pager-up { max-width: var(--measure); }
+
+/* Read line by line, so held to the reading measure rather than the page. */
+body > p,
+body > ul,
+body > ol { max-width: var(--prose); }
 
 body > table { width: 100%; }
 
@@ -486,7 +462,7 @@ body > table { width: 100%; }
 }
 
 .path-lede {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .9rem;
   color: var(--ink);
   margin: 2.4rem 0 .9rem;
@@ -499,7 +475,7 @@ body > table { width: 100%; }
   flex-wrap: wrap;
   max-width: var(--measure);
   margin: 0 0 1.8rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .82rem;
 }
 .path-start {
@@ -507,7 +483,7 @@ body > table { width: 100%; }
   color: var(--paper);
   font-weight: 650;
   font-size: .85rem;
-  border-radius: 6px;
+  border-radius: 0;
   padding: .6rem 1.5rem;
   text-decoration: none;
   white-space: nowrap;
@@ -518,7 +494,7 @@ body > table { width: 100%; }
 .path-progress .track {
   display: block;
   height: 5px;
-  border-radius: 2px;
+  border-radius: 0;
   background: var(--rule);
   overflow: hidden;
 }
@@ -531,7 +507,7 @@ body > table { width: 100%; }
   align-items: start;
   max-width: var(--measure);
   border: 1px solid var(--rule);
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--flag);
   padding: 1.1rem 1.2rem;
   margin: 0 0 .9rem;
@@ -557,7 +533,7 @@ body > table { width: 100%; }
 .modcard h3 a { color: var(--ink); text-decoration: none; }
 .modcard h3 a:hover { color: var(--accent); text-decoration: underline; }
 .modcard h3 .mod-n {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .7rem;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -568,7 +544,7 @@ body > table { width: 100%; }
 .modcard p {
   grid-column: 2;
   margin: .4rem 0 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .85rem;
   line-height: 1.5;
   color: var(--ink-soft);
@@ -576,7 +552,7 @@ body > table { width: 100%; }
 .modcard .modcard-meta {
   grid-column: 2;
   margin: .55rem 0 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .75rem;
   color: var(--ink-faint);
 }
@@ -584,12 +560,12 @@ body > table { width: 100%; }
 .pill {
   grid-column: 3;
   grid-row: 1;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .68rem;
   letter-spacing: .06em;
   text-transform: uppercase;
   border: 1px solid var(--rule);
-  border-radius: 999px;
+  border-radius: 0;
   padding: .22rem .7rem;
   color: var(--ink-faint);
   white-space: nowrap;
@@ -621,13 +597,13 @@ figure.diagram svg {
   display: block;
   width: 100%;
   height: auto;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   overflow: visible;
 }
 figure.diagram.wide { overflow-x: auto; }
 figure.diagram.wide svg { min-width: 640px; }
 figure.diagram figcaption {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .78rem;
   line-height: 1.45;
   color: var(--ink-faint);
@@ -655,7 +631,7 @@ figure.diagram figcaption {
 .dg-k-bad  { fill: var(--bad);  font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
 .dg-num    { fill: var(--paper); font-size: 12px; font-weight: 700; }
 .dg-tag    { fill: var(--accent); font-size: 10.5px; font-weight: 600; }
-.dg-code   { fill: var(--ink-soft); font-size: 11px; font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; }
+.dg-code   { fill: var(--ink-soft); font-size: 11px; font-family: var(--num); }
 .dg-onfill { fill: var(--paper); font-size: 11px; font-weight: 600; }
 
 .dg-fill-a   { fill: var(--accent); }
@@ -686,7 +662,7 @@ details.fold {
 }
 details.fold > summary {
   cursor: pointer;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui);
   font-size: .72rem;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -717,3 +693,158 @@ html.font-dyslexic h1 { font-size: 1.7rem; letter-spacing: 0; line-height: 1.25;
 html.font-dyslexic h2 { font-size: 1.25rem; }
 html.font-dyslexic .standfirst { font-style: normal; }
 html.font-dyslexic p, html.font-dyslexic li { max-width: 62ch; }
+
+/* ======================================================================
+   Security Print: the engraving layer.
+   Structure and copy are unchanged; this is how the sheet is printed.
+   ====================================================================== */
+
+/* The masthead is printed under a plate line, the way a certificate is. */
+.masthead {
+  border-top: 2px solid var(--rule-firm);
+  padding-top: 1.1rem;
+}
+.eyebrow {
+  font-family: var(--num);
+  font-size: .68rem;
+  letter-spacing: .16em;
+}
+h1 {
+  font-family: var(--cut);
+  font-weight: 700;
+  font-size: 2.6rem;
+  letter-spacing: -.015em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+h2 {
+  font-family: var(--cut);
+  font-weight: 600;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+h2 .num, h2 .num.n { font-family: var(--num); font-weight: 400; }
+h3 { font-family: var(--ui); font-weight: 600; letter-spacing: -.005em; }
+.standfirst { font-family: var(--read); font-size: 1.16rem; }
+
+/* Links are ink, not blue: the second ink of the two on this sheet. */
+a { color: var(--tint); }
+a:hover { color: var(--oxblood); }
+
+/* Tables are ledger rules: a firm line under the head, hairlines between. */
+th {
+  font-family: var(--ui);
+  font-weight: 600;
+  letter-spacing: .01em;
+  border-bottom: 2px solid var(--rule-firm);
+}
+td { border-bottom: 1px solid var(--rule); }
+caption { font-family: var(--num); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; }
+
+/* Marginal apparatus: a hairline, never a coloured bar. */
+.sidenote, .flag { border-left: 1px solid var(--rule-firm); }
+.flag .label {
+  font-family: var(--num);
+  font-size: .68rem;
+  letter-spacing: .16em;
+  color: var(--oxblood);
+}
+
+/* Wayfinding is set like a plate serial. */
+.crumb, .pager a span, .toc > summary, .toc-list .n {
+  font-family: var(--num);
+  letter-spacing: .1em;
+}
+.pager { border-top: 1px solid var(--rule-firm); }
+.pager a { font-family: var(--ui); }
+.pill {
+  font-family: var(--num);
+  font-size: .68rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule-firm);
+}
+.pill.on { border-color: var(--tint); color: var(--tint); background: none; }
+
+code, pre code { font-family: var(--num); }
+
+/* The one filled ink block on a lesson sheet. */
+.path-start {
+  font-family: var(--ui);
+  font-weight: 600;
+  letter-spacing: .01em;
+  background: var(--ink-fill);
+  color: var(--ink-fill-t);
+  border: 1px solid var(--ink-fill);
+}
+.path-start:hover { background: transparent; color: var(--tint); border-color: var(--tint); }
+.modcard h3 { font-family: var(--cut); font-weight: 700; }
+.modcard h3 .mod-n { font-family: var(--num); font-weight: 400; letter-spacing: .14em; }
+.modcard .modcard-meta { font-family: var(--ui); }
+.path-progress .lbl { font-family: var(--num); letter-spacing: .12em; }
+.path-progress .track { border: 1px solid var(--rule); background: none; }
+.path-progress .fill { background: var(--tint); }
+
+/* --- fixes from the finish review --- */
+
+/* The eyebrow is a plate serial, printed at the head of the sheet under the
+   rule, not a label stacked above the title. */
+.masthead .eyebrow {
+  text-align: right;
+  margin: 0 0 1.4rem;
+  padding-top: .1rem;
+}
+
+/* Prose holds a reading measure of its own, set for the face it is set in;
+   --measure stays the wider structural width. */
+p, ul, ol { max-width: var(--prose); }
+table p, table ul, table ol,
+.quiz p, .quiz ul, .quiz ol,
+.sidenote p, .flag p, figure p, .toc-list, .pager, .crumb, .course-nav ul { max-width: none; }
+
+/* The five modules are an index, not five cards. */
+.modcard {
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--rule);
+  border-radius: 0;
+  padding: 1.1rem 0;
+  margin: 0;
+  max-width: none;
+  position: relative;
+  grid-template-columns: 6.4rem 2.2rem 1fr auto;
+  gap: 0 1.2rem;
+}
+.modcard.is-next { border-color: var(--rule); }
+.modcard + .modcard { margin-top: 0; }
+.modcard-icon {
+  grid-row: 1 / span 3;
+  grid-column: 2;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-top: .15rem;
+}
+.modcard h3 { grid-column: 3; font-family: var(--cut); font-weight: 700; font-size: 1.22rem; }
+.modcard h3 .mod-n {
+  position: absolute;
+  left: 0;
+  top: 1.45rem;
+  width: 6rem;
+  font-family: var(--num);
+  font-size: .7rem;
+  letter-spacing: .14em;
+  color: var(--ink-faint);
+  display: block;
+}
+.modcard.is-next h3 .mod-n { color: var(--accent); }
+.modcard p, .modcard .modcard-meta { grid-column: 3; max-width: 62ch; }
+.modcard .pill { grid-column: 4; }
+
+/* The thesis refuses a progress bar; the count is printed instead. */
+.path-progress .track { display: none; }
+.path-progress .lbl { color: var(--ink-faint); }
+
+/* The plate serial at the head of the sheet already names the section, so the
+   trail below it stops at the module and does not restate it. */
+.crumb b { display: none; }
+.crumb span:last-of-type { display: none; }

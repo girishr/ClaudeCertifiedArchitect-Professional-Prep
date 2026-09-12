@@ -21,13 +21,13 @@
   top: .85rem;
   left: .85rem;
   z-index: 41;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui, system-ui, sans-serif);
   font-size: .78rem;
   font-weight: 600;
   color: var(--nv-ink);
   background: var(--nv-paper);
   border: 1px solid var(--nv-rule);
-  border-radius: 6px;
+  border-radius: 0;
   padding: .45rem .7rem;
   cursor: pointer;
   line-height: 1;
@@ -50,7 +50,7 @@ html.nav-open .nav-toggle { display: none; }
   background: var(--nv-bg);
   border-right: 1px solid var(--nv-rule);
   padding: .9rem 1rem 2rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--ui, system-ui, sans-serif);
   font-size: .84rem;
   line-height: 1.4;
   color: var(--nv-ink);
@@ -87,7 +87,7 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
 .sidenav-head .brand { font-weight: 700; color: var(--nv-ink); text-decoration: none; letter-spacing: .02em; }
 .nav-close {
   font: inherit; font-size: .72rem; color: var(--nv-faint);
-  background: none; border: 1px solid var(--nv-rule); border-radius: 5px;
+  background: none; border: 1px solid var(--nv-rule); border-radius: 0;
   padding: .3rem .55rem; cursor: pointer;
 }
 .nav-close:hover { color: var(--nv-ink); border-color: var(--nv-accent); }
@@ -102,7 +102,7 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
 .nav-group a {
   display: flex; gap: .55rem; align-items: baseline;
   color: var(--nv-soft); text-decoration: none;
-  padding: .28rem .5rem; margin: 0 -.5rem; border-radius: 5px;
+  padding: .28rem .5rem; margin: 0 -.5rem; border-radius: 0;
   font-weight: 400;
 }
 .nav-group a:hover { background: var(--nv-hover); color: var(--nv-ink); }
@@ -116,7 +116,7 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
 .seg-l { font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--nv-faint); width: 3.4rem; font-weight: 600; }
 .seg button {
   font: inherit; font-size: .74rem; color: var(--nv-soft);
-  background: none; border: 1px solid var(--nv-rule); border-radius: 999px;
+  background: none; border: 1px solid var(--nv-rule); border-radius: 0;
   padding: .22rem .6rem; cursor: pointer;
 }
 .seg button:hover { color: var(--nv-ink); }
@@ -153,3 +153,23 @@ html.font-dyslexic body *:not(code):not(pre):not(pre *):not(svg):not(svg *) {
 }
 html.font-dyslexic body { line-height: 1.8; letter-spacing: 0; word-spacing: .04em; }
 html.font-dyslexic strong, html.font-dyslexic b, html.font-dyslexic th { font-weight: 700; }
+
+
+/* Security Print: the menu is the sheet's index, set like one. */
+.sidenav-head .brand { font-family: var(--cut); font-weight: 700; letter-spacing: -.01em; font-size: 1.02rem; }
+.nav-group h4, .seg-l {
+  font-family: var(--num);
+  font-size: .7rem;
+  letter-spacing: .16em;
+}
+.nav-group a .n { font-family: var(--num); }
+.nav-group li.here a {
+  background: none;
+  border-left: 1px solid var(--nv-accent);
+  margin-left: -.5rem;
+  padding-left: calc(.5rem - 1px);
+  color: var(--nv-ink);
+}
+.nav-group li.here a .n { color: var(--nv-accent); }
+.seg button[aria-pressed="true"] { border-color: var(--nv-accent); color: var(--nv-accent); }
+.nav-toggle { font-family: var(--num); letter-spacing: .12em; text-transform: uppercase; font-size: .72rem; }

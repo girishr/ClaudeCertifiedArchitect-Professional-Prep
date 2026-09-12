@@ -9,206 +9,437 @@
 <link rel="apple-touch-icon" href="assets/badge-180.png">
 <script src="course/assets/nav.js"></script>
 <style>
+/* The palette, the type and the base surfaces live in course/assets/print.css,
+   which nav.js loads on every page. This file styles the workbench itself. */
+
 :root {
-  color-scheme: light;
-  --surface-1: #fcfcfb;
-  --plane: #f9f9f7;
-  --text-primary: #0b0b0b;
-  --text-secondary: #52514e;
-  --muted: #898781;
-  --grid: #e1e0d9;
-  --baseline: #c3c2b7;
-  --border: rgba(11,11,11,0.10);
-  --seq-100: #cde2fb;
-  --seq-250: #86b6ef;
-  --seq-450: #2a78d6;
-  --seq-600: #184f95;
-  --series-1: #2a78d6;
-  --good: #0ca30c;
-  --warning: #fab219;
-  --critical: #d03b3b;
-  --success-text: #006300;
-  --ghost: rgba(11,11,11,0.04);
+  /* Aliases kept for markup that names the old tokens. */
+  --grid: var(--rule);
+  --muted: var(--ink-faint);
+  --text-secondary: var(--ink-soft);
+  --success-text: var(--tint);
+  --critical: var(--oxblood);
 }
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --surface-1: #1a1a19;
-  --plane: #0d0d0d;
-  --text-primary: #ffffff;
-  --text-secondary: #c3c2b7;
-  --muted: #898781;
-  --grid: #2c2c2a;
-  --baseline: #383835;
-  --border: rgba(255,255,255,0.10);
-  --seq-100: #184f95;
-  --seq-250: #256abf;
-  --seq-450: #3987e5;
-  --seq-600: #86b6ef;
-  --series-1: #3987e5;
-  --good: #0ca30c;
-  --warning: #fab219;
-  --critical: #d03b3b;
-  --success-text: #0ca30c;
-  --ghost: rgba(255,255,255,0.06);
-}
+
 * { box-sizing: border-box; }
+
 body {
   margin: 0;
-  background: var(--plane);
-  color: var(--text-primary);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--plate);
+  color: var(--ink);
+  font-family: var(--ui);
   font-size: 15px;
   line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 1020px; margin: 0 auto; padding: 24px 20px 80px; }
+
+.wrap { max-width: 68rem; margin: 0 auto; padding: 24px 20px 96px; }
 html:not(.nav-open) .wrap { padding-top: 64px; }
 @media (min-width: 64.01rem) { html.nav-open body { padding-left: var(--nav-w, 17rem); } }
 @media print { html.nav-open body { padding-left: 0; } }
-header.top {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
+
+/* ---------- 1. the certificate header ---------- */
+
+.masthead { margin-bottom: 26px; }
+.masthead .plateline { margin-bottom: 18px; }
+
+.mast {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: start;
 }
-h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
-.sub { color: var(--text-secondary); font-size: 13px; margin: 0; }
-.countdown {
-  background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
-  padding: 10px 14px; text-align: right; min-width: 150px;
+.seal { width: 68px; height: 68px; flex: none; margin-top: 3px; }
+
+h1 {
+  font-family: var(--cut);
+  font-weight: 700;
+  font-size: clamp(26px, 4.4vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -.018em;
+  margin: -6px 0 6px;
+  text-wrap: balance;
 }
-.countdown .num { font-size: 26px; font-weight: 650; line-height: 1.1; }
-.countdown .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-button, select {
-  font-family: inherit; font-size: 13px; color: var(--text-primary);
-  background: var(--surface-1); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 12px; cursor: pointer;
+.sub { color: var(--ink-soft); font-size: 14px; margin: 0; max-width: 58ch; text-wrap: pretty; }
+
+/* The counterfoil: the plate's own numbers, and the visitor's exam date. */
+.counterfoil {
+  border: 1px solid var(--rule-firm);
+  min-width: 246px;
 }
-button:hover, select:hover { background: var(--ghost); }
-button.primary { background: var(--series-1); color: #fff; border-color: transparent; font-weight: 550; }
-button.primary:hover { filter: brightness(1.08); background: var(--series-1); }
-button:disabled { opacity: .45; cursor: default; }
-nav.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--grid); margin-bottom: 22px; flex-wrap: wrap; }
+.specimen {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0;
+}
+.specimen div { padding: 8px 10px 9px; border-right: 1px solid var(--rule); text-align: center; }
+.specimen div:last-child { border-right: 0; }
+.specimen dt {
+  font-family: var(--num);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1px;
+}
+.specimen dd {
+  margin: 0;
+  font-family: var(--cut);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.datebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--rule);
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+.datebar label { flex: none; }
+#exam-date {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--num);
+  font-size: 11.5px;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-firm);
+  padding: 3px 2px;
+}
+#exam-date::-webkit-calendar-picker-indicator { opacity: .5; cursor: pointer; }
+#exam-date::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+#exam-date::-webkit-datetime-edit { color: var(--ink-faint); }
+#exam-date:focus::-webkit-datetime-edit, #exam-date:valid::-webkit-datetime-edit { color: var(--ink); }
+.togo { font-family: var(--cut); font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.togo.none { font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+#cd-lbl { font-family: var(--num); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+
+/* ---------- 2. controls ---------- */
+
+button, select, input[type="date"] {
+  font-family: var(--ui);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--sheet);
+  border: 1px solid var(--rule-firm);
+  border-radius: 0;
+  padding: 7px 13px;
+  cursor: pointer;
+}
+button:hover, select:hover { border-color: var(--tint); color: var(--tint); }
+button:disabled { opacity: .45; cursor: default; border-color: var(--rule); color: var(--ink-faint); }
+button.primary {
+  background: var(--ink-fill);
+  border-color: var(--ink-fill);
+  color: var(--ink-fill-t);
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+button.primary:hover { background: transparent; border-color: var(--tint); color: var(--tint); }
+#theme-btn {
+  font-family: var(--num);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  background: transparent;
+  border-color: var(--rule);
+}
+.mast-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* ---------- 3. the one filled ink block ---------- */
+
+.ink-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: var(--ink-fill);
+  border: 1px solid var(--ink-fill);
+  color: var(--ink-fill-t);
+  padding: 16px 20px;
+  text-decoration: none;
+  margin-bottom: 22px;
+}
+.ink-block b { font-size: 15px; font-weight: 650; letter-spacing: .005em; display: block; }
+.ink-block span.line { font-size: 13px; color: var(--ink-fill-t); opacity: .82; }
+.ink-block .go {
+  font-family: var(--num);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  padding: 7px 13px;
+  white-space: nowrap;
+}
+.ink-block:hover { background: transparent; border-color: var(--tint); color: var(--tint); }
+
+/* ---------- 4. the ledger index ---------- */
+
+nav.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--rule-firm);
+  border-bottom: 1px solid var(--rule-firm);
+  margin-bottom: 22px;
+}
 nav.tabs button {
-  border: none; background: none; border-radius: 0; padding: 9px 14px;
-  border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 14px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 11px 18px 10px;
+  color: var(--ink-faint);
+  font-size: 13.5px;
+  font-weight: 500;
 }
-nav.tabs button[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--series-1); font-weight: 600; }
+nav.tabs button + button { border-left: 1px solid var(--rule); }
+nav.tabs button:hover { color: var(--ink); }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--tint); font-weight: 650; }
+
+/* ---------- 5. plates ---------- */
+
 .card {
-  background: var(--surface-1); border: 1px solid var(--border);
-  border-radius: 12px; padding: 18px; margin-bottom: 16px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  padding: 20px 22px;
+  margin-bottom: 16px;
 }
-.card h2 { font-size: 16px; margin: 0 0 10px; }
-.card h3 { font-size: 14px; margin: 18px 0 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .05em; }
-.meter { height: 8px; background: var(--grid); border-radius: 4px; overflow: hidden; }
-.meter > i { display: block; height: 100%; background: var(--series-1); border-radius: 4px; transition: width .25s; }
-.meter-row { display: flex; align-items: center; gap: 12px; margin: 6px 0 14px; }
-.meter-row .meter { flex: 1; }
-.meter-row .val { font-size: 13px; color: var(--text-secondary); font-variant-numeric: tabular-nums; min-width: 74px; text-align: right; }
-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
-th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-.day { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--grid); align-items: flex-start; }
-.day:last-child { border-bottom: none; }
-.day input { margin-top: 4px; width: 16px; height: 16px; accent-color: var(--series-1); cursor: pointer; }
-.day .d-meta { min-width: 108px; color: var(--muted); font-size: 12px; }
-.day .d-meta b { display: block; color: var(--text-primary); font-size: 13px; font-weight: 600; }
-.day .d-body b { font-weight: 600; }
-.day.done .d-body { color: var(--muted); text-decoration-color: var(--muted); }
-.day.done .d-body b { text-decoration: line-through; }
-.pill {
-  display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px;
-  border: 1px solid var(--border); color: var(--text-secondary); background: var(--ghost); margin-right: 6px;
-}
-.controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
-.q-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.q-scenario { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; }
-.q-stem { font-weight: 600; margin-bottom: 14px; }
-.opt {
-  display: flex; gap: 10px; align-items: flex-start; padding: 11px 13px; margin-bottom: 8px;
-  border: 1px solid var(--border); border-radius: 9px; cursor: pointer; background: var(--surface-1);
-}
-.opt:hover { background: var(--ghost); }
-.opt input { margin-top: 3px; accent-color: var(--series-1); }
-.opt .k { font-weight: 650; min-width: 16px; }
-.opt.correct { border-color: var(--good); background: color-mix(in srgb, var(--good) 9%, transparent); }
-.opt.wrong { border-color: var(--critical); background: color-mix(in srgb, var(--critical) 9%, transparent); }
-.expl { border-left: 3px solid var(--series-1); padding: 10px 0 10px 13px; margin-top: 14px; font-size: 14px; }
-.expl h4 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
-.expl ul { margin: 8px 0 0; padding-left: 18px; }
-.expl li { margin-bottom: 4px; color: var(--text-secondary); }
-.timer { font-variant-numeric: tabular-nums; font-weight: 650; font-size: 15px; }
-.timer.low { color: var(--critical); }
-.bar-row { display: grid; grid-template-columns: 220px 1fr 58px; gap: 12px; align-items: center; margin-bottom: 9px; }
-.bar-track { position: relative; height: 20px; background: var(--grid); border-radius: 4px; }
-.bar-fill { height: 100%; border-radius: 0 4px 4px 0; background: var(--seq-450); }
-.bar-target { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--baseline); left: 72%; }
-.bar-label { font-size: 13px; color: var(--text-secondary); }
-.bar-val { font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; color: var(--text-primary); }
-.legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin: 10px 0 16px; align-items: center; }
-.legend .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; background: var(--seq-450); margin-right: 6px; vertical-align: -1px; }
-.hero { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 6px; }
-.hero .stat .n { font-size: 30px; font-weight: 650; line-height: 1.15; }
-.hero .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-.note { font-size: 12.5px; color: var(--muted); }
+h2 { font-family: var(--cut); font-weight: 600; font-size: 21px; letter-spacing: -.01em; margin: 0 0 10px; text-wrap: balance; }
+h3 { font-size: 14px; font-weight: 650; margin: 22px 0 8px; letter-spacing: .005em; }
+h4 { font-size: 13.5px; margin: 0 0 6px; }
+p { margin: 0 0 10px; }
+a { color: var(--tint); }
+a:hover { color: var(--oxblood); }
+.note { color: var(--ink-faint); font-size: 12.5px; margin: 8px 0 0; }
 .hidden { display: none; }
-[title] { cursor: help; }
-@media (max-width: 640px) {
-  .bar-row { grid-template-columns: 1fr; gap: 4px; }
-  .day { flex-wrap: wrap; }
+
+/* The module ledger: ruled rows in an index, not a stack of cards. */
+.ledger { border-top: 2px solid var(--rule-firm); border-bottom: 1px solid var(--rule-firm); margin-bottom: 18px; }
+.lrow {
+  display: grid;
+  grid-template-columns: 96px 34px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
+  padding: 16px 2px;
+  border-top: 1px solid var(--rule);
+}
+.lrow:first-child { border-top: 0; }
+.lno {
+  font-family: var(--num);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 4px;
+}
+.lrow.is-next .lno { color: var(--tint); }
+.lrow .ic { width: 30px; height: 30px; color: var(--ink-faint); margin-top: 2px; }
+.lrow.is-next .ic { color: var(--tint); }
+.lrow .ic svg { width: 100%; height: 100%; display: block; }
+.lrow h3 { font-family: var(--cut); font-weight: 700; font-size: 20px; margin: 0 0 5px; letter-spacing: -.01em; line-height: 1.15; }
+.lrow h3 a { text-decoration: none; }
+.lrow p { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 7px; max-width: 66ch; }
+.lrow .pmeta { font-size: 12.5px; color: var(--ink-faint); margin: 0; font-variant-numeric: tabular-nums; }
+.lrow .pill { margin: 3px 0 0; }
+.tallied { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); display: block; margin: 16px 0 6px; }
+
+.pill {
+  display: inline-block;
+  font-family: var(--num);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule-firm);
+  color: var(--ink-faint);
+  padding: 3px 7px;
+  margin-right: 6px;
+}
+.pill.on { border-color: var(--tint); color: var(--tint); }
+
+/* ---------- 6. meters, plan, tables ---------- */
+
+.meter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.meter { flex: 1; height: 9px; border: 1px solid var(--rule-firm); }
+.meter i { display: block; height: 100%; background: var(--tint); }
+.val, .meter-row .val { font-family: var(--num); font-size: 11.5px; letter-spacing: .1em; color: var(--ink-faint); white-space: nowrap; }
+
+.day {
+  display: grid;
+  grid-template-columns: 20px 108px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 11px 0;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
 }
 
-.pathcard {
-  display: grid; grid-template-columns: 56px 1fr auto; gap: 0 16px; align-items: start;
-  background: var(--surface-1); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+.day .d-meta { font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+.day .d-meta b { display: block; color: var(--ink); font-size: 12px; letter-spacing: .08em; margin-bottom: 2px; }
+.day .d-body { font-size: 13.5px; color: var(--ink-soft); max-width: 88ch; }
+.day .d-body b { color: var(--ink); font-weight: 650; }
+.day.done { opacity: .5; }
+.day.done .d-body { text-decoration: line-through; text-decoration-color: var(--rule-firm); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 4px 0 0; }
+th, td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th { border-bottom: 2px solid var(--rule-firm); font-size: 11.5px; font-family: var(--num); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); font-weight: 400; }
+tbody th { font-weight: 600; width: 26%; }
+td.num, th.num { text-align: right; font-family: var(--num); font-variant-numeric: tabular-nums; }
+tr:last-child td, tr:last-child th { border-bottom: 0; }
+
+/* ---------- 7. practice ---------- */
+
+.q-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.timer { font-family: var(--num); font-size: 15px; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+.timer.low { color: var(--oxblood); }
+.q-scenario { font-family: var(--read); font-size: 16px; line-height: 1.6; color: var(--ink); margin: 0 0 10px; max-width: 72ch; }
+.q-stem { font-weight: 650; font-size: 14.5px; margin: 0 0 14px; max-width: 72ch; }
+
+.opt {
+  display: grid;
+  grid-template-columns: 18px 26px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  border: 1px solid var(--rule);
+  padding: 11px 13px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  cursor: pointer;
 }
-.pathcard.is-next { border-color: var(--series-1); }
-.pathcard .ic { grid-row: 1 / span 3; width: 56px; height: 56px; color: var(--muted); }
-.pathcard.is-next .ic { color: var(--series-1); }
-.pathcard .ic svg { width: 100%; height: 100%; display: block; }
-.pathcard .mod-n { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 2px; font-weight: 500; }
-.pathcard h3 { grid-column: 2; margin: 0; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--text-primary); font-weight: 650; }
-.pathcard h3 a { color: inherit; text-decoration: none; }
-.pathcard h3 a:hover { color: var(--series-1); text-decoration: underline; }
-.pathcard p { grid-column: 2; margin: 6px 0 0; font-size: 13.5px; color: var(--text-secondary); }
-.pathcard .pmeta { grid-column: 2; margin: 8px 0 0; font-size: 12px; color: var(--muted); }
-.pathcard .pmeta a { color: var(--series-1); }
-.pathcard .pill { grid-column: 3; grid-row: 1; margin-right: 0; }
-.pathcard .pill.on { border-color: var(--series-1); color: var(--series-1); }
+.opt:hover { border-color: var(--rule-firm); }
+.opt input, .day input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px; height: 15px;
+  margin: 3px 0 0;
+  border: 1px solid var(--rule-firm);
+  background: transparent;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+.opt input[type="radio"], .day input[type="radio"] { border-radius: 50%; }
+.opt input::after, .day input::after {
+  content: "";
+  width: 7px; height: 7px;
+  background: var(--tint);
+  transform: scale(0);
+  transition: transform .12s ease-out;
+}
+.opt input[type="radio"]::after, .day input[type="radio"]::after { border-radius: 50%; }
+.opt input:checked, .day input:checked { border-color: var(--tint); }
+.opt input:checked::after, .day input:checked::after { transform: scale(1); }
+.opt input:disabled { opacity: .6; cursor: default; }
+.opt .k { font-family: var(--num); font-weight: 600; font-size: 12px; color: var(--ink-faint); }
+.opt.correct { border-color: var(--tint); }
+.opt.correct .k { color: var(--tint); }
+.opt.wrong { border-color: var(--oxblood); }
+.opt.wrong .k { color: var(--oxblood); }
+
+.expl { border: 1px solid var(--rule); border-top: 2px solid var(--rule-firm); background: var(--sheet-2); padding: 15px 17px; font-size: 13.5px; }
+.expl h4 { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 8px; }
+.expl ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-soft); }
+.expl li { margin-bottom: 4px; }
+
+/* ---------- 8. results ---------- */
+
+.hero { display: flex; flex-wrap: wrap; gap: 34px; margin: 4px 0 12px; }
+.stat .n { font-family: var(--cut); font-size: 40px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .l { font-family: var(--num); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-top: 5px; }
+
+.rosette-row { display: grid; gap: 24px; align-items: center; }
+@media (min-width: 720px) { .rosette-row { grid-template-columns: 300px minmax(0, 1fr); } }
+.rosette-plate { margin: 0; border: 1px solid var(--rule-firm); padding: 12px; }
+.rosette-plate canvas { display: block; width: 100%; height: auto; }
+.rosette-plate figcaption { font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; text-align: center; }
+
+.legend { font-family: var(--num); font-size: 12px; letter-spacing: .03em; color: var(--ink-faint); display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px; }
+.legend .swatch { display: inline-block; width: 11px; height: 11px; background: var(--tint); margin-right: 6px; vertical-align: -1px; }
+
+.bar-row { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr) 46px; gap: 12px; align-items: center; padding: 6px 0; border-top: 1px solid var(--rule); font-size: 13px; }
+.bar-row:first-child { border-top: 0; }
+.bar-label { line-height: 1.35; }
+.bar-label .mk {
+  font-family: var(--num);
+  font-size: 11px;
+  color: var(--ink-faint);
+  border: 1px solid var(--rule-firm);
+  padding: 0 4px;
+  margin-right: 8px;
+}
+.bar-track { position: relative; height: 11px; border: 1px solid var(--rule-firm); }
+.bar-fill { height: 100%; background: var(--tint); }
+.bar-target { position: absolute; top: -3px; bottom: -3px; left: 72%; width: 1px; background: var(--gold); }
+.bar-val { font-family: var(--num); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---------- 9. narrow ---------- */
+
+@media (max-width: 760px) {
+  .mast { grid-template-columns: auto minmax(0, 1fr); }
+  .mast-actions { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+  .counterfoil { min-width: 0; flex: 1; }
+}
 @media (max-width: 560px) {
-  .pathcard { grid-template-columns: 1fr auto; }
-  .pathcard .ic { display: none; }
-  .pathcard p, .pathcard .pmeta { grid-column: 1 / -1; }
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .seal { width: 48px; height: 48px; }
+  .day { grid-template-columns: 20px minmax(0, 1fr); }
+  .day .d-meta { grid-column: 2; }
+  .bar-row { grid-template-columns: minmax(0, 1fr) 46px; }
+  .bar-row .bar-track { grid-column: 1 / -1; }
+  .lrow { grid-template-columns: 26px minmax(0, 1fr); gap: 0 12px; row-gap: 8px; }
+  .lrow .ic { grid-column: 1; grid-row: 1; width: 24px; height: 24px; margin: 0; }
+  .lrow .lno, .lrow > div, .lrow .pill { grid-column: 2; }
+  .lrow .lno { grid-row: 1; padding-top: 4px; }
+  .lrow .pill { justify-self: start; }
+  nav.tabs button { padding: 10px 13px; font-size: 12.5px; }
+  .bar-row { grid-template-columns: minmax(0, 1fr) 46px; }
 }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<header class="top">
-  <div style="display:flex; gap:16px; align-items:flex-start">
-    <img src="assets/badge.png" alt="Claude Certified Architect Professional badge" width="64" height="64" style="flex:none; margin-top:2px">
+<header class="masthead">
+  <hr class="plateline">
+  <div class="mast">
+    <img class="seal" src="assets/badge.png" alt="Claude Certified Architect Professional badge" width="68" height="68">
     <div>
-    <h1>Claude Certified Architect - Professional</h1>
-    <p class="sub">3-week prep hub. 120 minutes, pass mark 720 on a 100-1000 scale.</p>
+      <h1>Claude Certified Architect - Professional</h1>
+      <p class="sub">3-week prep hub. 120 minutes, pass mark 720 on a 100-1000 scale.</p>
     </div>
-  </div>
-  <div style="display:flex; gap:10px; align-items:flex-start;">
-    <div class="countdown">
-      <div class="num" id="cd-num">-</div>
-      <div class="lbl" id="cd-lbl">days to exam</div>
+    <div class="mast-actions">
+      <div class="counterfoil">
+        <dl class="specimen">
+          <div><dt>Items</dt><dd>63</dd></div>
+          <div><dt>Minutes</dt><dd>120</dd></div>
+          <div><dt>Pass</dt><dd>720</dd></div>
+          <div><dt>Domains</dt><dd>7</dd></div>
+        </dl>
+        <div class="datebar">
+          <label class="serial" for="exam-date">Exam date</label>
+          <input type="date" id="exam-date">
+          <span class="togo none" id="cd-num">not set</span>
+          <span id="cd-lbl"></span>
+        </div>
+      </div>
+      <button id="theme-btn" title="Toggle light and dark">Light</button>
     </div>
-    <button id="theme-btn" title="Toggle light and dark">Light</button>
   </div>
 </header>
 
-<a href="course/module-01/01-introduction.html" style="text-decoration:none; display:block; margin-bottom:16px">
-  <div class="card" style="margin:0; background:var(--series-1); border-color:transparent; color:#fff; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap">
-    <div>
-      <div style="font-weight:650; font-size:15px">Module 1, section 1 - Claude Platform &amp; Solution Design</div>
-      <div style="font-size:13px; opacity:.9">Twelve sections, all 34 official screens. Domains 1 and 2, 30% of the exam.</div>
-    </div>
-    <span style="font-size:13px; font-weight:600; white-space:nowrap; border:1px solid rgba(255,255,255,.5); border-radius:8px; padding:7px 14px">Start reading</span>
-  </div>
+<a class="ink-block" href="course/module-01/01-introduction.html">
+  <span>
+    <b>Module 1, section 1 - Claude Platform &amp; Solution Design</b>
+    <span class="line">Twelve sections, all 34 official screens. Domains 1 and 2, 30% of the exam.</span>
+  </span>
+  <span class="go">Start reading</span>
 </a>
 
 <nav class="tabs" role="tablist">
@@ -222,8 +453,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <!-- ================= COURSE ================= -->
 <section id="tab-course">
   <div class="card">
-    <h2 style="font-size:19px">Claude Certified Architect - Professional Prep Course</h2>
-    <p style="font-size:14px; color:var(--text-secondary); margin:0 0 14px">
+    <h2>Claude Certified Architect - Professional Prep Course</h2>
+    <p style="font-size:14px; color:var(--ink-soft); max-width:74ch">
       By the time an architect is involved the question is no longer whether Claude can do
       the task. It is whether the systems around Claude will integrate and operate as
       needed. Anthropic's official path teaches those decisions across five modules and 733
@@ -231,56 +462,67 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
       rather than sat through.
     </p>
     <p style="font-size:14px; margin:0 0 12px">Work through the 5 modules below:</p>
-    <div class="controls" style="margin-bottom:10px">
+    <div class="controls" style="margin-bottom:14px">
       <a href="course/module-01/01-introduction.html" style="text-decoration:none">
         <button class="primary" style="font-size:14px; padding:10px 18px">Start Module 1</button>
       </a>
       <a href="course/index.html" style="text-decoration:none"><button>Open the course page</button></a>
     </div>
-    <div class="meter-row" style="margin-bottom:0">
-      <div class="meter"><i style="width:20%"></i></div>
-      <div class="val">1 of 5 distilled</div>
-    </div>
   </div>
 
-  <div class="pathcard is-next">
+  <span class="tallied">1 of 5 distilled</span>
+
+  <div class="ledger">
+  <div class="lrow is-next">
+    <div class="lno">Module 1</div>
     <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 44V22a4 4 0 0 1 8 0v14"/><path d="M20 34V18a4 4 0 0 1 8 0v16"/><path d="M28 34V22a4 4 0 0 1 8 0v14"/><path d="M36 32v-6a4 4 0 0 1 8 0v18a14 14 0 0 1-14 14h-2a14 14 0 0 1-12-7l-6-10a4 4 0 0 1 7-4l3 5"/></svg></span>
-    <h3><span class="mod-n">Module 1</span><a href="course/module-01/index.html">Claude Platform &amp; Solution Design</a></h3>
-    <p>Master the design decisions that translate an ambiguous business problem into a defensible Claude solution architecture.</p>
-    <p class="pmeta">238 minutes &middot; Domains 1 and 2, 30% of the exam &middot; <a href="course/module-01/index.html">Twelve sections</a> &middot; <a href="course/module-01/01-introduction.html">Start reading</a></p>
+    <div>
+      <h3><a href="course/module-01/index.html">Claude Platform &amp; Solution Design</a></h3>
+      <p>Master the design decisions that translate an ambiguous business problem into a defensible Claude solution architecture.</p>
+      <p class="pmeta">238 minutes &middot; Domains 1 and 2, 30% of the exam &middot; <a href="course/module-01/index.html">Twelve sections</a> &middot; <a href="course/module-01/01-introduction.html">Start reading</a></p>
+    </div>
     <span class="pill on">Distilled</span>
   </div>
-
-  <div class="pathcard">
+  <div class="lrow">
+    <div class="lno">Module 2</div>
     <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="9"/><path d="M24 9v4M24 35v4M9 24h4M35 24h4M13.4 13.4l2.8 2.8M31.8 31.8l2.8 2.8M34.6 13.4l-2.8 2.8M16.2 31.8l-2.8 2.8"/><circle cx="44" cy="44" r="6"/><path d="M44 33v3M44 52v3M33 44h3M52 44h3M36.2 36.2l2.1 2.1M49.7 49.7l2.1 2.1M51.8 36.2l-2.1 2.1M38.3 49.7l-2.1 2.1"/></svg></span>
-    <h3><span class="mod-n">Module 2</span>Enterprise Integration &amp; Production</h3>
-    <p>Learn to take a designed solution from proof of concept to enterprise-ready production.</p>
-    <p class="pmeta">158 minutes &middot; Domains 3 and 4, 35% of the exam &middot; <a href="notes/02-integration-evals.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/enterprise-integration-production" target="_blank" rel="noopener">Official module</a></p>
+    <div>
+      <h3>Enterprise Integration &amp; Production</h3>
+      <p>Learn to take a designed solution from proof of concept to enterprise-ready production.</p>
+      <p class="pmeta">158 minutes &middot; Domains 3 and 4, 35% of the exam &middot; <a href="notes/02-integration-evals.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/enterprise-integration-production" target="_blank" rel="noopener">Official module</a></p>
+    </div>
     <span class="pill">Official only</span>
   </div>
-
-  <div class="pathcard">
+  <div class="lrow">
+    <div class="lno">Module 3</div>
     <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l20 8v16c0 13-8.6 20.8-20 24-11.4-3.2-20-11-20-24V16z"/><path d="M32 24v14M25 31h14"/></svg></span>
-    <h3><span class="mod-n">Module 3</span>Responsible AI, Safety &amp; Risk for Architects</h3>
-    <p>Design the full safety stack for a Claude system, placing each control and deciding what happens when one fails.</p>
-    <p class="pmeta">114 minutes &middot; Domain 5, 14% of the exam &middot; <a href="notes/03-governance-stakeholder.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/responsible-ai-safety-risk-for-architects" target="_blank" rel="noopener">Official module</a></p>
+    <div>
+      <h3>Responsible AI, Safety &amp; Risk for Architects</h3>
+      <p>Design the full safety stack for a Claude system, placing each control and deciding what happens when one fails.</p>
+      <p class="pmeta">114 minutes &middot; Domain 5, 14% of the exam &middot; <a href="notes/03-governance-stakeholder.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/responsible-ai-safety-risk-for-architects" target="_blank" rel="noopener">Official module</a></p>
+    </div>
     <span class="pill">Official only</span>
   </div>
-
-  <div class="pathcard">
+  <div class="lrow">
+    <div class="lno">Module 4</div>
     <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="20" r="8"/><path d="M8 48c0-8 6.3-13 14-13s14 5 14 13"/><circle cx="45" cy="26" r="7"/><path d="M36 50c1-7 5-11 12-11 6.5 0 10 3.5 11 9"/></svg></span>
-    <h3><span class="mod-n">Module 4</span>Stakeholder Engagement, Lifecycle &amp; GTM</h3>
-    <p>Lead the stakeholder conversations that decide whether a working system actually ships, adopts, and outlasts your involvement.</p>
-    <p class="pmeta">178 minutes &middot; Domain 6, 14% of the exam &middot; <a href="notes/03-governance-stakeholder.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/stakeholder-engagement-lifecycle-gtm" target="_blank" rel="noopener">Official module</a></p>
+    <div>
+      <h3>Stakeholder Engagement, Lifecycle &amp; GTM</h3>
+      <p>Lead the stakeholder conversations that decide whether a working system actually ships, adopts, and outlasts your involvement.</p>
+      <p class="pmeta">178 minutes &middot; Domain 6, 14% of the exam &middot; <a href="notes/03-governance-stakeholder.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/stakeholder-engagement-lifecycle-gtm" target="_blank" rel="noopener">Official module</a></p>
+    </div>
     <span class="pill">Official only</span>
   </div>
-
-  <div class="pathcard">
+  <div class="lrow">
+    <div class="lno">Module 5</div>
     <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M40 10a10 10 0 0 0-8 16L14 44a5 5 0 0 0 7 7l18-18a10 10 0 0 0 12-13l-7 7-6-6z"/><path d="M17 47h.02"/></svg></span>
-    <h3><span class="mod-n">Module 5</span>Team Enablement &amp; Operational Productivity</h3>
-    <p>Learn to enable a team to adopt a live Claude system and run it without depending on you.</p>
-    <p class="pmeta">45 minutes &middot; Domain 7, 7% of the exam &middot; <a href="notes/01-solution-design-models-devprod.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/developer-productivity-enablement" target="_blank" rel="noopener">Official module</a></p>
+    <div>
+      <h3>Team Enablement &amp; Operational Productivity</h3>
+      <p>Learn to enable a team to adopt a live Claude system and run it without depending on you.</p>
+      <p class="pmeta">45 minutes &middot; Domain 7, 7% of the exam &middot; <a href="notes/01-solution-design-models-devprod.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/developer-productivity-enablement" target="_blank" rel="noopener">Official module</a></p>
+    </div>
     <span class="pill">Official only</span>
+  </div>
   </div>
 
   <div class="card">
@@ -328,12 +570,12 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     <div class="q-head">
       <div><span class="pill" id="q-domain"></span><span class="pill" id="q-diff"></span><span class="pill" id="q-type"></span></div>
       <div style="display:flex; gap:14px; align-items:center;">
-        <span class="note" id="q-count"></span>
+        <span class="note" id="q-count" style="margin:0"></span>
         <span class="timer hidden" id="q-timer"></span>
         <button id="quit-btn">End set</button>
       </div>
     </div>
-    <div class="meter" style="margin-bottom:16px"><i id="q-meter" style="width:0%"></i></div>
+    <div class="meter" style="margin-bottom:18px"><i id="q-meter" style="width:0%"></i></div>
     <p class="q-scenario" id="q-scenario"></p>
     <p class="q-stem" id="q-stem"></p>
     <div id="q-options"></div>
@@ -359,12 +601,21 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <section id="tab-results" class="hidden">
   <div class="card">
     <h2>Where you stand</h2>
-    <div class="hero">
-      <div class="stat"><div class="n" id="r-score">-</div><div class="l">estimated scaled score</div></div>
-      <div class="stat"><div class="n" id="r-acc">-</div><div class="l">overall accuracy</div></div>
-      <div class="stat"><div class="n" id="r-answered">-</div><div class="l">questions attempted</div></div>
+    <div class="rosette-row">
+      <figure class="rosette-plate">
+        <canvas id="rosette" width="600" height="600" role="img" aria-label="Calibration rosette: one engraved lobe per exam domain, sized by its published weight and inked by your accuracy"></canvas>
+        <figcaption>Calibration rosette</figcaption>
+      </figure>
+      <div>
+        <div class="hero">
+          <div class="stat"><div class="n" id="r-score">-</div><div class="l">estimated scaled score</div></div>
+          <div class="stat"><div class="n" id="r-acc">-</div><div class="l">overall accuracy</div></div>
+          <div class="stat"><div class="n" id="r-answered">-</div><div class="l">questions attempted</div></div>
+        </div>
+        <p class="note" id="r-verdict"></p>
+        <p class="note">One lobe per domain, numbered as in the table below. A lobe's reach is that domain's published exam weighting; its green ink is the accuracy you have earned there, so a domain you have not attempted stays bare plate. Oxblood cuts the shortfall of any domain still under the gold ring, which is the 720 pass mark.</p>
+      </div>
     </div>
-    <p class="note" id="r-verdict"></p>
   </div>
   <div class="card">
     <h2>Accuracy by domain</h2>
@@ -411,7 +662,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   </div>
   <div class="card">
     <h2>Exam technique</h2>
-    <ul style="margin:0; padding-left:20px; color:var(--text-secondary)">
+    <ul style="margin:0; padding-left:20px; color:var(--ink-soft); font-size:14px">
       <li>Read the last sentence first, then the scenario. The ask is usually narrower than the setup suggests.</li>
       <li>Find the binding constraint: a latency SLA, a compliance regime, a budget, a team maturity level, a residency rule. The right answer respects it.</li>
       <li>On Select TWO, the two answers usually sit at different layers. Two from the same layer is a warning sign.</li>
@@ -437,7 +688,6 @@ const DOMAIN_WEIGHTS = {
   "Claude Models, Prompting & Context Engineering": 13,
   "Developer Productivity & Operational Enablement": 7
 };
-const EXAM_DATE = new Date("2026-09-05T00:00:00");
 
 // ---------- theme ----------
 const themeBtn = document.getElementById("theme-btn");
@@ -466,16 +716,28 @@ document.querySelectorAll("nav.tabs button").forEach(b => { b.onclick = () => sh
 // The site menu links to tabs by hash (#tab-plan, #tab-practice, ...). Honour it on load and on change.
 function tabFromHash() { const m = /^#tab-([a-z]+)$/.exec(location.hash); if (m) showTab(m[1], false); }
 window.addEventListener("hashchange", tabFromHash);
-tabFromHash();
+// Called at the end of this script: opening #tab-results runs renderResults,
+// which reads state declared further down.
 
-// ---------- countdown ----------
-(function () {
-  const days = Math.ceil((EXAM_DATE - new Date()) / 86400000);
-  const el = document.getElementById("cd-num");
-  if (days > 0) { el.textContent = days; }
-  else if (days === 0) { el.textContent = "Today"; document.getElementById("cd-lbl").textContent = "exam day"; }
-  else { el.textContent = Math.abs(days); document.getElementById("cd-lbl").textContent = "days since target"; }
-})();
+// ---------- exam date ----------
+// The plan runs 21 days from whenever you start it, so the date is yours to set.
+const dateInput = document.getElementById("exam-date");
+const cdNum = document.getElementById("cd-num"), cdLbl = document.getElementById("cd-lbl");
+function renderCountdown() {
+  const v = dateInput.value;
+  if (!v) { cdNum.textContent = "not set"; cdNum.className = "togo none"; cdLbl.textContent = ""; return; }
+  const days = Math.ceil((new Date(v + "T00:00:00") - new Date()) / 86400000);
+  cdNum.className = "togo";
+  if (days > 0) { cdNum.textContent = days; cdLbl.textContent = days === 1 ? "day to go" : "days to go"; }
+  else if (days === 0) { cdNum.textContent = "Today"; cdLbl.textContent = "exam day"; }
+  else { cdNum.textContent = Math.abs(days); cdLbl.textContent = "days since"; }
+}
+try { const saved = localStorage.getItem("ccarp-exam-date"); if (saved) dateInput.value = saved; } catch (e) {}
+dateInput.onchange = () => {
+  try { localStorage.setItem("ccarp-exam-date", dateInput.value); } catch (e) {}
+  renderCountdown();
+};
+renderCountdown();
 
 // ---------- plan ----------
 const doneDays = new Set();
@@ -667,18 +929,138 @@ document.getElementById("review-btn").onclick = () => {
   if (host.innerHTML) { host.innerHTML = ""; return; }
   host.innerHTML = session.answers.map((x,i) => {
     const q = x.q;
-    return "<div style='border-top:1px solid var(--grid); padding:16px 0'>" +
+    return "<div style='border-top:1px solid var(--rule); padding:16px 0'>" +
       "<div><span class='pill'>" + (i+1) + "</span><span class='pill'>" + q.domain + "</span>" +
-      "<span class='pill' style='color:" + (x.ok ? "var(--success-text)" : "var(--critical)") + "'>" + (x.ok ? "correct" : "wrong") + "</span></div>" +
+      "<span class='pill' style='color:" + (x.ok ? "var(--tint)" : "var(--oxblood)") + "; border-color:" + (x.ok ? "var(--tint)" : "var(--oxblood)") + "'>" + (x.ok ? "correct" : "wrong") + "</span></div>" +
       "<p class='q-scenario'>" + q.scenario + "</p><p class='q-stem'>" + q.question + "</p>" +
       "<ul style='padding-left:18px'>" + q.options.map(o =>
-        "<li style='margin-bottom:4px;color:" + (q.correct.includes(o.key) ? "var(--success-text)" : x.picked.includes(o.key) ? "var(--critical)" : "var(--text-secondary)") + "'>" +
+        "<li style='margin-bottom:4px;color:" + (q.correct.includes(o.key) ? "var(--tint)" : x.picked.includes(o.key) ? "var(--oxblood)" : "var(--ink-soft)") + "'>" +
         "<b>" + o.key + "</b> " + o.text + (q.correct.includes(o.key) ? " (correct)" : x.picked.includes(o.key) ? " (you picked this)" : "") + "</li>").join("") + "</ul>" +
       "<div class='expl'><p>" + q.explanation + "</p><ul>" +
       Object.entries(q.distractorNotes || {}).map(([k,v]) => "<li><b>"+k+":</b> "+v+"</li>").join("") + "</ul>" +
       (q.reference ? "<p class='note'><a href='"+q.reference+"' target='_blank' rel='noopener'>Reference</a></p>" : "") + "</div></div>";
   }).join("");
 };
+
+// ---------- the calibration rosette ----------
+// A guilloche rosette, the way a certificate is engraved: superposed epitrochoids
+// turned on a rose engine. Seven lobes, one per domain, numbered clockwise from
+// the top in the same order as the table below. A lobe's reach is that domain's
+// published exam weighting. Its green ink is the accuracy you have earned there,
+// cut only into that lobe's own sector, so a domain you have never attempted is
+// left as bare plate. Oxblood cuts the shortfall of any lobe still under the
+// pass mark. The dashed ring is 72%, the 720 mark on the 1000-point scale.
+let lastRows = null;
+
+function drawRosette(rows) {
+  lastRows = rows;
+  const c = document.getElementById("rosette");
+  if (!c || !c.getContext) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const size = 600;
+  c.width = size * dpr; c.height = size * dpr;
+  const ctx = c.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, size, size);
+
+  const cs = getComputedStyle(document.documentElement);
+  const tint = cs.getPropertyValue("--tint").trim() || "#3ba57c";
+  const oxblood = cs.getPropertyValue("--oxblood").trim() || "#c9636a";
+  const gold = cs.getPropertyValue("--gold").trim() || "#c9a24a";
+  const sheet = cs.getPropertyValue("--sheet").trim() || "#111a16";
+  const light = document.documentElement.getAttribute("data-theme") === "light";
+
+  const cx = size / 2, cy = size / 2, R = size * 0.40;
+  const n = rows.length;
+  const meanW = rows.reduce((s, r) => s + r.weight, 0) / n;
+  const PASS = 0.72;
+  const radiusFor = a => R * (0.30 + 0.62 * a);   // one scale for dots and the pass ring
+
+  // The weighting is interpolated between neighbouring lobes: a rose engine cuts
+  // a continuous line, and a stepped one would show as a seam.
+  function reachAt(t) {
+    const f = (t / (Math.PI * 2)) * n;
+    const i = Math.floor(f), frac = f - i;
+    const a = rows[((i % n) + n) % n].weight, b = rows[(((i + 1) % n) + n) % n].weight;
+    const eased = frac < .5 ? 2 * frac * frac : 1 - Math.pow(-2 * frac + 2, 2) / 2;
+    return (a + (b - a) * eased) / meanW;
+  }
+  function radial(t, amp, k, scale, phase) {
+    const w = 0.62 + 0.50 * reachAt(t);
+    return R * scale * (1 + amp * Math.cos(k * t + phase)) * w;
+  }
+  // from/to in turns (0..1). A full ring closes; a sector stays open.
+  function cut(from, to, phase, amp, k, scale, color, alpha, width) {
+    const span = to - from, steps = Math.max(24, Math.round(span * 900));
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const t = (from + span * (i / steps)) * Math.PI * 2;
+      const r = radial(t, amp, k, scale, phase);
+      const x = cx + r * Math.cos(t - Math.PI / 2), y = cy + r * Math.sin(t - Math.PI / 2);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    if (span >= 1) ctx.closePath();
+    ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.lineWidth = width; ctx.stroke(); ctx.globalAlpha = 1;
+  }
+
+  // 1. The blank plate, always engraved, in the same ink at low density.
+  //    This is the empty state.
+  for (let i = 0; i < 30; i++) cut(0, 1, i * 0.105, 0.155, n, 1 - i * 0.0092, tint, light ? 0.30 : 0.20, 0.6);
+
+  // 2. Each domain's own ink, cut only into its own sector. Green fills out from
+  //    the centre to the radius its accuracy reaches; oxblood fills what is left
+  //    between there and the pass ring.
+  const aInk = light ? 0.85 : 0.72, aGap = light ? 0.75 : 0.62;
+  const FLOOR = radiusFor(0) / R, PASS_S = radiusFor(PASS) / R;
+  // The phase is held across a band so its lines nest inside one lobe shape
+  // rather than sweeping across the plate.
+  function band(from, to, lo, hi, color, alpha, amp, k, phase) {
+    const steps = Math.max(3, Math.round((hi - lo) / 0.026));
+    for (let j = 0; j <= steps; j++) {
+      const sc = lo + (hi - lo) * (j / steps);
+      cut(from, to, phase, amp, k, sc, color, alpha, 0.6);
+    }
+  }
+  rows.forEach((row, i) => {
+    if (!row.seen) return;
+    const acc = row.right / row.seen;
+    const from = i / n - 0.006, to = (i + 1) / n + 0.006;
+    band(from, to, FLOOR, radiusFor(acc) / R, tint, aInk, 0.10, n, 0);
+    if (acc < PASS) band(from, to, radiusFor(acc) / R + 0.014, PASS_S, oxblood, aGap, 0.07, n * 2, Math.PI / n);
+  });
+
+  // 3. The pass mark, printed once, on the same scale as the domain marks.
+  ctx.setLineDash([5, 6]); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.9;
+  ctx.strokeStyle = gold;
+  ctx.beginPath(); ctx.arc(cx, cy, radiusFor(PASS), 0, Math.PI * 2); ctx.stroke();
+  ctx.setLineDash([]); ctx.globalAlpha = 1;
+
+  // 4. Each domain's mark, at the radius its accuracy reaches, and its number.
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  rows.forEach((row, i) => {
+    const t = (i + 0.5) / n * Math.PI * 2 - Math.PI / 2;
+    const rimR = R * 1.10;
+    ctx.font = "600 15px 'Chivo Mono', ui-monospace, monospace";
+    ctx.fillStyle = row.seen ? (row.right / row.seen >= PASS ? tint : oxblood) : tint;
+    ctx.globalAlpha = row.seen ? 1 : (light ? .8 : .7);
+    ctx.fillText(String(i + 1), cx + rimR * Math.cos(t), cy + rimR * Math.sin(t));
+    ctx.globalAlpha = 1;
+    if (!row.seen) return;
+    const acc = row.right / row.seen, r = radiusFor(acc);
+    const mx = cx + r * Math.cos(t), my = cy + r * Math.sin(t);
+    const mark = acc >= PASS ? tint : oxblood;
+    ctx.beginPath(); ctx.arc(mx, my, 6.5, 0, Math.PI * 2);
+    ctx.fillStyle = sheet; ctx.globalAlpha = .85; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(mx, my, 4.2, 0, Math.PI * 2);
+    ctx.fillStyle = mark; ctx.fill();
+    ctx.beginPath(); ctx.arc(mx, my, 7.5, 0, Math.PI * 2);
+    ctx.strokeStyle = mark; ctx.lineWidth = 1; ctx.globalAlpha = .55; ctx.stroke(); ctx.globalAlpha = 1;
+  });
+}
+// The numerals are set in the plate's own face, so redraw once it has loaded.
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => { if (lastRows) drawRosette(lastRows); });
+}
 
 // ---------- results ----------
 function renderResults() {
@@ -699,11 +1081,11 @@ function renderResults() {
     : scaled >= 720 ? "Weighted estimate is above the pass mark. Keep the weakest domain moving."
     : "Weighted estimate is below 720. The two shortest bars below are where the marks are.";
 
-  const bars = rows.map(([d,w]) => {
+  const bars = rows.map(([d,w], i) => {
     const s = stats[d], pct = s.seen ? Math.round(s.right/s.seen*100) : 0;
     const label = s.seen ? pct + "%" : "-";
     return "<div class='bar-row'>" +
-      "<div class='bar-label' title='" + d + "'>" + d.replace(" & ", " and ") + " <span style='color:var(--muted)'>" + w + "%</span></div>" +
+      "<div class='bar-label' title='" + d + "'><span class='mk'>" + (i+1) + "</span>" + d.replace(" & ", " and ") + " <span style='color:var(--ink-faint)'>" + w + "%</span></div>" +
       "<div class='bar-track' title='" + d + ": " + (s.seen ? s.right + " of " + s.seen + " correct" : "not attempted") + "'>" +
         "<div class='bar-fill' style='width:" + pct + "%'></div><div class='bar-target'></div></div>" +
       "<div class='bar-val'>" + label + "</div></div>";
@@ -713,8 +1095,11 @@ function renderResults() {
     const s = stats[d];
     return "<tr><td>"+d+"</td><td class='num'>"+w+"%</td><td class='num'>"+s.seen+"</td><td class='num'>"+s.right+"</td><td class='num'>"+(s.seen?Math.round(s.right/s.seen*100)+"%":"-")+"</td></tr>";
   }).join("");
+
+  drawRosette(rows.map(([d,w]) => ({ domain: d, weight: w, seen: stats[d].seen, right: stats[d].right })));
 }
 renderResults();
+tabFromHash();
 </script>
 </body>
 </html>
