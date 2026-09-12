@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09. Prompting as architecture - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 09 of 12</p>
+  <h1>Prompting as architecture</h1>
+  <p class="standfirst">The prompt as a governed, versioned, cacheable asset.</p>
+  <div class="meta"><span>Official screens S24 to S27</span><span>~31 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 09 of 12</b>
+</nav>
+<p>The other major lever alongside model and context is the prompt itself. At enterprise
+scale a prompt is not a sentence you type, it is an asset you design, version, cache and
+govern. Four screens in the official module, and the part of it least visible from the
+published exam objectives, which is exactly why it is worth reading twice.</p>
+
+<h2><span class="num n">9.1</span>The system prompt as a designed artifact</h2>
+
+<p>A system prompt for a one-off chat and one that hundreds of requests a day depend on
+are different things. The enterprise version has structure: a clear statement of role and
+scope, the constraints the model must hold, what it must never do and what it must always
+do, and an output contract naming the shape the response has to take. At scale, ambiguity is
+a defect multiplied across every request.</p>
+
+<p>A <strong>template</strong> is a system prompt with parameterised slots and fixed
+scaffolding around them. The design goal is that the scaffolding carries the consistency and
+safety guarantees, so filling a slot cannot accidentally remove a constraint. A good
+template makes the safe path the default path: the person using it supplies the variable
+content and inherits the guardrails without re-authoring them.</p>
+
+<div class="flag">
+  <span class="label">Description, as a competency</span>
+  <p>Telling the model precisely what you want: the <strong>scope</strong> (what is in and
+  out of bounds), the <strong>format</strong> (the exact output contract), and the
+  <strong>constraints</strong> (rules that must never be violated). The failure to hunt for
+  is underspecification. Where the prompt is silent, the model improvises, differently each
+  time, which is exactly the non-determinism you did not want in a reused asset. Read a
+  prompt for what it fails to say.</p>
+</div>
+
+<h2><span class="num n">9.2</span>Technique follows task complexity</h2>
+
+<table>
+  <caption>Three techniques</caption>
+  <thead><tr><th>Technique</th><th>What it is</th><th>When it fits</th></tr></thead>
+  <tbody>
+    <tr><td>Zero-shot</td><td>Instruction only, no examples</td><td>Well-specified tasks the model already handles. The default to try first</td></tr>
+    <tr><td>Few-shot</td><td>A handful of input and output examples in the prompt</td><td>Tasks where the format or the judgment is easier to show than to describe</td></tr>
+    <tr><td>Chain-of-thought</td><td>Prompt the model to reason step by step before answering</td><td>Multi-step reasoning, interacting conditions, tasks where the path matters to the answer</td></tr>
+  </tbody>
+</table>
+
+<figure class="diagram wide" id="fig-technique-ladder">
+<svg viewBox="0 0 760 200" role="img" aria-label="The three prompting techniques as a ladder of rising cost" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m23" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="70" width="232" height="58" rx="8" class="dg-box hi"/><text x="12" y="92" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Zero-shot</tspan></text><text x="12" y="110" class="dg-s" text-anchor="start"><tspan x="12" dy="0">instruction only</tspan></text><text x="12" y="144" class="dg-s" text-anchor="start"><tspan x="12" dy="0">the default to try first</tspan></text><path d="M236 99L246 69" class="dg-arrow" marker-end="url(#m23)"/><rect x="250" y="40" width="232" height="58" rx="8" class="dg-box"/><text x="262" y="62" class="dg-t-b" text-anchor="start"><tspan x="262" dy="0">Few-shot</tspan></text><text x="262" y="80" class="dg-s" text-anchor="start"><tspan x="262" dy="0">a handful of examples</tspan></text><text x="262" y="114" class="dg-s" text-anchor="start"><tspan x="262" dy="0">when the format is easier to show</tspan></text><text x="262" y="128" class="dg-s" text-anchor="start"><tspan x="262" dy="0">than describe</tspan></text><path d="M486 69L496 39" class="dg-arrow" marker-end="url(#m23)"/><rect x="500" y="10" width="232" height="58" rx="8" class="dg-box"/><text x="512" y="32" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">Chain-of-thought</tspan></text><text x="512" y="50" class="dg-s" text-anchor="start"><tspan x="512" dy="0">reason step by step first</tspan></text><text x="512" y="84" class="dg-s" text-anchor="start"><tspan x="512" dy="0">when the path matters to the</tspan></text><text x="512" y="98" class="dg-s" text-anchor="start"><tspan x="512" dy="0">answer</tspan></text><path d="M0 178L760 178" class="dg-arrow" marker-end="url(#m23)"/><text x="0" y="172" class="dg-k" text-anchor="start"><tspan x="0" dy="0">tokens and latency per call</tspan></text><text x="760" y="194" class="dg-s" text-anchor="end"><tspan x="760" dy="0">reach for the lightest technique that meets the requirement</tspan></text></svg>
+<figcaption>Start at the bottom. Climb only when the task's structure demands it, and re-check the pairing on every model swap.</figcaption>
+</figure>
+
+<table>
+  <caption>The module's own worked calls</caption>
+  <thead><tr><th>Task</th><th>Technique</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Classify a support ticket into five named categories</td><td>Zero-shot</td><td>Well specified, categories named, classification is reliable without examples</td></tr>
+    <tr><td>Extract date, vendor and amount from receipts with wildly varying layouts</td><td>Few-shot</td><td>The extraction format is easier to demonstrate than to describe, especially across layouts</td></tr>
+    <tr><td>Decide whether a clause creates liability under three interacting conditions</td><td>Chain-of-thought</td><td>The answer depends on a sequence of conditional steps; reasoning aloud reduces skipped interactions</td></tr>
+    <tr><td>Summarise 400 words into two sentences</td><td>Zero-shot</td><td>Bounded input, standard task. Examples or reasoning add tokens with no quality gain</td></tr>
+  </tbody>
+</table>
+
+<p>Two more things the module is explicit about. First, <strong>the same prompt does not
+behave identically across tiers or generations</strong>. A more capable model may need less
+scaffolding; a less capable one may need more. A prompt tuned for one model is a starting
+point for another, which is the underlying reason a model swap is treated as a release: the
+prompt-model pairing is what you ship. Second, <strong>bias gets built in through
+construction</strong>: leading phrasing, few-shot sets that show only one kind of case,
+assumptions baked into the instruction. Phrase neutrally, balance examples across the cases
+the system will really see, and check whether the prompt presumes the answer it is supposed
+to be eliciting.</p>
+
+<h2><span class="num n">9.3</span>Caching mechanics an architect designs around</h2>
+
+<figure class="diagram wide" id="fig-prompt-anatomy">
+<svg viewBox="0 0 760 234" role="img" aria-label="A reusable prompt laid out for caching: static block first, variable content after the breakpoint" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m22" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="16" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Wrong order: the cache never hits</tspan></text><rect x="0" y="24" width="198" height="30" class="dg-fill-bad"/><text x="99" y="43" class="dg-onfill" text-anchor="middle"><tspan x="99" dy="0">Per-request document</tspan></text><rect x="200" y="24" width="558" height="30" class="dg-fill-d"/><text x="479" y="43" class="dg-onfill" text-anchor="middle"><tspan x="479" dy="0">Role, scope, constraints, output contract (6,000 tokens)</tspan></text><text x="0" y="72" class="dg-s" text-anchor="start"><tspan x="0" dy="0">The prefix changes on every call, so nothing before the variable content can be reused.</tspan></text><text x="0" y="112" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Right order: static before dynamic</tspan></text><rect x="0" y="120" width="558" height="30" class="dg-fill-a"/><text x="279" y="139" class="dg-onfill" text-anchor="middle"><tspan x="279" dy="0">Role, scope, constraints, output contract (6,000 tokens)</tspan></text><rect x="560" y="120" width="198" height="30" class="dg-fill-b"/><text x="659" y="139" class="dg-onfill" text-anchor="middle"><tspan x="659" dy="0">Per-request document</tspan></text><text x="0" y="168" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Everything left of the breakpoint is computed once and reused. At hundreds of calls a day the prefix is where the savings live.</tspan></text><line x1="559" y1="106" x2="559" y2="156" class="dg-edge"/><text x="554" y="102" class="dg-tag" text-anchor="end"><tspan x="554" dy="0">cache breakpoint</tspan></text><text x="0" y="204" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Guardrails go in the output contract, as a structural constraint the format requires, not as a</tspan><tspan x="0" dy="1.3em">sentence in the role text that can be drifted past.</tspan></text></svg>
+<figcaption>The single most testable caching fact in the module.</figcaption>
+</figure>
+
+<table>
+  <caption>Four decisions</caption>
+  <thead><tr><th>Decision</th><th>Rule</th></tr></thead>
+  <tbody>
+    <tr><td>Cache breakpoints</td><td>Mark the boundary between the fixed part and the variable part, and keep the fixed part genuinely fixed</td></tr>
+    <tr><td>Content ordering</td><td>Static before dynamic, always. The large unchanging block first, per-request content after the breakpoint</td></tr>
+    <tr><td>TTL selection</td><td>Match cache lifetime to how often the fixed content changes and how often the prompt is called. A constantly called prompt benefits from a longer life; a rare one may never amortise the write</td></tr>
+    <tr><td>When not to cache</td><td>Writing to the cache costs something. If a prompt is called infrequently or its fixed portion is small, caching can cost more than it saves</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">9.4</span>Prompt library or Skill</h2>
+
+<p>Two ways to make a prompt reusable across a team. A <strong>modular prompt library</strong>
+is a shared collection of fragments and templates engineers assemble in their own code. A
+<strong>Skill</strong> is a versioned, self-contained unit, a SKILL.md packaging the
+instructions, optional scripts and version management, so the whole procedure travels as one
+governed artifact.</p>
+
+<table>
+  <caption>Which one</caption>
+  <thead><tr><th>Consideration</th><th>Library</th><th>Skill</th></tr></thead>
+  <tbody>
+    <tr><td>Repeatability</td><td>An assembled, often-tweaked prompt per use</td><td>A stable procedure run the same way every time</td></tr>
+    <tr><td>Distribution</td><td>Shared within one codebase or team</td><td>Across teams or products needing the same procedure</td></tr>
+    <tr><td>Governance</td><td>Lightweight, engineers own the fragments</td><td>Needs versioning, approval and rollback, which Skills carry</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Exercise, from the module</span>
+  <p>A support organisation runs the same operation hundreds of times a day: given a ticket
+  and the relevant manual section, draft a reply that follows the tone guidelines, cites the
+  section it relied on, and never promises a refund or a timeline the agent has not approved.
+  Make three decisions and justify each: where the stable prefix ends, how the
+  never-promise rule is enforced structurally rather than as a sentence, and whether this
+  ships as a template or a Skill.</p>
+</div>
+
+<table>
+  <caption>The model answer</caption>
+  <thead><tr><th>Decision</th><th>Answer</th></tr></thead>
+  <tbody>
+    <tr><td>Breakpoint</td><td>Role, tone rules, output contract and the guardrail go first as the stable prefix. The ticket and the manual section are the only per-request content. Dynamic content before the breakpoint means the prefix changes every call and the cache never hits, and at hundreds of calls a day the prefix is where the savings live</td></tr>
+    <tr><td>Guardrail</td><td>Build it into the output contract as a structural constraint the format requires, not a sentence in the role text. A rule stated in the role can be drifted past. A constraint that shapes the response format cannot be quietly ignored</td></tr>
+    <tr><td>Packaging</td><td>A versioned Skill. Stable procedure, run identically across the support org, needing versioning and rollback. A template each agent keeps locally has no central governance and drifts into slightly different versions</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-answer="C">
+  <p class="scenario">An analytics team reuses one prompt about 8,000 times a day. It opens
+  with the customer record being analysed, then a 6,000-token block of fixed methodology and
+  output schema. Costs are triple the projection and caching appears to do nothing.</p>
+  <p class="stem">What is the fix?</p>
+  <ol class="options">
+    <li data-key="A" data-why="A longer TTL cannot help a prefix that is different on every single call. There is nothing stable to keep alive.">Extend the cache TTL</li>
+    <li data-key="B" data-why="Trimming the methodology block reduces tokens but leaves the cache broken. It treats the symptom and abandons the largest available saving.">Shorten the methodology block to cut input tokens</li>
+    <li data-key="C" data-why="Caching matches on a stable prefix. With the per-customer record first, the prefix differs every call and nothing is reusable. Methodology and schema first, record after the breakpoint.">Reorder so the fixed methodology and schema come first, with the record after the breakpoint</li>
+    <li data-key="D" data-why="Packaging as a Skill addresses governance and distribution. It does not change the token ordering that is breaking the cache.">Package the prompt as a versioned Skill</li>
+  </ol>
+  <div class="verdict" hidden><b>Static before dynamic.</b> This is the single most testable
+  caching fact in the module, and the scenario telegraphs it: a large fixed block sitting
+  behind a small variable one. At 8,000 calls a day against a 6,000-token prefix the saving is
+  the whole point. Note what the other options are: each is a real technique that is right in
+  a different situation, which is how distractors are built in this domain.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="08-model-and-context.html"><span>Previous</span>08 Model and context strategy</a>
+  <a class="next" href="10-entry-points.html"><span>Next</span>10 Entry points and governance</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

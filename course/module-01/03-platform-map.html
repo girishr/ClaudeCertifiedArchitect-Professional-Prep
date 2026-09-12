@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03. Platform map and primitives - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 03 of 12</p>
+  <h1>Platform map and primitives</h1>
+  <p class="standfirst">Three layers of the platform, then the seven primitives you build from.</p>
+  <div class="meta"><span>Official screens S03 to S06</span><span>~36 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 03 of 12</b>
+</nav>
+<p>Three words get used as if they were alternatives to each other. They are not. Every
+deployment involves all three, and collapsing them is the most common source of muddled
+architecture conversations. Learn the names here; the choosing happens in section 10.</p>
+
+<figure class="diagram wide" id="fig-three-layers">
+<svg viewBox="0 0 760 350" role="img" aria-label="The three layers of the platform, top to bottom" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="760" height="98" rx="8" class="dg-box hi"/><text x="16" y="26" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Entry points</tspan></text><text x="16" y="46" class="dg-s" text-anchor="start"><tspan x="16" dy="0">What a person or system directly touches. Chosen for the user and the work</tspan></text><text x="16" y="84" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Claude.ai · Claude Code · Cowork · a custom app on the API</tspan></text><text x="744" y="26" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: The user</tspan></text><rect x="0" y="108" width="760" height="98" rx="8" class="dg-box"/><text x="16" y="134" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Build-time interfaces</tspan></text><text x="16" y="154" class="dg-s" text-anchor="start"><tspan x="16" dy="0">What the partner&#x27;s code is written against. Chosen for the engineering team</tspan></text><text x="16" y="192" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Direct API · SDKs · MCP · Agent SDK</tspan></text><text x="744" y="134" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: The engineer</tspan></text><rect x="0" y="216" width="760" height="98" rx="8" class="dg-box"/><text x="16" y="242" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Delivery routes</tspan></text><text x="16" y="262" class="dg-s" text-anchor="start"><tspan x="16" dy="0">Where the traffic terminates and whose infrastructure runs it. Chosen for</tspan><tspan x="16" dy="1.3em">cloud commitments and compliance</tspan></text><text x="16" y="300" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Anthropic · AWS Bedrock · GCP Vertex AI · Microsoft Foundry</tspan></text><text x="744" y="242" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: Procurement and compliance</tspan></text><text x="380" y="338" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">Not alternatives. Every deployment has all three, and a decision in one rarely dictates the others.</tspan></text></svg>
+<figcaption>Three layers, three different conversations with three different stakeholders.</figcaption>
+</figure>
+
+<details class="fold">
+  <summary>The three layers, in full wording</summary>
+<table>
+  <caption>Three layers, three separate conversations</caption>
+  <thead><tr><th>Layer</th><th>What it is</th><th>Examples</th><th>Chosen for</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Entry point</strong></td><td>What a person or system directly interacts with. The wrapper that decides who can talk to Claude and how</td><td>Claude.ai on web, mobile and desktop; Claude Code; a custom app on the API</td><td>The user and the work</td></tr>
+    <tr><td><strong>Build-time interface</strong></td><td>How an engineer programs against Claude. The layer the partner's code is written to</td><td>The direct API, the SDKs, MCP, the Agent SDK</td><td>The engineering team and the integration</td></tr>
+    <tr><td><strong>Delivery route</strong></td><td>Where API traffic terminates, and whose infrastructure runs the request</td><td>Anthropic directly, AWS Bedrock, GCP Vertex AI, Microsoft Foundry</td><td>Cloud commitments and compliance posture</td></tr>
+  </tbody>
+</table>
+</details>
+
+<p>Three layers, three different stakeholders, and a decision in one rarely dictates the
+others. A proposal once put Claude Code, an engineering entry point, in front of bank
+branch staff on the grounds that it is all Claude. It is all Claude, in that the same
+model sits under every entry point. But the entry point is the wrapper, and the wrapper
+was built for developers in a terminal. Treating the three layers as one erased the
+distinction that should have ruled the choice out in the first minute.</p>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A partner says: we will use Bedrock as our entry point, with MCP as
+  the delivery route, because our team already runs on AWS.</p>
+  <p class="stem">What is wrong with that sentence?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Bedrock and MCP are both real and both usable together. Nothing here is unavailable; the problem is that the words have been swapped.">Bedrock and MCP cannot be used together in one architecture</li>
+    <li data-key="B" data-why="Bedrock is a delivery route, where traffic terminates. MCP is a build-time interface, how tools are exposed across clients. Neither is an entry point, and the sentence has named no entry point at all.">Both terms are in the wrong layer, and no entry point has been named</li>
+    <li data-key="C" data-why="Running on AWS is a perfectly good reason to reach for Bedrock. The reasoning is fine; the vocabulary is not.">The AWS commitment is not a valid reason to choose a route</li>
+    <li data-key="D" data-why="MCP is not a delivery route at all, so the comparison does not arise.">MCP is the wrong delivery route for an AWS partner</li>
+  </ol>
+  <div class="verdict" hidden><b>The layers have been collapsed.</b> Bedrock is a delivery
+  route. MCP is a build-time interface. The entry point, what the loan officer or the
+  analyst actually opens, has not been decided yet, and it is the decision that should come
+  first because it is the one the user feels every day.</div>
+</div>
+
+<h2><span class="num n">3.1</span>Seven primitives, one job each</h2>
+
+<p>Before the patterns, the parts. Every architecture later in the module is an assembly
+of these seven. Being able to name the primitive a scenario needs is a separate skill from
+naming the pattern, and the module tests it separately.</p>
+
+<figure class="diagram wide" id="fig-seven-primitives">
+<svg viewBox="0 0 760 246" role="img" aria-label="The seven primitives and their one-word jobs, and the patterns as assemblies of them" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="12" y="26" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Tools</tspan></text><text x="12" y="46" class="dg-tag" text-anchor="start"><tspan x="12" dy="0">Act</tspan></text><rect x="193.5" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="205.5" y="26" class="dg-t-b" text-anchor="start"><tspan x="205.5" dy="0">MCP</tspan></text><text x="205.5" y="46" class="dg-tag" text-anchor="start"><tspan x="205.5" dy="0">Connect</tspan></text><rect x="387" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="399" y="26" class="dg-t-b" text-anchor="start"><tspan x="399" dy="0">Subagents</tspan></text><text x="399" y="46" class="dg-tag" text-anchor="start"><tspan x="399" dy="0">Isolate, parallelise</tspan></text><rect x="580.5" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="592.5" y="26" class="dg-t-b" text-anchor="start"><tspan x="592.5" dy="0">Hooks</tspan></text><text x="592.5" y="46" class="dg-tag" text-anchor="start"><tspan x="592.5" dy="0">Guarantee</tspan></text><rect x="0" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="12" y="104" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Skills</tspan></text><text x="12" y="124" class="dg-tag" text-anchor="start"><tspan x="12" dy="0">Package a procedure</tspan></text><rect x="193.5" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="205.5" y="104" class="dg-t-b" text-anchor="start"><tspan x="205.5" dy="0">Agent Teams</tspan></text><text x="205.5" y="124" class="dg-tag" text-anchor="start"><tspan x="205.5" dy="0">Coordinate peers</tspan></text><rect x="387" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="399" y="104" class="dg-t-b" text-anchor="start"><tspan x="399" dy="0">Dynamic Workflows</tspan></text><text x="399" y="124" class="dg-tag" text-anchor="start"><tspan x="399" dy="0">Compose at runtime</tspan></text><text x="0" y="174" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Patterns are assemblies of these parts</tspan></text><rect x="0" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="10" y="204" class="dg-t-b" text-anchor="start"><tspan x="10" dy="0">Augmented call</tspan></text><text x="10" y="222" class="dg-s" text-anchor="start"><tspan x="10" dy="0">model + tools</tspan></text><rect x="193.5" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="203.5" y="204" class="dg-t-b" text-anchor="start"><tspan x="203.5" dy="0">Workflow</tspan></text><text x="203.5" y="222" class="dg-s" text-anchor="start"><tspan x="203.5" dy="0">primitives wired in your code</tspan></text><rect x="387" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="397" y="204" class="dg-t-b" text-anchor="start"><tspan x="397" dy="0">Agent</tspan></text><text x="397" y="222" class="dg-s" text-anchor="start"><tspan x="397" dy="0">model chooses its tool calls</tspan></text><rect x="580.5" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="590.5" y="204" class="dg-t-b" text-anchor="start"><tspan x="590.5" dy="0">Multi-agent</tspan></text><text x="590.5" y="222" class="dg-s" text-anchor="start"><tspan x="590.5" dy="0">orchestrator + subagents</tspan></text></svg>
+<figcaption>Name the primitive a scenario needs before you name the pattern. The module tests the two separately.</figcaption>
+</figure>
+
+<details class="fold">
+  <summary>The seven primitives, in full wording</summary>
+<table>
+  <caption>The seven primitives</caption>
+  <thead><tr><th>Primitive</th><th>Job</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td>Tools</td><td>Act</td><td>A function the model can call to take an action or fetch a result from your code</td></tr>
+    <tr><td>MCP</td><td>Connect</td><td>A protocol for exposing a set of tools so multiple Claude clients can reach the same entry points</td></tr>
+    <tr><td>Subagents</td><td>Isolate or parallelise</td><td>A scoped sub-task handed to a separate context so it runs in isolation or in parallel</td></tr>
+    <tr><td>Hooks</td><td>Guarantee</td><td>Deterministic code fired on defined events to enforce a rule the model cannot skip</td></tr>
+    <tr><td>Skills</td><td>Package a procedure</td><td>A versioned, reusable unit of instructions plus optional scripts</td></tr>
+    <tr><td>Agent Teams</td><td>Coordinate peers</td><td>Multiple agents as coordinated peers, each owning part of a larger goal</td></tr>
+    <tr><td>Dynamic Workflows</td><td>Compose at runtime</td><td>Workflow steps assembled at runtime rather than fixed in advance</td></tr>
+  </tbody>
+</table>
+</details>
+
+<div class="sidenote"><b>Why this ordering helps.</b> A workflow is primitives wired
+together in your code. An agent is the model choosing its own sequence of tool calls. A
+multi-agent system is an orchestrator delegating to subagents. Once the primitives are
+named, every pattern in section 5 is a combination of things you already recognise.</div>
+
+<div class="flag">
+  <span class="label">The vocabulary failure</span>
+  <p>In one architecture review, someone said <em>we will use an agent</em>. Five people
+  heard five different things: a single tool-using model, a multi-step workflow, a team of
+  subagents, Claude Code, and a chatbot. Twenty minutes went by before anyone noticed they
+  were describing different architectures with the same word.</p>
+</div>
+
+<div class="quiz" data-answer="A,C">
+  <p class="scenario">A team needs two things in the same design. First, a rule that a
+  personally identifiable field is redacted before any prompt leaves their network, with no
+  possibility of the model skipping it. Second, the same set of internal tools reachable
+  from both Claude Code and their own customer-facing app.</p>
+  <p class="stem">Which two primitives do those two jobs?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Hooks are deterministic code on lifecycle events. That is the only primitive here that offers a guarantee rather than an instruction.">Hooks, for the redaction guarantee</li>
+    <li data-key="B" data-why="A Skill packages a procedure and can be versioned, but it does not fire deterministically on an event the model cannot bypass.">Skills, for the redaction guarantee</li>
+    <li data-key="C" data-why="MCP exists precisely for the case where one tool entry point must be reachable from more than one Claude client.">MCP, for the shared tool entry points</li>
+    <li data-key="D" data-why="Subagents isolate and parallelise work inside one system. They do not expose tools across separate clients.">Subagents, for the shared tool entry points</li>
+  </ol>
+  <div class="verdict" hidden><b>Hooks and MCP.</b> Match the primitive to its one-word
+  job: hooks <em>guarantee</em>, MCP <em>connects</em>. If only one client would ever consume
+  those tools, MCP would be paying integration cost for reusability nobody needs, and direct
+  tool use would be the better answer. The second client is what earns it.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="02-how-claude-behaves.html"><span>Previous</span>02 How Claude behaves</a>
+  <a class="next" href="04-decomposition.html"><span>Next</span>04 Decomposition</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

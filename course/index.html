@@ -3,137 +3,123 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Course: Claude Platform &amp; Solution Design</title>
+<title>CCAR-P Prep Course</title>
 <link rel="icon" type="image/png" href="assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/badge-180.png">
 <link rel="stylesheet" href="assets/lesson.css">
+<script src="assets/nav.js"></script>
 </head>
 <body>
 
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P prep kit</a> <span>/</span> <b>Course</b>
+</nav>
+
 <header class="masthead" style="display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap">
-  <img src="assets/badge.png" alt="Claude Certified Architect Professional badge" width="76" height="76" style="flex:none; margin-top:6px">
+  <img src="assets/badge.png" alt="Claude Certified Architect Professional badge" width="76" height="76" style="flex:none; margin-top:8px">
   <div style="flex:1; min-width:260px">
-  <p class="eyebrow">CCAR-P Course 1 of 5</p>
-  <h1>Claude Platform &amp; Solution Design</h1>
-  <p class="standfirst">Seven short lessons covering the same ground as Anthropic's
-  238-minute course, broken so each one fits an evening and gives you one tangible win.</p>
-  <div class="meta">
-    <span>~2 hours across 7 lessons</span>
-    <span>35 scenario drills</span>
-    <span>Exam Domains 1 and 2, 30% of the paper</span>
-  </div>
+  <p class="eyebrow">Claude Certified Architect &middot; Professional</p>
+  <h1>Prep Course</h1>
   </div>
 </header>
 
-<p>This track shadows Course 1 of the official
-<a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional">CCAR-P Prep Course</a>.
-The lesson sequence follows Anthropic's own published learning objectives for that
-course, not a structure I invented. Their course page lists six objectives, and each one
-gets a lesson or two below.</p>
+<p class="path-intro">By the time an architect is involved the question is no longer whether
+Claude can do the task. It is whether the systems around Claude will integrate and operate
+as needed. What work Claude owns, what form that work takes, which architecture fits, and
+where each control sits are all decided before anyone writes a line of code. Anthropic's
+official path teaches those decisions across five modules and 733 minutes. This is the same
+five modules, same order, distilled so each one can be read rather than sat through.</p>
 
-<div class="flag">
-  <span class="label">How to use this</span>
-  <p>Read in order the first time. The lessons build: the tier decision comes before the
-  pattern, the pattern before the surface, the surface before the governance. After that,
-  jump straight to whichever drill set you are weakest on, and use the two reference
-  documents for revision rather than re-reading lessons.</p>
+<p class="path-lede">Work through the 5 modules below:</p>
+
+<div class="path-status">
+  <a class="path-start" href="module-01/01-introduction.html">Start Module 1</a>
+  <div class="path-progress">
+    <span class="lbl">1 of 5 distilled</span>
+    <span class="track"><span class="fill" style="width:20%"></span></span>
+  </div>
 </div>
 
-<div class="flag">
-  <span class="label">Short on time? Start here</span>
-  <p><a href="lessons/module-01-distilled.html"><strong>Module 1 Distilled</strong></a> is the
-  whole official course in one pass, about 45 minutes: the four properties, the seven
-  primitives, decomposition, pattern selection, reference architectures, RAG, model and
-  context strategy, prompting, entry points and governance, with 9 drills. Read that alone
-  and you have the module. The seven lessons below drill individual decisions harder.</p>
+<div class="modcard is-next">
+  <span class="modcard-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 44V22a4 4 0 0 1 8 0v14"/><path d="M20 34V18a4 4 0 0 1 8 0v16"/><path d="M28 34V22a4 4 0 0 1 8 0v14"/><path d="M36 32v-6a4 4 0 0 1 8 0v18a14 14 0 0 1-14 14h-2a14 14 0 0 1-12-7l-6-10a4 4 0 0 1 7-4l3 5"/></svg></span>
+  <h3><span class="mod-n">Module 1</span><a href="module-01/index.html">Claude Platform &amp; Solution Design</a></h3>
+  <p>Master the design decisions that translate an ambiguous business problem into a defensible Claude solution architecture.</p>
+  <p class="modcard-meta">238 minutes &middot; Domains 1 and 2, 30% of the exam &middot;
+    <a href="module-01/index.html">Twelve sections</a> &middot;
+    <a href="module-01/01-introduction.html">Start reading</a></p>
+  <span class="pill on">Distilled</span>
 </div>
 
-<h2><span class="num">Sequence</span>The seven lessons</h2>
+<div class="modcard">
+  <span class="modcard-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="9"/><path d="M24 9v4M24 35v4M9 24h4M35 24h4M13.4 13.4l2.8 2.8M31.8 31.8l2.8 2.8M34.6 13.4l-2.8 2.8M16.2 31.8l-2.8 2.8"/><circle cx="44" cy="44" r="6"/><path d="M44 33v3M44 52v3M33 44h3M52 44h3M36.2 36.2l2.1 2.1M49.7 49.7l2.1 2.1M51.8 36.2l-2.1 2.1M38.3 49.7l-2.1 2.1"/></svg></span>
+  <h3><span class="mod-n">Module 2</span>Enterprise Integration &amp; Production</h3>
+  <p>Learn to take a designed solution from proof of concept to enterprise-ready production.</p>
+  <p class="modcard-meta">158 minutes &middot; Domains 3 and 4, 35% of the exam &middot;
+    <a href="../notes/02-integration-evals.md">Domain notes</a> &middot;
+    <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/enterprise-integration-production">Official module</a></p>
+  <span class="pill">Official only</span>
+</div>
+
+<div class="modcard">
+  <span class="modcard-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l20 8v16c0 13-8.6 20.8-20 24-11.4-3.2-20-11-20-24V16z"/><path d="M32 24v14M25 31h14"/></svg></span>
+  <h3><span class="mod-n">Module 3</span>Responsible AI, Safety &amp; Risk for Architects</h3>
+  <p>Design the full safety stack for a Claude system, placing each control and deciding what happens when one fails.</p>
+  <p class="modcard-meta">114 minutes &middot; Domain 5, 14% of the exam &middot;
+    <a href="../notes/03-governance-stakeholder.md">Domain notes</a> &middot;
+    <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/responsible-ai-safety-risk-for-architects">Official module</a></p>
+  <span class="pill">Official only</span>
+</div>
+
+<div class="modcard">
+  <span class="modcard-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="20" r="8"/><path d="M8 48c0-8 6.3-13 14-13s14 5 14 13"/><circle cx="45" cy="26" r="7"/><path d="M36 50c1-7 5-11 12-11 6.5 0 10 3.5 11 9"/></svg></span>
+  <h3><span class="mod-n">Module 4</span>Stakeholder Engagement, Lifecycle &amp; GTM</h3>
+  <p>Lead the stakeholder conversations that decide whether a working system actually ships, adopts, and outlasts your involvement.</p>
+  <p class="modcard-meta">178 minutes &middot; Domain 6, 14% of the exam &middot;
+    <a href="../notes/03-governance-stakeholder.md">Domain notes</a> &middot;
+    <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/stakeholder-engagement-lifecycle-gtm">Official module</a></p>
+  <span class="pill">Official only</span>
+</div>
+
+<div class="modcard">
+  <span class="modcard-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M40 10a10 10 0 0 0-8 16L14 44a5 5 0 0 0 7 7l18-18a10 10 0 0 0 12-13l-7 7-6-6z"/><path d="M17 47h.02"/></svg></span>
+  <h3><span class="mod-n">Module 5</span>Team Enablement &amp; Operational Productivity</h3>
+  <p>Learn to enable a team to adopt a live Claude system and run it without depending on you.</p>
+  <p class="modcard-meta">45 minutes &middot; Domain 7, 7% of the exam &middot;
+    <a href="../notes/01-solution-design-models-devprod.md">Domain notes</a> &middot;
+    <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/developer-productivity-enablement">Official module</a></p>
+  <span class="pill">Official only</span>
+</div>
+
+<div class="sidenote" style="margin-top:2.2rem"><b>Module titles, descriptions and durations
+are Anthropic's own</b>, taken from the
+<a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional">official
+path</a> so the two read the same way. The course is free, it is the authoritative source,
+and registration needs a work email on a Claude Partner Network domain. Nothing here
+replaces it.</div>
+
+<p style="margin-top:1.6rem">Modules 1 and 2 are 54% of the official reading and 65% of the
+exam. They come first, in that order.</p>
+
+<h2><span class="num">Also here</span>The rest of the kit</h2>
 
 <table>
-  <caption>Official objective, then the lesson that covers it</caption>
-  <thead>
-    <tr><th>#</th><th>Lesson</th><th>What you walk out able to do</th><th>Time</th></tr>
-  </thead>
+  <caption>What each piece is for</caption>
+  <thead><tr><th>Piece</th><th>Use it</th></tr></thead>
   <tbody>
-    <tr>
-      <td>0001</td>
-      <td><a href="lessons/0001-workflow-or-agent.html"><strong>Workflow or agent?</strong></a></td>
-      <td>Name the right tier in thirty seconds and say which constraint decided it. Covers the objective "selecting between augmented calls, workflows, and agents"</td>
-      <td>15 min</td>
-    </tr>
-    <tr>
-      <td>0002</td>
-      <td><a href="lessons/0002-splitting-the-work.html"><strong>Splitting the work</strong></a></td>
-      <td>Cut an ambiguous request into Claude, system and human piles, and defend each cut. Covers "breaking down requests into Claude, system, and human responsibilities"</td>
-      <td>18 min</td>
-    </tr>
-    <tr>
-      <td>0003</td>
-      <td><a href="lessons/0003-six-patterns.html"><strong>The six patterns, and their traps</strong></a></td>
-      <td>Match scenario shape to pattern, then check the precondition that permits it. Covers "picking appropriate reference architectures"</td>
-      <td>20 min</td>
-    </tr>
-    <tr>
-      <td>0004</td>
-      <td><a href="lessons/0004-multi-agent-economics.html"><strong>When multi-agent pays</strong></a></td>
-      <td>Do the multi-agent cost-benefit out loud before spending 15x. The expensive end of the same objective</td>
-      <td>18 min</td>
-    </tr>
-    <tr>
-      <td>0005</td>
-      <td><a href="lessons/0005-platform-entry-points.html"><strong>Platform entry points</strong></a></td>
-      <td>Pick the surface a solution ships through, and spot the sentence that quietly disqualifies one. Covers "identifying platform entry points"</td>
-      <td>18 min</td>
-    </tr>
-    <tr>
-      <td>0006</td>
-      <td><a href="lessons/0006-delivery-routes.html"><strong>Delivery routes and governance</strong></a></td>
-      <td>Name the route, then list the obligations that arrive with it. Covers "distinguishing user-facing, build-time, and enterprise delivery routes"</td>
-      <td>18 min</td>
-    </tr>
-    <tr>
-      <td>0007</td>
-      <td><a href="lessons/0007-model-and-context-strategy.html"><strong>Model and context strategy</strong></a></td>
-      <td>Choose a tier against a workload, and treat the context window as a spendable budget. Covers "making model and context decisions"</td>
-      <td>20 min</td>
-    </tr>
+    <tr><td><a href="module-01/index.html">Module 1, twelve sections</a></td><td>First, in order. This is the course</td></tr>
+    <tr><td><a href="reference/glossary.html">Glossary</a></td><td>Any time a term is doing more work than you expected</td></tr>
+    <tr><td><a href="reference/pattern-selection.html">Pattern selection sheet</a></td><td>Revision. One page, prints well</td></tr>
+    <tr><td><a href="../index.html#tab-practice">The question bank</a></td><td>Calibration. Domain drills as you go, one full mock at the end</td></tr>
+    <tr><td><a href="../study-plan.md">Study plan</a></td><td>To decide what to do on any given evening</td></tr>
   </tbody>
 </table>
 
-<h2><span class="num">Revision</span>Reference documents</h2>
-
-<p>These are the parts worth keeping. Lessons are read once, reference documents are read
-before the exam.</p>
-
-<ul>
-  <li><a href="reference/module-01-companion.html"><strong>Module 1 Companion</strong></a> - a map of the official Course 1: all 34 screens, the five Watch Out cases, and where this track has gaps</li>
-  <li><a href="reference/pattern-selection.html"><strong>Pattern Selection</strong></a> - one page, prints well. Three tiers, six patterns, multi-agent numbers, checkpoint rules, and how to read a scenario</li>
-  <li><a href="reference/glossary.html"><strong>Glossary</strong></a> - the vocabulary every lesson holds to. Architecture shapes, model and cost controls, exam terms of art</li>
-</ul>
-
-<h2><span class="num">Workspace</span>The rest of it</h2>
-
-<ul>
-  <li><a href="MISSION.md">MISSION.md</a> - why this is being learned. Every lesson is grounded in it, so correct it if it drifts</li>
-  <li><a href="RESOURCES.md">RESOURCES.md</a> - sources by trust level, plus the gaps still open</li>
-  <li><a href="NOTES.md">NOTES.md</a> - teaching preferences and the course plan</li>
-  <li><a href="learning-records/">learning-records/</a> - what has actually stuck, and what needs revisiting</li>
-</ul>
-
-<div class="flag">
-  <span class="label">One honest caveat</span>
-  <p>The official course's granular module list is behind enrolment. What is public is the
-  set of learning objectives, and those are what this sequence follows. The lesson
-  <em>split</em> is mine. If you enrol and find the real breakdown differs, tell me and I
-  will restructure rather than defend the guess.</p>
-</div>
-
-<div class="ask">
-  <p><strong>I am your teacher for this course, so use me.</strong> If a drill felt like a
-  coin flip, name it and we will pull the constraint apart. If you think an answer is
-  wrong, argue it, because that is usually where the interesting distinction lives. And
-  if the pitch is too easy or too hard, say so and I will move it.</p>
+<div class="course-nav">
+  <h3>Back</h3>
+  <ul>
+    <li><a href="../index.html">The CCAR-P prep kit hub</a></li>
+    <li><a href="MISSION.md">Mission</a> &middot; <a href="RESOURCES.md">Resources</a> &middot; <a href="NOTES.md">Notes</a></li>
+  </ul>
 </div>
 
 </body>

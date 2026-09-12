@@ -6,22 +6,21 @@ Study material for the Anthropic **Claude Certified Architect - Professional** (
 
 ## Start here
 
-### [Module 1 Distilled](course/lessons/module-01-distilled.html)
+### [Module 1: Claude Platform & Solution Design](course/module-01/index.html)
 
-**Anthropic's official Course 1 is 34 screens and 238 minutes. This is the whole of it in one pass, in about 45 minutes.** Read that and you have the module.
+Anthropic's prep path is **five modules and 733 minutes**. All five are listed on [the course page](course/index.html), in the official order, with what exists here for each.
 
-It covers exam **Domains 1 and 2, 30% of the paper**: the four model properties you design around, the three platform layers and seven primitives, decomposition and the delegation tests, pattern selection with its five-factor sequence, multi-agent orchestration, the five reference architectures, RAG chunking and indexing, model selection and the four context strategies, prompting as architecture, and entry points, delivery routes and regulated-industry constraints. Five scenario drills throughout.
+Module 1 is the foundation and the longest: **34 screens, 12 sections, 11 checkpoints, 238 minutes.** It is distilled here section by section, in the same order, so you can read it rather than sit through it. Every page has a previous and a next, so [start at section 1](course/module-01/01-introduction.html) and keep going.
 
-Then, to drill the individual decisions harder: **[the seven-lesson course](course/index.html)**, 35 scenario drills with immediate per-option feedback.
+It covers exam **Domains 1 and 2, 30% of the paper**: the four model properties you design around, the three platform layers and seven primitives, decomposition and the delegation tests, pattern selection with its five-factor sequence, multi-agent orchestration, the five reference architectures, RAG chunking and indexing, model selection and the four context strategies, prompting as architecture, and entry points, delivery routes and regulated-industry constraints. A drill on every decision that carries weight.
 
 **[Open the web hub](https://girishr.github.io/ClaudeCertifiedArchitect-Professional-Prep/)** for all of it plus the practice engine, the plan tracker and per-domain scoring.
 
 | Read this | If you want |
 |---|---|
-| [Module 1 Distilled](course/lessons/module-01-distilled.html) | The official Course 1 without sitting through it. **Start here** |
-| [The seven lessons](course/index.html) | To drill one decision at a time, harder |
+| [Module 1, the twelve sections](course/module-01/index.html) | The official module without sitting through it. **Start here** |
+| [The course page](course/index.html) | To see all five official modules and what exists here for each |
 | [Pattern Selection](course/reference/pattern-selection.html) | A one-page revision sheet that prints well |
-| [Module 1 Companion](course/reference/module-01-companion.html) | To work through the real course, mapped screen by screen |
 | [study-plan.md](study-plan.md) | The day-by-day schedule to exam day |
 
 ---
@@ -39,8 +38,8 @@ The spine of the study plan is Anthropic's own free [prep course](https://anthro
 | [`notes/03-governance-stakeholder.md`](notes/03-governance-stakeholder.md) | Domains 5 and 6: governance and safety and risk, stakeholder communication and lifecycle |
 | [`labs.md`](labs.md) | Eight time-boxed builds, 60 to 150 minutes each |
 | [`questions.json`](questions.json) | The question bank, with explanations and per-distractor notes |
-| [`course/`](course/) | **The course.** [Module 1 Distilled](course/lessons/module-01-distilled.html) plus seven drill lessons and three reference documents. Open [`course/index.html`](course/index.html) |
-| [`tools/`](tools/) | `build_hub.py` and the HTML template that generate `index.html` |
+| [`course/`](course/) | **The course.** All five official modules listed in [`course/index.html`](course/index.html); Module 1 distilled across twelve sections in [`course/module-01/`](course/module-01/); two reference sheets |
+| [`tools/`](tools/) | `build_hub.py` and its template generate `index.html`. The course pages are plain HTML, edited directly |
 
 Each notes file follows the same shape per domain: a framing paragraph on what the exam is really testing, comparative tables, decision heuristics, a common-distractors list, and a set of one-line recalls for the final week.
 

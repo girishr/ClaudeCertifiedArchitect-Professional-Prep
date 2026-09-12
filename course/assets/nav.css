@@ -1,0 +1,155 @@
+/* Site menu and reading settings. Loaded by assets/nav.js on every page that has
+   the menu, so it has to work on two different stylesheets: the course pages
+   (lesson.css) and the hub (its own). Every colour below is a chain of fallbacks,
+   course token first, hub token second, plain value last. */
+
+.sidenav, .nav-toggle, .nav-backdrop {
+  --nv-bg:         var(--flag,       var(--surface-1,      #f4f2ea));
+  --nv-rule:       var(--rule,       var(--border,         rgba(0,0,0,.12)));
+  --nv-ink:        var(--ink,        var(--text-primary,   #16150f));
+  --nv-soft:       var(--ink-soft,   var(--text-secondary, #4a4840));
+  --nv-faint:      var(--ink-faint,  var(--muted,          #8a877b));
+  --nv-accent:     var(--accent,     var(--series-1,       #2a78d6));
+  --nv-accent-dim: var(--accent-dim, var(--seq-100,        #cde2fb));
+  --nv-hover:      var(--code-bg,    var(--ghost,          rgba(0,0,0,.05)));
+  --nv-paper:      var(--paper,      var(--plane,          #ffffff));
+}
+:root { --nav-w: 17rem; }
+
+.nav-toggle {
+  position: fixed;
+  top: .85rem;
+  left: .85rem;
+  z-index: 41;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--nv-ink);
+  background: var(--nv-paper);
+  border: 1px solid var(--nv-rule);
+  border-radius: 6px;
+  padding: .45rem .7rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.nav-toggle:hover { border-color: var(--nv-accent); }
+html.nav-open .nav-toggle { display: none; }
+
+.nav-backdrop {
+  position: fixed; inset: 0; z-index: 39;
+  background: rgba(0,0,0,.45);
+  display: none;
+}
+
+.sidenav {
+  position: fixed;
+  top: 0; bottom: 0; left: 0;
+  width: var(--nav-w);
+  z-index: 40;
+  overflow-y: auto;
+  background: var(--nv-bg);
+  border-right: 1px solid var(--nv-rule);
+  padding: .9rem 1rem 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .84rem;
+  line-height: 1.4;
+  color: var(--nv-ink);
+  transform: translateX(-100%);
+  transition: transform .18s ease;
+  box-sizing: border-box;
+}
+html.nav-open .sidenav { transform: none; }
+html.nav-resizing .sidenav { transition: none; }
+html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-select: none; }
+
+.nav-resizer {
+  position: absolute;
+  top: 0; right: 0;
+  width: 8px; height: 100%;
+  cursor: col-resize;
+  touch-action: none;
+}
+.nav-resizer::after {
+  content: "";
+  position: absolute; top: 0; bottom: 0; right: 0;
+  width: 2px;
+  background: transparent;
+  transition: background .12s;
+}
+.nav-resizer:hover::after, .nav-resizer:focus-visible::after, html.nav-resizing .nav-resizer::after { background: var(--nv-accent); }
+.nav-resizer:focus-visible { outline: none; }
+
+.sidenav-head {
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  padding-bottom: .8rem; margin-bottom: .6rem;
+  border-bottom: 1px solid var(--nv-rule);
+}
+.sidenav-head .brand { font-weight: 700; color: var(--nv-ink); text-decoration: none; letter-spacing: .02em; }
+.nav-close {
+  font: inherit; font-size: .72rem; color: var(--nv-faint);
+  background: none; border: 1px solid var(--nv-rule); border-radius: 5px;
+  padding: .3rem .55rem; cursor: pointer;
+}
+.nav-close:hover { color: var(--nv-ink); border-color: var(--nv-accent); }
+
+.nav-group { margin: .9rem 0 0; }
+.nav-group h3 {
+  font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--nv-faint); font-weight: 600; margin: 0 0 .35rem;
+}
+.nav-group ul { list-style: none; margin: 0; padding: 0; }
+.nav-group li { margin: 0; }
+.nav-group a {
+  display: flex; gap: .55rem; align-items: baseline;
+  color: var(--nv-soft); text-decoration: none;
+  padding: .28rem .5rem; margin: 0 -.5rem; border-radius: 5px;
+  font-weight: 400;
+}
+.nav-group a:hover { background: var(--nv-hover); color: var(--nv-ink); }
+.nav-group a .n { color: var(--nv-faint); font-variant-numeric: tabular-nums; flex: none; font-size: .78em; }
+.nav-group a .ext { margin-left: auto; color: var(--nv-faint); font-size: .8em; }
+.nav-group li.here a { background: var(--nv-accent-dim); color: var(--nv-ink); font-weight: 600; }
+.nav-group li.here a .n { color: var(--nv-accent); }
+
+.sidenav-settings { margin-top: 1.4rem; padding-top: .9rem; border-top: 1px solid var(--nv-rule); }
+.seg { display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; margin-bottom: .55rem; }
+.seg-l { font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--nv-faint); width: 3.4rem; font-weight: 600; }
+.seg button {
+  font: inherit; font-size: .74rem; color: var(--nv-soft);
+  background: none; border: 1px solid var(--nv-rule); border-radius: 999px;
+  padding: .22rem .6rem; cursor: pointer;
+}
+.seg button:hover { color: var(--nv-ink); }
+.seg button[aria-pressed="true"] { border-color: var(--nv-accent); color: var(--nv-accent); font-weight: 600; }
+.sidenav-settings .hint { font-size: .68rem; color: var(--nv-faint); margin: .4rem 0 0; }
+
+@media (max-width: 64rem) {
+  html.nav-open .nav-backdrop { display: block; }
+}
+@media print {
+  .nav-toggle, .sidenav, .nav-backdrop { display: none !important; }
+}
+
+/* ---------- dyslexia-friendly font ----------
+   OpenDyslexic (SIL Open Font License, see fonts/OpenDyslexic-LICENSE.txt),
+   bundled so the site keeps working with no third-party requests. Switched on
+   from the menu; the choice is remembered. Code and figures keep their own faces,
+   because the figures were laid out for a narrower font and would overflow. */
+
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("fonts/opendyslexic-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("fonts/opendyslexic-latin-700-normal.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+html.font-dyslexic { font-size: 15.5px; }
+html.font-dyslexic body,
+html.font-dyslexic body *:not(code):not(pre):not(pre *):not(svg):not(svg *) {
+  font-family: "OpenDyslexic", "Comic Sans MS", "Trebuchet MS", sans-serif;
+}
+html.font-dyslexic body { line-height: 1.8; letter-spacing: 0; word-spacing: .04em; }
+html.font-dyslexic strong, html.font-dyslexic b, html.font-dyslexic th { font-weight: 700; }

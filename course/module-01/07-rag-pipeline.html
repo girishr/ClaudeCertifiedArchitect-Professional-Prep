@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07. RAG pipeline design - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 07 of 12</p>
+  <h1>RAG pipeline design</h1>
+  <p class="standfirst">Chunking by what the corpus is, indexing by how queries are phrased.</p>
+  <div class="meta"><span>Official screens S19 to S20</span><span>~18 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 07 of 12</b>
+</nav>
+<p>Section 6 named RAG as a known-good shape and showed where it is misapplied. This goes
+one level down: how a corpus is broken up, how chunks are made findable, and how the
+strategy is matched to the questions the system will actually be asked.</p>
+
+<figure class="diagram wide" id="fig-rag-pipeline">
+<svg viewBox="0 0 760 236" role="img" aria-label="The retrieval pipeline, with the two decisions an architect makes" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m17" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="134.4" height="52" rx="8" class="dg-box"/><text x="67.2" y="22" class="dg-t-b" text-anchor="middle"><tspan x="67.2" dy="0">Corpus</tspan></text><text x="67.2" y="40" class="dg-s" text-anchor="middle"><tspan x="67.2" dy="0">the documents</tspan></text><path d="M137.4 26L153.4 26" class="dg-arrow" marker-end="url(#m17)"/><rect x="156.4" y="0" width="134.4" height="52" rx="8" class="dg-box hi"/><text x="223.6" y="22" class="dg-t-b" text-anchor="middle"><tspan x="223.6" dy="0">Chunk</tspan></text><text x="223.6" y="40" class="dg-s" text-anchor="middle"><tspan x="223.6" dy="0">by source structure</tspan></text><path d="M293.8 26L309.8 26" class="dg-arrow" marker-end="url(#m17)"/><rect x="312.8" y="0" width="134.4" height="52" rx="8" class="dg-box hi"/><text x="380" y="22" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Index</tspan></text><text x="380" y="40" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">by query phrasing</tspan></text><path d="M450.2 26L466.2 26" class="dg-arrow" marker-end="url(#m17)"/><rect x="469.2" y="0" width="134.4" height="52" rx="8" class="dg-box"/><text x="536.4" y="22" class="dg-t-b" text-anchor="middle"><tspan x="536.4" dy="0">Retrieve</tspan></text><text x="536.4" y="40" class="dg-s" text-anchor="middle"><tspan x="536.4" dy="0">top-k per query</tspan></text><path d="M606.6 26L622.6 26" class="dg-arrow" marker-end="url(#m17)"/><rect x="625.6" y="0" width="134.4" height="52" rx="8" class="dg-box"/><text x="692.8" y="22" class="dg-t-b" text-anchor="middle"><tspan x="692.8" dy="0">Fuse</tspan></text><text x="692.8" y="40" class="dg-s" text-anchor="middle"><tspan x="692.8" dy="0">reciprocal rank fusion</tspan></text><text x="20" y="78" class="dg-k" text-anchor="start"><tspan x="20" dy="0">Chunking, chosen by the corpus</tspan></text><rect x="20" y="88" width="215.04" height="40" rx="6" class="dg-strip"/><text x="30" y="104" class="dg-t-b" text-anchor="start"><tspan x="30" dy="0">Fixed-size</tspan></text><text x="30" y="120" class="dg-s" text-anchor="start"><tspan x="30" dy="0">uniform, weak natural boundaries</tspan></text><rect x="20" y="134" width="215.04" height="40" rx="6" class="dg-strip"/><text x="30" y="150" class="dg-t-b" text-anchor="start"><tspan x="30" dy="0">Semantic</tspan></text><text x="30" y="166" class="dg-s" text-anchor="start"><tspan x="30" dy="0">prose that must stand alone</tspan></text><rect x="20" y="180" width="215.04" height="40" rx="6" class="dg-strip"/><text x="30" y="196" class="dg-t-b" text-anchor="start"><tspan x="30" dy="0">Hierarchical</tspan></text><text x="30" y="212" class="dg-s" text-anchor="start"><tspan x="30" dy="0">contracts, manuals, policies</tspan></text><text x="439.2" y="78" class="dg-k" text-anchor="start"><tspan x="439.2" dy="0">Indexing, chosen by the queries</tspan></text><rect x="439.2" y="88" width="215.04" height="40" rx="6" class="dg-strip"/><text x="449.2" y="104" class="dg-t-b" text-anchor="start"><tspan x="449.2" dy="0">Dense</tspan></text><text x="449.2" y="120" class="dg-s" text-anchor="start"><tspan x="449.2" dy="0">paraphrase, intent, concept</tspan></text><rect x="439.2" y="134" width="215.04" height="40" rx="6" class="dg-strip"/><text x="449.2" y="150" class="dg-t-b" text-anchor="start"><tspan x="449.2" dy="0">Sparse, BM25</tspan></text><text x="449.2" y="166" class="dg-s" text-anchor="start"><tspan x="449.2" dy="0">part numbers, citations, codes</tspan></text><rect x="439.2" y="180" width="215.04" height="40" rx="6" class="dg-strip"/><text x="449.2" y="196" class="dg-t-b" text-anchor="start"><tspan x="449.2" dy="0">Hybrid</tspan></text><text x="449.2" y="212" class="dg-s" text-anchor="start"><tspan x="449.2" dy="0">mixed queries, the production case</tspan></text></svg>
+<figcaption>Two decisions with different inputs: chunk by what the corpus is, index by how the questions are phrased.</figcaption>
+</figure>
+
+<h2><span class="num n">7.1</span>Chunking is chosen by what the corpus is</h2>
+
+<p>A chunk is the unit that gets retrieved. The approach follows the structure of the
+source material, not a default size.</p>
+
+<table>
+  <caption>Three chunking approaches</caption>
+  <thead><tr><th>Approach</th><th>How it works</th><th>When it earns its place</th></tr></thead>
+  <tbody>
+    <tr><td>Fixed-size</td><td>Uniform spans with overlap, regardless of structure</td><td>Homogeneous unstructured text with weak natural boundaries. Simplest to operate</td></tr>
+    <tr><td>Semantic</td><td>Splits on meaning boundaries, topic shifts, sentence groups that hang together</td><td>Prose where a retrieved chunk has to be self-contained to answer well. Reduces mid-idea cuts</td></tr>
+    <tr><td>Hierarchical</td><td>Preserves document structure, sections and subsections, and retrieves at the level that fits</td><td>Structured documents, contracts, manuals, policies, where section context carries meaning</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">7.2</span>Indexing is chosen by how queries are phrased</h2>
+
+<table>
+  <caption>Three indexing strategies</caption>
+  <thead><tr><th>Strategy</th><th>What it matches</th><th>When it earns its place</th></tr></thead>
+  <tbody>
+    <tr><td>Dense, embeddings</td><td>Semantic similarity. Meaning, not words</td><td>Queries phrased differently from the source: paraphrase, intent, concept matching</td></tr>
+    <tr><td>Sparse, keyword such as BM25</td><td>Exact terms, identifiers, codes, names</td><td>Queries that hinge on a specific token: part numbers, statute citations, error codes</td></tr>
+    <tr><td>Hybrid</td><td>Both, combined</td><td>Mixed query patterns, which is the common production case. Recovers the exact matches dense retrieval misses</td></tr>
+  </tbody>
+</table>
+
+<p>A hybrid index returns two ranked lists that have to be merged into one. <strong>Reciprocal
+rank fusion</strong> is the standard low-tuning way to do it: each result is scored by its
+rank in each list, and the combined score favours items that rank well in both. For an
+architect the point is that merging dense and sparse is a design decision with a known,
+defensible default, not an open research problem you have to solve on the call.</p>
+
+<h2><span class="num n">7.3</span>The trade-off you have to be able to state</h2>
+
+<p>Every retrieval design trades three things against each other: <strong>retrieval
+quality</strong> (does the right chunk come back), <strong>latency</strong> (how much
+retrieval adds per request), and <strong>maintenance</strong> (what it costs to keep
+correct as the corpus grows).</p>
+
+<figure class="diagram" id="fig-rag-tradeoff">
+<svg viewBox="0 0 760 262" role="img" aria-label="The three-way retrieval trade-off" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m18" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><polygon points="380,26 299.96,164 460.04,164" class="dg-window"/><text x="380" y="12" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Retrieval quality</tspan></text><text x="380" y="28" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">does the right chunk come back?</tspan></text><text x="291.96" y="170" class="dg-t-b" text-anchor="end"><tspan x="291.96" dy="0">Latency</tspan></text><text x="291.96" y="186" class="dg-s" text-anchor="end"><tspan x="291.96" dy="0">what does retrieval add per request?</tspan></text><text x="468.04" y="170" class="dg-t-b" text-anchor="start"><tspan x="468.04" dy="0">Maintenance</tspan></text><text x="468.04" y="186" class="dg-s" text-anchor="start"><tspan x="468.04" dy="0">what does it cost to keep correct?</tspan></text><text x="380" y="132" class="dg-k" text-anchor="middle"><tspan x="380" dy="0">pick the point</tspan></text><text x="380" y="146" class="dg-k" text-anchor="middle"><tspan x="380" dy="0">this corpus and</tspan></text><text x="380" y="160" class="dg-k" text-anchor="middle"><tspan x="380" dy="0">these queries need</tspan></text><text x="0" y="232" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Smaller chunks and hybrid indexing raise quality and latency together. Larger chunks and dense-only lower</tspan><tspan x="0" dy="1.3em">latency and maintenance but miss exact matches.</tspan></text></svg>
+<figcaption>There is no universally right point, only the one you can defend for this corpus and these queries.</figcaption>
+</figure>
+
+<div class="flag">
+  <span class="label">Exercise, from the module</span>
+  <p>A professional-services partner has about 4,000 documents: client engagement contracts
+  (structured, section-numbered), past project write-ups (long-form prose), and a methodology
+  handbook (structured, with defined procedures). Their team asks three kinds of question:
+  <em>what does our methodology say about X?</em>, <em>find the termination clause in the
+  Acme contract</em>, and <em>summarise how we have handled engagements like this one</em>.
+  Name the chunking approach per document type, the indexing strategy for the corpus, and
+  the trade-off you are making. Write it down before you read on.</p>
+</div>
+
+<table>
+  <caption>The model answer</caption>
+  <thead><tr><th>Decision</th><th>Answer</th><th>Because</th></tr></thead>
+  <tbody>
+    <tr><td>Contracts and handbook</td><td>Hierarchical</td><td>Both are structured and section-numbered, so retrieving at section level keeps a clause or procedure intact and self-contained. Fixed-size cuts across section boundaries and loses the context the query depends on</td></tr>
+    <tr><td>Project write-ups</td><td>Semantic</td><td>Long-form prose has no section numbers to anchor hierarchical chunking, and fixed-size cuts mid-idea. Semantic keeps each passage coherent enough to answer alone</td></tr>
+    <tr><td>Indexing</td><td>Hybrid, dense plus sparse</td><td>Sparse handles the exact-target lookups where an identifier matters. Dense handles concept lookup and synthesis. Neither alone covers both</td></tr>
+    <tr><td>The dominant trade-off</td><td>Query variety is the load-bearing constraint</td><td>Hybrid adds retrieval compute and a rank-fusion step. Those costs earn their place only because the query set genuinely needs both modes</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-answer="D">
+  <p class="scenario">A support team indexes its 900-page product manual for an assistant.
+  Users report that questions phrased in their own words work well, but any question naming
+  a specific error code returns unrelated passages. Latency is comfortably inside budget and
+  the corpus changes about twice a year.</p>
+  <p class="stem">What is the right change?</p>
+  <ol class="options">
+    <li data-key="A" data-why="A larger embedding model improves semantic matching, which is already the part that works. Exact-token matching is not what embeddings are for.">Move to a larger embedding model</li>
+    <li data-key="B" data-why="Refresh frequency addresses staleness. The corpus changes twice a year and the complaint is not about stale answers.">Shorten the index refresh interval</li>
+    <li data-key="C" data-why="Smaller chunks might help marginally, but the failure is that exact tokens are not being matched at all. Chunk size is the wrong lever.">Reduce the chunk size and increase overlap</li>
+    <li data-key="D" data-why="Error codes are exact tokens. Sparse retrieval is what matches them, and reciprocal rank fusion merges the two ranked lists. Latency headroom means the added cost is affordable.">Add a sparse index alongside the dense one and fuse the results</li>
+  </ol>
+  <div class="verdict" hidden><b>Go hybrid.</b> The symptom names the diagnosis: paraphrased
+  questions work, exact identifiers fail, which is dense retrieval doing exactly what dense
+  retrieval does. The latency headroom is the detail that makes it affordable, and the
+  slow-changing corpus is the detail that makes the added maintenance tolerable. Read those
+  two facts as permission, not as scenery.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="06-reference-architectures.html"><span>Previous</span>06 Reference architectures</a>
+  <a class="next" href="08-model-and-context.html"><span>Next</span>08 Model and context strategy</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

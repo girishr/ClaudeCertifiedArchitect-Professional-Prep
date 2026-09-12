@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05. Pattern selection - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 05 of 12</p>
+  <h1>Pattern selection</h1>
+  <p class="standfirst">Augmented call, workflow or agent, plus the multi-agent case.</p>
+  <div class="meta"><span>Official screens S11 to S15</span><span>~35 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 05 of 12</b>
+</nav>
+<p>The work is split. Now: what shape does Claude's involvement take? Three patterns, and
+each takes a different position on two axes, how predictable the path through the work is,
+and how much autonomy you are willing to hand the model.</p>
+
+<table>
+  <caption>Three patterns</caption>
+  <thead><tr><th>Pattern</th><th>Where control flow lives</th><th>Use it when</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Augmented LLM</strong><br>High predictability, low autonomy</td>
+      <td>In your code. One bounded call, possibly with tools, retrieval or extended thinking. The flow never branches on what the model decided</td>
+      <td>The task is well defined, the output is verifiable, and there is no reason to split the work</td>
+    </tr>
+    <tr>
+      <td><strong>Workflow</strong><br>Predictable shape, bounded judgment per step</td>
+      <td>In your code. Named steps you orchestrate; each step may or may not call Claude</td>
+      <td>Error cost is real, observability matters, and the steps can be written in advance</td>
+    </tr>
+    <tr>
+      <td><strong>Agent</strong><br>High autonomy, low predictability</td>
+      <td>Inside the model. You give a goal and tools; the model picks its own sequence</td>
+      <td>Only when the path genuinely cannot be enumerated in advance, and only when an unexpected output is acceptable and recoverable</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In production, agents are bound by constrained tool entry points, per-turn budgets,
+explicit permissions and stopping criteria. The module is blunt that these are not
+optional extras: they are what keeps an agent from becoming a liability.</p>
+
+<figure class="diagram wide" id="fig-quadrant">
+<svg viewBox="0 0 760 280" role="img" aria-label="The three patterns on two axes: predictability and model autonomy" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="60" y="16" width="690" height="234" class="dg-window"/><line x1="405" y1="16" x2="405" y2="250" class="dg-rule"/><line x1="60" y1="133" x2="750" y2="133" class="dg-rule"/><text x="60" y="268" class="dg-k" text-anchor="start"><tspan x="60" dy="0">Low predictability</tspan></text><text x="750" y="268" class="dg-k" text-anchor="end"><tspan x="750" dy="0">High predictability</tspan></text><text x="20" y="133" class="dg-k" text-anchor="middle" transform="rotate(-90 20 133)">Model autonomy: low to high</text><rect x="512" y="172.52" width="200" height="52" rx="10" class="dg-box"/><text x="612" y="192.52" class="dg-t-b" text-anchor="middle"><tspan x="612" dy="0">Augmented LLM</tspan></text><text x="612" y="210.52" class="dg-s" text-anchor="middle"><tspan x="612" dy="0">one bounded call, low autonomy</tspan></text><rect x="280" y="107" width="250" height="52" rx="10" class="dg-box hi"/><text x="405" y="127" class="dg-t-b" text-anchor="middle"><tspan x="405" dy="0">Workflow</tspan></text><text x="405" y="145" class="dg-s" text-anchor="middle"><tspan x="405" dy="0">predictable shape, judgment per step</tspan></text><rect x="98" y="41.48" width="200" height="52" rx="10" class="dg-box"/><text x="198" y="61.48" class="dg-t-b" text-anchor="middle"><tspan x="198" dy="0">Agent</tspan></text><text x="198" y="79.48" class="dg-s" text-anchor="middle"><tspan x="198" dy="0">model owns the trajectory</tspan></text><text x="750" y="30" class="dg-s" text-anchor="end"><tspan x="750" dy="0">Cost, error exposure and audit gaps rise this way</tspan></text></svg>
+<figcaption>Choosing a pattern is choosing how much autonomy to grant. Reach up and left only when the steps genuinely cannot be written in advance.</figcaption>
+</figure>
+
+<h2><span class="num n">5.1</span>Four workflow sub-patterns</h2>
+
+<p>Choosing a workflow does not finish the design. Four shapes, each a different
+assumption about how the steps relate.</p>
+
+<figure class="diagram wide" id="fig-subpatterns">
+<svg viewBox="0 0 760 170" role="img" aria-label="The four workflow sub-patterns as shapes" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="176.5" height="170" rx="8" class="dg-box"/><text x="12" y="24" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Chaining</tspan></text><text x="12" y="142" class="dg-s" text-anchor="start"><tspan x="12" dy="0">Stages with clean handoffs</tspan></text><circle cx="38.25" cy="82" r="10" class="dg-dot"/><path d="M50.25 82L76.25 82" class="dg-arrow" marker-end="url(#m12)"/><circle cx="88.25" cy="82" r="10" class="dg-dot"/><path d="M100.25 82L126.25 82" class="dg-arrow" marker-end="url(#m12)"/><circle cx="138.25" cy="82" r="10" class="dg-dot"/><rect x="194.5" y="0" width="176.5" height="170" rx="8" class="dg-box"/><text x="206.5" y="24" class="dg-t-b" text-anchor="start"><tspan x="206.5" dy="0">Routing</tspan></text><text x="206.5" y="142" class="dg-s" text-anchor="start"><tspan x="206.5" dy="0">Inputs differ in kind</tspan></text><circle cx="227.75" cy="82" r="10" class="dg-dot"/><circle cx="327.75" cy="48" r="8" class="dg-dot-soft"/><path d="M239.75 82L316.75 48" class="dg-arrow" marker-end="url(#m12)"/><circle cx="327.75" cy="82" r="8" class="dg-dot-soft"/><path d="M239.75 82L316.75 82" class="dg-arrow" marker-end="url(#m12)"/><circle cx="327.75" cy="116" r="8" class="dg-dot-soft"/><path d="M239.75 82L316.75 116" class="dg-arrow" marker-end="url(#m12)"/><rect x="389" y="0" width="176.5" height="170" rx="8" class="dg-box"/><text x="401" y="24" class="dg-t-b" text-anchor="start"><tspan x="401" dy="0">Parallelisation</tspan></text><text x="401" y="142" class="dg-s" text-anchor="start"><tspan x="401" dy="0">Independent sub-tasks</tspan></text><circle cx="417.25" cy="82" r="10" class="dg-dot"/><circle cx="537.25" cy="82" r="10" class="dg-dot"/><circle cx="477.25" cy="48" r="8" class="dg-dot-soft"/><path d="M429.25 82L467.25 48" class="dg-arrow" marker-end="url(#m12)"/><path d="M487.25 48L525.25 82" class="dg-arrow" marker-end="url(#m12)"/><circle cx="477.25" cy="82" r="8" class="dg-dot-soft"/><path d="M429.25 82L467.25 82" class="dg-arrow" marker-end="url(#m12)"/><path d="M487.25 82L525.25 82" class="dg-arrow" marker-end="url(#m12)"/><circle cx="477.25" cy="116" r="8" class="dg-dot-soft"/><path d="M429.25 82L467.25 116" class="dg-arrow" marker-end="url(#m12)"/><path d="M487.25 116L525.25 82" class="dg-arrow" marker-end="url(#m12)"/><rect x="583.5" y="0" width="176.5" height="170" rx="8" class="dg-box"/><text x="595.5" y="24" class="dg-t-b" text-anchor="start"><tspan x="595.5" dy="0">Evaluator-optimizer</tspan></text><text x="595.5" y="142" class="dg-s" text-anchor="start"><tspan x="595.5" dy="0">Verifiable, not reliable</tspan><tspan x="595.5" dy="1.3em">first time</tspan></text><circle cx="626.75" cy="82" r="10" class="dg-dot"/><circle cx="716.75" cy="82" r="10" class="dg-dot-soft"/><path d="M638.75 76L704.75 76" class="dg-arrow" marker-end="url(#m12)"/><path d="M711.75 94 Q 671.75 128 631.75 94" class="dg-arrow" marker-end="url(#m12)"/><text x="671.75" y="68" class="dg-k" text-anchor="middle"><tspan x="671.75" dy="0">draft</tspan></text><text x="671.75" y="122" class="dg-k" text-anchor="middle"><tspan x="671.75" dy="0">grade, feed back</tspan></text></svg>
+<figcaption>Four shapes a workflow can take. They combine; pick the simplest that meets the error tolerance and observability requirement.</figcaption>
+</figure>
+
+<table>
+  <caption>The four sub-patterns</caption>
+  <thead><tr><th>Sub-pattern</th><th>Shape</th><th>When it earns its place</th></tr></thead>
+  <tbody>
+    <tr><td>Chaining</td><td>Step 2 consumes step 1's output, sequentially</td><td>Natural stages with clean handoffs: extract, then classify, then summarise</td></tr>
+    <tr><td>Routing</td><td>A classifier, often Claude, picks the downstream path</td><td>Inputs vary in kind and different kinds need different handling</td></tr>
+    <tr><td>Parallelisation</td><td>Concurrent calls, results aggregated or voted</td><td>Sub-tasks are genuinely independent: twelve contracts, twelve reviews, one report</td></tr>
+    <tr><td>Evaluator-optimizer</td><td>One call drafts, a second grades and returns feedback, loop until a criterion or a retry cap</td><td>Quality is verifiable but a single attempt is not reliable enough</td></tr>
+  </tbody>
+</table>
+
+<p>They combine. Most production workflows use more than one. Pick the simplest shape that
+meets the error tolerance and observability requirement, then revisit once you have
+production data. Escalate when measurement shows the simpler pattern falling short, not
+before.</p>
+
+<h2><span class="num n">5.2</span>The five factors, in sequence</h2>
+
+<figure class="diagram wide" id="fig-five-factors">
+<svg viewBox="0 0 760 142" role="img" aria-label="The five factors for pattern selection, in sequence" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="137.6" height="84" rx="8" class="dg-box"/><text x="10" y="20" class="dg-tag" text-anchor="start"><tspan x="10" dy="0">1</tspan></text><text x="24" y="20" class="dg-t-b" text-anchor="start"><tspan x="24" dy="0">Predictability</tspan></text><text x="10" y="42" class="dg-s" text-anchor="start"><tspan x="10" dy="0">Can you enumerate</tspan><tspan x="10" dy="1.3em">the steps?</tspan></text><path d="M140.6 42L152.6 42" class="dg-arrow" marker-end="url(#m13)"/><rect x="155.6" y="0" width="137.6" height="84" rx="8" class="dg-box"/><text x="165.6" y="20" class="dg-tag" text-anchor="start"><tspan x="165.6" dy="0">2</tspan></text><text x="179.6" y="20" class="dg-t-b" text-anchor="start"><tspan x="179.6" dy="0">Error cost</tspan></text><text x="165.6" y="42" class="dg-s" text-anchor="start"><tspan x="165.6" dy="0">A retry, an audit, a</tspan><tspan x="165.6" dy="1.3em">lawsuit?</tspan></text><path d="M296.2 42L308.2 42" class="dg-arrow" marker-end="url(#m13)"/><rect x="311.2" y="0" width="137.6" height="84" rx="8" class="dg-box"/><text x="321.2" y="20" class="dg-tag" text-anchor="start"><tspan x="321.2" dy="0">3</tspan></text><text x="335.2" y="20" class="dg-t-b" text-anchor="start"><tspan x="335.2" dy="0">Observability</tspan></text><text x="321.2" y="42" class="dg-s" text-anchor="start"><tspan x="321.2" dy="0">Can ops reconstruct</tspan><tspan x="321.2" dy="1.3em">why?</tspan></text><path d="M451.8 42L463.8 42" class="dg-arrow" marker-end="url(#m13)"/><rect x="466.8" y="0" width="137.6" height="84" rx="8" class="dg-box"/><text x="476.8" y="20" class="dg-tag" text-anchor="start"><tspan x="476.8" dy="0">4</tspan></text><text x="490.8" y="20" class="dg-t-b" text-anchor="start"><tspan x="490.8" dy="0">Latency</tspan></text><text x="476.8" y="42" class="dg-s" text-anchor="start"><tspan x="476.8" dy="0">What is the visible</tspan><tspan x="476.8" dy="1.3em">deadline?</tspan></text><path d="M607.4 42L619.4 42" class="dg-arrow" marker-end="url(#m13)"/><rect x="622.4" y="0" width="137.6" height="84" rx="8" class="dg-box"/><text x="632.4" y="20" class="dg-tag" text-anchor="start"><tspan x="632.4" dy="0">5</tspan></text><text x="646.4" y="20" class="dg-t-b" text-anchor="start"><tspan x="646.4" dy="0">Cost</tspan></text><text x="632.4" y="42" class="dg-s" text-anchor="start"><tspan x="632.4" dy="0">Tokens per request</tspan><tspan x="632.4" dy="1.3em">at volume?</tspan></text><text x="0" y="110" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Walk them in this order. The first factor that rules a pattern out is the deciding one, and naming it is the answer.</tspan></text><text x="0" y="130" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Error cost is the one that most often decides. When it binds, it picks the pattern on its own.</tspan></text></svg>
+<figcaption>Five factors, in sequence, each asked as a question that can rule a pattern out.</figcaption>
+</figure>
+
+<table>
+  <caption>What each pattern costs you on each factor</caption>
+  <thead><tr><th>Factor</th><th>The question</th><th>Augmented LLM</th><th>Workflow</th><th>Agent</th></tr></thead>
+  <tbody>
+    <tr><td>Predictability</td><td>Can you enumerate the steps in advance?</td><td>Low: one bounded task</td><td>Low: you wrote the path</td><td>High: unpredictable by design</td></tr>
+    <tr><td>Error cost</td><td>A retry, an audit, or a lawsuit?</td><td>Medium: no step-level guards</td><td>Low: deterministic guards sit between steps</td><td>High: full output distribution across many turns</td></tr>
+    <tr><td>Observability</td><td>Can operations reconstruct why?</td><td>Medium: easy to log, opaque inside</td><td>Low: logs like ordinary code</td><td>High: a trajectory, and most tooling cannot alert on it</td></tr>
+    <tr><td>Latency budget</td><td>What is the user-visible deadline?</td><td>Low: fastest by default</td><td>Medium: predictable, additive</td><td>High: open-ended, budget the worst case</td></tr>
+    <tr><td>Cost</td><td>Per-request tokens at your volume?</td><td>Low</td><td>Medium: scales with step count</td><td>High: iteration, retries and growing context. Poorly bounded agents are often the most expensive pattern</td></tr>
+  </tbody>
+</table>
+
+<div class="sidenote"><b>A qualifier the module is careful about.</b> Agents are not
+automatically more expensive than workflows. What drives cost is how much context
+accumulates and how many calls are made. A badly designed workflow can cost more than a
+well-designed agent. Design matters more than the label.</div>
+
+<h2><span class="num n">5.3</span>Prompt before you fine-tune</h2>
+
+<p>When prompting feels unreliable the instinct is fine-tuning. On Claude that is usually
+the wrong first move. The sequence: optimise the prompt, then add tools or retrieval, then
+move to a stronger pattern such as evaluator-optimizer, and only then consider
+fine-tuning. Fine-tuning earns its place at very high volume where inference cost is the
+constraint, where latency demands a smaller specialised model, or where a consistent output
+format has resisted every prompting attempt. Otherwise it pins you to a fixed model version
+for little gain. Availability is limited and varies by model and route, so confirm before
+recommending it to a partner.</p>
+
+<h2><span class="num n">5.4</span>Multi-agent: orchestrator and subagents</h2>
+
+<p>Some problems exceed what one agent can hold in one context. Then the design becomes an
+orchestrator that decomposes and synthesises, and subagents that each carry a scoped piece
+in their own context. The orchestrator never does the sub-task work itself.</p>
+
+<p>Three things must be designed rather than assumed: how the work is split, how each
+subagent's result is structured so it can be combined, and how the orchestrator resolves
+conflicts and gaps.</p>
+
+<figure class="diagram wide" id="fig-orchestration">
+<svg viewBox="0 0 760 308" role="img" aria-label="An orchestrator fanning work out to subagents, one of which returns nothing" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m14" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="270" y="0" width="220" height="48" rx="8" class="dg-box hi"/><text x="380" y="20" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Orchestrator</tspan></text><text x="380" y="38" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">owns the goal, decomposes, synthesises</tspan></text><path d="M380 51L96 107" class="dg-arrow" marker-end="url(#m14)"/><rect x="30" y="110" width="132" height="44" rx="8" class="dg-box"/><text x="96" y="129" class="dg-t" text-anchor="middle"><tspan x="96" dy="0">Subagent 1</tspan></text><text x="96" y="145" class="dg-s" text-anchor="middle"><tspan x="96" dy="0">unit 1, own context</tspan></text><path d="M380 51L238 107" class="dg-arrow" marker-end="url(#m14)"/><rect x="172" y="110" width="132" height="44" rx="8" class="dg-box"/><text x="238" y="129" class="dg-t" text-anchor="middle"><tspan x="238" dy="0">Subagent 2</tspan></text><text x="238" y="145" class="dg-s" text-anchor="middle"><tspan x="238" dy="0">unit 2, own context</tspan></text><path d="M380 51L380 107" class="dg-arrow" marker-end="url(#m14)"/><rect x="314" y="110" width="132" height="44" rx="8" class="dg-box"/><text x="380" y="129" class="dg-t" text-anchor="middle"><tspan x="380" dy="0">Subagent 3</tspan></text><text x="380" y="145" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">unit 3, own context</tspan></text><path d="M380 51L522 107" class="dg-arrow" marker-end="url(#m14)"/><rect x="456" y="110" width="132" height="44" rx="8" class="dg-box-bad"/><text x="522" y="129" class="dg-t" text-anchor="middle"><tspan x="522" dy="0">Subagent 4</tspan></text><text x="522" y="145" class="dg-k-bad" text-anchor="middle"><tspan x="522" dy="0">timed out, no result</tspan></text><path d="M380 51L664 107" class="dg-arrow" marker-end="url(#m14)"/><rect x="598" y="110" width="132" height="44" rx="8" class="dg-box"/><text x="664" y="129" class="dg-t" text-anchor="middle"><tspan x="664" dy="0">Subagent 5</tspan></text><text x="664" y="145" class="dg-s" text-anchor="middle"><tspan x="664" dy="0">unit 5, own context</tspan></text><rect x="210" y="210" width="340" height="46" rx="8" class="dg-strip"/><text x="380" y="229" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Synthesis, with a coverage check</tspan></text><text x="380" y="246" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">results returned must equal units dispatched, or flag the gap</tspan></text><path d="M96 157L260 207" class="dg-arrow" marker-end="url(#m14)"/><path d="M238 157L320 207" class="dg-arrow" marker-end="url(#m14)"/><path d="M380 157L380 207" class="dg-arrow" marker-end="url(#m14)"/><path d="M664 157L500 207" class="dg-arrow" marker-end="url(#m14)"/><text x="0" y="280" class="dg-k-good" text-anchor="start"><tspan x="0" dy="0">Subagent failure: usually recoverable. Retry, re-route, or drop and flag.</tspan></text><text x="0" y="298" class="dg-k-bad" text-anchor="start"><tspan x="0" dy="0">Orchestrator failure: usually not. Protect its state, checkpoint progress.</tspan></text></svg>
+<figcaption>Design for the asymmetry: subagent work idempotent and retryable, orchestrator state protected, and a count reconciled at synthesis so a dropped unit cannot hide.</figcaption>
+</figure>
+
+<table>
+  <caption>Failure modes and the design response</caption>
+  <thead><tr><th>Failure</th><th>Where it lands</th><th>Response</th></tr></thead>
+  <tbody>
+    <tr><td>A subagent returns malformed or empty output</td><td>Subagent boundary, recoverable</td><td>Validate every result; retry or re-route; record the gap rather than failing the run</td></tr>
+    <tr><td>Two subagents conflict</td><td>Synthesis, recoverable</td><td>Give the orchestrator an explicit conflict rule, or escalate to a human</td></tr>
+    <tr><td>The orchestrator loses the goal or its state</td><td>Orchestrator, often unrecoverable</td><td>Protect orchestrator state; checkpoint so a failed run resumes rather than restarts</td></tr>
+    <tr><td>Traces fragment across components</td><td>Observability, cross-cutting</td><td>Propagate one shared trace identifier so a run is reconstructable end to end</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">5.5</span>Watch out, twice</h2>
+
+<p><strong>Flexibility bought non-determinism.</strong> A team picked an agent because they
+did not want to constrain the design too early. By month two they had added so many
+guardrail tools that they had rebuilt the workflow inside the agent loop, minus the
+logging. When compliance asked which step approved a disbursement, they could point only at
+a model turn, and the model version had rolled forward two weeks earlier with no
+re-validation. When they mined the traces, the real paths through the system fell into four
+shapes, all knowable from week one. A router and four chains would have been the answer.</p>
+
+<p>Note the module separates two failures there. The audit gap is about the agent pattern.
+The unpinned model version is a governance gap that a workflow would have inherited just as
+easily. Only one of them is an argument against agents.</p>
+
+<p><strong>Fan-out hid a dropped unit.</strong> A compliance team fanned a 50-section
+contract out to one subagent per section and synthesised: <em>48 sections reviewed, 3
+flagged</em>. Two sections had never been reviewed, one subagent timed out and one failed to
+parse a scanned page. Nothing reconciled results returned against units dispatched, so 48
+returned results became <em>48 reviewed</em> instead of <em>two are missing</em>. The summary
+read as complete, which is exactly what made it dangerous.</p>
+
+<div class="quiz" data-answer="A,C">
+  <p class="scenario">A draft multi-agent design for a large document-classification job
+  lists six components: (1) the orchestrator splits the corpus into per-document units,
+  (2) subagents run in parallel and each returns a verdict, (3) synthesis sums the returned
+  verdicts into a report, (4) an irreversible auto-archive action runs with no human gate,
+  (5) no retry or gap flag on a failed subagent, (6) a shared trace ID is propagated to every
+  subagent.</p>
+  <p class="stem">Which two carry a control or failure-boundary defect?</p>
+  <ol class="options">
+    <li data-key="A" data-why="An irreversible action taken autonomously is exactly where a human-in-the-loop gate belongs. Reversibility and stakes both argue for it.">Component 4, the ungated irreversible action</li>
+    <li data-key="B" data-why="Splitting a corpus into per-document units is the correct fan-out shape. Nothing is wrong with it.">Component 1, the decomposition into units</li>
+    <li data-key="C" data-why="A timed-out or empty subagent is the recoverable case, but only if something is watching the boundary. With no retry and no gap flag, a recoverable failure passes silently.">Component 5, the missing retry and gap flag</li>
+    <li data-key="D" data-why="A shared trace identifier is the fix for fragmented traces, not a defect. This is the one component that is unambiguously right.">Component 6, the shared trace ID</li>
+  </ol>
+  <div class="verdict" hidden><b>Components 4 and 5.</b> Component 3 is also weak, because
+  summing returned verdicts without reconciling them against units dispatched is the
+  dropped-unit failure. If the item had asked for three, that would be the third. Work the
+  boundaries: every dispatch needs a count that must match, and every irreversible action
+  needs a gate.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="04-decomposition.html"><span>Previous</span>04 Decomposition</a>
+  <a class="next" href="06-reference-architectures.html"><span>Next</span>06 Reference architectures</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

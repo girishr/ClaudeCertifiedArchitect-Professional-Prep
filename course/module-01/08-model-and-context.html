@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08. Model and context strategy - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 08 of 12</p>
+  <h1>Model and context strategy</h1>
+  <p class="standfirst">Tier choice, the context budget, and the eval gate on every swap.</p>
+  <div class="meta"><span>Official screens S21 to S23</span><span>~26 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 08 of 12</b>
+</nav>
+<p>You have a pattern and an architecture. You do not have a shippable system. Three
+decisions remain, and each one sets what the same architecture costs at production volume:
+which model, how much of the window to use, and whether context arrives progressively or
+all at once.</p>
+
+<h2><span class="num n">8.1</span>Four terms people conflate</h2>
+
+<table>
+  <caption>Keep these apart or the architecture blurs</caption>
+  <thead><tr><th>Term</th><th>What it actually is</th></tr></thead>
+  <tbody>
+    <tr><td>Context window</td><td>The model's active attention space. Everything inside is available for reasoning; everything outside does not exist to the model. It resets between calls unless your application manages continuity</td></tr>
+    <tr><td>Retrieval</td><td>External knowledge fetched at query time from a corpus the model does not hold. It augments the window, it does not replace it. The model sees only what the retriever surfaced</td></tr>
+    <tr><td>Persistent application state</td><td>Owned by your system, not the model. Order status, user records, balances. Reaching it requires a tool call</td></tr>
+    <tr><td>Summaries and memory layers</td><td>Continuity your application manages across turns or sessions. The model has no native memory between calls. Anything that persists does so because you stored it and passed it back</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">8.2</span>Model selection: Sonnet by default, moves by evidence</h2>
+
+<p>Opus, Sonnet and Haiku trade cost, latency and capability differently. <strong>Sonnet is
+the default starting point.</strong> Move up to Opus only when an eval set says Sonnet is
+not meeting the quality bar. Move down to Haiku only when an eval set confirms the trade-off
+is acceptable for the specific task. Measured, not reflexive.</p>
+
+<h2><span class="num n">8.3</span>The window is a ceiling, not a target</h2>
+
+<p>Everything entering the window is counted in tokens: system prompt, conversation
+history, retrieved documents, tool outputs, and the model's own responses. Two constraints
+follow, and both show up in design: the window has a fixed limit, and you are billed per
+token on every call.</p>
+
+<p>How much text a token covers varies by model generation, tokeniser and language, so
+treat any characters-per-token ratio as illustration. Measure instead: the <code>usage</code>
+field on every response reports what actually counted.</p>
+
+<figure class="diagram" id="fig-context-budget">
+<svg viewBox="0 0 760 162" role="img" aria-label="The context window as a budget with named line items" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m19" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="16" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Everything that enters the window is counted, and billed, in tokens</tspan></text><rect x="0" y="40" width="89.2" height="30" class="dg-fill-a"/><text x="44.6" y="86" class="dg-s" text-anchor="middle"><tspan x="44.6" dy="0">System prompt</tspan></text><rect x="91.2" y="40" width="195.6" height="30" class="dg-fill-b"/><text x="189" y="59" class="dg-onfill" text-anchor="middle"><tspan x="189" dy="0">Conversation history</tspan></text><rect x="288.8" y="40" width="165.2" height="30" class="dg-fill-c2"/><text x="371.4" y="59" class="dg-onfill" text-anchor="middle"><tspan x="371.4" dy="0">Retrieved documents</tspan></text><rect x="456" y="40" width="89.2" height="30" class="dg-fill-d"/><text x="500.6" y="86" class="dg-s" text-anchor="middle"><tspan x="500.6" dy="0">Tool outputs</tspan></text><rect x="547.2" y="40" width="58.8" height="30" class="dg-fill-e"/><text x="576.6" y="86" class="dg-s" text-anchor="middle"><tspan x="576.6" dy="0">Response</tspan></text><rect x="608" y="40" width="74" height="30" class="dg-fill-margin"/><text x="645" y="86" class="dg-s" text-anchor="middle"><tspan x="645" dy="0">Margin</tspan></text><line x1="759" y1="32" x2="759" y2="78" class="dg-edge"/><text x="754" y="28" class="dg-k" text-anchor="end"><tspan x="754" dy="0">hard limit</tspan></text><text x="0" y="114" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Budget the largest realistic conversation plus everything above, plus margin. Design to the ceiling</tspan><tspan x="0" dy="1.3em">and you will hit it in production.</tspan></text><text x="0" y="152" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Measure, do not estimate: the usage field on every response is what the limit and the bill apply to.</tspan></text></svg>
+<figcaption>A ceiling, not a target.</figcaption>
+</figure>
+
+<h2><span class="num n">8.4</span>Four context strategies, usually layered</h2>
+
+<table>
+  <caption>Where each earns its place and where it breaks</caption>
+  <thead><tr><th>Strategy</th><th>Earns its place</th><th>Breaks down</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Monolithic</strong><br>Load everything into one prompt</td>
+      <td>Bounded tasks with predictable input size. Stable prefixes that benefit from caching. Single-shot Q&amp;A. Reasoning that genuinely needs all material at once</td>
+      <td>Conversations and tool loops where context accumulates. Cost and latency scale with length, and attention quality can degrade well before the hard limit</td>
+    </tr>
+    <tr>
+      <td><strong>Progressive</strong><br>Carry forward only what the next step needs</td>
+      <td>Multi-turn dialogue, iterative refinement, agent loops, staged workflows with narrow handoffs. <em>The right default for most production workloads</em></td>
+      <td>Tasks needing long-range coherence. Decisions depending on detail dropped earlier. Caching is harder when the carried context mutates, and the exact input at step N is no longer reconstructable, which complicates debugging</td>
+    </tr>
+    <tr>
+      <td><strong>Retrieval</strong><br>Fetch relevant chunks at query time</td>
+      <td>Knowledge bases too large for context. Sources that change faster than the prompt is redeployed. Queries needing only a slice. Cases where citation is required</td>
+      <td>Synthesis across many documents scored independently. Chunking that splits tables, code or multi-paragraph arguments. Recall failures where the right document never enters the top-k</td>
+    </tr>
+    <tr>
+      <td><strong>Compaction</strong><br>Periodically summarise accumulated context</td>
+      <td>Long-running agents and conversations where the full transcript is wasteful but recent state matters. Phase transitions that can checkpoint to a clean summary</td>
+      <td>Summaries that drop load-bearing detail: identifiers, numbers, prior decisions, an edge case mentioned once. The summariser is itself a model call with cost and failure modes, and compaction is largely one-way</td>
+    </tr>
+  </tbody>
+</table>
+
+<figure class="diagram wide" id="fig-context-strategies">
+<svg viewBox="0 0 760 206" role="img" aria-label="Four context strategies layered over one coding-agent session" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="0" y1="14" x2="760" y2="14" class="dg-line"/><circle cx="10" cy="14" r="7" class="dg-dot"/><text x="24" y="18" class="dg-t-b" text-anchor="start"><tspan x="24" dy="0">Session start</tspan></text><text x="0" y="44" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Task description and the</tspan><tspan x="0" dy="1.3em">files the user named</tspan></text><rect x="0" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="10" y="112" class="dg-t-b" text-anchor="start"><tspan x="10" dy="0">Monolithic prefix</tspan></text><text x="10" y="130" class="dg-s" text-anchor="start"><tspan x="10" dy="0">small, stable, cacheable</tspan></text><circle cx="204" cy="14" r="7" class="dg-dot"/><text x="218" y="18" class="dg-t-b" text-anchor="start"><tspan x="218" dy="0">Active work</tspan></text><text x="194" y="44" class="dg-s" text-anchor="start"><tspan x="194" dy="0">Each tool call appends to</tspan><tspan x="194" dy="1.3em">the working context</tspan></text><rect x="194" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="204" y="112" class="dg-t-b" text-anchor="start"><tspan x="204" dy="0">Progressive</tspan></text><text x="204" y="130" class="dg-s" text-anchor="start"><tspan x="204" dy="0">recent state is what the</tspan></text><text x="204" y="143" class="dg-s" text-anchor="start"><tspan x="204" dy="0">next step needs</tspan></text><circle cx="398" cy="14" r="7" class="dg-dot"/><text x="412" y="18" class="dg-t-b" text-anchor="start"><tspan x="412" dy="0">Discovery</tspan></text><text x="388" y="44" class="dg-s" text-anchor="start"><tspan x="388" dy="0">The agent needs a file it</tspan><tspan x="388" dy="1.3em">never loaded; searches the</tspan><tspan x="388" dy="1.3em">codebase</tspan></text><rect x="388" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="398" y="112" class="dg-t-b" text-anchor="start"><tspan x="398" dy="0">Just-in-time retrieval</tspan></text><text x="398" y="130" class="dg-s" text-anchor="start"><tspan x="398" dy="0">fetch a slice on demand</tspan></text><circle cx="592" cy="14" r="7" class="dg-dot"/><text x="606" y="18" class="dg-t-b" text-anchor="start"><tspan x="606" dy="0">Context filling</tspan></text><text x="582" y="44" class="dg-s" text-anchor="start"><tspan x="582" dy="0">Early exploration is</tspan><tspan x="582" dy="1.3em">crowding the window</tspan></text><rect x="582" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="592" y="112" class="dg-t-b" text-anchor="start"><tspan x="592" dy="0">Compaction</tspan></text><text x="592" y="130" class="dg-s" text-anchor="start"><tspan x="592" dy="0">keep what was learned,</tspan></text><text x="592" y="143" class="dg-s" text-anchor="start"><tspan x="592" dy="0">drop the transcript</tspan></text><text x="0" y="176" class="dg-t" text-anchor="start"><tspan x="0" dy="0">No single strategy carries this workload. Ask four questions: what is needed at the start, from the</tspan><tspan x="0" dy="1.3em">recent steps, on demand, and what can be compressed.</tspan></text></svg>
+<figcaption>The module's worked example: a long-running coding agent uses all four, one per phase.</figcaption>
+</figure>
+
+<div class="flag">
+  <span class="label">Four questions that design a context system</span>
+  <p>What does the model need at the start? That is the monolithic baseline. What does it
+  need from the most recent steps? The progressive window. What might it need to fetch on
+  demand? The retrieval layer. What earlier material can be compressed without losing
+  decision-relevant detail? The compaction policy. Context strategy and context sizing are
+  separate decisions that interact but do not determine each other, and treating them as one
+  is where most context designs go wrong.</p>
+</div>
+
+<h2><span class="num n">8.5</span>Extended thinking is a bill, not a mode</h2>
+
+<p>Extended thinking is a per-request capability: the model works through the problem in a
+separate block of thinking tokens before answering. Control has changed across
+generations. On Claude Opus 4.6 and later, Sonnet 4.6 and later, and Sonnet 5,
+<strong>adaptive thinking with the effort parameter</strong> is the recommended control, so
+you set how much reasoning effort to apply rather than configuring a token budget. Adaptive
+thinking is the only mode on Claude Fable 5. The older manual <code>budget_tokens</code> is
+deprecated on the 4.6 generation and removed on Sonnet 5, where it returns a 400.</p>
+
+<p>Thinking tokens bill as output tokens and add latency. When extended thinking is not
+engaged, none are generated and none are billed. The model reasons internally either way;
+what you are choosing is whether to pay for an expanded pass. Run evals without it first.
+Turn it on because a measured accuracy gap says so, not because it cannot hurt.</p>
+
+<h2><span class="num n">8.6</span>Gate every model change with an eval</h2>
+
+<p>A model swap is a change to the system's behaviour, so treat it as a release. Three
+things, minimum:</p>
+
+<ol>
+  <li>A curated test set of prompts with known-good outputs, covering the real distribution of work.</li>
+  <li>A grading function, model-graded against a rubric or programmatic where the check can be expressed in code.</li>
+  <li>A delta threshold <strong>set in advance</strong>. Set it after and you are not setting a standard, you are writing the acceptance criteria after the build.</li>
+</ol>
+
+<figure class="diagram wide" id="fig-eval-gate">
+<svg viewBox="0 0 760 270" role="img" aria-label="The eval gate on a model swap, with the Sonnet to Haiku worked case" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m21" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="230" height="46" rx="8" class="dg-box"/><text x="12" y="19" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Curated test set</tspan></text><text x="12" y="36" class="dg-s" text-anchor="start"><tspan x="12" dy="0">known-good outputs, stratified by type</tspan></text><path d="M233 23L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="0" y="56" width="230" height="46" rx="8" class="dg-box"/><text x="12" y="75" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Grading function</tspan></text><text x="12" y="92" class="dg-s" text-anchor="start"><tspan x="12" dy="0">rubric-graded or programmatic</tspan></text><path d="M233 79L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="0" y="112" width="230" height="46" rx="8" class="dg-box hi"/><text x="12" y="131" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Delta threshold</tspan></text><text x="12" y="148" class="dg-s" text-anchor="start"><tspan x="12" dy="0">set BEFORE the run</tspan></text><path d="M233 135L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="290" y="60" width="130" height="48" rx="8" class="dg-strip"/><text x="355" y="80" class="dg-t-b" text-anchor="middle"><tspan x="355" dy="0">Run both models</tspan></text><text x="355" y="97" class="dg-s" text-anchor="middle"><tspan x="355" dy="0">same set, same grader</tspan></text><path d="M423 84L470 84" class="dg-arrow" marker-end="url(#m21)"/><text x="480" y="12" class="dg-k" text-anchor="start"><tspan x="480" dy="0">Per type: Sonnet vs Haiku, line at 0.85</tspan></text><rect x="488" y="36.25" width="14" height="113.75" class="dg-fill-b"/><rect x="505" y="52.5" width="14" height="97.5" class="dg-fill-a"/><text x="503" y="164" class="dg-s" text-anchor="middle"><tspan x="503" dy="0">Type A</tspan></text><rect x="544" y="42.75" width="14" height="107.25" class="dg-fill-b"/><rect x="561" y="59" width="14" height="91" class="dg-fill-a"/><text x="559" y="164" class="dg-s" text-anchor="middle"><tspan x="559" dy="0">Type B</tspan></text><rect x="600" y="39.5" width="14" height="110.5" class="dg-fill-b"/><rect x="617" y="114.25" width="14" height="35.75" class="dg-fill-bad"/><text x="615" y="164" class="dg-s" text-anchor="middle"><tspan x="615" dy="0">Type C</tspan></text><rect x="656" y="33" width="14" height="117" class="dg-fill-b"/><rect x="673" y="104.5" width="14" height="45.5" class="dg-fill-bad"/><text x="671" y="164" class="dg-s" text-anchor="middle"><tspan x="671" dy="0">Type D</tspan></text><rect x="712" y="46" width="14" height="104" class="dg-fill-b"/><rect x="729" y="55.75" width="14" height="94.25" class="dg-fill-a"/><text x="727" y="164" class="dg-s" text-anchor="middle"><tspan x="727" dy="0">Type E</tspan></text><line x1="480" y1="68.75" x2="760" y2="68.75" class="dg-edge" stroke-dasharray="4 3"/><text x="760" y="180" class="dg-k-bad" text-anchor="end"><tspan x="760" dy="0">dashed line: 0.85, the rollback criterion</tspan></text><text x="0" y="200" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Two types crossed the line, so the migration as proposed was rejected. The salvage: route those two</tspan><tspan x="0" dy="1.3em">to Sonnet through the existing classifier, the rest to Haiku.</tspan></text><text x="0" y="238" class="dg-s" text-anchor="start"><tspan x="0" dy="0">The criterion was fixed before the data came in, so nobody negotiated with themselves. A stratified set surfaced</tspan><tspan x="0" dy="1.3em">the partial migration a single average would have hidden.</tspan></text></svg>
+<figcaption>Treat a model swap as a release. Three inputs, one run, and a line you drew before you looked.</figcaption>
+</figure>
+
+<h2><span class="num n">8.7</span>Watch out: Opus everywhere, seven times the budget</h2>
+
+<p>Ninety days after launch, monthly cost was running at seven times the model. Median
+latency on the user-facing path was 2.3 seconds against an agreed 800 millisecond target.
+Satisfaction scores had not moved. Every call in the stack was Opus, because there had been
+no per-step model decision, because there had been no per-step eval that would have forced
+one. Extended thinking had been left on for a routing classifier that does no reasoning.</p>
+
+<p>The fix, retroactively: build the eval set, route the classifier to Haiku, mid-pipeline
+summarisation to Sonnet, keep Opus only on final response composition where the eval said it
+earned its place. Cost fell 71 percent, latency to 940 milliseconds, satisfaction
+unchanged.</p>
+
+<div class="flag">
+  <span class="label">The line worth carrying into the exam</span>
+  <p>Not choosing a model tier is choosing the most expensive one. The absence of a
+  deliberate choice is not neutral.</p>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A trading desk wants a one-line natural-language summary of each
+  executed trade, delivered within 400 milliseconds. Volume is high and constant. A
+  proposal suggests Opus with extended thinking enabled, monolithic context carrying the
+  full session history, on the grounds that accuracy matters in finance.</p>
+  <p class="stem">Which single change does the most to make this shippable?</p>
+  <ol class="options">
+    <li data-key="A" data-why="A cache helps cost on a stable prefix. It does nothing about a session history that grows every trade, and it does not remove the thinking-token latency.">Enable prompt caching on the system prompt</li>
+    <li data-key="B" data-why="Extended thinking adds a billed reasoning pass and latency to every call. On a 400ms budget, with a task that is short bounded summarisation, it is the setting blocking the deadline, and no eval justifies it.">Turn extended thinking off and re-measure before anything else</li>
+    <li data-key="C" data-why="Moving to Haiku may well be right, but only an eval says so. Changing the tier first, without a test set, repeats the mistake the scenario already contains.">Switch to Haiku immediately to cut latency</li>
+    <li data-key="D" data-why="Splitting into steps adds latency in a design that is already over budget. Nothing about the task requires more than one call.">Split the summary into a two-step workflow</li>
+  </ol>
+  <div class="verdict" hidden><b>Extended thinking comes off first.</b> It is the cost and
+  latency lever with the clearest case against it here: a one-line summary of a bounded input
+  is not reasoning work, and nobody has produced a measured accuracy gap to justify the pass.
+  Monolithic session history is the second problem and progressive context is its fix. The
+  tier question comes last, and it comes with an eval set attached.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="07-rag-pipeline.html"><span>Previous</span>07 RAG pipeline design</a>
+  <a class="next" href="09-prompting.html"><span>Next</span>09 Prompting as architecture</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

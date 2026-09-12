@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02. How Claude behaves - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 02 of 12</p>
+  <h1>How Claude behaves</h1>
+  <p class="standfirst">Four model properties you design around, and the consequence each one forces.</p>
+  <div class="meta"><span>Official screens S02</span><span>~12 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 02 of 12</b>
+</nav>
+<p>This is the frame for everything after it. Four properties of the model, each treated
+as a force to design around rather than a defect to fix, the way a structural engineer
+designs around what steel and concrete actually do. Read it slowly. It is one screen in
+the official module and it explains why half the later answers are right.</p>
+
+<p>Each property pairs a capability with the limitation that is the same trait seen from
+the other side, and each has a mitigation an architect reaches for.</p>
+
+<figure class="diagram wide" id="fig-four-properties">
+<svg viewBox="0 0 760 378" role="img" aria-label="The four properties: what each is good at, where it fails, and the mitigation" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="369" height="178" rx="8" class="dg-box"/><text x="14" y="24" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Next-token prediction</tspan></text><text x="14" y="48" class="dg-k-good" text-anchor="start"><tspan x="14" dy="0">Good at</tspan></text><text x="14" y="66" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Common patterns:</tspan><tspan x="14" dy="1.3em">summarising,</tspan><tspan x="14" dy="1.3em">reformatting, explaining</tspan><tspan x="14" dy="1.3em">settled ideas</tspan></text><line x1="188.5" y1="40" x2="188.5" y2="120" class="dg-rule"/><text x="198.5" y="48" class="dg-k-bad" text-anchor="start"><tspan x="198.5" dy="0">Fails at</tspan></text><text x="198.5" y="66" class="dg-s" text-anchor="start"><tspan x="198.5" dy="0">Precision on specifics:</tspan><tspan x="198.5" dy="1.3em">names, dates, citations,</tspan><tspan x="198.5" dy="1.3em">statistics</tspan></text><rect x="10" y="130" width="349" height="38" rx="6" class="dg-strip"/><text x="20" y="146" class="dg-k" text-anchor="start"><tspan x="20" dy="0">Design around it</tspan></text><text x="20" y="161" class="dg-s" text-anchor="start"><tspan x="20" dy="0">Citations, verifier loops, tool calls for facts</tspan></text><rect x="391" y="0" width="369" height="178" rx="8" class="dg-box"/><text x="405" y="24" class="dg-t-b" text-anchor="start"><tspan x="405" dy="0">Knowledge</tspan></text><text x="405" y="48" class="dg-k-good" text-anchor="start"><tspan x="405" dy="0">Good at</tspan></text><text x="405" y="66" class="dg-s" text-anchor="start"><tspan x="405" dy="0">Topics that are common,</tspan><tspan x="405" dy="1.3em">recent and consistent in</tspan><tspan x="405" dy="1.3em">training data</tspan></text><line x1="579.5" y1="40" x2="579.5" y2="120" class="dg-rule"/><text x="589.5" y="48" class="dg-k-bad" text-anchor="start"><tspan x="589.5" dy="0">Fails at</tspan></text><text x="589.5" y="66" class="dg-s" text-anchor="start"><tspan x="589.5" dy="0">Rare, contested or fast-</tspan><tspan x="589.5" dy="1.3em">changing topics, in the</tspan><tspan x="589.5" dy="1.3em">same confident tone</tspan></text><rect x="401" y="130" width="349" height="38" rx="6" class="dg-strip"/><text x="411" y="146" class="dg-k" text-anchor="start"><tspan x="411" dy="0">Design around it</tspan></text><text x="411" y="161" class="dg-s" text-anchor="start"><tspan x="411" dy="0">Search, retrieval, tools, MCP: an external source of truth</tspan></text><rect x="0" y="200" width="369" height="178" rx="8" class="dg-box"/><text x="14" y="224" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Working memory</tspan></text><text x="14" y="248" class="dg-k-good" text-anchor="start"><tspan x="14" dy="0">Good at</tspan></text><text x="14" y="266" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Anything inside the</tspan><tspan x="14" dy="1.3em">active context window</tspan></text><line x1="188.5" y1="240" x2="188.5" y2="320" class="dg-rule"/><text x="198.5" y="248" class="dg-k-bad" text-anchor="start"><tspan x="198.5" dy="0">Fails at</tspan></text><text x="198.5" y="266" class="dg-s" text-anchor="start"><tspan x="198.5" dy="0">A hard edge. Outside the</tspan><tspan x="198.5" dy="1.3em">window, content does not</tspan><tspan x="198.5" dy="1.3em">exist</tspan></text><rect x="10" y="330" width="349" height="38" rx="6" class="dg-strip"/><text x="20" y="346" class="dg-k" text-anchor="start"><tspan x="20" dy="0">Design around it</tspan></text><text x="20" y="361" class="dg-s" text-anchor="start"><tspan x="20" dy="0">Progressive loading, chunking, summarising across turns</tspan></text><rect x="391" y="200" width="369" height="178" rx="8" class="dg-box"/><text x="405" y="224" class="dg-t-b" text-anchor="start"><tspan x="405" dy="0">Steerability</tspan></text><text x="405" y="248" class="dg-k-good" text-anchor="start"><tspan x="405" dy="0">Good at</tspan></text><text x="405" y="266" class="dg-s" text-anchor="start"><tspan x="405" dy="0">Short, concrete,</tspan><tspan x="405" dy="1.3em">verifiable instructions</tspan><tspan x="405" dy="1.3em">with defined formats</tspan></text><line x1="579.5" y1="240" x2="579.5" y2="320" class="dg-rule"/><text x="589.5" y="248" class="dg-k-bad" text-anchor="start"><tspan x="589.5" dy="0">Fails at</tspan></text><text x="589.5" y="266" class="dg-s" text-anchor="start"><tspan x="589.5" dy="0">Abstract instructions,</tspan><tspan x="589.5" dy="1.3em">long chains, exact</tspan><tspan x="589.5" dy="1.3em">computation; letter over</tspan><tspan x="589.5" dy="1.3em">intent</tspan></text><rect x="401" y="330" width="349" height="38" rx="6" class="dg-strip"/><text x="411" y="346" class="dg-k" text-anchor="start"><tspan x="411" dy="0">Design around it</tspan></text><text x="411" y="361" class="dg-s" text-anchor="start"><tspan x="411" dy="0">System prompts, structured outputs, code execution</tspan></text></svg>
+<figcaption>Each property is one trait seen from two sides. The strip is what an architect reaches for.</figcaption>
+</figure>
+
+<details class="fold">
+  <summary>The same four, in full wording</summary>
+<table>
+  <caption>The four properties, and what each one forces</caption>
+  <thead><tr><th>Property</th><th>Good at</th><th>Fails at</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Next-token prediction</strong></td>
+      <td>Work built on common patterns: summarising, reformatting, explaining settled ideas</td>
+      <td>Precision on specifics. Output that looks accurate and is not, concentrated around names, dates, citations and statistics</td>
+      <td>Citations, uncertainty signalling, generator-verifier loops. Route factual lookups through a tool call, not the model's recall</td>
+    </tr>
+    <tr>
+      <td><strong>Knowledge</strong></td>
+      <td>Topics that are common, recent and consistent in training data</td>
+      <td>Rare, niche, contested or fast-changing topics, delivered in the same confident tone as settled fact</td>
+      <td>Search, retrieval, tools or MCP, so an external system is the source of truth instead of the weights</td>
+    </tr>
+    <tr>
+      <td><strong>Working memory</strong></td>
+      <td>Anything inside the active context window</td>
+      <td>A hard edge. Outside the window, content does not exist to the model at all</td>
+      <td>Progressive loading, chunking, front-loading what matters, summarising across turns</td>
+    </tr>
+    <tr>
+      <td><strong>Steerability</strong></td>
+      <td>Short, concrete, verifiable instructions with defined formats and explicit limits</td>
+      <td>Abstract instructions, long reasoning chains, exact numerical or logical computation. Following the letter while drifting from the intent</td>
+      <td>System prompts, structured outputs, code execution for anything needing logical precision. Restate the goal next to the instruction</td>
+    </tr>
+  </tbody>
+</table>
+</details>
+
+<h2><span class="num n">2.1</span>Two different errors at the context edge</h2>
+
+<p>The module is precise here and the exam can be too. The working-memory edge produces
+two failures that are easy to conflate.</p>
+
+<figure class="diagram wide" id="fig-context-edge">
+<svg viewBox="0 0 760 262" role="img" aria-label="Two different failures at the context window edge" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="48" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Request already too</tspan><tspan x="0" dy="1.3em">large</tspan></text><rect x="150" y="30" width="440" height="26" class="dg-window"/><text x="590" y="24" class="dg-s" text-anchor="end"><tspan x="590" dy="0">window edge</tspan></text><line x1="590" y1="26" x2="590" y2="60" class="dg-edge"/><rect x="150" y="30" width="530" height="26" class="dg-fill-a"/><text x="158" y="47" class="dg-onfill" text-anchor="start"><tspan x="158" dy="0">prompt</tspan></text><rect x="590" y="30" width="90" height="26" class="dg-fill-bad"/><text x="150" y="78" class="dg-t" text-anchor="start"><tspan x="150" dy="0">Rejected before generation starts.</tspan></text><text x="150" y="94" class="dg-code" text-anchor="start"><tspan x="150" dy="0">400 invalid_request_error (prompt too long)  /  413 request_too_large (body too big)</tspan></text><text x="0" y="168" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Fits, but generation</tspan><tspan x="0" dy="1.3em">runs out of room</tspan></text><rect x="150" y="150" width="440" height="26" class="dg-window"/><text x="590" y="144" class="dg-s" text-anchor="end"><tspan x="590" dy="0">window edge</tspan></text><line x1="590" y1="146" x2="590" y2="180" class="dg-edge"/><rect x="150" y="150" width="320" height="26" class="dg-fill-a"/><text x="158" y="167" class="dg-onfill" text-anchor="start"><tspan x="158" dy="0">prompt</tspan></text><rect x="470" y="150" width="190" height="26" class="dg-fill-b"/><text x="478" y="167" class="dg-onfill" text-anchor="start"><tspan x="478" dy="0">generation</tspan></text><rect x="590" y="150" width="70" height="26" class="dg-fill-bad"/><text x="150" y="198" class="dg-t" text-anchor="start"><tspan x="150" dy="0">Starts, then stops early with truncated output.</tspan></text><text x="150" y="214" class="dg-code" text-anchor="start"><tspan x="150" dy="0">stop_reason: model_context_window_exceeded</tspan></text><text x="0" y="250" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Measure, do not estimate: the usage field on every response, and the token-counting API before you send.</tspan></text></svg>
+<figcaption>Two errors at the same edge that are easy to conflate. One happens before generation, the other during it.</figcaption>
+</figure>
+
+<h2><span class="num n">2.2</span>From property to design consequence</h2>
+
+<p>This is the part worth memorising, because it is the reasoning the rest of the
+certification runs on.</p>
+
+<figure class="diagram wide" id="fig-property-chain">
+<svg viewBox="0 0 760 336" role="img" aria-label="Each property, the consequence it forces, and where the course pays it off" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="4" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="32" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Non-determinism</tspan></text><path d="M153 39L182 39" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="4" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="26" class="dg-s" text-anchor="start"><tspan x="197" dy="0">Same input, different output. You cannot</tspan><tspan x="197" dy="1.3em">certify behaviour you saw once</tspan></text><path d="M458 39L487 39" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="4" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="25" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why evaluation frameworks exist</tspan></text><text x="502" y="65" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Module 2</tspan></text><rect x="0" y="88" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="116" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Context is</tspan><tspan x="12" dy="1.3em">finite</tspan></text><path d="M153 123L182 123" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="88" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="110" class="dg-s" text-anchor="start"><tspan x="197" dy="0">The window is a budget you spend, not a</tspan><tspan x="197" dy="1.3em">container you fill</tspan></text><path d="M458 123L487 123" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="88" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="109" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why context strategy is a design</tspan><tspan x="502" dy="1.3em">decision</tspan></text><text x="502" y="149" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Section 8</tspan></text><rect x="0" y="172" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="200" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Confidence is</tspan><tspan x="12" dy="1.3em">not validity</tspan></text><path d="M153 207L182 207" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="172" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="194" class="dg-s" text-anchor="start"><tspan x="197" dy="0">Fluent and wrong looks exactly like</tspan><tspan x="197" dy="1.3em">fluent and right</tspan></text><path d="M458 207L487 207" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="172" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="193" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why human-in-the-loop placement is</tspan><tspan x="502" dy="1.3em">architecture</tspan></text><text x="502" y="233" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Module 3</tspan></text><rect x="0" y="256" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="284" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Knowledge</tspan><tspan x="12" dy="1.3em">boundary</tspan></text><path d="M153 291L182 291" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="256" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="278" class="dg-s" text-anchor="start"><tspan x="197" dy="0">The model does not know what it was</tspan><tspan x="197" dy="1.3em">never given, and will not say so</tspan></text><path d="M458 291L487 291" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="256" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="277" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why retrieval and tools exist</tspan></text><text x="502" y="317" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Sections 6 and 7</tspan></text></svg>
+<figcaption>Property, then the consequence, then the practice that exists because of it. When an exam option proposes a control, ask which property it mitigates.</figcaption>
+</figure>
+
+<div class="flag">
+  <span class="label">Carry this sentence</span>
+  <p>A guardrail is not bureaucracy. It is the mitigation for confidence-is-not-validity.
+  A deterministic check in code is the mitigation for non-determinism. When an exam option
+  proposes a control, ask which property it is mitigating. If it mitigates nothing, it is
+  the distractor.</p>
+</div>
+
+<h2><span class="num n">2.3</span>The failure that began with a misread property</h2>
+
+<figure class="diagram wide" id="fig-failure-timeline">
+<svg viewBox="0 0 760 172" role="img" aria-label="Timeline of the reconciliation pipeline failure" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="75" y1="44" x2="685" y2="44" class="dg-line"/><circle cx="75" cy="44" r="9" class="dg-dot"/><text x="75" y="24" class="dg-k" text-anchor="middle"><tspan x="75" dy="0">Demo</tspan></text><text x="75" y="74" class="dg-s" text-anchor="middle"><tspan x="75" dy="0">Five clean runs in a</tspan><tspan x="75" dy="1.3em">row</tspan></text><circle cx="227.5" cy="44" r="9" class="dg-dot"/><text x="227.5" y="24" class="dg-k" text-anchor="middle"><tspan x="227.5" dy="0">Conclusion</tspan></text><text x="227.5" y="74" class="dg-s" text-anchor="middle"><tspan x="227.5" dy="0">&quot;It is</tspan><tspan x="227.5" dy="1.3em">deterministic&quot;</tspan></text><circle cx="380" cy="44" r="9" class="dg-dot"/><text x="380" y="24" class="dg-k" text-anchor="middle"><tspan x="380" dy="0">Ship</tspan></text><text x="380" y="74" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">Reconciliation</tspan><tspan x="380" dy="1.3em">pipeline, no checks</tspan><tspan x="380" dy="1.3em">around outputs</tspan></text><circle cx="532.5" cy="44" r="9" class="dg-dot-bad"/><text x="532.5" y="24" class="dg-k" text-anchor="middle"><tspan x="532.5" dy="0">Week 2</tspan></text><text x="532.5" y="74" class="dg-s" text-anchor="middle"><tspan x="532.5" dy="0">Same statement, re-</tspan><tspan x="532.5" dy="1.3em">run, different</tspan><tspan x="532.5" dy="1.3em">category</tspan></text><circle cx="685" cy="44" r="9" class="dg-dot-bad"/><text x="685" y="24" class="dg-k" text-anchor="middle"><tspan x="685" dy="0">Found</tspan></text><text x="685" y="74" class="dg-s" text-anchor="middle"><tspan x="685" dy="0">By chance. An</tspan><tspan x="685" dy="1.3em">analyst happened to</tspan><tspan x="685" dy="1.3em">re-run a batch</tspan></text><text x="380" y="140" class="dg-t" text-anchor="middle"><tspan x="380" dy="0">Nothing in the input changed. The architecture assumed a property the model does not have.</tspan></text><text x="380" y="160" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">A demo is not evidence of determinism.</tspan></text></svg>
+<figcaption>The failure that began with a misread property.</figcaption>
+</figure>
+
+<p>The lesson is not that the model is unreliable. It is that a demo is not evidence of
+determinism, and the four properties are present whether or not your architecture
+acknowledges them.</p>
+
+<div class="quiz" data-answer="C">
+  <p class="scenario">A pricing team wants Claude to apply a published discount schedule:
+  orders above a stated volume get a fixed percentage off. The schedule is maintained in a
+  rules table the finance team owns. The engineer proposes prompting Claude with the
+  schedule and letting it compute each discount, to keep the design to one component.</p>
+  <p class="stem">Which property makes this the wrong call, and what is the mitigation?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Knowledge boundary is about what the model learned in training. The schedule is being supplied in the prompt, so the boundary is not the binding problem here.">Knowledge boundary, so retrieve the schedule from a corpus at query time</li>
+    <li data-key="B" data-why="Working memory would matter if the schedule were enormous. A discount table is small, and the failure would still occur at any size.">Working memory, so chunk the schedule and load it progressively</li>
+    <li data-key="C" data-why="A rule that must be right every time has been handed to a system that is right most of the time. Deterministic computation owns the arithmetic; Claude can read the order and call it.">Non-determinism, so the arithmetic belongs in code and Claude calls it</li>
+    <li data-key="D" data-why="Steerability is real here, but it is the secondary effect. The primary defect is that a deterministic rule is being enforced probabilistically.">Steerability, so tighten the prompt with explicit worked examples</li>
+  </ol>
+  <div class="verdict" hidden><b>Non-determinism.</b> The distinguishing question in this family
+  of items is always the same: does this rule have to hold every single time? If yes, code
+  owns it. The model can extract the order volume and invoke the calculation, which uses
+  next-token prediction for what it is good at and leaves the guarantee where guarantees
+  belong.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="01-introduction.html"><span>Previous</span>01 Module introduction</a>
+  <a class="next" href="03-platform-map.html"><span>Next</span>03 Platform map and primitives</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

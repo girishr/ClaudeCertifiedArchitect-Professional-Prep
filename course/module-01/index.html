@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1: Claude Platform & Solution Design</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead" style="display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap">
+  <img src="../assets/badge.png" alt="Claude Certified Architect Professional badge" width="76" height="76" style="flex:none; margin-top:6px">
+  <div style="flex:1; min-width:260px">
+  <p class="eyebrow">CCAR-P &middot; Module 1 of 5</p>
+  <h1>Claude Platform &amp; Solution Design</h1>
+  <p class="standfirst">The whole module, distilled. Twelve sections in the official order,
+  every screen accounted for, a drill on each decision that carries weight.</p>
+  <div class="meta">
+    <span>34 screens &middot; 12 sections</span>
+    <span>238 min official, about 70 here</span>
+    <span>Exam domains 1 and 2, 30% of the paper</span>
+  </div>
+  </div>
+</header>
+
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <b>Module 1</b>
+</nav>
+
+<div class="flag">
+  <span class="label">How to work through this</span>
+  <p>Read the twelve sections in order the first time. They build: the model's properties
+  come before decomposition, decomposition before the pattern, the pattern before the
+  architecture, the architecture before the entry point. Every page has a previous and a
+  next, so you can start at section 1 and never touch this page again.</p>
+</div>
+
+<h2><span class="num">Contents</span>The twelve sections</h2>
+
+<table>
+  <caption>In the official order, with the screens each one covers</caption>
+  <thead><tr><th>#</th><th>Section</th><th>What it decides</th><th>Screens</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td><a href="01-introduction.html">Module introduction</a></td><td>The four decisions that happen before anyone writes code.</td><td>S01</td></tr>
+    <tr><td>02</td><td><a href="02-how-claude-behaves.html">How Claude behaves</a></td><td>Four model properties you design around, and the consequence each one forces.</td><td>S02</td></tr>
+    <tr><td>03</td><td><a href="03-platform-map.html">Platform map and primitives</a></td><td>Three layers of the platform, then the seven primitives you build from.</td><td>S03 to S06</td></tr>
+    <tr><td>04</td><td><a href="04-decomposition.html">Decomposition</a></td><td>Splitting a request across Claude, existing systems and humans.</td><td>S07 to S10</td></tr>
+    <tr><td>05</td><td><a href="05-pattern-selection.html">Pattern selection</a></td><td>Augmented call, workflow or agent, plus the multi-agent case.</td><td>S11 to S15</td></tr>
+    <tr><td>06</td><td><a href="06-reference-architectures.html">Reference architectures</a></td><td>Five proven shapes, and the one mistake that recurs in all of them.</td><td>S16 to S18</td></tr>
+    <tr><td>07</td><td><a href="07-rag-pipeline.html">RAG pipeline design</a></td><td>Chunking by what the corpus is, indexing by how queries are phrased.</td><td>S19 to S20</td></tr>
+    <tr><td>08</td><td><a href="08-model-and-context.html">Model and context strategy</a></td><td>Tier choice, the context budget, and the eval gate on every swap.</td><td>S21 to S23</td></tr>
+    <tr><td>09</td><td><a href="09-prompting.html">Prompting as architecture</a></td><td>The prompt as a governed, versioned, cacheable asset.</td><td>S24 to S27</td></tr>
+    <tr><td>10</td><td><a href="10-entry-points.html">Entry points and governance</a></td><td>Entry point, build-time interface, delivery route, and what rules them out.</td><td>S28 to S30</td></tr>
+    <tr><td>11</td><td><a href="11-assembly.html">Assembly</a></td><td>One brief, five decisions, four candidate architectures, one survivor.</td><td>S31</td></tr>
+    <tr><td>12</td><td><a href="12-recap.html">Recap and what is next</a></td><td>The five takeaways, a closed-book self-test, and where Module 2 picks up.</td><td>S32, CERT</td></tr>
+  </tbody>
+</table>
+
+<p style="margin-top:1.6rem"><a href="01-introduction.html"><strong>Start at section 1 &rarr;</strong></a></p>
+
+<h2><span class="num">Weighting</span>Where the time actually goes</h2>
+
+<p>Two screens carry a fifth of the official module between them: S21 on model and context
+strategy, and S28 on entry points and governance. S28 is the longest screen in the module by
+a wide margin, and section 10 looks small in any contents list. It is not. Budget by screen
+weight, not by section count.</p>
+
+<p>The five <strong>Watch Out</strong> screens are the highest-value pages in the original.
+Each is a real architecture that failed, traced back to the decision that caused it, which
+is exactly the shape of an exam distractor. They are folded into sections 4, 5, 6, 8 and 10
+here. Cover the diagnosis, decide what you would have done, then read.</p>
+
+<div class="course-nav">
+  <h3>Reference</h3>
+  <ul>
+    <li><a href="../reference/glossary.html">Glossary</a> - the vocabulary the module holds to</li>
+    <li><a href="../reference/pattern-selection.html">Pattern selection</a> - one page, prints well</li>
+    <li><a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/claude-platform-solution-design">The official module</a> on Anthropic's Partner Academy</li>
+  </ul>
+</div>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

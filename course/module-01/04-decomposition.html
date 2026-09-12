@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04. Decomposition - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 04 of 12</p>
+  <h1>Decomposition</h1>
+  <p class="standfirst">Splitting a request across Claude, existing systems and humans.</p>
+  <div class="meta"><span>Official screens S07 to S10</span><span>~21 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 04 of 12</b>
+</nav>
+<p>You already make three decisions when you architect anything: what the ask is, which
+systems you have, and where human judgment belongs. Claude adds a fourth. Over-assigning
+to Claude is named in the module as the most common and most expensive early mistake.</p>
+
+<figure class="diagram wide" id="fig-three-owners">
+<svg viewBox="0 0 760 290" role="img" aria-label="Three owners with the delegation tests above them and the claims example sorted beneath" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="14" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Three tests before Claude owns anything: reversibility, stakes, accountability</tspan></text><rect x="0" y="24" width="760" height="30" rx="6" class="dg-strip"/><text x="126.667" y="44" class="dg-t" text-anchor="middle"><tspan x="126.667" dy="0">Can a wrong call be undone?</tspan></text><text x="380" y="44" class="dg-t" text-anchor="middle"><tspan x="380" dy="0">What does a wrong call cost?</tspan></text><text x="633.333" y="44" class="dg-t" text-anchor="middle"><tspan x="633.333" dy="0">Who has to answer for it?</tspan></text><rect x="0" y="70" width="242.667" height="90" rx="8" class="dg-box hi"/><text x="12" y="94" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Claude</tspan></text><text x="12" y="114" class="dg-s" text-anchor="start"><tspan x="12" dy="0">Language understanding, summarising,</tspan><tspan x="12" dy="1.3em">planning, drafting, tool-mediated</tspan><tspan x="12" dy="1.3em">action</tspan></text><rect x="258.667" y="70" width="242.667" height="90" rx="8" class="dg-box"/><text x="270.667" y="94" class="dg-t-b" text-anchor="start"><tspan x="270.667" dy="0">Existing systems</tspan></text><text x="270.667" y="114" class="dg-s" text-anchor="start"><tspan x="270.667" dy="0">Anything the partner already paid to</tspan><tspan x="270.667" dy="1.3em">make reliable: rules, records, the</tspan><tspan x="270.667" dy="1.3em">system of record</tspan></text><rect x="517.333" y="70" width="242.667" height="90" rx="8" class="dg-box"/><text x="529.333" y="94" class="dg-t-b" text-anchor="start"><tspan x="529.333" dy="0">Humans</tspan></text><text x="529.333" y="114" class="dg-s" text-anchor="start"><tspan x="529.333" dy="0">Judgment calls, exceptions,</tspan><tspan x="529.333" dy="1.3em">approvals, where right beats fast</tspan></text><text x="0" y="182" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Worked: a claims triage assistant, one request, six pieces of work</tspan></text><rect x="6" y="194" width="230.667" height="24" rx="5" class="dg-box"/><text x="16" y="210" class="dg-t" text-anchor="start"><tspan x="16" dy="0">Read the claim</tspan></text><rect x="264.667" y="194" width="230.667" height="24" rx="5" class="dg-box"/><text x="274.667" y="210" class="dg-t" text-anchor="start"><tspan x="274.667" dy="0">Decide priority</tspan></text><rect x="264.667" y="224" width="230.667" height="24" rx="5" class="dg-box"/><text x="274.667" y="240" class="dg-t" text-anchor="start"><tspan x="274.667" dy="0">Look up coverage</tspan></text><rect x="6" y="224" width="230.667" height="24" rx="5" class="dg-box"/><text x="16" y="240" class="dg-t" text-anchor="start"><tspan x="16" dy="0">Draft the email</tspan></text><rect x="264.667" y="254" width="230.667" height="24" rx="5" class="dg-box"/><text x="274.667" y="270" class="dg-t" text-anchor="start"><tspan x="274.667" dy="0">Send the email</tspan></text><rect x="523.333" y="194" width="230.667" height="24" rx="5" class="dg-box"/><text x="533.333" y="210" class="dg-t" text-anchor="start"><tspan x="533.333" dy="0">Approve above threshold</tspan></text></svg>
+<figcaption>Ask where the four properties argue for Claude over the system that already does this correctly, not where Claude could help.</figcaption>
+</figure>
+
+<details class="fold">
+  <summary>The three owners, in full wording</summary>
+<table>
+  <caption>Three owners</caption>
+  <thead><tr><th>Owner</th><th>What belongs here</th></tr></thead>
+  <tbody>
+    <tr><td>Claude</td><td>Work that benefits from language understanding, summarisation, planning, drafting, or tool-mediated action</td></tr>
+    <tr><td>Existing systems</td><td>Anything the partner has already paid to make reliable: the order-status service, the policy engine, the rules table, the database of record</td></tr>
+    <tr><td>Humans</td><td>Judgment calls, exception paths, approvals, the moments where being right matters more than being fast</td></tr>
+  </tbody>
+</table>
+</details>
+
+<h2><span class="num n">4.1</span>The delegation test</h2>
+
+<p>Decomposition produces a delegation map. For each part you decide not whether Claude
+<em>can</em> do it but whether Claude <em>should own</em> it: AI-appropriate, human-retained,
+or collaborative where Claude drafts and a person decides. Three questions justify every
+assignment.</p>
+
+<ul>
+  <li><strong>Reversibility.</strong> Can a wrong call be undone?</li>
+  <li><strong>Stakes.</strong> What does a wrong call cost?</li>
+  <li><strong>Accountability.</strong> Who has to answer for it?</li>
+</ul>
+
+<div class="flag">
+  <span class="label">The framing shift the module is building towards</span>
+  <p>Stop asking <em>where can Claude help?</em> Start asking <em>where do the four
+  properties argue for Claude over the system that already does this correctly?</em> The
+  first question has no wrong answer, which is why it produces bad architectures.</p>
+</div>
+
+<h2><span class="num n">4.2</span>Worked: a claims triage assistant</h2>
+
+<p>A partner asks for an assistant that reads a claim, decides priority, looks up policy
+coverage, and emails the adjuster. The instinct is to put all four in the Claude bucket.
+The four-properties lens stops that.</p>
+
+<table>
+  <caption>One request, four different answers</caption>
+  <thead><tr><th>Step</th><th>Owner</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Read the claim</td><td>Claude</td><td>Pattern-rich language work. With a constrained output schema, next-token prediction and steerability both work in your favour</td></tr>
+    <tr><td>Decide priority</td><td>Existing system</td><td>Priority is a deterministic rule the partner defines and maintains. It lives in a rule engine, not in training data. Claude calls the engine</td></tr>
+    <tr><td>Look up policy coverage</td><td>Existing system</td><td>Same problem, higher stakes. Coverage tables change and the model cannot know when its version stopped being current. Tool use or MCP against the live source</td></tr>
+    <tr><td>Email the adjuster</td><td>Split</td><td>Drafting is Claude. Sending is the email system. Above a value threshold a human approves, because working memory and steerability are both risks on an irreversible send</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">4.3</span>Watch out: the deterministic check that quietly drifted</h2>
+
+<p>A partner had a rule: any claim over five thousand pounds needs a senior adjuster.
+It was an SQL check against the claims table. Could Claude do it instead? The architect
+said yes, we can prompt Claude to extract the amount and route on it, one step instead of
+two, simpler. The partner agreed.</p>
+
+<p>Three months later: of 14,000 claims, 41 routed incorrectly. All 41 shared one trait.
+The amount was not a clean number. It was inside a sentence, something like <em>damages
+estimated around five thousand pounds</em>. The model treated an approximation as an
+approximation rather than as a figure that trips the threshold. The rule was precise. The
+input was not. The model followed the letter and missed the intent.</p>
+
+<figure class="diagram wide" id="fig-drift-bars">
+<svg viewBox="0 0 760 244" role="img" aria-label="A deterministic check versus the same rule handed to the model" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="24" class="dg-t-b" text-anchor="start"><tspan x="0" dy="0">SQL check against the claims table</tspan></text><rect x="0" y="34" width="760" height="22" class="dg-fill-a"/><text x="8" y="50" class="dg-onfill" text-anchor="start"><tspan x="8" dy="0">14,000 of 14,000</tspan></text><text x="0" y="92" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Right every time. Testable, logged, owned</tspan></text><text x="0" y="120" class="dg-t-b" text-anchor="start"><tspan x="0" dy="0">Threshold rule folded into the prompt</tspan></text><rect x="0" y="130" width="757.774" height="22" class="dg-fill-a"/><rect x="751.774" y="130" width="8" height="22" class="dg-fill-bad"/><text x="747.774" y="170" class="dg-k-bad" text-anchor="end"><tspan x="747.774" dy="0">41 of 14,000 routed wrong</tspan></text><text x="8" y="146" class="dg-onfill" text-anchor="start"><tspan x="8" dy="0">13,959 of 14,000</tspan></text><text x="0" y="188" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Right most of the time. 41 misroutes, found by an audit three months later</tspan></text><text x="0" y="232" class="dg-t" text-anchor="start"><tspan x="0" dy="0">The amount was written as &quot;around five thousand pounds&quot;. The rule was precise. The input was not.</tspan></text></svg>
+<figcaption>A rule that must hold every time, handed to a system that is right most of the time. The gap between those is where the misroutes live.</figcaption>
+</figure>
+
+<p>Two things made it worse, and both are the actual exam content:</p>
+
+<ul>
+  <li><strong>Nobody built test cases for the routing</strong>, because routing had been
+  reclassified in everyone's head from <em>a rule the business depends on</em> to
+  <em>something the model handles</em>. A rule the business depends on gets tested, watched
+  and owned. Something the model handles gets left alone until it breaks.</li>
+  <li><strong>Monitoring could not see it.</strong> The logging that would have caught a
+  broken SQL check does not record the choices a model makes inside a single request. An
+  audit found it, not the system.</li>
+</ul>
+
+<div class="quiz" data-answer="B,D">
+  <p class="scenario">A field-service partner wants an on-site assistant for engineers.
+  Among the requested capabilities: <em>return the current stock level of part 78-A at the
+  nearest warehouse</em>, <em>summarise the engineer's case notes into a one-page
+  handover</em>, <em>approve a refund above two thousand pounds when the engineer asks</em>,
+  and <em>extract the part number from a photo of the unit label</em>.</p>
+  <p class="stem">Which two of those belong outside the Claude bucket?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Summarising notes into a handover is pattern-rich language work with a verifiable output. This is the clearest Claude case on the list.">Summarise the case notes</li>
+    <li data-key="B" data-why="Stock level is live state owned by the inventory system. Its correct value changes independently of anything Claude holds, so it is a tool call, not a model answer.">Return the current stock level</li>
+    <li data-key="C" data-why="Reading a part number off a label is extraction from an image: bounded, checkable against a catalogue, and squarely Claude work.">Extract the part number from the photo</li>
+    <li data-key="D" data-why="A refund above a threshold is irreversible, high-stakes, and someone must answer for it. All three delegation tests point the same way.">Approve the refund above two thousand pounds</li>
+  </ol>
+  <div class="verdict" hidden><b>Stock level and the refund approval.</b> They fail different
+  tests, which is the point of the drill. Stock level fails the knowledge-boundary test: it is
+  live state and belongs to the system of record. The refund fails reversibility, stakes and
+  accountability at once. Claude can draft the refund request and explain it; a person signs
+  it.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="03-platform-map.html"><span>Previous</span>03 Platform map and primitives</a>
+  <a class="next" href="05-pattern-selection.html"><span>Next</span>05 Pattern selection</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

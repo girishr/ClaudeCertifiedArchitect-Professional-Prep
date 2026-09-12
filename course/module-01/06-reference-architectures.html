@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06. Reference architectures - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 06 of 12</p>
+  <h1>Reference architectures</h1>
+  <p class="standfirst">Five proven shapes, and the one mistake that recurs in all of them.</p>
+  <div class="meta"><span>Official screens S16 to S18</span><span>~25 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 06 of 12</b>
+</nav>
+<p>Patterns give you the shape. Reference architectures give you the wiring: documented
+ways to assemble an LLM application for a recurring class of problem, already proven in
+the Claude ecosystem.</p>
+
+<p>They are references, not blueprints. The goal is not to match a problem to a fixed
+design and implement it as drawn. Every partner workload is different, so understand each
+shape well enough to generalise from it, adapt the one that fits, and recognise when a
+problem draws on more than one.</p>
+
+<table>
+  <caption>Five shapes, what good looks like, and where projects go wrong</caption>
+  <thead><tr><th>Architecture</th><th>Good</th><th>Wrong</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Agent</strong></td>
+      <td>The model works toward a goal, choosing which tools to call and in what order. Autonomy bounded by what the tools can do and a cap on turns. For paths that cannot be written in advance: investigating a codebase, multi-source research, complex case triage</td>
+      <td>Unbounded autonomy. State-changing tools with no human review, no turn limit, and no measure of whether the goal was met</td>
+    </tr>
+    <tr>
+      <td><strong>Retrieval-augmented generation</strong></td>
+      <td>A stable corpus, manuals, internal docs, regulatory text, is chunked and indexed. The most relevant chunks are retrieved per question and passed as context</td>
+      <td>Using it for live state: order status, inventory, ticket queues. The index is a snapshot; if the data moved, the answer is wrong</td>
+    </tr>
+    <tr>
+      <td><strong>Document processing pipeline</strong> (evaluator-optimizer)</td>
+      <td>Structured extraction from semi-structured documents. OCR, extract against a schema, validate, route exceptions. An evaluator pass because first-pass extraction on edge cases is not trustworthy alone</td>
+      <td>No exception path. Low-confidence extractions flow through the same pipeline as clean ones, with no human gate</td>
+    </tr>
+    <tr>
+      <td><strong>Customer service and ticket triage</strong> (routing)</td>
+      <td>Classify the intent, then route: retrieval for documentation questions, a transactional API for live state, a human approval layer for high-consequence actions</td>
+      <td>Retrieval for live order status instead of the API. No escalation path. Deploying an agent variant before the simpler routed workflow has been measured</td>
+    </tr>
+    <tr>
+      <td><strong>Coding agent</strong></td>
+      <td>Two phases. Agentic investigation of the codebase, because that path cannot be scripted. Then deterministic edit steps: parse, plan, propose, test, review. Subagents take isolated tasks with enough context and no more</td>
+      <td>Letting it edit and commit with no human review gate. Not tracking regression rates per language or framework. Treating it as a conversation rather than a pipeline with defined handoffs</td>
+    </tr>
+  </tbody>
+</table>
+
+<figure class="diagram wide" id="fig-triage-routing">
+<svg viewBox="0 0 760 206" role="img" aria-label="The customer-service routing reference architecture" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m16" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="60" width="150" height="50" rx="8" class="dg-box hi"/><text x="75" y="80" class="dg-t-b" text-anchor="middle"><tspan x="75" dy="0">Intent classifier</tspan></text><text x="75" y="98" class="dg-s" text-anchor="middle"><tspan x="75" dy="0">a Claude call</tspan></text><path d="M153 85L205 34" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="22" class="dg-k" text-anchor="start"><tspan x="210" dy="0">Documentation question</tspan></text><rect x="210" y="28" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="50" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Retrieval over the manual corpus</tspan></text><path d="M543 45L600 85" class="dg-arrow" marker-end="url(#m16)"/><path d="M153 85L205 94" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="82" class="dg-k" text-anchor="start"><tspan x="210" dy="0">Live-state query</tspan></text><rect x="210" y="88" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="110" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Transactional API: order status, account</tspan></text><path d="M543 105L600 85" class="dg-arrow" marker-end="url(#m16)"/><path d="M153 85L205 154" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="142" class="dg-k" text-anchor="start"><tspan x="210" dy="0">High-consequence action</tspan></text><rect x="210" y="148" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="170" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Human approval layer: refund, cancel</tspan></text><path d="M543 165L600 85" class="dg-arrow" marker-end="url(#m16)"/><rect x="604" y="60" width="156" height="50" rx="8" class="dg-box"/><text x="682" y="80" class="dg-t-b" text-anchor="middle"><tspan x="682" dy="0">Response composer</tspan></text><text x="682" y="98" class="dg-s" text-anchor="middle"><tspan x="682" dy="0">a Claude call</tspan></text><text x="0" y="196" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Where it goes wrong: retrieval on the live-state lane, no human lane at all, or an agent variant shipped before this was measured.</tspan></text></svg>
+<figcaption>Classify, then route by what the answer needs. Three lanes, three mechanisms.</figcaption>
+</figure>
+
+<h2><span class="num n">6.1</span>When a problem needs two</h2>
+
+<p>Real problems often sit at a boundary. A routing workflow hands some intents to an
+agentic investigation loop. A document pipeline reaches for RAG over policy text on an
+exception. Combining is sometimes right. What matters is <em>why</em> you are reaching for
+the second one.</p>
+
+<p>Reach for a second pattern when the two parts of your problem break in different ways
+that are worth managing separately. If you are reaching for a second pattern because you
+have not decided what problem you are solving, adapt a single one instead. That is a
+decision you are deferring, not a pattern you are applying.</p>
+
+<h2><span class="num n">6.2</span>The mistake the module calls the most common</h2>
+
+<p>Retrieval used where a tool call belongs. This one is worth over-learning, because it
+is the highest-frequency distractor shape in this whole domain.</p>
+
+<figure class="diagram wide" id="fig-knowledge-vs-state">
+<svg viewBox="0 0 760 356" role="img" aria-label="Stable knowledge goes to retrieval, live state goes to a tool call" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m15" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="230" y="0" width="300" height="44" rx="8" class="dg-box hi"/><text x="380" y="19" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">What kind of data does the answer need?</tspan></text><text x="380" y="35" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">the question the module says architects skip</tspan></text><path d="M320 47L170 97" class="dg-arrow" marker-end="url(#m15)"/><path d="M440 47L590 97" class="dg-arrow" marker-end="url(#m15)"/><rect x="0" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="14" y="124" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Stable knowledge</tspan></text><text x="14" y="146" class="dg-s" text-anchor="start"><tspan x="14" dy="0">True yesterday, true tomorrow: manuals,</tspan><tspan x="14" dy="1.3em">policies, FAQs, regulatory text</tspan></text><rect x="10" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="20" y="200" class="dg-t" text-anchor="start"><tspan x="20" dy="0">Retrieval over an index</tspan></text><rect x="420" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="434" y="124" class="dg-t-b" text-anchor="start"><tspan x="434" dy="0">Live state</tspan></text><text x="434" y="146" class="dg-s" text-anchor="start"><tspan x="434" dy="0">Changes independently of any index: order</tspan><tspan x="434" dy="1.3em">status, inventory, balances, availability</tspan></text><rect x="430" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="440" y="200" class="dg-t" text-anchor="start"><tspan x="440" dy="0">A tool call to the system of record</tspan></text><text x="0" y="240" class="dg-k" text-anchor="start"><tspan x="0" dy="0">The trace: &quot;Where is my order?&quot;</tspan></text><text x="0" y="260" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Chunk 1, similarity 0.78: shipped on the 12th, tracking AB123. Chunk 2, similarity 0.74: being processed,</tspan><tspan x="0" dy="1.3em">dispatch within 24 hours.</tspan></text><text x="0" y="292" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Both were true once. Neither is true now: returned to depot, awaiting re-dispatch. That state is in no chunk.</tspan><tspan x="0" dy="1.3em">The order-status tool was never called.</tspan></text><text x="0" y="330" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Similarity is not truth. The fix is a tool call, not a better chunker, a shorter refresh, or a</tspan><tspan x="0" dy="1.3em">higher threshold.</tspan></text></svg>
+<figcaption>The most common reference-architecture mistake, and the one question that prevents it.</figcaption>
+</figure>
+
+<table>
+  <caption>Why it broke, four ways</caption>
+  <thead><tr><th>The error</th><th>What it means</th></tr></thead>
+  <tbody>
+    <tr><td>A category error</td><td>Retrieval is the mechanism for knowledge: FAQs, policies, manuals. It is the wrong mechanism for transactional state</td></tr>
+    <tr><td>A data-architecture failure, not a retrieval failure</td><td>Live state had been represented as historical text snapshots in the first place</td></tr>
+    <tr><td>Similarity is not truth</td><td>A higher similarity score means the text was semantically close to the query. That is not the same as current</td></tr>
+    <tr><td>The fix is a tool call</td><td>Not a better chunker, a shorter refresh interval, or a higher threshold. The knowledge base keeps the FAQs; the transactional database keeps the orders</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The sentence to memorise</span>
+  <p>Retrieval is for stable knowledge: things that were true yesterday and will be true
+  tomorrow. Tool use is for live state: things whose current value is owned by a system and
+  changes independently of your index. Any scenario mentioning balances, inventory, status
+  or availability is testing this.</p>
+</div>
+
+<div class="quiz" data-answer="A,C">
+  <p class="scenario">A draft customer-service architecture: (1) an intent classifier, a
+  Claude call, then two branches, (2) retrieval over an <em>Order Status Index</em> and
+  (3) retrieval over a <em>Product Manual Corpus</em>, feeding into (4) an agent loop with
+  tools for refund, cancel and update-address, with (5) no escalation path to a human, and
+  (6) a response composer.</p>
+  <p class="stem">Which two components are misapplied for this design?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Order status is live state. Indexing it as text is the exact category error: the system searches a corpus of past snapshots instead of querying the system of record.">Component 2, retrieval over the Order Status Index</li>
+    <li data-key="B" data-why="A product manual is stable reference material that was true yesterday and will be true tomorrow. This is textbook correct RAG.">Component 3, retrieval over the Product Manual Corpus</li>
+    <li data-key="C" data-why="Refund and cancel are irreversible and high-consequence. An agent loop holding those tools with no human escalation path inverts the risk: the most consequential actions run on the least constrained component.">Components 4 and 5 together, an agent holding refund and cancel with no escalation</li>
+    <li data-key="D" data-why="A classifier deciding the downstream path is the defining move of a routing workflow. It belongs here.">Component 1, the intent classifier</li>
+  </ol>
+  <div class="verdict" hidden><b>The order-status index and the ungated agent loop.</b> Two
+  different failures in one diagram, which is how these items are usually built. One is a
+  mechanism error: retrieval on live state. The other is a delegation error: irreversible
+  actions granted to the pattern with the weakest guarantees. Fix the first with a tool call
+  against the order service, the second with a human approval layer on anything that moves
+  money.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="05-pattern-selection.html"><span>Previous</span>05 Pattern selection</a>
+  <a class="next" href="07-rag-pipeline.html"><span>Next</span>07 RAG pipeline design</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

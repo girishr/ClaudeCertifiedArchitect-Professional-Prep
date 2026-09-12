@@ -9,7 +9,7 @@ There is one spine and three supports. Get this right and the rest is scheduling
 | | What it is | When |
 |---|---|---|
 | **The spine** | [Anthropic's official CCAR-P Prep Course](https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional). Free, 733 minutes, five courses | Every study day. This is where the knowledge comes from |
-| Support 1 | The `course/` lessons in this repo. 35 scenario drills | Straight after the matching official course, same evening |
+| Support 1 | The twelve distilled sections in `course/module-01/`. One drill per section | Straight after the matching official course, same evening |
 | Support 2 | The `notes/` files | Week 3 revision, not week 1 reading |
 | Support 3 | `questions.json` and the hub. 75 questions | Calibration. Domain drills as you go, one full mock at the end |
 
@@ -79,9 +79,9 @@ So this plan front-loads. The heavy lifting happens before the 26th, launch week
 
 | Day | Date | Official course | Then |
 |---|---|---|---|
-| 1 | Thu 20 Aug | Course 1, first third (~80 min) | Course lessons 0001 and 0002 |
-| 2 | Fri 21 Aug | Course 1, second third (~80 min) | Course lessons 0003 and 0004 |
-| 3 | Sat 22 Aug | Course 1, final third (~78 min) | Course lessons 0005, 0006, 0007. Then 13 Domain 1 questions |
+| 1 | Thu 20 Aug | Course 1, first third (~80 min) | Module 1, sections 1 to 4 |
+| 2 | Fri 21 Aug | Course 1, second third (~80 min) | Module 1, sections 5 to 8 |
+| 3 | Sat 22 Aug | Course 1, final third (~78 min) | Module 1, sections 9 to 12. Then 13 Domain 1 questions |
 | 4 | Sun 23 Aug | Course 2, first half (~80 min) | Notes: Integration, mechanism choice and MCP architecture |
 | 5 | Mon 24 Aug | Course 2, second half (~78 min) | Notes: Evals. Then 14 Integration questions |
 | 6 | Tue 25 Aug | Catch up on anything slipped | 12 Evals questions. Then stop and launch |
@@ -128,7 +128,7 @@ Mock 2 is deliberately cut. With seventeen days and a launch inside them, one mo
 
 ## Extra reps, if you want them
 
-This repo's 75 questions plus the 35 course drills is enough. If you burn through them and want more:
+This repo's 75 questions plus the twelve section drills is enough. If you burn through them and want more:
 
 - [CertSafari - Anthropic](https://certsafari.com/anthropic) - free, no signup, and the only third-party bank that covers CCAR-P directly rather than Foundations
 - [Claude Certification Guide mock exam](https://claudecertificationguide.com/mock-exam) - free timed mock. It is built for **Foundations**, 60 items and a five-domain split, so use it to rehearse working against the clock, not to judge where you stand by domain

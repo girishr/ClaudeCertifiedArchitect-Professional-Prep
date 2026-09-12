@@ -1,7 +1,7 @@
 # 0001 - The workflow/agent line is predictability, not difficulty
 
 - **Date:** 2026-08-19
-- **Lesson:** [0001 - Workflow or agent](../lessons/0001-workflow-or-agent.html)
+- **Lesson:** 0001 - Workflow or agent (retired; the ground it covered is now section 05 of Module 1)
 - **Domain:** 1, Solution Design & Architecture (17%)
 - **Status:** taught, not yet tested under time pressure
 

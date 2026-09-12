@@ -3,6 +3,11 @@
    Tufte-influenced: generous measure, restrained rules, sidenotes, prints well. */
 
 :root {
+  /* Two measures, not one. Prose stays at a readable line length; tables get the
+     full page, because this course is mostly five-column comparison tables and
+     they were the reason the page felt cramped. */
+  --page:    62rem;
+  --measure: 48rem;
   color-scheme: dark;
   --paper:      #16150f;
   --ink:        #f4f1e6;
@@ -38,7 +43,7 @@ html { font-size: 17px; }
 body {
   margin: 0 auto;
   padding: 4rem 2rem 8rem;
-  max-width: 46rem;
+  max-width: var(--page);
   background: var(--paper);
   color: var(--ink);
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Charter, Georgia, serif;
@@ -345,3 +350,370 @@ pre code { background: none; padding: 0; }
   .quiz .why { display: block; }
   .quiz .verdict { display: block !important; }
 }
+
+/* ---------- course navigation ----------
+   Breadcrumb and pager on every section page, so no page is a dead end.
+   The full menu is assets/nav.js. */
+
+.crumb {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .78rem;
+  color: var(--ink-faint);
+  margin: 0 0 1rem;
+}
+.crumb span { margin: 0 .4em; opacity: .6; }
+.crumb b { color: var(--ink-soft); font-weight: 600; }
+
+.toc {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  margin: 0 0 2.4rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .85rem;
+  background: var(--flag);
+}
+.toc > summary {
+  cursor: pointer;
+  padding: .6rem .9rem;
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.toc > summary:hover { color: var(--ink); }
+.toc[open] > summary { border-bottom: 1px solid var(--rule); }
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: .6rem .9rem .8rem;
+  columns: 2;
+  column-gap: 1.6rem;
+}
+.toc-list li {
+  margin-bottom: .3rem;
+  break-inside: avoid;
+  display: flex;
+  gap: .6em;
+}
+.toc-list .n {
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.toc-list li.here .n { color: var(--accent); }
+.toc-list li.here a { color: var(--ink); font-weight: 600; text-decoration: none; }
+
+.pager {
+  display: flex;
+  gap: 1rem;
+  margin: 3.5rem 0 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .88rem;
+}
+.pager a {
+  flex: 1 1 0;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: .8rem 1rem;
+  text-decoration: none;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.pager a:hover { border-color: var(--accent); }
+.pager a span {
+  display: block;
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: .25rem;
+}
+.pager .next { text-align: right; margin-left: auto; }
+.pager-up {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .8rem;
+  color: var(--ink-faint);
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 34rem) {
+  .toc-list { columns: 1; }
+  .pager { flex-direction: column; }
+  .pager .next { text-align: left; }
+}
+
+@media print {
+  .crumb, .toc, .pager, .pager-up { display: none; }
+}
+
+/* ---------- measure ----------
+   Everything that is read line by line is held to --measure. Tables, and only
+   tables, are allowed the full --page width. */
+
+.masthead,
+.crumb,
+.toc,
+body > p,
+body > h2,
+body > h3,
+body > ul,
+body > ol,
+body > hr,
+body > .flag,
+body > .sidenote,
+body > .quiz,
+body > .ask,
+body > .course-nav,
+.pager,
+.pager-up { max-width: var(--measure); }
+
+body > table { width: 100%; }
+
+@media (max-width: 64rem) {
+  :root { --page: 100%; --measure: 100%; }
+}
+
+/* ---------- learning path (course/index.html) ----------
+   Laid out like Anthropic's own path page: a statement of the whole, a progress
+   line, then one card per module. Our palette, their structure. */
+
+.path-intro {
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.path-lede {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .9rem;
+  color: var(--ink);
+  margin: 2.4rem 0 .9rem;
+}
+
+.path-status {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  max-width: var(--measure);
+  margin: 0 0 1.8rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .82rem;
+}
+.path-start {
+  background: var(--accent);
+  color: var(--paper);
+  font-weight: 650;
+  font-size: .85rem;
+  border-radius: 6px;
+  padding: .6rem 1.5rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.path-start:hover { filter: brightness(1.08); }
+.path-progress { flex: 1 1 14rem; min-width: 11rem; }
+.path-progress .lbl { color: var(--ink-faint); display: block; margin-bottom: .35rem; }
+.path-progress .track {
+  display: block;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.path-progress .fill { display: block; height: 100%; background: var(--accent); }
+
+.modcard {
+  display: grid;
+  grid-template-columns: 4.6rem 1fr auto;
+  gap: 0 1.1rem;
+  align-items: start;
+  max-width: var(--measure);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--flag);
+  padding: 1.1rem 1.2rem;
+  margin: 0 0 .9rem;
+}
+.modcard.is-next { border-color: var(--accent); }
+.modcard-icon {
+  grid-row: 1 / span 3;
+  width: 4.6rem;
+  height: 4.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+}
+.modcard.is-next .modcard-icon { color: var(--accent); }
+.modcard-icon svg { width: 100%; height: 100%; }
+.modcard h3 {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.modcard h3 a { color: var(--ink); text-decoration: none; }
+.modcard h3 a:hover { color: var(--accent); text-decoration: underline; }
+.modcard h3 .mod-n {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .7rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: .25rem;
+}
+.modcard p {
+  grid-column: 2;
+  margin: .4rem 0 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.modcard .modcard-meta {
+  grid-column: 2;
+  margin: .55rem 0 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .75rem;
+  color: var(--ink-faint);
+}
+.modcard .modcard-meta a { color: var(--accent); }
+.pill {
+  grid-column: 3;
+  grid-row: 1;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .68rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: .22rem .7rem;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+.pill.on { border-color: var(--accent); color: var(--accent); }
+
+@media (max-width: 34rem) {
+  .modcard { grid-template-columns: 1fr auto; }
+  .modcard-icon { display: none; }
+  .modcard p, .modcard .modcard-meta { grid-column: 1 / -1; }
+}
+
+@media print {
+  .path-status { display: none; }
+  .modcard { break-inside: avoid; }
+}
+
+/* ---------- figures (inline SVG, hand-editable in each page) ----------
+   Drawn against the same custom properties as the text, so a figure follows the
+   theme and prints in ink. Wide figures scroll inside their own box on narrow
+   screens rather than shrinking the type below legibility. */
+
+figure.diagram {
+  margin: 2rem 0;
+  max-width: var(--measure);
+  padding: 0;
+}
+figure.diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow: visible;
+}
+figure.diagram.wide { overflow-x: auto; }
+figure.diagram.wide svg { min-width: 640px; }
+figure.diagram figcaption {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .78rem;
+  line-height: 1.45;
+  color: var(--ink-faint);
+  margin-top: .7rem;
+  max-width: var(--measure);
+}
+
+.dg-box    { fill: var(--flag); stroke: var(--rule); stroke-width: 1; }
+.dg-box.hi { stroke: var(--accent); stroke-width: 1.5; }
+.dg-strip  { fill: var(--accent-dim); stroke: none; }
+.dg-window { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 3; }
+.dg-edge   { stroke: var(--ink); stroke-width: 1.5; }
+.dg-rule   { stroke: var(--rule); stroke-width: 1; }
+.dg-line   { stroke: var(--rule); stroke-width: 2; }
+.dg-arrow  { stroke: var(--ink-faint); stroke-width: 1.4; fill: none; }
+.dg-head   { fill: var(--ink-faint); }
+.dg-dot    { fill: var(--accent); }
+.dg-dot-bad{ fill: var(--bad); }
+
+.dg-t      { fill: var(--ink); font-size: 13px; }
+.dg-t-b    { fill: var(--ink); font-size: 13.5px; font-weight: 650; }
+.dg-s      { fill: var(--ink-soft); font-size: 11.5px; }
+.dg-k      { fill: var(--ink-faint); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.dg-k-good { fill: var(--good); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.dg-k-bad  { fill: var(--bad);  font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.dg-num    { fill: var(--paper); font-size: 12px; font-weight: 700; }
+.dg-tag    { fill: var(--accent); font-size: 10.5px; font-weight: 600; }
+.dg-code   { fill: var(--ink-soft); font-size: 11px; font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; }
+.dg-onfill { fill: var(--paper); font-size: 11px; font-weight: 600; }
+
+.dg-fill-a   { fill: var(--accent); }
+.dg-fill-b   { fill: color-mix(in srgb, var(--accent) 55%, var(--ink-faint)); }
+.dg-fill-c   { fill: var(--bad); }
+.dg-fill-d   { fill: var(--ink-faint); }
+.dg-fill-bad { fill: var(--bad); opacity: .85; }
+.dg-fill-c2  { fill: color-mix(in srgb, var(--accent) 35%, var(--ink-faint)); }
+.dg-fill-e   { fill: color-mix(in srgb, var(--ink-faint) 60%, var(--paper)); }
+.dg-fill-margin { fill: none; stroke: var(--ink-faint); stroke-dasharray: 3 3; }
+.dg-box-bad  { fill: color-mix(in srgb, var(--bad) 10%, var(--flag)); stroke: var(--bad); stroke-width: 1; }
+.dg-dot-soft { fill: var(--ink-faint); }
+.dg-dot-good { fill: var(--good); }
+.dg-mark     { fill: var(--paper); font-size: 12px; font-weight: 700; }
+.dg-k2       { fill: var(--ink-faint); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+
+@media print {
+  figure.diagram.wide { overflow: visible; }
+  figure.diagram.wide svg { min-width: 0; }
+}
+
+/* ---------- fold ----------
+   Exact wording kept behind a disclosure, after a figure has carried the idea. */
+details.fold {
+  max-width: var(--measure);
+  margin: 1rem 0 2.2rem;
+  border-top: 1px solid var(--rule);
+}
+details.fold > summary {
+  cursor: pointer;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: .65rem 0;
+}
+details.fold > summary:hover { color: var(--ink); }
+details.fold table { margin-top: .4rem; }
+@media print { details.fold { display: block; } details.fold > summary { display: none; } details.fold:not([open]) > *:not(summary) { display: block; } }
+
+/* ---------- site menu ----------
+   The menu itself is styled by assets/nav.css, which assets/nav.js loads on every
+   page that has it. This stylesheet only says how the page moves out of its way. */
+
+:root { --nav-w: 17rem; }
+
+@media (min-width: 64.01rem) {
+  html.nav-open body {
+    margin-left: calc(var(--nav-w) + max(0px, (100vw - var(--nav-w) - var(--page)) / 2));
+    margin-right: 0;
+  }
+}
+@media print { html.nav-open body { margin-left: 0; } }
+
+/* ---------- dyslexia-friendly font, course-specific adjustments ----------
+   The font itself and the body rules live in assets/nav.css. */
+html.font-dyslexic h1 { font-size: 1.7rem; letter-spacing: 0; line-height: 1.25; }
+html.font-dyslexic h2 { font-size: 1.25rem; }
+html.font-dyslexic .standfirst { font-style: normal; }
+html.font-dyslexic p, html.font-dyslexic li { max-width: 62ch; }

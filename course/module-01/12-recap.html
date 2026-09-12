@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12. Recap and what is next - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 12 of 12</p>
+  <h1>Recap and what is next</h1>
+  <p class="standfirst">The five takeaways, a closed-book self-test, and where Module 2 picks up.</p>
+  <div class="meta"><span>Official screens S32, CERT</span><span>~5 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 12 of 12</b>
+</nav>
+<p>The module closes with five takeaways. Notice how much of it is restraint: decompose
+before designing, use the known shape, start at the middle tier, choose by the work.</p>
+
+<table>
+  <caption>The five takeaways</caption>
+  <thead><tr><th>#</th><th>Takeaway</th><th>The operative detail</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td>Decomposition comes before architecture</td><td>Split the work into Claude, existing systems and humans first. Designs that skip it force Claude into work another system does cheaper, or ask it to operate without context a colleague would have been given</td></tr>
+    <tr><td>02</td><td>Choosing a pattern is choosing how much autonomy to grant</td><td>Not how clever the solution is. Five factors decide: predictability, error cost, observability, latency, cost. The tightest constraint is the one that picks</td></tr>
+    <tr><td>03</td><td>Reach for a tested reference architecture before inventing one</td><td>Agent, RAG, document pipeline, routing, coding agent. Combine them when parts of the system break differently. The recurring mistake is retrieval standing in for live state</td></tr>
+    <tr><td>04</td><td>Start with Sonnet and treat every swap as a release</td><td>An eval set that defines better, and a rollback criterion set before the swap. The same principle governs context: progressive holds up over a long-lived deployment, monolithic grows until it breaks</td></tr>
+    <tr><td>05</td><td>Pick the entry point by the work, not by what is on the shelf</td><td>Each carries a different core tradeoff. The right recommendation is the one whose tradeoff you can name out loud at the moment you make it, because that is what tells you later when to switch</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">12.1</span>Closed-book self-test</h2>
+
+<p>No scrolling. Anything you cannot produce cleanly is the section to reread, not the
+whole module.</p>
+
+<ol>
+  <li>Name the four properties an architect designs around, and one design consequence of each.</li>
+  <li>Name the three layers of the platform map, and place Bedrock, MCP and Claude Code.</li>
+  <li>Name as many of the seven primitives as you can, with the one-word job each does.</li>
+  <li>What are the three owners in a decomposition, and what three tests decide what Claude gets?</li>
+  <li>Name the four workflow sub-patterns and one situation each is for.</li>
+  <li>Walk the five factors for pattern selection in order, and say what each rules out.</li>
+  <li>What is the most common reference-architecture mistake, and how do you spot it in a scenario?</li>
+  <li>Choose a chunking approach for a section-numbered contract and for long-form prose, and say why.</li>
+  <li>What is the default model tier, and what must happen before you change it?</li>
+  <li>Where does the cache breakpoint go, and what happens if you get it backwards?</li>
+  <li>Name three constraints that eliminate an entry point before cost is discussed.</li>
+</ol>
+
+<h2><span class="num n">12.2</span>What this buys on the exam</h2>
+
+<p>Module 1 maps to Domain 1, Solution Design and Architecture (17 percent), and Domain 2,
+Claude Models, Prompting and Context Engineering (13 percent). Thirty percent of the paper,
+and the vocabulary the other five domains are written in.</p>
+
+<figure class="diagram" id="fig-exam-weight">
+<svg viewBox="0 0 760 158" role="img" aria-label="Exam weight by module" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m28" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="16" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Share of the exam each module buys</tspan></text><rect x="0" y="30" width="226" height="34" class="dg-fill-a"/><text x="113" y="51" class="dg-onfill" text-anchor="middle"><tspan x="113" dy="0">30%</tspan></text><rect x="228" y="30" width="264" height="34" class="dg-fill-b"/><text x="360" y="51" class="dg-onfill" text-anchor="middle"><tspan x="360" dy="0">35%</tspan></text><rect x="494" y="30" width="104.4" height="34" class="dg-fill-c2"/><text x="546.2" y="51" class="dg-onfill" text-anchor="middle"><tspan x="546.2" dy="0">14%</tspan></text><rect x="600.4" y="30" width="104.4" height="34" class="dg-fill-d"/><text x="652.6" y="51" class="dg-onfill" text-anchor="middle"><tspan x="652.6" dy="0">14%</tspan></text><rect x="706.8" y="30" width="51.2" height="34" class="dg-fill-e"/><text x="732.4" y="51" class="dg-onfill" text-anchor="middle"><tspan x="732.4" dy="0">7%</tspan></text><rect x="0" y="79" width="10" height="10" class="dg-fill-a"/><text x="16" y="88" class="dg-s" text-anchor="start"><tspan x="16" dy="0">M1 Platform &amp; Solution Design</tspan></text><rect x="253" y="79" width="10" height="10" class="dg-fill-b"/><text x="269" y="88" class="dg-s" text-anchor="start"><tspan x="269" dy="0">M2 Integration &amp; Production</tspan></text><rect x="506" y="79" width="10" height="10" class="dg-fill-c2"/><text x="522" y="88" class="dg-s" text-anchor="start"><tspan x="522" dy="0">M3 Safety &amp; Risk</tspan></text><rect x="0" y="101" width="10" height="10" class="dg-fill-d"/><text x="16" y="110" class="dg-s" text-anchor="start"><tspan x="16" dy="0">M4 Stakeholder &amp; Lifecycle</tspan></text><rect x="253" y="101" width="10" height="10" class="dg-fill-e"/><text x="269" y="110" class="dg-s" text-anchor="start"><tspan x="269" dy="0">M5 Team Enablement</tspan></text><text x="0" y="148" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Modules 1 and 2 are 54% of the official reading and 65% of the paper. They come first, in that order.</tspan></text></svg>
+<figcaption>This module is done. The next one is the heaviest.</figcaption>
+</figure>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p>Module 2, Enterprise Integration &amp; Production, takes the designed solution to
+  production: deployment patterns, integration architecture, and reliability. It is the
+  heaviest module on the exam at 35 percent across two domains, and it is where the
+  evaluation work this module kept pointing forward to actually lives.</p>
+</div>
+<nav class="pager">
+  <a class="prev" href="11-assembly.html"><span>Previous</span>11 Assembly</a>
+  
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

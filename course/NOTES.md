@@ -29,22 +29,18 @@ two of them were missing from my plan entirely: platform entry points, and deliv
 routes. The sequence now follows Anthropic's published objectives rather than my guess.
 See learning record 0002.
 
-| # | Lesson | Official objective it covers | Status |
-|---|---|---|---|
-| 0001 | Workflow or agent | Selecting between augmented calls, workflows, and agents | Written |
-| 0002 | Splitting the work | Breaking requests into Claude, system, and human responsibilities | Written |
-| 0003 | The six patterns, and their traps | Picking appropriate reference architectures | Written |
-| 0004 | When multi-agent pays | Reference architectures, the expensive end | Written |
-| 0005 | Platform entry points | Identifying platform entry points | Written |
-| 0006 | Delivery routes and governance | User-facing vs build-time vs enterprise delivery routes | Written |
-| 0007 | Model and context strategy | Making model and context decisions | Written |
+That seven-lesson track has since been retired. Once the official module itself became
+readable, it was distilled section by section into `course/module-01/`, twelve sections
+following Anthropic's own structure rather than an inference from the objectives. The
+seven lessons overlapped six of those twelve, used a "six patterns" counting the module
+does not use, and were deleted rather than maintained alongside it.
 
-Course 1 is complete. Courses 2 to 5 of the official path are still unwritten:
+Module 1 is complete. Modules 2 to 5 of the official path are still unwritten:
 Enterprise Integration & Production (158 min), Responsible AI, Safety & Risk (114 min),
 Stakeholder Engagement, Lifecycle & GTM (178 min), Team Enablement & Operational
 Productivity (45 min).
 
-`index.html` at the workspace root is the front door and every lesson links back to it.
+`index.html` at the workspace root is the front door and every section links back to it.
 
 ## Open questions to revisit
 

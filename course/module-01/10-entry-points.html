@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10. Entry points and governance - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 10 of 12</p>
+  <h1>Entry points and governance</h1>
+  <p class="standfirst">Entry point, build-time interface, delivery route, and what rules them out.</p>
+  <div class="meta"><span>Official screens S28 to S30</span><span>~22 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 10 of 12</b>
+</nav>
+<p>The longest screen in the official module sits here, and the section looks small in the
+contents list. It is not. Three decisions, made in sequence, and the order is what prevents
+the most common architecture mistakes.</p>
+
+<ol>
+  <li>Which <strong>entry point</strong> fits the work?</li>
+  <li>Which <strong>build-time interface</strong> suits the team?</li>
+  <li>Which <strong>delivery route</strong> fits the partner's cloud commitments?</li>
+</ol>
+
+<p>Section 3 taught the vocabulary. This is the selection work under real constraints.</p>
+
+<figure class="diagram wide" id="fig-entry-sequence">
+<svg viewBox="0 0 760 268" role="img" aria-label="Governance first, then entry point, interface and route, in sequence" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m24" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="760" height="66" rx="8" class="dg-box-bad"/><text x="14" y="22" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">0  Constraints rule options out first</tspan></text><text x="14" y="40" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Attorney-client privilege · HIPAA · GDPR and residency · FedRAMP · the partner&#x27;s approved cloud list.</tspan><tspan x="14" dy="1.3em">Name the constraint, let it eliminate before preferences do.</tspan></text><path d="M118.667 69L118.667 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="0" y="96" width="237.333" height="116" rx="8" class="dg-box hi"/><circle cx="20" cy="118" r="12" class="dg-dot"/><text x="20" y="122.5" class="dg-num" text-anchor="middle"><tspan x="20" dy="0">1</tspan></text><text x="40" y="122" class="dg-t-b" text-anchor="start"><tspan x="40" dy="0">Entry point</tspan></text><text x="14" y="146" class="dg-s" text-anchor="start"><tspan x="14" dy="0">chosen because it fits the</tspan><tspan x="14" dy="1.3em">work and the user</tspan></text><text x="14" y="180" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Claude.ai, Claude Code,</tspan><tspan x="14" dy="1.3em">Cowork, a custom app</tspan></text><path d="M240.333 154L258.333 154" class="dg-arrow" marker-end="url(#m24)"/><path d="M380 69L380 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="261.333" y="96" width="237.333" height="116" rx="8" class="dg-box"/><circle cx="281.333" cy="118" r="12" class="dg-dot"/><text x="281.333" y="122.5" class="dg-num" text-anchor="middle"><tspan x="281.333" dy="0">2</tspan></text><text x="301.333" y="122" class="dg-t-b" text-anchor="start"><tspan x="301.333" dy="0">Build-time interface</tspan></text><text x="275.333" y="146" class="dg-s" text-anchor="start"><tspan x="275.333" dy="0">chosen because it suits the</tspan><tspan x="275.333" dy="1.3em">team</tspan></text><text x="275.333" y="180" class="dg-s" text-anchor="start"><tspan x="275.333" dy="0">API, SDK, MCP, Agent SDK</tspan></text><path d="M501.667 154L519.667 154" class="dg-arrow" marker-end="url(#m24)"/><path d="M641.333 69L641.333 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="522.667" y="96" width="237.333" height="116" rx="8" class="dg-box"/><circle cx="542.667" cy="118" r="12" class="dg-dot"/><text x="542.667" y="122.5" class="dg-num" text-anchor="middle"><tspan x="542.667" dy="0">3</tspan></text><text x="562.667" y="122" class="dg-t-b" text-anchor="start"><tspan x="562.667" dy="0">Delivery route</tspan></text><text x="536.667" y="146" class="dg-s" text-anchor="start"><tspan x="536.667" dy="0">chosen because it fits the</tspan><tspan x="536.667" dy="1.3em">cloud commitment</tspan></text><text x="536.667" y="180" class="dg-s" text-anchor="start"><tspan x="536.667" dy="0">Anthropic, Bedrock, Vertex,</tspan><tspan x="536.667" dy="1.3em">Foundry</tspan></text><text x="0" y="238" class="dg-t" text-anchor="start"><tspan x="0" dy="0">In this order. The entry point chosen before the user is named is the most common and most avoidable</tspan><tspan x="0" dy="1.3em">error in the section.</tspan></text></svg>
+<figcaption>Three decisions, made in sequence, after the constraints have had their say.</figcaption>
+</figure>
+
+<h2><span class="num n">10.1</span>Entry points</h2>
+
+<table>
+  <caption>The same intelligence, packaged for different jobs</caption>
+  <thead><tr><th>Entry point</th><th>Who it is for</th><th>Core tradeoff</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Claude.ai</strong><br>web, mobile, desktop</td>
+      <td>Knowledge workers using Claude as a thinking partner: research, drafting, analysis, review. No code. Consumer tiers for individuals and small teams; Claude for Work where governance and identity controls are needed</td>
+      <td>Zero build cost against zero integration. You get the product Anthropic ships and cannot embed it in another product</td>
+    </tr>
+    <tr>
+      <td><strong>Claude Code</strong><br>terminal, IDE, desktop, web</td>
+      <td>Engineers doing real development: exploring codebases, refactoring, debugging, building features, under configurable permission boundaries</td>
+      <td>Purpose-built for engineering. Outstanding for code, wrong shape for a customer-service product or any non-engineering workflow</td>
+    </tr>
+    <tr>
+      <td><strong>Claude Cowork</strong></td>
+      <td>Operations, admin and other non-engineering roles who need Claude to act on their machine rather than produce text in a chat window. Paid plans via the desktop app</td>
+      <td>Real system actions against supervision overhead. Permission scoping and human review matter more than in a chat-only entry point</td>
+    </tr>
+    <tr><td><strong>Claude in Chrome</strong></td><td>Knowledge workers whose tasks live in web applications rather than files or codebases</td><td>-</td></tr>
+    <tr><td><strong>Claude for Excel</strong></td><td>Analysts and finance teams whose primary tool is a spreadsheet</td><td>-</td></tr>
+  </tbody>
+</table>
+
+<div class="sidenote"><b>The Claude for Work tiers, because governance questions turn on
+them.</b> Team adds admin controls, SSO and SAML, domain capture, and a contractual
+commitment not to train on customer content. Enterprise adds SCIM provisioning,
+configurable retention, audit logs, a Compliance API, and a HIPAA-ready option with a signed
+BAA.</div>
+
+<h2><span class="num n">10.2</span>Build-time interfaces</h2>
+
+<table>
+  <caption>Four layers that stack, not four alternatives</caption>
+  <thead><tr><th>Interface</th><th>What it is</th><th>Tradeoff</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Direct API</strong></td><td>The HTTP interface. You own retries, streaming, tool use, observability and the UI. The layer everything else sits on</td><td>Maximum control against maximum responsibility. Use it when an SDK has not exposed a feature you need, or the team prefers raw HTTP</td></tr>
+    <tr><td><strong>SDKs</strong><br>Python, TypeScript, Java, Go, Ruby, C#, PHP</td><td>The same capability wrapped in language-native types and helpers: auth, request formatting, retries, streaming, tool-use plumbing. The agent loop, if any, is still your code</td><td>Ergonomics against control. SDK abstractions move at Anthropic's release cadence. The default choice for embedding Claude in a product</td></tr>
+    <tr><td><strong>MCP</strong></td><td>An open protocol for exposing tools, prompts and resources from one server so any MCP-aware client can discover and use them. A sharing convention across products, not a calling convention inside one</td><td>Reusability across clients against added architectural complexity. If only one client will ever use it, MCP is overhead</td></tr>
+    <tr><td><strong>Agent SDK</strong></td><td>The managed agent loop that powers Claude Code, run from your own application code: iteration, tool execution, termination. TypeScript and Python</td><td>Managed loop against custom orchestration. You give up fine-grained control of the loop</td></tr>
+  </tbody>
+</table>
+
+<figure class="diagram wide" id="fig-interfaces-stack">
+<svg viewBox="0 0 760 332" role="img" aria-label="The four build-time interfaces as a stack" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m25" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="216" width="760" height="64" rx="8" class="dg-box"/><text x="12" y="238" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Direct API</tspan></text><text x="12" y="256" class="dg-s" text-anchor="start"><tspan x="12" dy="0">the HTTP interface everything else sits on. Maximum control,</tspan></text><text x="12" y="271" class="dg-s" text-anchor="start"><tspan x="12" dy="0">maximum responsibility</tspan></text><rect x="0" y="144" width="760" height="64" rx="8" class="dg-box"/><text x="12" y="166" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">SDKs</tspan></text><text x="12" y="184" class="dg-s" text-anchor="start"><tspan x="12" dy="0">the same entry point with language-native types, retries,</tspan></text><text x="12" y="199" class="dg-s" text-anchor="start"><tspan x="12" dy="0">streaming. The default for embedding</tspan></text><rect x="0" y="72" width="372" height="64" rx="8" class="dg-strip"/><text x="12" y="94" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">MCP</tspan></text><text x="12" y="112" class="dg-s" text-anchor="start"><tspan x="12" dy="0">shares one tool entry point across many</tspan></text><text x="12" y="127" class="dg-s" text-anchor="start"><tspan x="12" dy="0">clients. Overhead if only one client will</tspan></text><rect x="388" y="72" width="372" height="64" rx="8" class="dg-strip"/><text x="400" y="94" class="dg-t-b" text-anchor="start"><tspan x="400" dy="0">Agent SDK</tspan></text><text x="400" y="112" class="dg-s" text-anchor="start"><tspan x="400" dy="0">the managed loop that powers Claude Code,</tspan></text><text x="400" y="127" class="dg-s" text-anchor="start"><tspan x="400" dy="0">run from your own code. You give up control</tspan></text><text x="380" y="14" class="dg-k" text-anchor="middle"><tspan x="380" dy="0">Layers that stack, not four alternatives</tspan></text><text x="0" y="302" class="dg-t" text-anchor="start"><tspan x="0" dy="0">One request, one response: API or SDK. Reusable tools across clients: MCP. Claude acting across</tspan><tspan x="0" dy="1.3em">turns inside the partner&#x27;s product: Agent SDK.</tspan></text></svg>
+<figcaption>API and SDK are the same entry point with different ergonomics. MCP and API tool use are different layers. The Anthropic SDK and the Agent SDK are different products.</figcaption>
+</figure>
+
+<div class="flag">
+  <span class="label">Three distinctions the exam can turn on</span>
+  <p><strong>API and SDK are the same entry point</strong>, different ergonomics. The SDK is
+  an opinionated wrapper. The only reason to drop to raw HTTP is a freshly shipped feature
+  the SDK has not wrapped yet.</p>
+  <p><strong>MCP and API tool use are different layers</strong>, not alternatives. An MCP
+  server exposes tools that any MCP-aware client calls using API tool use. Pick MCP when one
+  tool entry point must be reachable from multiple clients; pick raw tool use when the tools
+  live inside one product.</p>
+  <p><strong>Anthropic SDK and Agent SDK are different products.</strong> The first is a
+  convenience wrapper over the API and runs no loop. The second is the managed runtime that
+  does. One request and one response, use the API or SDK. Reusable tools across clients, MCP.
+  Claude acting across multiple turns inside the partner's product, the Agent SDK.</p>
+</div>
+
+<h2><span class="num n">10.3</span>Claude Code: shaping layers and governing layers</h2>
+
+<p>Choosing Claude Code starts a second decision: which customisation belongs at which
+layer. The layers split into two groups, and keeping the split clean is what makes an agent
+both useful and safe to run.</p>
+
+<table>
+  <caption>Shaping what it knows, governing what it may touch</caption>
+  <thead><tr><th>Layer</th><th>Group</th><th>When it belongs here</th></tr></thead>
+  <tbody>
+    <tr><td>CLAUDE.md</td><td>Shaping</td><td>Persistent context for every task in the project: coding standards, repo layout, team conventions</td></tr>
+    <tr><td>Skills</td><td>Shaping</td><td>Repeatable procedures nobody should have to respell: a commit-push-PR flow, a release-notes generator, a schema migration</td></tr>
+    <tr><td>Subagents</td><td>Shaping</td><td>Work that should run read-only, with a restricted tool entry point, or a different system prompt from the main session</td></tr>
+    <tr><td>MCP servers</td><td>Shaping</td><td>When the same tool entry point must be reusable across clients, for example a team's Linear server that should also work from Claude.ai</td></tr>
+    <tr><td>Hooks</td><td>Governing</td><td>Deterministic gates the agent must not skip, where the guarantee has to come from code rather than prompting</td></tr>
+    <tr><td>Permission boundaries and approval flows</td><td>Governing</td><td>Any environment where the cost of an unintended action is non-trivial</td></tr>
+    <tr><td>Sandboxing and restricted execution</td><td>Governing</td><td>Where a wrong action has real consequences and approval prompts alone are not a sufficient backstop. The environment enforces the boundary, not the agent's judgment</td></tr>
+  </tbody>
+</table>
+
+<p>Six permission modes control what runs without prompting: <strong>default</strong> asks
+before each action; <strong>acceptEdits</strong> approves file edits and common filesystem
+commands while other Bash still prompts; <strong>plan</strong> locks the session read-only
+until a plan is approved; <strong>auto</strong> classifies actions as safe or risky and is a
+research preview; <strong>dontAsk</strong> auto-denies anything that would prompt and runs
+only what allow rules cover, which makes it the locked-down CI mode; and
+<strong>bypassPermissions</strong> skips all checks and is scoped to containers or CI
+only.</p>
+
+<div class="sidenote"><b>The distinction in one line.</b> Permissions govern what the agent
+is allowed to touch. Hooks govern what must happen before or after an action.</div>
+
+<h2><span class="num n">10.4</span>Delivery routes</h2>
+
+<p>Same model on every route. What differs is which cloud account the spend lands in, which
+identity system authenticates, which region traffic terminates in, and which procurement
+contract already exists. The decision rule is not technical capability, it is what the
+partner has already committed to.</p>
+
+<table>
+  <caption>Four routes</caption>
+  <thead><tr><th>Route</th><th>Pick it when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Anthropic first-party</strong><br>api.anthropic.com, Anthropic API key</td><td>No binding cloud commitment, wants the newest features the day they ship, or prefers AI spend consolidated with Anthropic. The default when no procurement constraint pulls the other way</td></tr>
+    <tr><td><strong>AWS Bedrock</strong><br>billed on the AWS account, IAM auth</td><td>A committed AWS enterprise agreement, the rest of the stack on AWS, and AI spend drawing down against that commitment. Identity, networking and audit inherit from the existing account. Regional availability matters and inference profiles solve cross-region routing</td></tr>
+    <tr><td><strong>GCP Vertex AI</strong><br>billed on the GCP project, Google credentials</td><td>The partner runs on GCP, the ML stack lives in Vertex, and they want one billing and audit entry point across foundation models. Models are enabled per project in Model Garden</td></tr>
+    <tr><td><strong>Microsoft Foundry</strong><br>billed on the Azure subscription, Entra ID</td><td>A Microsoft enterprise agreement, identity through Entra ID, the cloud footprint on Azure. Foundry offers two hosting forms, one running inference in the partner's Azure environment and one routing to Anthropic-managed infrastructure, so verify the hosting form for residency or GDPR needs</td></tr>
+  </tbody>
+</table>
+
+<figure class="diagram wide" id="fig-delivery-routes">
+<svg viewBox="0 0 760 314" role="img" aria-label="Four delivery routes around one model" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m26" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="380" y1="120" x2="260" y2="40" class="dg-arrow"/><line x1="380" y1="120" x2="500" y2="40" class="dg-arrow"/><line x1="380" y1="120" x2="260" y2="200" class="dg-arrow"/><line x1="380" y1="120" x2="500" y2="200" class="dg-arrow"/><rect x="0" y="15" width="260" height="50" rx="8" class="dg-box"/><text x="12" y="35" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Anthropic first-party</tspan></text><text x="12" y="53" class="dg-s" text-anchor="start"><tspan x="12" dy="0">no cloud commitment, newest features first</tspan></text><rect x="500" y="15" width="260" height="50" rx="8" class="dg-box"/><text x="512" y="35" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">AWS Bedrock</tspan></text><text x="512" y="53" class="dg-s" text-anchor="start"><tspan x="512" dy="0">AWS agreement, IAM, inference profiles</tspan></text><rect x="0" y="175" width="260" height="50" rx="8" class="dg-box"/><text x="12" y="195" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">GCP Vertex AI</tspan></text><text x="12" y="213" class="dg-s" text-anchor="start"><tspan x="12" dy="0">GCP project, Model Garden, one audit trail</tspan></text><rect x="500" y="175" width="260" height="50" rx="8" class="dg-box"/><text x="512" y="195" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">Microsoft Foundry</tspan></text><text x="512" y="213" class="dg-s" text-anchor="start"><tspan x="512" dy="0">Azure, Entra ID, verify the hosting form</tspan></text><circle cx="380" cy="120" r="54" class="dg-box hi"/><text x="380" y="116" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Same model</tspan></text><text x="380" y="134" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">same behaviour</tspan></text><text x="0" y="250" class="dg-s" text-anchor="start"><tspan x="0" dy="0">What changes: whose account the spend lands in, which identity system, which region, which contract. What does</tspan><tspan x="0" dy="1.3em">not: prompting, evals, tool use, context behaviour.</tspan></text><text x="0" y="284" class="dg-s" text-anchor="start"><tspan x="0" dy="0">CSP routes lag the first-party API on new features by weeks. The rule is what the partner has already committed</tspan><tspan x="0" dy="1.3em">to, not technical capability.</tspan></text></svg>
+<figcaption>The decision is procurement, not engineering.</figcaption>
+</figure>
+
+<h2><span class="num n">10.5</span>Constraints that rule options out first</h2>
+
+<p>Some of this is not at your discretion. When a partner is subject to privilege, HIPAA,
+GDPR, FedRAMP or an internal residency policy, those constraints rule entry points in or out
+<em>before</em> cost, ergonomics or build effort enter the conversation. Name the governing
+constraint when you recommend an entry point, and let it eliminate options before
+preferences do.</p>
+
+<table>
+  <caption>What each constraint tends to rule out</caption>
+  <thead><tr><th>Constraint</th><th>Ruled out</th><th>Usually survives review</th></tr></thead>
+  <tbody>
+    <tr><td>Attorney-client privilege</td><td>Consumer tiers of Claude.ai for privileged review, and anything touching privileged material through a surface the firm cannot audit end to end</td><td>API or SDK behind the firm's own application, SSO, routed through a firm-approved gateway that logs every request. The firm owns the audit trail, which is what privilege review turns on</td></tr>
+    <tr><td>HIPAA</td><td>Any entry point without a BAA in place for the specific configuration in use. A BAA for one configuration does not extend to another</td><td>API or SDK on a BAA-covered configuration via the route already in use. Beta features are generally excluded from coverage unless explicitly listed</td></tr>
+    <tr><td>GDPR and data residency</td><td>Routes where the region of model execution cannot be pinned, or where data leaves the approved boundary at any step</td><td>A CSP-mediated route with the region pinned to a covered jurisdiction and DPA terms inherited from the existing cloud contract</td></tr>
+    <tr><td>FedRAMP and government</td><td>Any path not on an authorised cloud environment at the required impact level</td><td>Claude for Government for FedRAMP High civilian, Bedrock GovCloud for FedRAMP High and DoD IL4/5, Vertex Assured Workloads for FedRAMP High and IL2. Authorised environments run on a model lag</td></tr>
+    <tr><td>Internal data-residency policy</td><td>Routes outside the approved cloud vendor list, whatever the technical capability</td><td>The route on the approved CSP. This is procurement, not engineering: the right route is whichever the CIO has already cleared</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">10.6</span>Watch out: Claude Code outside engineering</h2>
+
+<p>A regional bank proposed an operations assistant for branch staff: look up balances,
+schedule appointments, answer policy questions. The design was Claude Code on branch
+laptops with a per-branch CLAUDE.md, MCP servers for the customer database, appointment
+system and policy corpus, and subagents running compliance checks on every interaction.</p>
+
+<p>Three failures, each visible in the proposal:</p>
+
+<ul>
+  <li><strong>The entry point was chosen before the user was named.</strong> Branch staff do
+  not run terminals. That constraint should have decided the entry point before anything
+  else.</li>
+  <li><strong>MCP was carried forward from a previous project as a default.</strong> There
+  were no other Claude clients in the bank, so the reusability that justifies MCP did not
+  apply, and the protocol layer was paying integration cost for nothing.</li>
+  <li><strong>Compliance, the highest-consequence path, was assigned to the weakest
+  deterministic guarantee.</strong> The pattern was inverted: the work most needing
+  code-level certainty ran furthest from it.</li>
+</ul>
+
+<p>The architecture that fits: a custom web application calling the API directly,
+compliance in deterministic server-side code, the UI authenticated through the bank's SSO
+and shaped like a banking workflow, and tool calls audited at the server boundary.</p>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A healthcare network wants a clinical documentation assistant that
+  processes patient records. The network already holds a BAA with AWS and has confirmed
+  Bedrock is covered under it. A competing proposal suggests the direct Anthropic API with a
+  separately negotiated BAA.</p>
+  <p class="stem">Which option names both the right choice and the deciding tradeoff?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Bedrock is right, but the reason is wrong. Regional pinning addresses residency. HIPAA coverage is about whether a BAA covers this configuration, which is a governance question.">Bedrock, because the deciding tradeoff is regulatory residency: it pins data to a US region</li>
+    <li data-key="B" data-why="The existing BAA already covers this configuration, which removes the compliance risk before cost, latency or ergonomics are discussed. Governance eliminates options first.">Bedrock, because the deciding tradeoff is governance: the existing BAA covers this configuration and eliminates the compliance risk first</li>
+    <li data-key="C" data-why="Negotiating a second BAA adds time and risk to reach a position the network already holds. More control over PHI flow is not the binding constraint here.">The direct API with a new BAA, because the deciding tradeoff is control over how PHI flows</li>
+    <li data-key="D" data-why="Claude.ai Enterprise offers a HIPAA-ready option, but this is a documentation assistant embedded in clinical systems, not a chat product. The entry point does not fit the work.">Claude.ai Enterprise with a BAA, because the deciding tradeoff is governance: Enterprise adds HIPAA-ready configuration</li>
+  </ol>
+  <div class="verdict" hidden><b>Bedrock, on governance.</b> These items pair a choice with a
+  reason and score the pair, so a right route with the wrong reason is wrong. The tell is that
+  the scenario states the BAA already covers Bedrock. That is a constraint that has already
+  eliminated options, and it outranks every preference in the room.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="09-prompting.html"><span>Previous</span>09 Prompting as architecture</a>
+  <a class="next" href="11-assembly.html"><span>Next</span>11 Assembly</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

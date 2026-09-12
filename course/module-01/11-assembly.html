@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11. Assembly - Module 1</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 1 &middot; Section 11 of 12</p>
+  <h1>Assembly</h1>
+  <p class="standfirst">One brief, five decisions, four candidate architectures, one survivor.</p>
+  <div class="meta"><span>Official screens S31</span><span>~7 min in the original</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 11 of 12</b>
+</nav>
+<p>One brief, and every decision the module has taught, made at once. This is the closest
+thing in Module 1 to an exam question, so work it properly rather than reading the
+answer.</p>
+
+<div class="flag">
+  <span class="label">The brief</span>
+  <p>A 180-lawyer mid-market firm wants to speed up contract review. Senior associates spend
+  an estimated 12 to 18 hours a week reading vendor and partnership contracts to flag clauses
+  that conflict with the firm's standard playbook. Average contract length is 35 pages.
+  Current output is a redlined PDF with margin comments. The firm uses iManage for document
+  storage, has a private LLM gateway approved by their CIO, and is bound by attorney-client
+  privilege requirements that exclude consumer-grade tools. Target: cut associate time per
+  contract by 60 percent while keeping the senior associate as final reviewer.</p>
+</div>
+
+<p>Before reading further, write one paragraph covering all five decisions: entry point,
+pattern, the split across Claude and existing systems and humans, model and context
+strategy, and the human-in-the-loop posture.</p>
+
+<h2><span class="num n">11.1</span>Reading the brief for constraints</h2>
+
+<table>
+  <caption>Every sentence in the brief is doing work</caption>
+  <thead><tr><th>In the brief</th><th>What it decides</th></tr></thead>
+  <tbody>
+    <tr><td>Attorney-client privilege, consumer tools excluded</td><td>Rules out Claude.ai as the entry point before anything else is discussed</td></tr>
+    <tr><td>A CIO-approved private LLM gateway</td><td>The route already exists. The build-time interface is the API or SDK behind the firm's own app</td></tr>
+    <tr><td>iManage for storage</td><td>Document fetch belongs to an existing system, not to Claude</td></tr>
+    <tr><td>A standard playbook</td><td>A versioned source of truth the firm maintains. Retrieve it, do not bake it into the model or freeze it in a prompt</td></tr>
+    <tr><td>35 pages, clause by clause</td><td>Independent units. Parallelisation is the workflow sub-pattern</td></tr>
+    <tr><td>Senior associate stays the final reviewer</td><td>The human gate is fixed by the brief, not chosen by you</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">11.2</span>The four candidate architectures</h2>
+
+<p>All four commit to all five decisions. Three fail on exactly one. That is the diagnostic
+skill: find the single decision that breaks each one.</p>
+
+<figure class="diagram wide" id="fig-option-matrix">
+<svg viewBox="0 0 760 248" role="img" aria-label="The four candidate architectures scored against the five decisions" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m27" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="120.8" y="14" class="dg-k2" text-anchor="middle"><tspan x="120.8" dy="0">Entry point</tspan></text><text x="210.4" y="14" class="dg-k2" text-anchor="middle"><tspan x="210.4" dy="0">Pattern</tspan></text><text x="300" y="14" class="dg-k2" text-anchor="middle"><tspan x="300" dy="0">Split of work</tspan></text><text x="389.6" y="14" class="dg-k2" text-anchor="middle"><tspan x="389.6" dy="0">Model, context</tspan></text><text x="479.2" y="14" class="dg-k2" text-anchor="middle"><tspan x="479.2" dy="0">Human gate</tspan></text><rect x="0" y="26" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="51" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option A</tspan></text><circle cx="120.8" cy="45" r="9" class="dg-dot-bad"/><text x="120.8" y="49" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✗</tspan></text><circle cx="210.4" cy="45" r="9" class="dg-dot-good"/><text x="210.4" y="49" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="45" r="9" class="dg-dot-good"/><text x="300" y="49" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="45" r="9" class="dg-dot-good"/><text x="389.6" y="49" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✓</tspan></text><circle cx="479.2" cy="45" r="9" class="dg-dot-good"/><text x="479.2" y="49" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="51" class="dg-s" text-anchor="end"><tspan x="748" dy="0">Claude.ai, privilege excludes it</tspan></text><rect x="0" y="70" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="95" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option B</tspan></text><circle cx="120.8" cy="89" r="9" class="dg-dot-good"/><text x="120.8" y="93" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="89" r="9" class="dg-dot-good"/><text x="210.4" y="93" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="89" r="9" class="dg-dot-good"/><text x="300" y="93" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="89" r="9" class="dg-dot-bad"/><text x="389.6" y="93" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✗</tspan></text><circle cx="479.2" cy="89" r="9" class="dg-dot-good"/><text x="479.2" y="93" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="95" class="dg-s" text-anchor="end"><tspan x="748" dy="0">playbook monolithic on every call</tspan></text><rect x="0" y="114" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="139" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option C</tspan></text><circle cx="120.8" cy="133" r="9" class="dg-dot-good"/><text x="120.8" y="137" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="133" r="9" class="dg-dot-bad"/><text x="210.4" y="137" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✗</tspan></text><circle cx="300" cy="133" r="9" class="dg-dot-good"/><text x="300" y="137" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="133" r="9" class="dg-dot-bad"/><text x="389.6" y="137" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✗</tspan></text><circle cx="479.2" cy="133" r="9" class="dg-dot-good"/><text x="479.2" y="137" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="139" class="dg-s" text-anchor="end"><tspan x="748" dy="0">open-ended agent, Opus everywhere</tspan></text><rect x="0" y="158" width="760" height="38" rx="6" class="dg-box hi"/><text x="14" y="183" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option D</tspan></text><circle cx="120.8" cy="177" r="9" class="dg-dot-good"/><text x="120.8" y="181" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="177" r="9" class="dg-dot-good"/><text x="210.4" y="181" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="177" r="9" class="dg-dot-good"/><text x="300" y="181" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="177" r="9" class="dg-dot-good"/><text x="389.6" y="181" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✓</tspan></text><circle cx="479.2" cy="177" r="9" class="dg-dot-good"/><text x="479.2" y="181" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="183" class="dg-s" text-anchor="end"><tspan x="748" dy="0">holds on all five</tspan></text><text x="0" y="218" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Three look reasonable and each fails on exactly one decision. Find the single break; that is the</tspan><tspan x="0" dy="1.3em">diagnostic skill the item tests.</tspan></text></svg>
+<figcaption>Separate what the brief fixed from what it left to you, then check each option against the fixed items first.</figcaption>
+</figure>
+
+<table>
+  <caption>What fails, and where</caption>
+  <thead><tr><th>Option</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A.</strong> Claude.ai, associates upload each contract into a Project holding the playbook as reference files. Parallelised review by section. Sonnet, progressive context. Senior associate reviews everything</td><td><strong>Fails on the entry point.</strong> The pattern, model and human gate are all fine. Privilege excludes the consumer-grade surface, and that constraint was stated in the brief</td></tr>
+    <tr><td><strong>B.</strong> API or SDK behind a thin internal app, SSO, approved gateway. The playbook loaded into the system prompt in full on every call. Parallelised by section. Sonnet. Senior associate reviews everything</td><td><strong>Fails on context strategy.</strong> A monolithic playbook on every call is the working-memory cliff and the silent budget killer, and it freezes a document the firm updates. Retrieve the playbook per clause</td></tr>
+    <tr><td><strong>C.</strong> API or SDK behind a thin internal app, SSO, approved gateway. An open-ended agent given the contract and the iManage tools, deciding for itself how to work through the document. Playbook retrieved per clause. Opus on every call. Senior associate reviews everything</td><td><strong>Fails on pattern, and on tier.</strong> The path through a 35-page contract is enumerable, so autonomy buys nothing and costs audit clarity in a privileged setting. Opus everywhere is the untested default the module warns about</td></tr>
+    <tr><td><strong>D.</strong> API or SDK behind a thin internal app, SSO, approved gateway. Parallelised review by section with an evaluator pass enforcing a strict schema on flagged clauses. Claude extracts, classifies against the playbook and drafts redlines. The playbook stays in the firm's systems as a versioned source of truth, retrieved per clause. iManage fetches documents. Sonnet with progressive context, extended thinking per clause only where an eval justifies it. Senior associate signs off on every output, low-confidence clauses flagged</td><td><strong>Holds.</strong> Every constraint in the brief is respected and every decision is one you can defend out loud</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-answer="D">
+  <p class="scenario">Same firm, same brief. A fifth proposal arrives: API behind the
+  approved gateway, parallelised clause review, playbook retrieved per clause, Sonnet with
+  progressive context, iManage for fetch. The only change is that low-risk clause categories
+  are auto-approved without associate review, to hit the 60 percent time saving more
+  comfortably.</p>
+  <p class="stem">What does that change cost, and is it acceptable?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Sampling is the right tool for low-stakes actions, and the module recommends it. But the brief did not offer this gate as a variable, so redesigning it is answering a question nobody asked.">Acceptable, because sampling low-stakes work is exactly what the module recommends</li>
+    <li data-key="B" data-why="Cost is not what changed. Removing a review gate does not alter tokens, tier or context strategy.">Unacceptable, because it raises cost per contract above the target</li>
+    <li data-key="C" data-why="Classification accuracy is a real risk, but the deciding objection is not measurement. It is that the brief fixed this gate as a requirement.">Acceptable, provided an eval set confirms the low-risk classifier is accurate</li>
+    <li data-key="D" data-why="The brief states the senior associate remains the final reviewer. That is a stated requirement, not a tradeoff on the table, and in a privileged setting the reviewer is also the accountability answer.">Unacceptable, because the brief fixed the human gate and accountability sits with the reviewer</li>
+  </ol>
+  <div class="verdict" hidden><b>The gate was a requirement, not a preference.</b> The
+  strongest habit for this domain is to separate what the brief <em>fixed</em> from what it
+  left to you. Fixed here: privilege, the gateway, iManage, the final reviewer. Left to you:
+  pattern, sub-pattern, tier, context strategy, and where retrieval fits. An option that
+  optimises a fixed constraint is wrong however sensible it sounds in isolation.</div>
+</div>
+<nav class="pager">
+  <a class="prev" href="10-entry-points.html"><span>Previous</span>10 Entry points and governance</a>
+  <a class="next" href="12-recap.html"><span>Next</span>12 Recap and what is next</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 1 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

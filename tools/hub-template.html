@@ -7,6 +7,7 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/badge-180.png">
+<script src="course/assets/nav.js"></script>
 <style>
 :root {
   color-scheme: light;
@@ -60,6 +61,9 @@ body {
   line-height: 1.55;
 }
 .wrap { max-width: 1020px; margin: 0 auto; padding: 24px 20px 80px; }
+html:not(.nav-open) .wrap { padding-top: 64px; }
+@media (min-width: 64.01rem) { html.nav-open body { padding-left: var(--nav-w, 17rem); } }
+@media print { html.nav-open body { padding-left: 0; } }
 header.top {
   display: flex; align-items: flex-start; justify-content: space-between;
   gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
@@ -151,6 +155,30 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   .bar-row { grid-template-columns: 1fr; gap: 4px; }
   .day { flex-wrap: wrap; }
 }
+
+.pathcard {
+  display: grid; grid-template-columns: 56px 1fr auto; gap: 0 16px; align-items: start;
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+}
+.pathcard.is-next { border-color: var(--series-1); }
+.pathcard .ic { grid-row: 1 / span 3; width: 56px; height: 56px; color: var(--muted); }
+.pathcard.is-next .ic { color: var(--series-1); }
+.pathcard .ic svg { width: 100%; height: 100%; display: block; }
+.pathcard .mod-n { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 2px; font-weight: 500; }
+.pathcard h3 { grid-column: 2; margin: 0; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--text-primary); font-weight: 650; }
+.pathcard h3 a { color: inherit; text-decoration: none; }
+.pathcard h3 a:hover { color: var(--series-1); text-decoration: underline; }
+.pathcard p { grid-column: 2; margin: 6px 0 0; font-size: 13.5px; color: var(--text-secondary); }
+.pathcard .pmeta { grid-column: 2; margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+.pathcard .pmeta a { color: var(--series-1); }
+.pathcard .pill { grid-column: 3; grid-row: 1; margin-right: 0; }
+.pathcard .pill.on { border-color: var(--series-1); color: var(--series-1); }
+@media (max-width: 560px) {
+  .pathcard { grid-template-columns: 1fr auto; }
+  .pathcard .ic { display: none; }
+  .pathcard p, .pathcard .pmeta { grid-column: 1 / -1; }
+}
 </style>
 </head>
 <body>
@@ -173,11 +201,11 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   </div>
 </header>
 
-<a href="course/lessons/module-01-distilled.html" style="text-decoration:none; display:block; margin-bottom:16px">
+<a href="course/module-01/01-introduction.html" style="text-decoration:none; display:block; margin-bottom:16px">
   <div class="card" style="margin:0; background:var(--series-1); border-color:transparent; color:#fff; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap">
     <div>
-      <div style="font-weight:650; font-size:15px">Module 1 Distilled - the official Course 1 in one pass</div>
-      <div style="font-size:13px; opacity:.9">238 minutes of course, distilled to about 45. Domains 1 and 2, 30% of the exam.</div>
+      <div style="font-weight:650; font-size:15px">Module 1, section 1 - Claude Platform &amp; Solution Design</div>
+      <div style="font-size:13px; opacity:.9">Twelve sections, all 34 official screens. Domains 1 and 2, 30% of the exam.</div>
     </div>
     <span style="font-size:13px; font-weight:600; white-space:nowrap; border:1px solid rgba(255,255,255,.5); border-radius:8px; padding:7px 14px">Start reading</span>
   </div>
@@ -193,53 +221,77 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 
 <!-- ================= COURSE ================= -->
 <section id="tab-course">
-  <div class="card" style="border-left:4px solid var(--series-1); display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap">
-    <img src="assets/badge.png" alt="" width="88" height="88" style="flex:none">
-    <div style="flex:1; min-width:280px">
-    <h2 style="font-size:19px">Module 1 Distilled</h2>
+  <div class="card">
+    <h2 style="font-size:19px">Claude Certified Architect - Professional Prep Course</h2>
     <p style="font-size:14px; color:var(--text-secondary); margin:0 0 14px">
-      Anthropic's official Course 1 is 34 screens and 238 minutes. This is the whole of it
-      in one pass, about 45 minutes, with five scenario drills. Read this and you have the
-      module. It covers exam Domains 1 and 2, which together are 30% of the paper.
+      By the time an architect is involved the question is no longer whether Claude can do
+      the task. It is whether the systems around Claude will integrate and operate as
+      needed. Anthropic's official path teaches those decisions across five modules and 733
+      minutes. This is the same five modules, same order, distilled so each one can be read
+      rather than sat through.
     </p>
-    <div class="controls" style="margin-bottom:14px">
-      <a href="course/lessons/module-01-distilled.html" style="text-decoration:none">
-        <button class="primary" style="font-size:14px; padding:10px 18px">Start the course</button>
+    <p style="font-size:14px; margin:0 0 12px">Work through the 5 modules below:</p>
+    <div class="controls" style="margin-bottom:10px">
+      <a href="course/module-01/01-introduction.html" style="text-decoration:none">
+        <button class="primary" style="font-size:14px; padding:10px 18px">Start Module 1</button>
       </a>
-      <a href="course/index.html" style="text-decoration:none"><button>All lessons</button></a>
+      <a href="course/index.html" style="text-decoration:none"><button>Open the course page</button></a>
     </div>
-    <p class="note" style="margin:0">
-      Written from the real course content. Four model properties, three layers, seven
-      primitives, decomposition, pattern selection, multi-agent, five reference
-      architectures, RAG, model and context strategy, prompting, entry points and governance.
-    </p>
+    <div class="meter-row" style="margin-bottom:0">
+      <div class="meter"><i style="width:20%"></i></div>
+      <div class="val">1 of 5 distilled</div>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Drill the individual decisions</h2>
-    <p class="note" style="margin:-4px 0 12px">Seven short lessons, 35 scenario drills. Use these after the distilled course, or on whichever decision you feel least sure about.</p>
-    <table>
-      <thead><tr><th>#</th><th>Lesson</th><th>What it trains</th></tr></thead>
-      <tbody>
-        <tr><td>0001</td><td><a href="course/lessons/0001-workflow-or-agent.html">Workflow or agent?</a></td><td>Name the tier in thirty seconds and say which constraint decided it</td></tr>
-        <tr><td>0002</td><td><a href="course/lessons/0002-splitting-the-work.html">Splitting the work</a></td><td>Cut a request into Claude, system and human, and defend each cut</td></tr>
-        <tr><td>0003</td><td><a href="course/lessons/0003-six-patterns.html">The six patterns, and their traps</a></td><td>Match shape to pattern, then check the precondition that permits it</td></tr>
-        <tr><td>0004</td><td><a href="course/lessons/0004-multi-agent-economics.html">When multi-agent pays</a></td><td>Do the cost-benefit out loud before spending 15x</td></tr>
-        <tr><td>0005</td><td><a href="course/lessons/0005-platform-entry-points.html">Platform entry points</a></td><td>Pick the surface, and spot the sentence that disqualifies one</td></tr>
-        <tr><td>0006</td><td><a href="course/lessons/0006-delivery-routes.html">Delivery routes and governance</a></td><td>Name the route, then the obligations that arrive with it</td></tr>
-        <tr><td>0007</td><td><a href="course/lessons/0007-model-and-context-strategy.html">Model and context strategy</a></td><td>Choose a tier, and treat the context window as a budget</td></tr>
-      </tbody>
-    </table>
+  <div class="pathcard is-next">
+    <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 44V22a4 4 0 0 1 8 0v14"/><path d="M20 34V18a4 4 0 0 1 8 0v16"/><path d="M28 34V22a4 4 0 0 1 8 0v14"/><path d="M36 32v-6a4 4 0 0 1 8 0v18a14 14 0 0 1-14 14h-2a14 14 0 0 1-12-7l-6-10a4 4 0 0 1 7-4l3 5"/></svg></span>
+    <h3><span class="mod-n">Module 1</span><a href="course/module-01/index.html">Claude Platform &amp; Solution Design</a></h3>
+    <p>Master the design decisions that translate an ambiguous business problem into a defensible Claude solution architecture.</p>
+    <p class="pmeta">238 minutes &middot; Domains 1 and 2, 30% of the exam &middot; <a href="course/module-01/index.html">Twelve sections</a> &middot; <a href="course/module-01/01-introduction.html">Start reading</a></p>
+    <span class="pill on">Distilled</span>
+  </div>
+
+  <div class="pathcard">
+    <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="9"/><path d="M24 9v4M24 35v4M9 24h4M35 24h4M13.4 13.4l2.8 2.8M31.8 31.8l2.8 2.8M34.6 13.4l-2.8 2.8M16.2 31.8l-2.8 2.8"/><circle cx="44" cy="44" r="6"/><path d="M44 33v3M44 52v3M33 44h3M52 44h3M36.2 36.2l2.1 2.1M49.7 49.7l2.1 2.1M51.8 36.2l-2.1 2.1M38.3 49.7l-2.1 2.1"/></svg></span>
+    <h3><span class="mod-n">Module 2</span>Enterprise Integration &amp; Production</h3>
+    <p>Learn to take a designed solution from proof of concept to enterprise-ready production.</p>
+    <p class="pmeta">158 minutes &middot; Domains 3 and 4, 35% of the exam &middot; <a href="notes/02-integration-evals.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/enterprise-integration-production" target="_blank" rel="noopener">Official module</a></p>
+    <span class="pill">Official only</span>
+  </div>
+
+  <div class="pathcard">
+    <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l20 8v16c0 13-8.6 20.8-20 24-11.4-3.2-20-11-20-24V16z"/><path d="M32 24v14M25 31h14"/></svg></span>
+    <h3><span class="mod-n">Module 3</span>Responsible AI, Safety &amp; Risk for Architects</h3>
+    <p>Design the full safety stack for a Claude system, placing each control and deciding what happens when one fails.</p>
+    <p class="pmeta">114 minutes &middot; Domain 5, 14% of the exam &middot; <a href="notes/03-governance-stakeholder.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/responsible-ai-safety-risk-for-architects" target="_blank" rel="noopener">Official module</a></p>
+    <span class="pill">Official only</span>
+  </div>
+
+  <div class="pathcard">
+    <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="20" r="8"/><path d="M8 48c0-8 6.3-13 14-13s14 5 14 13"/><circle cx="45" cy="26" r="7"/><path d="M36 50c1-7 5-11 12-11 6.5 0 10 3.5 11 9"/></svg></span>
+    <h3><span class="mod-n">Module 4</span>Stakeholder Engagement, Lifecycle &amp; GTM</h3>
+    <p>Lead the stakeholder conversations that decide whether a working system actually ships, adopts, and outlasts your involvement.</p>
+    <p class="pmeta">178 minutes &middot; Domain 6, 14% of the exam &middot; <a href="notes/03-governance-stakeholder.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/stakeholder-engagement-lifecycle-gtm" target="_blank" rel="noopener">Official module</a></p>
+    <span class="pill">Official only</span>
+  </div>
+
+  <div class="pathcard">
+    <span class="ic" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M40 10a10 10 0 0 0-8 16L14 44a5 5 0 0 0 7 7l18-18a10 10 0 0 0 12-13l-7 7-6-6z"/><path d="M17 47h.02"/></svg></span>
+    <h3><span class="mod-n">Module 5</span>Team Enablement &amp; Operational Productivity</h3>
+    <p>Learn to enable a team to adopt a live Claude system and run it without depending on you.</p>
+    <p class="pmeta">45 minutes &middot; Domain 7, 7% of the exam &middot; <a href="notes/01-solution-design-models-devprod.md">Domain notes</a> &middot; <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/developer-productivity-enablement" target="_blank" rel="noopener">Official module</a></p>
+    <span class="pill">Official only</span>
   </div>
 
   <div class="card">
     <h2>Revision</h2>
-    <p class="note" style="margin:-4px 0 12px">Lessons are read once. These are what you read again before the exam.</p>
+    <p class="note" style="margin:-4px 0 12px">Sections are read once. These are what you read again before the exam.</p>
     <ul style="margin:0; padding-left:20px; font-size:14px">
       <li><a href="course/reference/pattern-selection.html"><strong>Pattern Selection</strong></a> - one page, prints well. Three tiers, six patterns, multi-agent numbers, checkpoint rules</li>
-      <li><a href="course/reference/glossary.html"><strong>Glossary</strong></a> - the vocabulary every lesson holds to</li>
-      <li><a href="course/reference/module-01-companion.html"><strong>Module 1 Companion</strong></a> - the official course mapped screen by screen, if you do want to work through it</li>
+      <li><a href="course/reference/glossary.html"><strong>Glossary</strong></a> - the vocabulary every section holds to</li>
+      <li><a href="course/module-01/12-recap.html"><strong>Module 1 recap</strong></a> - the five takeaways and an eleven-question closed-book self-test</li>
     </ul>
+    <p class="note" style="margin:12px 0 0">Module titles, descriptions and durations above are Anthropic's own, taken from the <a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional" target="_blank" rel="noopener">official path</a>. That course is free and is the authoritative source; nothing here replaces it.</p>
   </div>
 </section>
 
@@ -389,22 +441,32 @@ const EXAM_DATE = new Date("2026-09-05T00:00:00");
 
 // ---------- theme ----------
 const themeBtn = document.getElementById("theme-btn");
+themeBtn.textContent = document.documentElement.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
 themeBtn.onclick = () => {
   const dark = document.documentElement.getAttribute("data-theme") === "dark";
-  document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+  const next = dark ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem("ccarp-theme", next); } catch (e) {}
+  document.querySelectorAll('.sidenav .seg[aria-label="Theme"] button').forEach(b => b.setAttribute("aria-pressed", String(b.textContent.toLowerCase() === next)));
   themeBtn.textContent = dark ? "Dark" : "Light";
   renderResults();
 };
 
 // ---------- tabs ----------
-document.querySelectorAll("nav.tabs button").forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll("nav.tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
-    ["course","plan","practice","results","brief"].forEach(t =>
-      document.getElementById("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab));
-    if (b.dataset.tab === "results") renderResults();
-  };
-});
+function showTab(name, pushHash) {
+  const b = document.querySelector('nav.tabs button[data-tab="' + name + '"]');
+  if (!b) return;
+  document.querySelectorAll("nav.tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+  ["course","plan","practice","results","brief"].forEach(t =>
+    document.getElementById("tab-" + t).classList.toggle("hidden", t !== name));
+  if (name === "results") renderResults();
+  if (pushHash && location.hash !== "#tab-" + name) { history.replaceState(null, "", "#tab-" + name); window.dispatchEvent(new HashChangeEvent("hashchange")); }
+}
+document.querySelectorAll("nav.tabs button").forEach(b => { b.onclick = () => showTab(b.dataset.tab, true); });
+// The site menu links to tabs by hash (#tab-plan, #tab-practice, ...). Honour it on load and on change.
+function tabFromHash() { const m = /^#tab-([a-z]+)$/.exec(location.hash); if (m) showTab(m[1], false); }
+window.addEventListener("hashchange", tabFromHash);
+tabFromHash();
 
 // ---------- countdown ----------
 (function () {
