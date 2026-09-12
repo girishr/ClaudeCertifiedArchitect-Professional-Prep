@@ -56,7 +56,7 @@ h1 {
   font-weight: 700;
   font-size: clamp(26px, 4.4vw, 44px);
   line-height: 1.02;
-  letter-spacing: -.018em;
+  letter-spacing: -.012em;
   margin: -6px 0 6px;
   text-wrap: balance;
 }
@@ -211,7 +211,7 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: 
   padding: 20px 22px;
   margin-bottom: 16px;
 }
-h2 { font-family: var(--cut); font-weight: 600; font-size: 21px; letter-spacing: -.01em; margin: 0 0 10px; text-wrap: balance; }
+h2 { font-family: var(--cut); font-weight: 700; font-size: 21px; letter-spacing: -.008em; margin: 0 0 10px; text-wrap: balance; }
 h3 { font-size: 14px; font-weight: 650; margin: 22px 0 8px; letter-spacing: .005em; }
 h4 { font-size: 13.5px; margin: 0 0 6px; }
 p { margin: 0 0 10px; }
@@ -243,7 +243,7 @@ a:hover { color: var(--oxblood); }
 .lrow .ic { width: 30px; height: 30px; color: var(--ink-faint); margin-top: 2px; }
 .lrow.is-next .ic { color: var(--tint); }
 .lrow .ic svg { width: 100%; height: 100%; display: block; }
-.lrow h3 { font-family: var(--cut); font-weight: 700; font-size: 20px; margin: 0 0 5px; letter-spacing: -.01em; line-height: 1.15; }
+.lrow h3 { font-family: var(--cut); font-weight: 700; font-size: 20px; margin: 0 0 5px; letter-spacing: -.008em; line-height: 1.15; }
 .lrow h3 a { text-decoration: none; }
 .lrow p { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 7px; max-width: 66ch; }
 .lrow .pmeta { font-size: 12.5px; color: var(--ink-faint); margin: 0; font-variant-numeric: tabular-nums; }
@@ -376,7 +376,7 @@ tr:last-child td, tr:last-child th { border-bottom: 0; }
 }
 .bar-track { position: relative; height: 11px; border: 1px solid var(--rule-firm); }
 .bar-fill { height: 100%; background: var(--tint); }
-.bar-target { position: absolute; top: -3px; bottom: -3px; left: 72%; width: 1px; background: var(--gold); }
+.bar-target { position: absolute; top: -3px; bottom: -3px; left: 72%; width: 1px; background: var(--mark); }
 .bar-val { font-family: var(--num); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
 
 /* ---------- 9. narrow ---------- */
@@ -613,7 +613,7 @@ tr:last-child td, tr:last-child th { border-bottom: 0; }
           <div class="stat"><div class="n" id="r-answered">-</div><div class="l">questions attempted</div></div>
         </div>
         <p class="note" id="r-verdict"></p>
-        <p class="note">One lobe per domain, numbered as in the table below. A lobe's reach is that domain's published exam weighting; its green ink is the accuracy you have earned there, so a domain you have not attempted stays bare plate. Oxblood cuts the shortfall of any domain still under the gold ring, which is the 720 pass mark.</p>
+        <p class="note">One lobe per domain, numbered as in the table below. A lobe's reach is that domain's published exam weighting; the clay ink is the accuracy you have earned there, so a domain you have not attempted stays bare plate. The grey cuts the shortfall of any domain still under the olive ring, which is the 720 pass mark. A domain's mark sits olive once it clears the ring and red while it does not.</p>
       </div>
     </div>
   </div>
@@ -964,10 +964,12 @@ function drawRosette(rows) {
   ctx.clearRect(0, 0, size, size);
 
   const cs = getComputedStyle(document.documentElement);
-  const tint = cs.getPropertyValue("--tint").trim() || "#3ba57c";
-  const oxblood = cs.getPropertyValue("--oxblood").trim() || "#c9636a";
-  const gold = cs.getPropertyValue("--gold").trim() || "#c9a24a";
-  const sheet = cs.getPropertyValue("--sheet").trim() || "#111a16";
+  const tint = cs.getPropertyValue("--tint").trim() || "#d97757";
+  const oxblood = cs.getPropertyValue("--oxblood").trim() || "#e0837a";
+  const mark = cs.getPropertyValue("--mark").trim() || "#9db37c";
+  const gap = cs.getPropertyValue("--gap").trim() || "#5e5d59";
+  const bad = cs.getPropertyValue("--bad").trim() || "#e0837a";
+  const sheet = cs.getPropertyValue("--sheet").trim() || "#1f1e1d";
   const light = document.documentElement.getAttribute("data-theme") === "light";
 
   const cx = size / 2, cy = size / 2, R = size * 0.40;
@@ -1010,7 +1012,7 @@ function drawRosette(rows) {
   // 2. Each domain's own ink, cut only into its own sector. Green fills out from
   //    the centre to the radius its accuracy reaches; oxblood fills what is left
   //    between there and the pass ring.
-  const aInk = light ? 0.85 : 0.72, aGap = light ? 0.75 : 0.62;
+  const aInk = light ? 0.85 : 0.72, aGap = light ? 0.85 : 0.75;
   const FLOOR = radiusFor(0) / R, PASS_S = radiusFor(PASS) / R;
   // The phase is held across a band so its lines nest inside one lobe shape
   // rather than sweeping across the plate.
@@ -1026,12 +1028,12 @@ function drawRosette(rows) {
     const acc = row.right / row.seen;
     const from = i / n - 0.006, to = (i + 1) / n + 0.006;
     band(from, to, FLOOR, radiusFor(acc) / R, tint, aInk, 0.10, n, 0);
-    if (acc < PASS) band(from, to, radiusFor(acc) / R + 0.014, PASS_S, oxblood, aGap, 0.07, n * 2, Math.PI / n);
+    if (acc < PASS) band(from, to, radiusFor(acc) / R + 0.014, PASS_S, gap, aGap, 0.07, n * 2, Math.PI / n);
   });
 
   // 3. The pass mark, printed once, on the same scale as the domain marks.
   ctx.setLineDash([5, 6]); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.9;
-  ctx.strokeStyle = gold;
+  ctx.strokeStyle = mark;
   ctx.beginPath(); ctx.arc(cx, cy, radiusFor(PASS), 0, Math.PI * 2); ctx.stroke();
   ctx.setLineDash([]); ctx.globalAlpha = 1;
 
@@ -1040,21 +1042,21 @@ function drawRosette(rows) {
   rows.forEach((row, i) => {
     const t = (i + 0.5) / n * Math.PI * 2 - Math.PI / 2;
     const rimR = R * 1.10;
-    ctx.font = "600 15px 'Chivo Mono', ui-monospace, monospace";
-    ctx.fillStyle = row.seen ? (row.right / row.seen >= PASS ? tint : oxblood) : tint;
+    ctx.font = "600 15px 'JetBrains Mono VF', ui-monospace, monospace";
+    ctx.fillStyle = row.seen ? (row.right / row.seen >= PASS ? mark : bad) : tint;
     ctx.globalAlpha = row.seen ? 1 : (light ? .8 : .7);
     ctx.fillText(String(i + 1), cx + rimR * Math.cos(t), cy + rimR * Math.sin(t));
     ctx.globalAlpha = 1;
     if (!row.seen) return;
     const acc = row.right / row.seen, r = radiusFor(acc);
     const mx = cx + r * Math.cos(t), my = cy + r * Math.sin(t);
-    const mark = acc >= PASS ? tint : oxblood;
+    const dot = acc >= PASS ? mark : bad;
     ctx.beginPath(); ctx.arc(mx, my, 6.5, 0, Math.PI * 2);
     ctx.fillStyle = sheet; ctx.globalAlpha = .85; ctx.fill(); ctx.globalAlpha = 1;
     ctx.beginPath(); ctx.arc(mx, my, 4.2, 0, Math.PI * 2);
-    ctx.fillStyle = mark; ctx.fill();
+    ctx.fillStyle = dot; ctx.fill();
     ctx.beginPath(); ctx.arc(mx, my, 7.5, 0, Math.PI * 2);
-    ctx.strokeStyle = mark; ctx.lineWidth = 1; ctx.globalAlpha = .55; ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = dot; ctx.lineWidth = 1; ctx.globalAlpha = .55; ctx.stroke(); ctx.globalAlpha = 1;
   });
 }
 // The numerals are set in the plate's own face, so redraw once it has loaded.

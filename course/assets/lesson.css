@@ -227,7 +227,7 @@ pre code { background: none; padding: 0; }
   h2 { break-after: avoid; }
   table, .flag, .quiz { break-inside: avoid; }
   .quiz-reveal, .ask { display: none; }
-  a::after { content: " (" attr(href) ")"; font-size: .75em; color: #666; word-break: break-all; }
+  a::after { content: " (" attr(href) ")"; font-size: .75em; color: var(--ink-faint); word-break: break-all; }
   a[href^="#"]::after { content: ""; }
 }
 
@@ -712,15 +712,15 @@ html.font-dyslexic p, html.font-dyslexic li { max-width: 62ch; }
 h1 {
   font-family: var(--cut);
   font-weight: 700;
-  font-size: 2.6rem;
-  letter-spacing: -.015em;
+  font-size: 2.5rem;
+  letter-spacing: -.012em;
   line-height: 1.08;
   text-wrap: balance;
 }
 h2 {
   font-family: var(--cut);
-  font-weight: 600;
-  letter-spacing: -.01em;
+  font-weight: 700;
+  letter-spacing: -.008em;
   text-wrap: balance;
 }
 h2 .num, h2 .num.n { font-family: var(--num); font-weight: 400; }
@@ -824,7 +824,7 @@ table p, table ul, table ol,
   height: 2.2rem;
   margin-top: .15rem;
 }
-.modcard h3 { grid-column: 3; font-family: var(--cut); font-weight: 700; font-size: 1.22rem; }
+.modcard h3 { grid-column: 3; font-family: var(--cut); font-weight: 700; font-size: 1.2rem; letter-spacing: -.008em; }
 .modcard h3 .mod-n {
   position: absolute;
   left: 0;

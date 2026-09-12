@@ -1,62 +1,756 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T00:00:00Z",
+  "generatedAt": "2026-09-12T02:14:43Z",
   "title": "Design System: CCAR-P Prep Kit",
   "extensions": {
-    "notes": {
-      "loadOrder": "course/assets/nav.js injects course/assets/print.css first, then course/assets/nav.css, on every page, before any page stylesheet. print.css owns the palette, the four @font-face sets and the shared primitives (.serial, .plateline, .cut, svg rect rx:0).",
-      "themes": "Dark is the default on bare :root (color-scheme: dark). Light is :root[data-theme=\"light\"]. There is deliberately no prefers-color-scheme block; the site toggles and persists the choice in localStorage under 'ccarp-theme', applied before paint by nav.js. A third set is defined under @media print.",
-      "generation": "index.html is generated from tools/hub-template.html by tools/build_hub.py. Edit the template, never the output.",
-      "aliases": "print.css publishes --paper, --accent, --accent-dim, --good, --bad, --flag, --code-bg as aliases of world tokens because lesson.css, the SVG diagram classes and some hub markup name them. hub-template.html's :root adds --grid, --muted, --text-secondary, --success-text, --critical. nav.css resolves each colour through a course-token / hub-token / literal fallback chain. All are load-bearing.",
-      "measures": "--prose (28rem) is the reading measure for body-level p/ul/ol; --measure (40rem) is the wider structural width for figures, tables and apparatus. Both are defined in course/assets/lesson.css and nowhere else."
-    },
+    "notes": [
+      "Recorded from the shipped artifact: course/assets/print.css (world layer, injected by nav.js on every page before nav.css and any page stylesheet), tools/hub-template.html (hub component layer, source of the generated index.html), course/assets/lesson.css (reading sheet, including its engraving layer and the fixes from the finish review), course/assets/nav.css (persistent side index).",
+      "The palette and lettering are Anthropic's own, read off anthropic.com. Anthropic's licensed faces (Styrene A / anthropicSans, Copernicus / anthropicSerif) are NOT in this repo: Hanken Grotesk stands in for the sans, Faustina for the serif. JetBrains Mono is the real face Anthropic ships. All self-hosted from npm Fontsource under course/assets/fonts/ with OFL-LICENSE-fontsource.txt alongside.",
+      "This record supersedes the earlier green-and-oxblood / Bodoni Moda + Archivo + Chivo Mono record. Those three font files were deleted from the repo.",
+      "The type ramp in the frontmatter is the ramp the build actually ships (rem against a 17px root on the reading sheet, px against a 15px body on the workbench, plus SVG diagram lettering). It is deliberately not an idealised scale."
+    ],
     "colorMeta": {
-      "plate": { "role": "neutral", "displayName": "Steel Plate (green-black ground)", "canonical": "#0c1310", "aliases": ["--paper"], "themes": { "dark": "#0c1310", "light": "#e4e7dd", "print": "#ffffff" }, "tonalRamp": ["oklch(15% 0.015 160)", "oklch(25% 0.015 160)", "oklch(35% 0.015 160)", "oklch(45% 0.015 160)", "oklch(55% 0.015 160)", "oklch(70% 0.015 160)", "oklch(85% 0.015 160)", "oklch(95% 0.015 160)"] },
-      "sheet": { "role": "neutral", "displayName": "Plate Face", "canonical": "#111a16", "themes": { "dark": "#111a16", "light": "#eef0e8", "print": "#ffffff" }, "tonalRamp": ["oklch(15% 0.018 160)", "oklch(25% 0.018 160)", "oklch(35% 0.018 160)", "oklch(45% 0.018 160)", "oklch(55% 0.018 160)", "oklch(70% 0.018 160)", "oklch(85% 0.018 160)", "oklch(95% 0.018 160)"] },
-      "sheet-2": { "role": "neutral", "displayName": "Well", "canonical": "#16211c", "themes": { "dark": "#16211c", "light": "#dde1d5", "print": "#ffffff" }, "tonalRamp": ["oklch(15% 0.02 160)", "oklch(25% 0.02 160)", "oklch(35% 0.02 160)", "oklch(45% 0.02 160)", "oklch(55% 0.02 160)", "oklch(70% 0.02 160)", "oklch(85% 0.02 160)", "oklch(95% 0.02 160)"] },
-      "ink": { "role": "neutral", "displayName": "Ink White", "canonical": "#eef1ea", "themes": { "dark": "#eef1ea", "light": "#101a15", "print": "#000000" }, "tonalRamp": ["oklch(15% 0.008 130)", "oklch(25% 0.008 130)", "oklch(35% 0.008 130)", "oklch(45% 0.008 130)", "oklch(55% 0.008 130)", "oklch(70% 0.008 130)", "oklch(85% 0.008 130)", "oklch(95% 0.008 130)"] },
-      "ink-soft": { "role": "neutral", "displayName": "Soft Ink", "canonical": "#b6c2b8", "aliases": ["--text-secondary"], "themes": { "dark": "#b6c2b8", "light": "#3d4a43", "print": "#222222" }, "tonalRamp": ["oklch(15% 0.015 150)", "oklch(25% 0.015 150)", "oklch(35% 0.015 150)", "oklch(45% 0.015 150)", "oklch(55% 0.015 150)", "oklch(70% 0.015 150)", "oklch(85% 0.015 150)", "oklch(95% 0.015 150)"] },
-      "ink-faint": { "role": "neutral", "displayName": "Faint Ink (serials and meta)", "canonical": "#7d8a82", "aliases": ["--muted"], "themes": { "dark": "#7d8a82", "light": "#6a776f", "print": "#555555" }, "tonalRamp": ["oklch(15% 0.015 155)", "oklch(25% 0.015 155)", "oklch(35% 0.015 155)", "oklch(45% 0.015 155)", "oklch(58% 0.015 155)", "oklch(70% 0.015 155)", "oklch(85% 0.015 155)", "oklch(95% 0.015 155)"] },
-      "rule": { "role": "neutral", "displayName": "Hairline", "canonical": "#2a352f", "aliases": ["--grid"], "themes": { "dark": "#2a352f", "light": "#b9c0b3", "print": "#bbbbbb" }, "tonalRamp": ["oklch(15% 0.012 155)", "oklch(25% 0.012 155)", "oklch(35% 0.012 155)", "oklch(45% 0.012 155)", "oklch(55% 0.012 155)", "oklch(70% 0.012 155)", "oklch(85% 0.012 155)", "oklch(95% 0.012 155)"] },
-      "rule-firm": { "role": "neutral", "displayName": "Plate Line", "canonical": "#46544c", "themes": { "dark": "#46544c", "light": "#8d978a", "print": "#000000" }, "tonalRamp": ["oklch(15% 0.014 155)", "oklch(25% 0.014 155)", "oklch(35% 0.014 155)", "oklch(45% 0.014 155)", "oklch(55% 0.014 155)", "oklch(70% 0.014 155)", "oklch(85% 0.014 155)", "oklch(95% 0.014 155)"] },
-      "tint": { "role": "primary", "displayName": "Intaglio Green (ink one)", "canonical": "#3ba57c", "aliases": ["--accent", "--good", "--success-text"], "themes": { "dark": "#3ba57c", "light": "#0e6b4d", "print": "#04503a" }, "tonalRamp": ["oklch(15% 0.09 163)", "oklch(25% 0.09 163)", "oklch(35% 0.10 163)", "oklch(45% 0.11 163)", "oklch(55% 0.11 163)", "oklch(64% 0.11 163)", "oklch(80% 0.08 163)", "oklch(95% 0.03 163)"] },
-      "oxblood": { "role": "secondary", "displayName": "Oxblood (ink two)", "canonical": "#c9636a", "aliases": ["--bad", "--critical"], "themes": { "dark": "#c9636a", "light": "#8c1f2d", "print": "#6d1622" }, "tonalRamp": ["oklch(15% 0.08 18)", "oklch(25% 0.10 18)", "oklch(35% 0.12 18)", "oklch(45% 0.14 18)", "oklch(55% 0.15 18)", "oklch(63% 0.14 18)", "oklch(80% 0.09 18)", "oklch(95% 0.03 18)"] },
-      "gold": { "role": "tertiary", "displayName": "Seal Gold (pass mark only)", "canonical": "#c9a24a", "themes": { "dark": "#c9a24a", "light": "#8a6d1e", "print": "#6a5316" }, "tonalRamp": ["oklch(15% 0.05 85)", "oklch(25% 0.07 85)", "oklch(35% 0.08 85)", "oklch(45% 0.09 85)", "oklch(55% 0.10 85)", "oklch(72% 0.11 85)", "oklch(85% 0.08 85)", "oklch(95% 0.04 85)"] },
-      "ink-fill": { "role": "primary", "displayName": "Printed Ink Field", "canonical": "#17624a", "purpose": "The solid-ink ground for the one filled block on a sheet. It exists because the bright tint, correct as a hairline, was wrong as a large filled field.", "themes": { "dark": "#17624a", "light": "#0e6b4d", "print": "#04503a" }, "tonalRamp": ["oklch(15% 0.08 163)", "oklch(25% 0.09 163)", "oklch(35% 0.10 163)", "oklch(45% 0.11 163)", "oklch(55% 0.11 163)", "oklch(68% 0.10 163)", "oklch(82% 0.07 163)", "oklch(95% 0.03 163)"] },
-      "ink-fill-t": { "role": "primary", "displayName": "On Printed Ink", "canonical": "#eef1ea", "purpose": "The only text colour permitted on ink-fill.", "themes": { "dark": "#eef1ea", "light": "#f1f3ec", "print": "#ffffff" }, "tonalRamp": ["oklch(15% 0.008 130)", "oklch(25% 0.008 130)", "oklch(35% 0.008 130)", "oklch(45% 0.008 130)", "oklch(55% 0.008 130)", "oklch(70% 0.008 130)", "oklch(85% 0.008 130)", "oklch(95% 0.008 130)"] },
-      "accent-dim": { "role": "neutral", "displayName": "Quiet Tint Ground", "canonical": "#143024", "themes": { "dark": "#143024", "light": "#c9dcd1", "print": "#eeeeee" }, "tonalRamp": ["oklch(15% 0.04 163)", "oklch(25% 0.05 163)", "oklch(35% 0.06 163)", "oklch(45% 0.06 163)", "oklch(58% 0.06 163)", "oklch(72% 0.05 163)", "oklch(85% 0.04 163)", "oklch(95% 0.02 163)"] },
-      "code-bg": { "role": "neutral", "displayName": "Code Bed", "canonical": "#0f1815", "themes": { "dark": "#0f1815", "light": "#dde1d5", "print": "#ffffff" }, "tonalRamp": ["oklch(15% 0.015 160)", "oklch(25% 0.015 160)", "oklch(35% 0.015 160)", "oklch(45% 0.015 160)", "oklch(55% 0.015 160)", "oklch(70% 0.015 160)", "oklch(85% 0.015 160)", "oklch(95% 0.015 160)"] }
+      "plate": {
+        "role": "neutral",
+        "displayName": "Slate Plate",
+        "canonical": "#141413",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-950; the dark ground. Light theme: ivory #faf9f5."
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Raised Plate Face",
+        "canonical": "#1f1e1d",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-850; the first tonal step above the ground. Light theme: #ffffff."
+      },
+      "sheet-2": {
+        "role": "neutral",
+        "displayName": "Well",
+        "canonical": "#262624",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-800; wells, stripes, explanation blocks. Light theme: ivory medium #f0eee6."
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ivory",
+        "canonical": "#faf9f5",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "body text. Light theme: slate-950."
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#c2c0b6",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-350; secondary prose. Light theme: slate-700 #3d3d3a."
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Faint Ink",
+        "canonical": "#9c9a92",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-450; serials and labels. Light theme: slate-600 #5e5d59."
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#30302e",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-750; the 1px rule between peers. Light theme: slate-250 #dedcd1."
+      },
+      "rule-firm": {
+        "role": "neutral",
+        "displayName": "Plate Line",
+        "canonical": "#4d4c48",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-650; the 2px rule that opens or closes a structure. Light theme: slate-450 #9c9a92."
+      },
+      "tint": {
+        "role": "primary",
+        "displayName": "Clay",
+        "canonical": "#d97757",
+        "tonalRamp": [
+          "#2b1710",
+          "#4a2618",
+          "#6b3722",
+          "#8c472c",
+          "#ad5533",
+          "#c96a45",
+          "#d97757",
+          "#efb59c"
+        ],
+        "note": "Anthropic's accent and the only one here. Light theme takes the deeper cut #ad5533 for text and line work, because true clay is 2.96:1 on ivory."
+      },
+      "ink-fill": {
+        "role": "primary",
+        "displayName": "Clay Field",
+        "canonical": "#d97757",
+        "tonalRamp": [
+          "#2b1710",
+          "#4a2618",
+          "#6b3722",
+          "#8c472c",
+          "#ad5533",
+          "#c96a45",
+          "#d97757",
+          "#efb59c"
+        ],
+        "note": "true clay in BOTH themes: the one filled block per sheet, always carrying ink-fill-t slate text on it."
+      },
+      "ink-fill-t": {
+        "role": "primary",
+        "displayName": "Field Text",
+        "canonical": "#141413",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "the only colour ever set on a clay field."
+      },
+      "oxblood": {
+        "role": "secondary",
+        "displayName": "Lifted Error Red",
+        "canonical": "#e0837a",
+        "tonalRamp": [
+          "#2e1210",
+          "#4c1d19",
+          "#6b2823",
+          "#8c332c",
+          "#bf4d43",
+          "#d1655c",
+          "#e0837a",
+          "#f0b4ae"
+        ],
+        "note": "Anthropic's error red, lifted for the dark ground. Wrong answers, low timer, flag labels, caret, link hover. Light theme: #bf4d43."
+      },
+      "mark": {
+        "role": "secondary",
+        "displayName": "Olive",
+        "canonical": "#9db37c",
+        "tonalRamp": [
+          "#181c12",
+          "#2a3020",
+          "#3c452c",
+          "#4e5a38",
+          "#5f7345",
+          "#7d9160",
+          "#9db37c",
+          "#c6d6ad"
+        ],
+        "note": "the 720 pass mark and nothing else; replaced the former gold token. Light theme: #5f7345."
+      },
+      "gap": {
+        "role": "tertiary",
+        "displayName": "Unearned Ground",
+        "canonical": "#5e5d59",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "slate-600; the rosette's band between a domain's reach and the pass ring. A shortfall is neutral, not red. Light theme: #b0aea5."
+      },
+      "focus": {
+        "role": "tertiary",
+        "displayName": "Focus Blue",
+        "canonical": "#5fa3e8",
+        "tonalRamp": [
+          "#0b1b2c",
+          "#122c48",
+          "#1a3f66",
+          "#225f9f",
+          "#2c84db",
+          "#4694e4",
+          "#5fa3e8",
+          "#a8cdf3"
+        ],
+        "note": "Anthropic's focus blue, used by exactly one rule: the 2px :focus-visible outline at 2px offset in print.css. Light theme: #2c84db."
+      },
+      "accent-dim": {
+        "role": "neutral",
+        "displayName": "Dim Accent Wash",
+        "canonical": "#3a2820",
+        "tonalRamp": [
+          "#2b1710",
+          "#4a2618",
+          "#6b3722",
+          "#8c472c",
+          "#ad5533",
+          "#c96a45",
+          "#d97757",
+          "#efb59c"
+        ],
+        "note": "the active row in the side index. Light theme: #f2e2da."
+      },
+      "code-bg": {
+        "role": "neutral",
+        "displayName": "Code Ground",
+        "canonical": "#1a1918",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "the only ground code sits on; also the side-index hover wash. Light theme: #f0eee6."
+      },
+      "quiet": {
+        "role": "neutral",
+        "displayName": "Quiet Wash",
+        "canonical": "rgba(250, 249, 245, .05)",
+        "tonalRamp": [
+          "#141413",
+          "#262624",
+          "#3d3d3a",
+          "#5e5d59",
+          "#9c9a92",
+          "#c2c0b6",
+          "#dedcd1",
+          "#faf9f5"
+        ],
+        "note": "table stripe. Light theme: rgba(20, 20, 19, .05)."
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Engraved Display", "purpose": "The credential name in the hub masthead. Bodoni Moda, self-hosted variable woff2. One per page.", "cssVar": "--cut" },
-      "headline": { "displayName": "Sheet Title", "purpose": "The lesson sheet's h1, set under a 2px plate line.", "cssVar": "--cut" },
-      "title": { "displayName": "Plate Heading", "purpose": "Section and plate headings, text-wrap: balance.", "cssVar": "--cut" },
-      "numeral": { "displayName": "Engraved Numeral", "purpose": "Scores, item counts, minutes, pass mark, days to go. Numbers are display material in this world.", "cssVar": "--cut" },
-      "body-read": { "displayName": "Reading Face", "purpose": "Faustina, long-form lesson prose and the practice scenario. Held to --prose (28rem).", "cssVar": "--read" },
-      "body-ui": { "displayName": "Workbench Face", "purpose": "Archivo, hub prose, tables, ledger rows, controls.", "cssVar": "--ui" },
-      "label": { "displayName": "Emphasis Label", "purpose": "Question stems and emphasised row text, Archivo 650.", "cssVar": "--ui" },
-      "serial": { "displayName": "Plate Serial", "purpose": "Chivo Mono. Every label, caption, table head, pill, breadcrumb and field label. Canonical form is the .serial primitive in print.css.", "cssVar": "--num" }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The credential name in the hub masthead. One per page."
+      },
+      "display-sheet": {
+        "displayName": "Display, sheet",
+        "purpose": "A lesson h1, set by the engraving layer in lesson.css."
+      },
+      "display-base": {
+        "displayName": "Display, base",
+        "purpose": "The h1 in lesson.css's base layer, before the engraving layer raises it."
+      },
+      "display-dyslexic": {
+        "displayName": "Display, OpenDyslexic",
+        "purpose": "h1 when the reader has switched to OpenDyslexic."
+      },
+      "display-narrow": {
+        "displayName": "Display, narrow",
+        "purpose": "h1 below 34rem."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section heads; h2 on the reading sheet."
+      },
+      "headline-dyslexic": {
+        "displayName": "Headline, OpenDyslexic",
+        "purpose": "h2 in the dyslexic reading mode."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Hub h2 on a plate."
+      },
+      "title-row": {
+        "displayName": "Title, ledger row",
+        "purpose": "A module row's own heading in the hub ledger."
+      },
+      "title-sheet": {
+        "displayName": "Title, sheet",
+        "purpose": "A module card heading on the course index, after the finish-review fix."
+      },
+      "title-sheet-base": {
+        "displayName": "Title, sheet base",
+        "purpose": "The same heading in lesson.css's base layer."
+      },
+      "figure-hero": {
+        "displayName": "Figure, hero",
+        "purpose": "The estimated scaled score and the two stats beside it."
+      },
+      "figure-counterfoil": {
+        "displayName": "Figure, counterfoil",
+        "purpose": "The four exam facts in the masthead counterfoil."
+      },
+      "figure-countdown": {
+        "displayName": "Figure, countdown",
+        "purpose": "Days to go, beside the visitor's own exam date."
+      },
+      "body-read": {
+        "displayName": "Body, reading",
+        "purpose": "Lesson prose, Faustina at a 17px root."
+      },
+      "body-read-narrow": {
+        "displayName": "Body, reading narrow",
+        "purpose": "Same, at a 16px root below 34rem."
+      },
+      "body-read-dyslexic": {
+        "displayName": "Body, OpenDyslexic",
+        "purpose": "The whole page when the reading option is on: 15.5px root, 1.8 leading, 0.04em word spacing."
+      },
+      "body-read-print": {
+        "displayName": "Body, print",
+        "purpose": "Print stylesheet body size."
+      },
+      "standfirst": {
+        "displayName": "Standfirst",
+        "purpose": "The single paragraph under a display head."
+      },
+      "standfirst-base": {
+        "displayName": "Standfirst, base",
+        "purpose": "The base-layer standfirst, italic, before the engraving layer."
+      },
+      "scenario": {
+        "displayName": "Scenario",
+        "purpose": "A practice question's scenario, the one place the reading face appears on the workbench."
+      },
+      "callout-read": {
+        "displayName": "Callout",
+        "purpose": "Flag callouts on the reading sheet."
+      },
+      "body-ui": {
+        "displayName": "Body, workbench",
+        "purpose": "Hub body copy and control text."
+      },
+      "subhead": {
+        "displayName": "Subhead",
+        "purpose": "h3 on the reading sheet."
+      },
+      "subhead-hub": {
+        "displayName": "Subhead, hub",
+        "purpose": "h3 on a hub plate."
+      },
+      "brand": {
+        "displayName": "Brand",
+        "purpose": "The side index's brand line; also the path intro on the course index."
+      },
+      "prompt": {
+        "displayName": "Prompt",
+        "purpose": "A question stem."
+      },
+      "body-ui-sm": {
+        "displayName": "Body, small",
+        "purpose": "Hub tables, answer options, ledger prose, h4, explanation blocks."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Buttons, selects, date inputs, domain bar rows."
+      },
+      "note": {
+        "displayName": "Note",
+        "purpose": "Hub notes, row meta, tabs below 560px."
+      },
+      "body-ui-sheet": {
+        "displayName": "Body, sheet UI",
+        "purpose": "Quiz body and the path lede on the reading sheet."
+      },
+      "apparatus": {
+        "displayName": "Apparatus",
+        "purpose": "The pager and the ask block."
+      },
+      "verdict": {
+        "displayName": "Verdict",
+        "purpose": "A quiz verdict line."
+      },
+      "index": {
+        "displayName": "Index",
+        "purpose": "Table of contents, course nav, module prose, path-start."
+      },
+      "table-sheet": {
+        "displayName": "Table, sheet",
+        "purpose": "Table body on the reading sheet."
+      },
+      "index-nav": {
+        "displayName": "Index, side",
+        "purpose": "Side index items."
+      },
+      "status": {
+        "displayName": "Status",
+        "purpose": "Scoreboard and path status."
+      },
+      "code-block": {
+        "displayName": "Code block",
+        "purpose": "pre blocks."
+      },
+      "caption-sheet": {
+        "displayName": "Caption",
+        "purpose": "Meta strip, breadcrumb, figure captions, narrow tables, the nav toggle."
+      },
+      "hint": {
+        "displayName": "Hint",
+        "purpose": "Quiz hints, module meta, the side index hint."
+      },
+      "control-nav": {
+        "displayName": "Control, nav",
+        "purpose": "The segmented reading-setting buttons in the side index."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Eyebrow, caption, toc summary, fold summary, course-nav heads."
+      },
+      "label-sm": {
+        "displayName": "Label, small",
+        "purpose": "Flag labels and the module serial."
+      },
+      "label-xs": {
+        "displayName": "Label, x-small",
+        "purpose": "Pills, pager serials, the engraved eyebrow, the nav hint."
+      },
+      "label-nav": {
+        "displayName": "Label, nav",
+        "purpose": "Side index group heads and segment labels."
+      },
+      "tab": {
+        "displayName": "Tab",
+        "purpose": "The ledger tab row; 650 when selected."
+      },
+      "serial": {
+        "displayName": "Serial",
+        "purpose": "The workbench's plate serial: anything that numbers or stamps rather than speaks."
+      },
+      "serial-sheet": {
+        "displayName": "Serial, sheet",
+        "purpose": "print.css's .serial primitive and the reading sheet's captions."
+      },
+      "serial-sheet-lg": {
+        "displayName": "Serial, sheet large",
+        "purpose": "Eyebrow, flag label, pill and pager serials on the sheet."
+      },
+      "serial-mod": {
+        "displayName": "Serial, module",
+        "purpose": "The absolute-positioned module serial on the course index."
+      },
+      "serial-field": {
+        "displayName": "Serial, field",
+        "purpose": "The exam-date field, meter values, table heads."
+      },
+      "serial-key": {
+        "displayName": "Serial, key",
+        "purpose": "Option key letters, bar values, the legend."
+      },
+      "timer": {
+        "displayName": "Timer",
+        "purpose": "The countdown clock on a timed set; goes oxblood when low."
+      },
+      "code-inline": {
+        "displayName": "Code, inline",
+        "purpose": "Inline code, relative to its parent."
+      },
+      "section-number": {
+        "displayName": "Section number",
+        "purpose": "The numeric section marker, inline with its heading, never stacked above it."
+      },
+      "index-number": {
+        "displayName": "Index number",
+        "purpose": "The mono number in a side index row."
+      },
+      "index-glyph": {
+        "displayName": "Index marker",
+        "purpose": "The external-link marker in a side index row."
+      },
+      "print-href": {
+        "displayName": "Print href",
+        "purpose": "The URL printed after a link in the print stylesheet."
+      },
+      "diagram-label": {
+        "displayName": "Diagram label",
+        "purpose": "Lettering set in SVG on the drawn plates."
+      },
+      "diagram-label-bold": {
+        "displayName": "Diagram label, bold",
+        "purpose": "Emphasised diagram lettering."
+      },
+      "diagram-sub": {
+        "displayName": "Diagram sub",
+        "purpose": "Secondary diagram lettering."
+      },
+      "diagram-tag": {
+        "displayName": "Diagram tag",
+        "purpose": "An accented diagram tag."
+      },
+      "diagram-key": {
+        "displayName": "Diagram key",
+        "purpose": "Tracked uppercase keys on a diagram."
+      },
+      "diagram-key-xs": {
+        "displayName": "Diagram key, x-small",
+        "purpose": "The smallest key lettering; the only type below 10px, and only inside a drawn plate."
+      }
     },
+    "fonts": [
+      {
+        "family": "Hanken Grotesk VF",
+        "role": "--ui and --cut",
+        "weights": "100 900 (variable)",
+        "file": "course/assets/fonts/hanken-grotesk-latin-wght-normal.woff2",
+        "standIn": "Yes: stands in for Anthropic's Styrene A / anthropicSans, which is licensed and not in this repo."
+      },
+      {
+        "family": "Faustina VF",
+        "role": "--read",
+        "weights": "300 800 (variable), roman and italic",
+        "file": "course/assets/fonts/faustina-latin-wght-normal.woff2, faustina-latin-wght-italic.woff2",
+        "standIn": "Yes: stands in for Anthropic's Copernicus / anthropicSerif, which is licensed and not in this repo."
+      },
+      {
+        "family": "JetBrains Mono VF",
+        "role": "--num",
+        "weights": "100 800 (variable)",
+        "file": "course/assets/fonts/jetbrains-mono-latin-wght-normal.woff2",
+        "standIn": "No: this is the mono Anthropic actually ships, and it is free."
+      },
+      {
+        "family": "OpenDyslexic",
+        "role": "reading option offered by nav.js; declared in nav.css",
+        "weights": "400, 700",
+        "file": "course/assets/fonts/opendyslexic-latin-400-normal.woff2, opendyslexic-latin-700-normal.woff2",
+        "standIn": "No: an accessibility option that must survive, per PRODUCT.md."
+      }
+    ],
     "shadows": [],
     "motion": [
-      { "name": "mark-in", "value": "transform .12s ease-out", "purpose": "The 7px tint mark scaling into a checked radio or checkbox." },
-      { "name": "menu-slide", "value": "transform .18s ease", "purpose": "The side index sliding in and out." },
-      { "name": "row-state", "value": "background .12s, border-color .12s", "purpose": "Lesson quiz option rows changing state." },
-      { "name": "reduced-motion", "value": "animation-duration: .001ms; transition-duration: .001ms", "purpose": "print.css collapses every animation and transition under prefers-reduced-motion: reduce." }
+      {
+        "name": "control-dot",
+        "value": "transform .12s ease-out",
+        "purpose": "The 7px clay dot scaling in when a checkbox or radio is checked."
+      },
+      {
+        "name": "nav-slide",
+        "value": "transform .18s ease",
+        "purpose": "The side index sliding in and out; suppressed while the panel is being resized."
+      },
+      {
+        "name": "resizer-line",
+        "value": "background .12s",
+        "purpose": "The 2px clay line appearing on the side index's resize handle."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce) { animation-duration: .001ms; transition-duration: .001ms }",
+        "purpose": "print.css kills all motion globally when the reader asks for it."
+      }
     ],
     "breakpoints": [
-      { "name": "narrow", "value": "560px" },
-      { "name": "sheet-narrow", "value": "34rem" },
-      { "name": "rosette-two-col", "value": "720px" },
-      { "name": "mast-fold", "value": "760px" },
-      { "name": "menu-inline", "value": "64.01rem" }
+      {
+        "name": "hub-narrow",
+        "value": "560px"
+      },
+      {
+        "name": "hub-mid",
+        "value": "760px"
+      },
+      {
+        "name": "rosette-row",
+        "value": "720px"
+      },
+      {
+        "name": "sheet-narrow",
+        "value": "34rem"
+      },
+      {
+        "name": "sheet-wide",
+        "value": "64rem"
+      },
+      {
+        "name": "nav-shift",
+        "value": "64.01rem"
+      }
     ],
-    "fonts": [
-      { "family": "Bodoni Moda VF", "job": "display and numerals", "files": "course/assets/fonts/bodoni-moda-latin-wght-normal.woff2, -italic.woff2", "axes": "wght 400-900", "source": "npm Fontsource, OFL licence kept alongside" },
-      { "family": "Faustina VF", "job": "long-form reading", "files": "course/assets/fonts/faustina-latin-wght-normal.woff2, -italic.woff2", "axes": "wght 300-800", "source": "npm Fontsource, OFL licence kept alongside" },
-      { "family": "Archivo VF", "job": "workbench UI", "files": "course/assets/fonts/archivo-latin-wght-normal.woff2", "axes": "wght 100-900", "source": "npm Fontsource, OFL licence kept alongside" },
-      { "family": "Chivo Mono", "job": "serials and tabular figures", "files": "course/assets/fonts/chivo-mono-latin-400-normal.woff2, -600-normal.woff2", "axes": "static 400 and 600", "source": "npm Fontsource, OFL licence kept alongside" },
-      { "family": "OpenDyslexic", "job": "accessibility option, switched from the menu and remembered; excluded from code, figures and SVG", "files": "course/assets/fonts/opendyslexic-latin-400-normal.woff2, -700-normal.woff2", "axes": "static 400 and 700", "source": "SIL OFL, licence at course/assets/fonts/OpenDyslexic-LICENSE.txt" }
+    "lineWork": [
+      {
+        "name": "hairline",
+        "value": "1px solid var(--rule)",
+        "purpose": "Between peers: ledger rows, table body, cards, pills, meters."
+      },
+      {
+        "name": "plate-line",
+        "value": "2px solid var(--rule-firm)",
+        "purpose": "Opens or closes a structure: masthead, ledger bounds, table head, explanation top."
+      },
+      {
+        "name": "closing-rule",
+        "value": "1.5px solid var(--ink)",
+        "purpose": "The reading sheet's base table closes on a 1.5px line under the last row."
+      },
+      {
+        "name": "guilloche",
+        "value": "0.6px canvas stroke",
+        "purpose": "Every cut in the rosette; tone is stroke count, not weight."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 0",
+        "purpose": "The one focus treatment, from print.css. No component overrides it."
+      }
+    ],
+    "measures": [
+      {
+        "name": "--prose",
+        "value": "28rem",
+        "purpose": "The reading measure; constrains body-level p, ul, ol. Owned solely by lesson.css."
+      },
+      {
+        "name": "--measure",
+        "value": "40rem",
+        "purpose": "The wider structural width for figures, tables, callouts, apparatus and pager. Owned solely by lesson.css."
+      },
+      {
+        "name": "--page",
+        "value": "62rem",
+        "purpose": "The reading sheet's page width."
+      },
+      {
+        "name": "--nav-w",
+        "value": "17rem",
+        "purpose": "The side index width; user-resizable."
+      },
+      {
+        "name": "hub-wrap",
+        "value": "68rem",
+        "purpose": "The workbench column."
+      }
+    ],
+    "legacyAliases": [
+      {
+        "token": "--paper",
+        "aliasOf": "--plate",
+        "where": "print.css; named by lesson.css"
+      },
+      {
+        "token": "--accent",
+        "aliasOf": "--tint",
+        "where": "print.css; named by lesson.css and nav.css"
+      },
+      {
+        "token": "--accent-dim",
+        "aliasOf": "(own value)",
+        "where": "print.css; the active side-index row"
+      },
+      {
+        "token": "--good",
+        "aliasOf": "--mark",
+        "where": "print.css; diagram keys"
+      },
+      {
+        "token": "--bad",
+        "aliasOf": "--oxblood",
+        "where": "print.css; diagram keys"
+      },
+      {
+        "token": "--flag",
+        "aliasOf": "--sheet-2",
+        "where": "print.css; callouts and the side index ground"
+      },
+      {
+        "token": "--code-bg",
+        "aliasOf": "(own value)",
+        "where": "print.css; code ground and nav hover wash"
+      },
+      {
+        "token": "--grid",
+        "aliasOf": "--rule",
+        "where": "hub-template.html"
+      },
+      {
+        "token": "--muted",
+        "aliasOf": "--ink-faint",
+        "where": "hub-template.html"
+      },
+      {
+        "token": "--text-secondary",
+        "aliasOf": "--ink-soft",
+        "where": "hub-template.html"
+      },
+      {
+        "token": "--success-text",
+        "aliasOf": "--tint",
+        "where": "hub-template.html"
+      },
+      {
+        "token": "--critical",
+        "aliasOf": "--oxblood",
+        "where": "hub-template.html"
+      }
     ]
   },
   "components": [
@@ -64,138 +758,220 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The filled-ink control. Hover empties it to a tint outline; that inversion is the house hover.",
-      "html": "<button class=\"ds-btn-primary\">Start a set</button>",
-      "css": ".ds-btn-primary { font-family: var(--ui); font-size: 13px; font-weight: 600; letter-spacing: .01em; background: var(--ink-fill); color: var(--ink-fill-t); border: 1px solid var(--ink-fill); border-radius: 0; padding: 7px 13px; cursor: pointer; } .ds-btn-primary:hover { background: transparent; border-color: var(--tint); color: var(--tint); } .ds-btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; } .ds-btn-primary:disabled { opacity: .45; cursor: default; border-color: var(--rule); color: var(--ink-faint); }"
+      "description": "The one filled clay field on a sheet; hovering empties it to an outline.",
+      "html": "<button class=\"ds-btn-primary\">Start Module 1</button>",
+      "css": ".ds-btn-primary { font-family: var(--ui); font-size: 13px; font-weight: 600; letter-spacing: .01em; background: var(--ink-fill); border: 1px solid var(--ink-fill); color: var(--ink-fill-t); border-radius: 0; padding: 7px 13px; cursor: pointer; } .ds-btn-primary:hover { background: transparent; border-color: var(--tint); color: var(--tint); } .ds-btn-primary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
     },
     {
       "name": "Default Button",
       "kind": "button",
       "refersTo": "button-default",
-      "description": "The workbench control: plate face, hairline border, ink text. Hover moves border and text to ink one.",
-      "html": "<button class=\"ds-btn\">Domain drill</button>",
-      "css": ".ds-btn { font-family: var(--ui); font-size: 13px; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule-firm); border-radius: 0; padding: 7px 13px; cursor: pointer; } .ds-btn:hover { border-color: var(--tint); color: var(--tint); } .ds-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }"
+      "description": "Every other control: plate face, plate-line border, clay on hover.",
+      "html": "<button class=\"ds-btn\">Reveal answer</button>",
+      "css": ".ds-btn { font-family: var(--ui); font-size: 13px; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule-firm); border-radius: 0; padding: 7px 13px; cursor: pointer; } .ds-btn:hover { border-color: var(--tint); color: var(--tint); } .ds-btn:disabled { opacity: .45; cursor: default; border-color: var(--rule); color: var(--ink-faint); } .ds-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Serial Button",
+      "kind": "button",
+      "refersTo": "button-serial",
+      "description": "The theme toggle: a mono uppercase serial in a hairline box.",
+      "html": "<button class=\"ds-btn-serial\">Light</button>",
+      "css": ".ds-btn-serial { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); background: transparent; border: 1px solid var(--rule); border-radius: 0; padding: 5px 9px; cursor: pointer; } .ds-btn-serial:hover { border-color: var(--tint); color: var(--tint); } .ds-btn-serial:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
     },
     {
       "name": "Ink Block",
       "kind": "custom",
       "refersTo": "ink-block",
-      "description": "The one filled field on a sheet: the primary call to action, with a bordered serial chip at the right. At most one per page.",
-      "html": "<a class=\"ds-ink-block\" href=\"#\"><span><b>Start Module 1</b><span class=\"ds-ink-block-line\">Twelve distilled sections, 133 minutes of official material.</span></span><span class=\"ds-ink-block-go\">Open</span></a>",
-      "css": ".ds-ink-block { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-family: var(--ui); background: var(--ink-fill); border: 1px solid var(--ink-fill); color: var(--ink-fill-t); padding: 16px 20px; text-decoration: none; } .ds-ink-block b { font-size: 15px; font-weight: 650; letter-spacing: .005em; display: block; } .ds-ink-block-line { font-size: 13px; opacity: .82; } .ds-ink-block-go { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; border: 1px solid currentColor; padding: 7px 13px; white-space: nowrap; } .ds-ink-block:hover { background: transparent; border-color: var(--tint); color: var(--tint); } .ds-ink-block:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }"
+      "description": "The single filled call to action on a sheet, with a mono go-label inside it.",
+      "html": "<a class=\"ds-ink-block\" href=\"#\"><span><b>Module 1 - Claude and the Anthropic platform</b><span class=\"line\">Twelve distilled sections, checkpoints at the end of each.</span></span><span class=\"go\">Start</span></a>",
+      "css": ".ds-ink-block { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; background: var(--ink-fill); border: 1px solid var(--ink-fill); color: var(--ink-fill-t); padding: 16px 20px; text-decoration: none; font-family: var(--ui); } .ds-ink-block b { font-size: 15px; font-weight: 650; letter-spacing: .005em; display: block; } .ds-ink-block .line { font-size: 13px; color: var(--ink-fill-t); opacity: .82; } .ds-ink-block .go { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; border: 1px solid currentColor; padding: 7px 13px; white-space: nowrap; } .ds-ink-block:hover { background: transparent; border-color: var(--tint); color: var(--tint); } .ds-ink-block:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Counterfoil",
+      "kind": "custom",
+      "refersTo": "counterfoil",
+      "description": "The masthead's plate block: four exam facts in ruled cells over a date bar the visitor fills in.",
+      "html": "<div class=\"ds-counterfoil\"><dl class=\"specimen\"><div><dt>Items</dt><dd>63</dd></div><div><dt>Minutes</dt><dd>120</dd></div><div><dt>To pass</dt><dd>720</dd></div><div><dt>Domains</dt><dd>7</dd></div></dl><div class=\"datebar\"><label for=\"ds-exam-date\">Exam</label><input id=\"ds-exam-date\" type=\"date\"><span class=\"togo\">21</span></div></div>",
+      "css": ".ds-counterfoil { border: 1px solid var(--rule-firm); min-width: 246px; font-family: var(--ui); } .ds-counterfoil .specimen { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; } .ds-counterfoil .specimen div { padding: 8px 10px 9px; border-right: 1px solid var(--rule); text-align: center; } .ds-counterfoil .specimen div:last-child { border-right: 0; } .ds-counterfoil dt { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1px; } .ds-counterfoil dd { margin: 0; font-family: var(--cut); font-weight: 600; font-size: 21px; line-height: 1.1; font-variant-numeric: tabular-nums; } .ds-counterfoil .datebar { display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--rule); padding: 7px 10px; white-space: nowrap; font-size: 13px; } .ds-counterfoil input[type=\"date\"] { flex: 1 1 auto; min-width: 0; font-family: var(--num); font-size: 11.5px; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--rule-firm); border-radius: 0; padding: 3px 2px; } .ds-counterfoil input[type=\"date\"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; } .ds-counterfoil .togo { font-family: var(--cut); font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }"
     },
     {
       "name": "Ledger Tabs",
       "kind": "nav",
-      "refersTo": "tab-ledger",
-      "description": "A ruled ledger index rather than pills: a band between two plate lines, divided by hairlines, selected by a 2px tint rule.",
-      "html": "<nav class=\"ds-tabs\"><button aria-selected=\"true\">Course</button><button aria-selected=\"false\">Study plan</button><button aria-selected=\"false\">Practice</button><button aria-selected=\"false\">Results</button></nav>",
-      "css": ".ds-tabs { display: flex; flex-wrap: wrap; border-top: 1px solid var(--rule-firm); border-bottom: 1px solid var(--rule-firm); } .ds-tabs button { font-family: var(--ui); font-size: 13.5px; font-weight: 500; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 11px 18px 10px; color: var(--ink-faint); cursor: pointer; } .ds-tabs button + button { border-left: 1px solid var(--rule); } .ds-tabs button:hover { color: var(--ink); } .ds-tabs button[aria-selected=\"true\"] { color: var(--ink); border-bottom-color: var(--tint); font-weight: 650; } .ds-tabs button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }"
-    },
-    {
-      "name": "Counterfoil",
-      "kind": "card",
-      "refersTo": "card-plate",
-      "description": "The plate's own numbers, set in engraved figures under Chivo Mono serial labels, bounded by a plate line and divided by hairlines.",
-      "html": "<div class=\"ds-counterfoil\"><dl class=\"ds-specimen\"><div><dt>Items</dt><dd>63</dd></div><div><dt>Minutes</dt><dd>120</dd></div><div><dt>Pass</dt><dd>720</dd></div><div><dt>Domains</dt><dd>7</dd></div></dl></div>",
-      "css": ".ds-counterfoil { border: 1px solid var(--rule-firm); min-width: 246px; color: var(--ink); } .ds-specimen { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; } .ds-specimen div { padding: 8px 10px 9px; border-right: 1px solid var(--rule); text-align: center; } .ds-specimen div:last-child { border-right: 0; } .ds-specimen dt { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1px; } .ds-specimen dd { margin: 0; font-family: var(--cut); font-weight: 600; font-size: 21px; line-height: 1.1; font-variant-numeric: tabular-nums; }"
+      "refersTo": "tab",
+      "description": "The hub's index: a ruled row of tabs, the selected one underlined in clay.",
+      "html": "<nav class=\"ds-tabs\"><button aria-selected=\"true\">Course</button><button aria-selected=\"false\">Study plan</button><button aria-selected=\"false\">Practice</button><button aria-selected=\"false\">Results</button><button aria-selected=\"false\">Exam brief</button></nav>",
+      "css": ".ds-tabs { display: flex; flex-wrap: wrap; border-top: 1px solid var(--rule-firm); border-bottom: 1px solid var(--rule-firm); } .ds-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 11px 18px 10px; color: var(--ink-faint); font-family: var(--ui); font-size: 13.5px; font-weight: 500; border-radius: 0; cursor: pointer; } .ds-tabs button:hover { color: var(--ink); } .ds-tabs button[aria-selected=\"true\"] { color: var(--ink); border-bottom-color: var(--tint); font-weight: 650; } .ds-tabs button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
     },
     {
       "name": "Ledger Row",
-      "kind": "custom",
-      "refersTo": "option-row",
-      "description": "The house layout for repeated items: a hairline-ruled row with a leading serial, a line-art mark, an engraved title and a serial pill. The next item is marked by moving its serial and mark to ink one.",
-      "html": "<div class=\"ds-ledger\"><div class=\"ds-lrow ds-is-next\"><span class=\"ds-lno\">Section 01</span><span class=\"ds-ic\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\"/><path d=\"M7 9h10M7 13h10M7 17h6\"/></svg></span><div><h3>Module introduction</h3><p>What the exam tests, and how this sheet is used.</p><p class=\"ds-pmeta\">9 min</p></div><span class=\"ds-pill ds-on\">Next</span></div></div>",
-      "css": ".ds-ledger { border-top: 2px solid var(--rule-firm); border-bottom: 1px solid var(--rule-firm); font-family: var(--ui); color: var(--ink); } .ds-lrow { display: grid; grid-template-columns: 96px 34px minmax(0,1fr) auto; gap: 18px; align-items: start; padding: 16px 2px; border-top: 1px solid var(--rule); } .ds-lrow:first-child { border-top: 0; } .ds-lno { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); padding-top: 4px; } .ds-is-next .ds-lno, .ds-is-next .ds-ic { color: var(--tint); } .ds-ic { width: 30px; height: 30px; color: var(--ink-faint); margin-top: 2px; } .ds-ic svg { width: 100%; height: 100%; display: block; } .ds-lrow h3 { font-family: var(--cut); font-weight: 700; font-size: 20px; letter-spacing: -.01em; line-height: 1.15; margin: 0 0 5px; } .ds-lrow p { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 7px; max-width: 66ch; } .ds-pmeta { font-size: 12.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; } .ds-pill { display: inline-block; font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; border: 1px solid var(--rule-firm); color: var(--ink-faint); padding: 3px 7px; } .ds-pill.ds-on { border-color: var(--tint); color: var(--tint); }"
+      "kind": "card",
+      "refersTo": "ledger-row",
+      "description": "A module in the index: mono serial, line icon, title and prose, status pill; the next row's serial and icon take clay.",
+      "html": "<div class=\"ds-ledger\"><div class=\"ds-lrow is-next\"><div class=\"lno\">Module 01</div><div class=\"ic\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"0\" ry=\"0\"/><path d=\"M3 9h18M9 9v12\"/></svg></div><div><h3>Claude and the Anthropic platform</h3><p>The platform, the models, and where an architect's decisions actually land.</p><p class=\"pmeta\">12 sections - 141 min</p></div><span class=\"ds-pill on\">Distilled</span></div></div>",
+      "css": ".ds-ledger { border-top: 2px solid var(--rule-firm); border-bottom: 1px solid var(--rule-firm); font-family: var(--ui); } .ds-lrow { display: grid; grid-template-columns: 96px 34px minmax(0, 1fr) auto; gap: 18px; align-items: start; padding: 16px 2px; border-top: 1px solid var(--rule); } .ds-lrow:first-child { border-top: 0; } .ds-lrow .lno { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); padding-top: 4px; } .ds-lrow.is-next .lno, .ds-lrow.is-next .ic { color: var(--tint); } .ds-lrow .ic { width: 30px; height: 30px; color: var(--ink-faint); margin-top: 2px; } .ds-lrow .ic svg { width: 100%; height: 100%; display: block; } .ds-lrow h3 { font-family: var(--cut); font-weight: 700; font-size: 20px; margin: 0 0 5px; letter-spacing: -.008em; line-height: 1.15; } .ds-lrow p { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 7px; max-width: 66ch; } .ds-lrow .pmeta { font-size: 12.5px; color: var(--ink-faint); margin: 0; font-variant-numeric: tabular-nums; } .ds-pill { display: inline-block; font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; border: 1px solid var(--rule-firm); color: var(--ink-faint); padding: 3px 7px; } .ds-pill.on { border-color: var(--tint); color: var(--tint); }"
     },
     {
       "name": "Answer Option",
-      "kind": "custom",
-      "refersTo": "option-row",
-      "description": "A practice option: hairline box, appearance-none control with a scaling tint mark, serial key letter. Correct takes ink one, wrong takes ink two. No ornament on this surface.",
-      "html": "<label class=\"ds-opt\"><input type=\"radio\" name=\"ds-opt\"><span class=\"ds-k\">A</span><span>Route the request through a batch job and reconcile the results overnight.</span></label>",
-      "css": ".ds-opt { display: grid; grid-template-columns: 18px 26px minmax(0,1fr); gap: 10px; align-items: start; font-family: var(--ui); font-size: 13.5px; color: var(--ink); border: 1px solid var(--rule); border-radius: 0; padding: 11px 13px; margin-bottom: 8px; cursor: pointer; } .ds-opt:hover { border-color: var(--rule-firm); } .ds-opt input { appearance: none; -webkit-appearance: none; width: 15px; height: 15px; margin: 3px 0 0; border: 1px solid var(--rule-firm); border-radius: 50%; background: transparent; display: grid; place-content: center; cursor: pointer; } .ds-opt input::after { content: \"\"; width: 7px; height: 7px; border-radius: 50%; background: var(--tint); transform: scale(0); transition: transform .12s ease-out; } .ds-opt input:checked { border-color: var(--tint); } .ds-opt input:checked::after { transform: scale(1); } .ds-opt input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; } .ds-k { font-family: var(--num); font-weight: 600; font-size: 12px; color: var(--ink-faint); } .ds-opt.ds-correct { border-color: var(--tint); } .ds-opt.ds-correct .ds-k { color: var(--tint); } .ds-opt.ds-wrong { border-color: var(--oxblood); } .ds-opt.ds-wrong .ds-k { color: var(--oxblood); }"
+      "kind": "input",
+      "refersTo": "option",
+      "description": "A practice answer: hairline box, mono key letter, a clay dot that scales in on check; correct and wrong recolour the border and key only.",
+      "html": "<label class=\"ds-opt\"><input type=\"radio\" name=\"ds-q\"><span class=\"k\">B</span><span>Route the batch through the Message Batches API and poll for completion.</span></label><label class=\"ds-opt correct\"><input type=\"radio\" name=\"ds-q\" checked><span class=\"k\">C</span><span>Stream the response and cache the prefix across calls.</span></label>",
+      "css": ".ds-opt { display: grid; grid-template-columns: 18px 26px minmax(0, 1fr); gap: 10px; align-items: start; border: 1px solid var(--rule); padding: 11px 13px; margin-bottom: 8px; font-family: var(--ui); font-size: 13.5px; cursor: pointer; } .ds-opt:hover { border-color: var(--rule-firm); } .ds-opt input { appearance: none; -webkit-appearance: none; width: 15px; height: 15px; margin: 3px 0 0; border: 1px solid var(--rule-firm); border-radius: 50%; background: transparent; display: grid; place-content: center; cursor: pointer; } .ds-opt input::after { content: \"\"; width: 7px; height: 7px; border-radius: 50%; background: var(--tint); transform: scale(0); transition: transform .12s ease-out; } .ds-opt input:checked { border-color: var(--tint); } .ds-opt input:checked::after { transform: scale(1); } .ds-opt input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; } .ds-opt .k { font-family: var(--num); font-weight: 600; font-size: 12px; color: var(--ink-faint); } .ds-opt.correct { border-color: var(--tint); } .ds-opt.correct .k { color: var(--tint); } .ds-opt.wrong { border-color: var(--oxblood); } .ds-opt.wrong .k { color: var(--oxblood); }"
     },
     {
-      "name": "Date Field",
-      "kind": "input",
-      "refersTo": "input-date",
-      "description": "Controls are drawn as printed rules, not boxes: a transparent field on a single plate-line underline, set in serial mono.",
-      "html": "<span class=\"ds-datebar\"><label class=\"ds-serial\" for=\"ds-date\">Exam date</label><input class=\"ds-date\" id=\"ds-date\" type=\"date\"></span>",
-      "css": ".ds-datebar { display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--rule); padding: 7px 10px; white-space: nowrap; } .ds-serial { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); } .ds-date { font-family: var(--num); font-size: 11.5px; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--rule-firm); border-radius: 0; padding: 3px 2px; } .ds-date:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }"
+      "name": "Explanation Block",
+      "kind": "card",
+      "refersTo": "explanation",
+      "description": "The per-question explanation: a well under a plate line, headed by a mono serial.",
+      "html": "<div class=\"ds-expl\"><h4>Why</h4><p>Prompt caching is billed on write and read separately; the break-even is at two reads.</p><ul><li><b>A</b> - batches change latency, not token accounting.</li></ul></div>",
+      "css": ".ds-expl { border: 1px solid var(--rule); border-top: 2px solid var(--rule-firm); background: var(--sheet-2); padding: 15px 17px; font-family: var(--ui); font-size: 13.5px; } .ds-expl h4 { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 8px; } .ds-expl ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-soft); } .ds-expl li { margin-bottom: 4px; }"
     },
     {
       "name": "Domain Bar",
       "kind": "custom",
-      "refersTo": "explanation-panel",
-      "description": "A ruled gauge, not a progress bar: a 1px plate-line track with a flat tint fill and a 1px gold target line at the 72% pass mark.",
-      "html": "<div class=\"ds-bar-row\"><span class=\"ds-bar-label\"><span class=\"ds-mk\">D1</span>Claude Platform &amp; Solution Design</span><span class=\"ds-bar-track\"><span class=\"ds-bar-fill\" style=\"width:64%\"></span><span class=\"ds-bar-target\"></span></span><span class=\"ds-bar-val\">64%</span></div>",
-      "css": ".ds-bar-row { display: grid; grid-template-columns: minmax(0,360px) minmax(0,1fr) 46px; gap: 12px; align-items: center; padding: 6px 0; border-top: 1px solid var(--rule); font-family: var(--ui); font-size: 13px; color: var(--ink); } .ds-mk { font-family: var(--num); font-size: 11px; color: var(--ink-faint); border: 1px solid var(--rule-firm); padding: 0 4px; margin-right: 8px; } .ds-bar-track { position: relative; display: block; height: 11px; border: 1px solid var(--rule-firm); } .ds-bar-fill { display: block; height: 100%; background: var(--tint); } .ds-bar-target { position: absolute; top: -3px; bottom: -3px; left: 72%; width: 1px; background: var(--gold); } .ds-bar-val { font-family: var(--num); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }"
+      "refersTo": "stat-figure",
+      "description": "One weighted domain: a ruled gauge with a flat clay fill and a 1px olive target line at the 72% pass mark.",
+      "html": "<div class=\"ds-bar-row\"><div class=\"bar-label\"><span class=\"mk\">1</span>Designing Claude solutions <span class=\"w\">22%</span></div><div class=\"bar-track\"><div class=\"bar-fill\" style=\"width:64%\"></div><div class=\"bar-target\"></div></div><div class=\"bar-val\">64%</div></div>",
+      "css": ".ds-bar-row { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr) 46px; gap: 12px; align-items: center; padding: 6px 0; border-top: 1px solid var(--rule); font-family: var(--ui); font-size: 13px; } .ds-bar-row .bar-label { line-height: 1.35; } .ds-bar-row .bar-label .mk { font-family: var(--num); font-size: 11px; color: var(--ink-faint); border: 1px solid var(--rule-firm); padding: 0 4px; margin-right: 8px; } .ds-bar-row .bar-label .w { color: var(--ink-faint); } .ds-bar-row .bar-track { position: relative; height: 11px; border: 1px solid var(--rule-firm); } .ds-bar-row .bar-fill { height: 100%; background: var(--tint); } .ds-bar-row .bar-target { position: absolute; top: -3px; bottom: -3px; left: 72%; width: 1px; background: var(--mark); } .ds-bar-row .bar-val { font-family: var(--num); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }"
     },
     {
       "name": "Side Index",
       "kind": "nav",
-      "refersTo": "tab-ledger",
-      "description": "The persistent left menu, set as the sheet's index: Bodoni brand mark, serial group heads, and a 1px tint left rule marking the current page.",
-      "html": "<nav class=\"ds-sidenav\"><div class=\"ds-sidenav-head\"><a class=\"ds-brand\" href=\"#\">CCAR-P</a></div><div class=\"ds-nav-group\"><h3>Module 1</h3><ul><li class=\"ds-here\"><a href=\"#\"><span class=\"ds-n\">01</span>Module introduction</a></li><li><a href=\"#\"><span class=\"ds-n\">02</span>How Claude behaves</a></li></ul></div></nav>",
-      "css": ".ds-sidenav { width: 17rem; background: var(--flag); border-right: 1px solid var(--rule); padding: .9rem 1rem 2rem; font-family: var(--ui); font-size: .84rem; line-height: 1.4; color: var(--ink); box-sizing: border-box; } .ds-sidenav-head { padding-bottom: .8rem; margin-bottom: .6rem; border-bottom: 1px solid var(--rule); } .ds-brand { font-family: var(--cut); font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; color: var(--ink); text-decoration: none; } .ds-nav-group h3 { font-family: var(--num); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin: .9rem 0 .35rem; } .ds-nav-group ul { list-style: none; margin: 0; padding: 0; } .ds-nav-group a { display: flex; gap: .55rem; align-items: baseline; color: var(--ink-soft); text-decoration: none; padding: .28rem .5rem; margin: 0 -.5rem; border-radius: 0; } .ds-nav-group a:hover { background: var(--code-bg); color: var(--ink); } .ds-nav-group .ds-n { font-family: var(--num); color: var(--ink-faint); font-size: .78em; font-variant-numeric: tabular-nums; flex: none; } .ds-nav-group li.ds-here a { border-left: 1px solid var(--tint); margin-left: -.5rem; padding-left: calc(.5rem - 1px); color: var(--ink); font-weight: 600; } .ds-nav-group li.ds-here a .ds-n { color: var(--tint); } .ds-nav-group a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }"
+      "refersTo": "side-index-item",
+      "description": "The persistent menu: uppercase group heads, mono-numbered rows, the current page washed in dim accent.",
+      "html": "<div class=\"ds-sidenav\"><div class=\"head\"><a class=\"brand\" href=\"#\">CCAR-P Prep</a><button class=\"close\">Close</button></div><div class=\"group\"><h3>Module 1</h3><ul><li><a href=\"#\"><span class=\"n\">1.1</span>The platform</a></li><li class=\"here\"><a href=\"#\"><span class=\"n\">1.2</span>Model selection</a></li><li><a href=\"#\"><span class=\"n\">1.3</span>Context and caching<span class=\"ext\">&#8599;</span></a></li></ul></div></div>",
+      "css": ".ds-sidenav { width: 17rem; background: var(--flag); border-right: 1px solid var(--rule); padding: .9rem 1rem 2rem; font-family: var(--ui); font-size: .84rem; line-height: 1.4; color: var(--ink); } .ds-sidenav .head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding-bottom: .8rem; margin-bottom: .6rem; border-bottom: 1px solid var(--rule); } .ds-sidenav .brand { font-family: var(--cut); font-weight: 700; letter-spacing: -.008em; font-size: 1.02rem; color: var(--ink); text-decoration: none; } .ds-sidenav .close { font: inherit; font-size: .72rem; color: var(--ink-faint); background: none; border: 1px solid var(--rule); border-radius: 0; padding: .3rem .55rem; cursor: pointer; } .ds-sidenav .close:hover { color: var(--ink); border-color: var(--accent); } .ds-sidenav .group h3 { font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin: 0 0 .35rem; } .ds-sidenav ul { list-style: none; margin: 0; padding: 0; } .ds-sidenav a { display: flex; gap: .55rem; align-items: baseline; color: var(--ink-soft); text-decoration: none; padding: .28rem .5rem; margin: 0 -.5rem; border-radius: 0; } .ds-sidenav a .n { font-family: var(--num); color: var(--ink-faint); font-variant-numeric: tabular-nums; flex: none; font-size: .78em; } .ds-sidenav a .ext { margin-left: auto; color: var(--ink-faint); font-size: .8em; } .ds-sidenav a:hover { background: var(--code-bg); color: var(--ink); } .ds-sidenav li.here a { background: var(--accent-dim); color: var(--ink); font-weight: 600; } .ds-sidenav li.here a .n { color: var(--accent); } .ds-sidenav a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
     },
     {
       "name": "Calibration Rosette",
       "kind": "custom",
-      "refersTo": "card-plate",
-      "description": "The signature component. A guilloche rosette engraved live in canvas from the published domain weights: seven lobes, reach by weighting, green ink by accuracy cut into each lobe's own sector, oxblood cutting the shortfall, a dashed gold ring at the 720 pass mark, bare plate where nothing has been attempted. Source: drawRosette() in tools/hub-template.html. Owns the Results tab only.",
-      "html": "<figure class=\"ds-rosette-plate\"><canvas width=\"600\" height=\"600\" role=\"img\" aria-label=\"Calibration rosette: one engraved lobe per exam domain, sized by its published weight and inked by your accuracy\"></canvas><figcaption>Calibration rosette</figcaption></figure>",
-      "css": ".ds-rosette-plate { margin: 0; border: 1px solid var(--rule-firm); padding: 12px; max-width: 300px; } .ds-rosette-plate canvas { display: block; width: 100%; height: auto; } .ds-rosette-plate figcaption { font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; text-align: center; }"
+      "refersTo": null,
+      "description": "The signature plate: seven guilloche lobes cut live from the published domain weights, clay for what is earned, neutral for what is not, a dashed olive ring at 720.",
+      "html": "<figure class=\"ds-rosette\"><canvas id=\"ds-rosette-canvas\" width=\"600\" height=\"600\"></canvas><figcaption>Calibration plate - seven domains, weighted</figcaption></figure>",
+      "css": ".ds-rosette { margin: 0; border: 1px solid var(--rule-firm); padding: 12px; } .ds-rosette canvas { display: block; width: 100%; height: auto; } .ds-rosette figcaption { font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; text-align: center; }"
     }
   ],
   "narrative": {
-    "northStar": "Security Print",
-    "overview": "A certificate resists forgery by being unreproducibly precise, and so does an honestly weighted score report. This system is built out of the printing craft credentials are actually made from: intaglio line work, guilloche, engraved numerals, security tints, plate serials, counterfoils. Two inks on a tinted stock and nothing more. Structure carries all the ornament — plate lines, ruled indexes, serial strips, a seal — so the instrument feels issued rather than assembled.\n\nDark is the default and it is the engraved steel plate: a green-black ground with warm ink-white lettering. Light is not white and not cream; it is tinted safety stock. Both themes are first-class and both are shipped in course/assets/print.css; there is deliberately no prefers-color-scheme block, because the site carries its own toggle and persists the choice in localStorage under 'ccarp-theme' (applied before paint by course/assets/nav.js). nav.js also injects print.css on every page before nav.css and before any page's own stylesheet — that injection order is the mechanism that makes one file own the palette and the type site-wide, and it must not be reordered.\n\nDensity is high and honest: a workbench, not a brochure. Long-form reading gets a narrow measure and a serif; the workbench gets a grotesque at 13–15px with ruled rows. The world explicitly refuses the arrangement this category ships — equal rounded cards on near-black with one blue accent and a progress bar. There are no rounded corners, no shadows, no gradients, and no progress bar on the learning path: the count is printed instead.",
+    "northStar": "Security Print, in Anthropic's Ink",
+    "overview": "This is a certificate press running on Anthropic's own colour and lettering. The craft is security printing - hairline rules, ruled ledgers, plate serials, engraved figures, a counterfoil, a guilloche rosette - because a weighted score report and a credential are both documents that earn trust by being unreproducibly precise. The stock and the inks, however, are read straight off anthropic.com: the warm slate-to-ivory ramp, clay as the single accent, olive and their error red as the two semantic inks, their focus blue on the focus ring. Dark is the steel plate and remains the default; light is ivory.\n\nDensity is high and deliberately unpadded. Nothing is a card floating in space; everything sits in a ruled structure that says where it belongs. Two surfaces share the world through course/assets/print.css, which nav.js injects on every page ahead of nav.css and any page stylesheet: the hub is a workbench set in the grotesque at a 15px px ramp, and the course is a reading sheet set in Faustina at a 17px root with a rem ramp. The originally specified didone display face is gone - display is now the grotesque at 700 with easier tracking - and the world lost nothing, because the engraving was never in the serifs; it is in the line work.\n\nThe build refuses the category arrangement it replaced: equal rounded cards on near-black with one blue accent and a progress bar. There are no shadows, no gradients, no radii, and no progress bar - the learning path's track is explicitly hidden and the count is printed instead.",
     "keyCharacteristics": [
-      "Two inks (intaglio green, oxblood) plus one reserved gold, on a tinted stock",
-      "Square corners everywhere, including SVG geometry",
-      "Hairline 1px rules with a 2px plate line as the only heavier weight",
-      "Four self-hosted faces, each with one named job",
-      "Ruled ledger rows instead of card grids",
-      "Ornament only in structure — never inside a question body or a timed screen"
+      "Warm slate/ivory stock with exactly one accent ink, clay; olive reserved to the 720 pass mark.",
+      "Square corners everywhere, including rx: 0; ry: 0 on every SVG rect.",
+      "Two line weights only: 1px hairline (rule) and 2px plate line (rule-firm).",
+      "Flat by construction - depth is line density, never shadow or blur.",
+      "Mono serials and tabular figures wherever the page labels or counts.",
+      "Ornament lives in structure and never enters a question body or a timed screen."
     ],
     "rules": [
-      { "name": "The Two Inks Rule", "body": "Any surface may use exactly two inks — intaglio green and oxblood — over stock and rules. A third hue is not a design decision available here.", "section": "colors" },
-      { "name": "The Reserved Gold Rule", "body": "Gold means pass mark or seal, plus the focus ring. If a new element wants gold, it is asking to be a pass mark; if it is not one, it takes ink-faint.", "section": "colors" },
-      { "name": "The Ink-Fill Rule", "body": "A filled colour field is printed ink (ink-fill), never the bright tint, and there is at most one filled block per sheet. Everything else is line work on stock.", "section": "colors" },
-      { "name": "The Bare-Plate Rule", "body": "An empty state is unengraved plate: the low-density line work with nothing cut into it. Never a grey placeholder fill, never a zeroed bar dressed as data.", "section": "colors" },
-      { "name": "The Four Jobs Rule", "body": "Each face has exactly one job: Bodoni engraves display text and numerals, Faustina sets long-form reading, Archivo sets the workbench UI, Chivo Mono sets serials and tabular figures. A face used outside its job is a bug.", "section": "typography" },
-      { "name": "The Serial Rule", "body": "Anything that labels rather than speaks — table heads, captions, pills, breadcrumbs, wayfinding, field labels — is Chivo Mono at 11px/0.66rem, tracked 0.14em, uppercase, in ink-faint. Uniform and unmissable.", "section": "typography" },
-      { "name": "The Tabular Figures Rule", "body": "Figures line up everywhere, not only in tables: print.css applies font-variant-numeric: tabular-nums to table, .serial, .fig, time and .num globally.", "section": "typography" },
-      { "name": "The Two Measures Rule", "body": "Two widths, defined in lesson.css and nowhere else: --prose (28rem) is the reading measure and constrains body-level p, ul, ol; --measure (40rem) is the wider structural width for figures, tables, callouts, apparatus and pager. Separating them was a deliberate fix — do not collapse them back into one variable, and do not redefine either in another stylesheet.", "section": "layout" },
-      { "name": "The Ledger Rule", "body": "Three or more sibling items are ruled rows in one index sharing column tracks. If a design reaches for a grid of equal cards, it has left this world.", "section": "layout" },
-      { "name": "The Printed Count Rule", "body": "Progress is a printed count, not a bar. The learning path's track is explicitly hidden; the number stands alone. Short, bounded measures — the plan meter, domain accuracy bars — are 1px-bordered tracks with a flat tint fill and a gold target line, which is a ruled gauge, not a progress bar.", "section": "layout" },
-      { "name": "The No-Shadow Rule", "body": "No box-shadow, no text-shadow, no filter: drop-shadow, no gradient, in any state including hover and focus. A surface that needs to read as raised gets sheet and a hairline.", "section": "elevation" },
-      { "name": "The Line-Density Rule", "body": "Where tone is needed, cut more lines. Value is built from stroke count, not from fills or blurs.", "section": "elevation" }
+      {
+        "name": "The One Accent Rule",
+        "body": "Clay is the only accent in the system. A new element does not get a new hue; it gets clay, or an ink weight, or a rule.",
+        "section": "colors"
+      },
+      {
+        "name": "The Deep-Cut Clay Rule",
+        "body": "True clay #d97757 measures 2.96:1 on ivory. In the light theme, therefore, text and line work take the deeper cut #ad5533 and the true clay is used only as a filled field with slate text on it. Raising light-theme line work back to #d97757 is not a correction; it is a contrast failure.",
+        "section": "colors"
+      },
+      {
+        "name": "The Reserved Mark Rule",
+        "body": "Olive means 720. If a new element wants olive, it is claiming to be the pass mark; if it is not one, it takes ink-faint.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-Fill Rule",
+        "body": "At most one filled colour field per sheet, and it is ink-fill with ink-fill-t on it - the hub's Module 1 block, or a lesson's .path-start. Hovering it empties the field and leaves the outline.",
+        "section": "colors"
+      },
+      {
+        "name": "The Bare-Plate Rule",
+        "body": "An empty state is unengraved plate: the low-density line work with nothing cut into it. Never a grey placeholder fill, never a zeroed bar dressed as data.",
+        "section": "colors"
+      },
+      {
+        "name": "The Unearned Ground Rule",
+        "body": "A shortfall is drawn in the neutral gap, not in red. Red is reserved for a wrong answer and an expiring clock.",
+        "section": "colors"
+      },
+      {
+        "name": "The Four Jobs Rule",
+        "body": "Each face has exactly one job: the grotesque at 700 engraves display, the grotesque at 400-650 runs the workbench, Faustina sets long-form reading, JetBrains Mono sets serials, figures and code. A face outside its job is a bug.",
+        "section": "typography"
+      },
+      {
+        "name": "The Serial Rule",
+        "body": "Anything that labels or numbers rather than speaks - plate facts, pills, captions, table heads, breadcrumbs, wayfinding, option keys, figcaptions - is mono, tracked 0.1-0.16em, uppercase, in ink-faint. The eyebrow at the head of a lesson sheet is one of these: a right-aligned plate serial carrying the sheet's own identifier, not a label stacked above the title.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Figures line up everywhere, not only in tables: print.css applies font-variant-numeric: tabular-nums to table, .serial, .fig, time and .num globally.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Roots Rule",
+        "body": "The reading sheet is set in rem against a 17px root; the workbench is set in px against a 15px body. Both ramps are real and neither is idealised - do not port one surface's steps onto the other, and do not round the half-pixel steps (13.5px, 14.5px, 11.5px) away: they are the shipped ramp.",
+        "section": "typography"
+      },
+      {
+        "name": "The Stand-In Rule",
+        "body": "Do not add an @font-face for Styrene A or Copernicus, and do not reference anthropicSans or anthropicSerif. They are licensed and absent. Any new face must be self-hosted under course/assets/fonts/ with its licence file beside it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Measures Rule",
+        "body": "Two widths, owned solely by lesson.css: --prose (28rem) is the reading measure and constrains body-level p, ul, ol; --measure (40rem) is the wider structural width for figures, tables, callouts, apparatus and pager. Table, quiz, sidenote, flag, figure, toc, pager, crumb and nav contents are explicitly released from --prose. Separating the two was a deliberate fix - do not collapse them, and do not redefine either outside lesson.css.",
+        "section": "layout"
+      },
+      {
+        "name": "The Ledger Rule",
+        "body": "Three or more sibling items are ruled rows in one index sharing column tracks - 2px top, 1px between, 1px bottom. If a design reaches for a grid of equal cards, it has left this world.",
+        "section": "layout"
+      },
+      {
+        "name": "The Printed Count Rule",
+        "body": "Progress is a printed count, not a bar: .path-progress .track is set to display: none and the number stands alone. Bounded measures that are genuinely quantities - the plan meter, the seven domain bars - are 1px-bordered tracks with a flat clay fill and a 1px olive target line at 72%. That is a ruled gauge, not a progress bar.",
+        "section": "layout"
+      },
+      {
+        "name": "The No-Shadow Rule",
+        "body": "A surface that needs to read as raised gets sheet and a hairline. Nothing in this world casts.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Line-Density Rule",
+        "body": "Where tone is needed, cut more lines. Value is built from stroke count at 0.6px, never from fills or blurs.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Corner Rule",
+        "body": "Radius is 0 on every element, and rx/ry are 0 on every SVG rect. Radius is not a variable in this system.",
+        "section": "shapes"
+      }
     ],
     "dos": [
-      "Do let course/assets/print.css own the palette and the type, and keep nav.js injecting it first — before nav.css, before any page stylesheet.",
-      "Do ship both themes as real, hand-authored token sets on :root (dark plate, default) and :root[data-theme=\"light\"] (tinted stock), toggled by the site and remembered in localStorage under ccarp-theme.",
-      "Do keep every legacy alias (--paper, --accent, --accent-dim, --good, --bad, --flag, --code-bg, and the hub's --grid, --muted, --text-secondary, --success-text, --critical) and nav.css's fallback chains intact.",
-      "Do square every corner, including rx: 0; ry: 0 on SVG rects; circles only where the thing is genuinely a circle.",
-      "Do separate with a 1px hairline (rule) and structure with a 2px plate line (rule-firm).",
-      "Do use ink-fill for any filled field, at most one filled block per sheet, and invert to an empty tint outline on hover.",
-      "Do set every label, caption and wayfinding string as a Chivo Mono serial at 11px/0.14em uppercase.",
-      "Do hold body-level prose to --prose (28rem) and structural blocks to --measure (40rem), both defined only in lesson.css.",
-      "Do keep the built world self-hosted: fonts under course/assets/fonts/ with their OFL licence, no third-party requests.",
-      "Do keep pages printing usefully — every stylesheet ships a @media print block that returns the world to black ink on white."
+      "Do take colour from the tokens in print.css only, and let the theme split handle light: tint for line work and text, ink-fill for a filled field.",
+      "Do set every radius to 0, and add rx: 0; ry: 0 to any SVG rect you draw.",
+      "Do use exactly two rule weights: 1px rule between peers, 2px rule-firm to open or close a structure.",
+      "Do set anything that labels or numbers in mono, uppercase, tracked 0.14em, in ink-faint.",
+      "Do put three or more siblings in one ruled ledger sharing column tracks.",
+      "Do hold body-level prose to --prose (28rem) and figures, tables and apparatus to --measure (40rem), and define both only in lesson.css.",
+      "Do print a count where a progress bar is tempting.",
+      "Do build tone from line density at 0.6px, and keep an empty state as unengraved plate.",
+      "Do self-host any new face under course/assets/fonts/ with its licence file, and keep the OpenDyslexic reading option working.",
+      "Do leave the focus ring alone: 2px focus blue at 2px offset, from print.css."
     ],
     "donts": [
-      "Don't add a shadow, a gradient, or a blur to anything, in any state.",
-      "Don't round a rectangle.",
-      "Don't introduce a third ink, and don't spend gold on anything that is not the pass mark, the seal, or the focus ring.",
-      "Don't fill a large field with the bright tint; that is what ink-fill exists for.",
-      "Don't lay repeated items out as a grid of equal cards, and don't add a progress bar to the learning path — the count is printed.",
-      "Don't put ornament — rosette, guilloche, seal, plate border — inside a question body or a timed screen. Those surfaces stay bare.",
-      "Don't use a face outside its job, and don't set numerals in anything but Bodoni (display figures) or Chivo Mono (tabular figures).",
-      "Don't edit index.html directly; it is generated from tools/hub-template.html by tools/build_hub.py.",
-      "Don't remove the OpenDyslexic option or its exclusions for code, figures and SVG."
+      "Don't introduce a second accent hue, or spend olive on anything but the 720 pass mark.",
+      "Don't raise light-theme clay line work from #ad5533 to #d97757; it measures 2.96:1 on ivory.",
+      "Don't ship a box-shadow, text-shadow, drop-shadow or gradient in any state.",
+      "Don't add a border radius, including on SVG rects and including \"just for the avatar\".",
+      "Don't lay out equal-size cards in a grid where a ruled index belongs.",
+      "Don't put more than one filled colour field on a sheet.",
+      "Don't let ornament - rosette, guilloche, seal, plate borders - into a question body or a timed screen.",
+      "Don't stack a lone section number above a heading; it goes inline, in mono, at 0.82em.",
+      "Don't declare an @font-face for Styrene A or Copernicus, or reference anthropicSans / anthropicSerif: they are licensed and not in this repo.",
+      "Don't redefine --prose, --measure or any palette token outside the file that owns it, and don't delete the legacy aliases (paper, accent, accent-dim, good, bad, flag, code-bg, grid, muted, text-secondary, success-text, critical) - live markup and nav.css fallback chains still name them."
     ]
   }
 }

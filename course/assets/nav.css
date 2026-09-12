@@ -37,7 +37,7 @@ html.nav-open .nav-toggle { display: none; }
 
 .nav-backdrop {
   position: fixed; inset: 0; z-index: 39;
-  background: rgba(0,0,0,.45);
+  background: var(--scrim, rgba(20, 20, 19, .55));
   display: none;
 }
 
@@ -156,7 +156,7 @@ html.font-dyslexic strong, html.font-dyslexic b, html.font-dyslexic th { font-we
 
 
 /* Security Print: the menu is the sheet's index, set like one. */
-.sidenav-head .brand { font-family: var(--cut); font-weight: 700; letter-spacing: -.01em; font-size: 1.02rem; }
+.sidenav-head .brand { font-family: var(--cut); font-weight: 700; letter-spacing: -.008em; font-size: 1.02rem; }
 .nav-group h4, .seg-l {
   font-family: var(--num);
   font-size: .7rem;
