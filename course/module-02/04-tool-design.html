@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04. Tool design and capability bloat - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 04 of 12</p>
+  <h1>Tool design and capability bloat</h1>
+  <p class="standfirst">What makes a tool Claude uses correctly, and what to do when there are more tools than the context window can afford.</p>
+  <div class="meta"><span>Exam domain 3</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 04 of 12</b>
+</nav>
+<p>When the model calls the wrong tool, or calls the right tool with wrong arguments, the
+instinct is to edit the system prompt. That is almost always the third-best fix. The tool
+description and the error string are the two things the model reads at the moment it makes
+the mistake, and they are the two things you control most directly.</p>
+
+<p>Anthropic attributes Sonnet 3.5's SWE-bench Verified result largely to refined tool
+descriptions. That is the weight to put on this: description quality matters more than
+anything else you control at this layer.</p>
+
+<h2><span class="num n">4.1</span>Descriptions, names and namespaces</h2>
+
+<p>Write the description as you would for a new engineer joining the team: what the tool
+does, when to use it, <strong>when not to use it</strong>, how its resources relate to each
+other, and any niche query syntax it expects. The "when not to" clause is the one people
+omit and the one that stops wrong selection.</p>
+
+<table>
+  <caption>Naming rules worth holding exactly</caption>
+  <thead><tr><th>Rule</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td>Unambiguous parameters</td><td><code>user_id</code>, not <code>user</code>. The model cannot ask which you meant</td></tr>
+    <tr><td>Tool name constraints</td><td>1 to 128 characters, <code>[A-Za-z0-9_.-]</code>, case-sensitive, unique per server</td></tr>
+    <tr><td>Namespace by service and resource</td><td><code>asana_projects_search</code>, <code>jira_search</code>. Prefix and suffix conventions measurably change accuracy, so evaluate rather than assume which is better for your set</td></tr>
+    <tr><td>Aggregating proxies disambiguate collisions themselves</td><td><code>serverInfo.name</code> is not guaranteed unique, so a proxy in front of several servers cannot rely on it to separate two tools with the same name</td></tr>
+    <tr><td>Deterministic <code>tools/list</code> ordering</td><td>So clients can cache the list and provider prompt caches actually hit</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">4.2</span>Return something the model can use, at a size it can afford</h2>
+
+<p>A tool that returns raw records forces the model to guess what they mean. Resolving
+UUIDs to names reduces hallucination in retrieval tasks, which is a cheap change with a
+measured effect.</p>
+
+<table>
+  <caption>Output design, with the numbers to quote</caption>
+  <thead><tr><th>Lever</th><th>What to do</th><th>The number</th></tr></thead>
+  <tbody>
+    <tr><td>Semantic output</td><td>Resolve identifiers to human-meaningful names rather than returning opaque UUIDs</td><td>Reported to reduce hallucination in retrieval tasks</td></tr>
+    <tr><td><code>response_format</code> enum</td><td>Offer <code>concise</code> and <code>detailed</code> so the model asks for IDs only when it needs them downstream</td><td>Anthropic's Slack example: 206 tokens detailed against 72 concise</td></tr>
+    <tr><td>Bounded response size</td><td>Pagination with sane defaults, filters, range selection, and truncation that tells the model what to do instead ("narrow your search")</td><td>Claude Code's default tool-response ceiling is 25,000 tokens</td></tr>
+    <tr><td><code>outputSchema</code> and <code>structuredContent</code></td><td>Use them when the result feeds code or another tool. Required for typed stubs in programmatic tool calling</td><td>-</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">4.3</span>Errors are prompts, and annotations are not guarantees</h2>
+
+<p>There are two error channels and they behave differently.</p>
+
+<table>
+  <caption>The two error channels</caption>
+  <thead><tr><th>Channel</th><th>Used for</th><th>What the model can do</th></tr></thead>
+  <tbody>
+    <tr><td>JSON-RPC protocol errors</td><td>Unknown tool, malformed request</td><td>Usually nothing. These are your bug, not the model's</td></tr>
+    <tr><td>Tool execution errors, returned as a normal result with <code>isError: true</code></td><td>Bad argument, business-rule violation, upstream failure</td><td>Self-correct, if the text is actionable. Clients SHOULD feed these back to the model</td></tr>
+  </tbody>
+</table>
+
+<p>So put the useful sentence in the second channel. "Invalid departure date: must be in
+the future. Current date is 08/08/2025." tells the model what to change. "Validation
+error" does not.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>The annotations <code>readOnlyHint</code>, <code>destructiveHint</code>,
+  <code>idempotentHint</code> and <code>openWorldHint</code> are hints for UI and policy.
+  Clients MUST treat them as untrusted when they come from an untrusted server. Setting
+  <code>idempotentHint: true</code> does not make retries safe; server-side idempotency
+  keys do. Any answer that treats an annotation as behaviour is wrong.</p>
+</div>
+
+<h2><span class="num n">4.4</span>Capability bloat, and the ladder out of it</h2>
+
+<p>Bloat has measurable symptoms, and they are the numbers a scenario will hand you as its
+constraint.</p>
+
+<ul>
+  <li>Selection accuracy degrades past roughly <strong>30 to 50 tools</strong>.</li>
+  <li>A five-server setup (GitHub, Slack, Sentry, Grafana, Splunk) burns about
+  <strong>55k tokens</strong> on definitions before reading the user's first message.</li>
+  <li>Naive multi-server hosts can spend about <strong>150k tokens</strong> on definitions
+  alone.</li>
+</ul>
+
+<table>
+  <caption>Six techniques, and the condition that selects each</caption>
+  <thead><tr><th>Technique</th><th>Mechanism</th><th>Reach for it when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Consolidation</strong></td><td>Collapse chatty endpoints into workflow-shaped tools</td><td>Always, first, at design time</td></tr>
+    <tr><td><strong>Split servers by domain</strong></td><td>One server per bounded domain, connect only what the task needs</td><td>Ownership or permissions differ per domain</td></tr>
+    <tr><td><strong>Tool search tool</strong> (Anthropic API)</td><td>Mark tools <code>defer_loading: true</code> and add <code>tool_search_tool_regex_20251119</code> or <code>..._bm25_20251119</code>; the API expands matches into <code>tool_reference</code> blocks inline</td><td>10 or more tools, definitions over roughly 10k tokens, or 200-plus aggregated tools. Reported over 85% context reduction. Cap is 10,000 deferred tools, at least one must stay non-deferred, and you keep the 3 to 5 hottest loaded</td></tr>
+    <tr><td><strong>Progressive discovery</strong> (an MCP client pattern)</td><td>Three layers: a <code>search_tools</code> catalog, <code>get_tool_details</code> to inspect, then execute. Ranking strategies are keyword or BM25, embedding, a Haiku-class subagent, or hybrid</td><td>Build your own only when the provider has no native tool search, or you need access-control-aware ranking. Switch it on at 1 to 5% of the context window spent on definitions</td></tr>
+    <tr><td><strong>Dynamic server management</strong></td><td>Connect and disconnect whole servers at runtime from a registry</td><td>General-purpose agents where intent is unknown upfront. Pairs with skills that declare which servers they need</td></tr>
+    <tr><td><strong>Programmatic tool calling</strong> (code mode)</td><td>The model writes code against generated typed stubs, a sandbox executes it, and only console output returns</td><td>Chained calls with large intermediates. Illustrative: about 100k tokens of direct calls against a roughly 200-token script plus a 15-token summary</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>The caching interaction is a favourite trap. Providers cache the prompt prefix
+  <em>including the <code>tools</code> array</em>, so adding or removing definitions mid
+  conversation invalidates the cache, and the miss can cost more than the definitions you
+  saved. Mitigations: append discovered definitions after the cache breakpoint, or route
+  everything through a stable <code>call_tool({name, args})</code> meta-tool, and treat a
+  server disconnection as a conversation boundary. On the Anthropic API,
+  <code>defer_loading: true</code> plus <code>cache_control</code> on the same tool is a
+  400.</p>
+</div>
+
+<p>The order is the answer to most bloat questions: consolidate at design time, split by
+domain where ownership differs, and only then defer loading and add search. If the task
+chains tools with large intermediates, go straight to programmatic calling in a sandbox,
+because no amount of description tuning fixes 100k tokens of intermediate payloads passing
+through the context window.</p>
+<nav class="pager">
+  <a class="prev" href="03-mcp-in-depth.html"><span>Previous</span>03 MCP in depth</a>
+  <a class="next" href="05-security-and-auth.html"><span>Next</span>05 Security and authentication</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

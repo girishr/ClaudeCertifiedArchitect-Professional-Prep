@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05. Compliance mapping - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 05 of 8</p>
+  <h1>Compliance mapping</h1>
+  <p class="standfirst">Obligation to architectural control, regime by regime. The highest-yield page in the module.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 05 of 8</b>
+</nav>
+<p>Items in this part of the domain have one shape. A regulation is named, a scenario is
+given, and you choose the control set that satisfies it. The distractors are real controls
+that satisfy a <em>different</em> obligation, which is why the mapping has to be held
+precisely rather than approximately.</p>
+
+<div class="flag">
+  <span class="label">How to work through this</span>
+  <p>The table below is the single highest-yield artefact in Domain 5. Reproduce it from
+  memory on blank paper, regime by regime, before you read it again. Whatever you cannot
+  produce is the row to study; the rest of the page is commentary on rows people get wrong.</p>
+</div>
+
+<table>
+  <caption>What each regime obliges, and what you build to satisfy it</caption>
+  <thead><tr><th>Regime</th><th>Core obligation the exam will test</th><th>Concrete architectural control</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>GDPR</strong> lawful basis</td>
+      <td>You need one before processing. Legitimate interest requires a balancing test</td>
+      <td>Documented DPIA and LIA, with the purpose recorded in the design</td>
+    </tr>
+    <tr>
+      <td><strong>GDPR</strong> data minimisation</td>
+      <td>Only what is necessary for the stated purpose</td>
+      <td>Field-level redaction pre-prompt, no "send the whole record" retrieval, narrow retrieval scope</td>
+    </tr>
+    <tr>
+      <td><strong>GDPR</strong> data subject requests (access, erasure, portability)</td>
+      <td>You must be able to find and delete one person's data</td>
+      <td>Per-subject indexing of prompts, logs and vectors. Deletion propagating to caches, embeddings and backups. Retention limits</td>
+    </tr>
+    <tr>
+      <td><strong>GDPR</strong> cross-border transfer</td>
+      <td>A Chapter V mechanism is required for non-adequate destinations</td>
+      <td>SCCs plus a transfer impact assessment, or keep processing in-region via inference geo pinning</td>
+    </tr>
+    <tr>
+      <td><strong>GDPR Art. 22</strong></td>
+      <td>Restricts solely-automated decisions with legal or similarly significant effect. Safeguards include the right to obtain human intervention, to express a view and to contest</td>
+      <td>Mandatory human review with real authority to overturn</td>
+    </tr>
+    <tr>
+      <td><strong>HIPAA</strong></td>
+      <td>PHI handling, a BAA with any business associate, and minimum necessary</td>
+      <td>Signed BAA with the model provider, HIPAA-configured deployment, de-identification where possible, audit logging, encryption in transit and at rest, role-scoped retrieval</td>
+    </tr>
+    <tr>
+      <td><strong>SOC 2</strong></td>
+      <td>Trust Services Criteria, with evidence of operating effectiveness over a period</td>
+      <td>Change management, access reviews, immutable audit logs, vendor SOC 2 reports collected and reviewed</td>
+    </tr>
+    <tr>
+      <td><strong>FedRAMP</strong></td>
+      <td>US federal cloud authorisation. High for CUI</td>
+      <td>Deploy via an authorised path. Claude via Amazon Bedrock in AWS GovCloud carries FedRAMP High and DoD IL4/IL5 approval; the first-party commercial API does not</td>
+    </tr>
+    <tr>
+      <td><strong>EU AI Act</strong></td>
+      <td>Risk tiers: unacceptable (prohibited), high-risk, limited or transparency, minimal</td>
+      <td>Tier the use case first. Art. 50 transparency duties: disclose AI interaction, label synthetic content. High-risk brings a risk management system, data governance, technical documentation, logging, human oversight, and accuracy, robustness and cybersecurity</td>
+    </tr>
+    <tr>
+      <td><strong>India DPDP Act 2023 and DPDP Rules 2025</strong></td>
+      <td>Notice and consent, purpose limitation, erasure on withdrawal, breach notification, plus extras for a Significant Data Fiduciary</td>
+      <td>Itemised standalone notice, easy withdrawal, deletion on purpose completion, breach reporting to the Data Protection Board with a detailed report inside 72 hours, security logs retained at least one year, grievance redressal</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">5.1</span>Four rows people get wrong</h2>
+
+<p><strong>Art. 22 is about intervention, not explanation.</strong> The enforceable duty is
+meaningful information about the logic, under Arts. 13 to 15. The strong "right to
+explanation" phrasing sits in Recital 71, not in the Art. 22 text, so do not overstate it.
+What Art. 22 gets you architecturally is a human with authority to overturn the decision
+before it takes effect.</p>
+
+<p><strong>SOC 2 Type II is the one that proves controls operated.</strong> Type I proves
+they were designed. If a stem asks for evidence of operating effectiveness over a period,
+Type I is the wrong artefact.</p>
+
+<p><strong>A DPA is not a transfer mechanism.</strong> A DPA covers processor duties. A
+cross-border transfer to a non-adequate destination needs a Chapter V mechanism, or you keep
+the processing in-region instead.</p>
+
+<p><strong>An authorised path is not an authorisation.</strong> Bedrock in GovCloud makes a
+FedRAMP High path available to you. Your own system still needs its own authorisation, and a
+vendor attestation covers the vendor, not your application.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Log everything, forever" fails two regimes at once. Over-retention creates its own GDPR
+  and DPDP exposure and expands the blast radius of any breach. Retention limits are a
+  control, not a gap in one.</p>
+</div>
+
+<h2><span class="num n">5.2</span>Dates, and which ones are examinable</h2>
+
+<p>The phasing is the examinable point, not the day. Know the order and the two deadlines
+that moved.</p>
+
+<table>
+  <caption>EU AI Act and DPDP timing</caption>
+  <thead><tr><th>Regime</th><th>Milestone</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td>EU AI Act</td><td>In force</td><td>1 Aug 2024</td></tr>
+    <tr><td>EU AI Act</td><td>Prohibitions and AI literacy</td><td>2 Feb 2025</td></tr>
+    <tr><td>EU AI Act</td><td>GPAI provider obligations</td><td>2 Aug 2025</td></tr>
+    <tr><td>EU AI Act</td><td>Most provisions, including Art. 50 transparency</td><td>2 Aug 2026</td></tr>
+    <tr><td>EU AI Act</td><td>Additional deepfake and CSAM prohibitions, transitional deadlines</td><td>2 Dec 2026</td></tr>
+    <tr><td>EU AI Act</td><td><strong>Annex III high-risk rules, deferred</strong></td><td>2 Dec 2027</td></tr>
+    <tr><td>EU AI Act</td><td>Annex I embedded high-risk</td><td>2 Aug 2028</td></tr>
+    <tr><td>India DPDP</td><td>Rules notified, Data Protection Board stood up first</td><td>14 Nov 2025</td></tr>
+    <tr><td>India DPDP</td><td>Consent Manager provisions, at 12 months</td><td>14 Nov 2026</td></tr>
+    <tr><td>India DPDP</td><td>The bulk of operational duties, at 18 months</td><td>14 May 2027</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>If a practice question says high-risk EU AI Act obligations bite in August 2026, it
+  predates the Digital Omnibus deferral. August 2026 is the transparency and
+  general-applicability date. Annex III high-risk moved to December 2027.</p>
+</div>
+
+<aside class="sidenote"><b>Directional, not gospel.</b> The EU AI Act sub-deadlines are the
+part of this domain most likely to have moved again. The phasing order is stable; re-check
+the exact dates against a primary source rather than trusting any study kit, including this
+one.</aside>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A German motor insurer wants Claude to pre-assess inbound claims. The
+  system's output determines whether a claim is declined, and today's design sends the
+  decline letter to the policyholder automatically with no human touch. Volume is around
+  4,000 claims a week. Legal has signed a DPA with the model provider and asks the architect
+  whether anything further is needed on the decision-making side.</p>
+  <p class="stem">Which control set actually satisfies the obligation in play?</p>
+  <ol class="options">
+    <li data-key="A" data-why="A reasoning trace is a plausible narrative, not a faithful account of the computation, and it is not an audit artefact. It also does nothing about the absence of human intervention, which is the actual duty.">Publish a system card and attach the model's chain of thought to each decline, to satisfy the right to explanation</li>
+    <li data-key="B" data-why="Right. A solely automated decision with a significant effect on a person needs a qualified human with authority to overturn it before it takes effect, plus disclosure that AI was involved. What you can legitimately provide as the record is inputs, sources, prompt and model versions, the policy applied, and who signed off.">Route every decline to a qualified claims handler who can overturn it before it takes effect, disclose the AI involvement to the policyholder, and log the inputs, prompt and model version and the human who signed off</li>
+    <li data-key="C" data-why="A DPA covers processor duties and ZDR removes retained content. Neither addresses a solely automated decision with significant effect, and ZDR would destroy the record you need to show what the decision was based on.">Rely on the signed DPA and enable zero data retention on the claims traffic</li>
+    <li data-key="D" data-why="Risk-weighted sampling is the right pattern for high-volume, low-severity, reversible work. A decline sent to the policyholder is none of those, and sampling reviews some decisions after they have already taken effect.">Apply a 5 percent risk-weighted post-hoc review with a bias dashboard across protected attributes</li>
+  </ol>
+  <div class="verdict" hidden><b>Human intervention with authority to overturn, plus
+  disclosure.</b> The volume figure is there to make sampling attractive and the DPA is there
+  to make the question look answered. Neither touches the duty: this is a solely automated
+  decision with a significant effect on a person, and the control is a qualified human in
+  front of it. The bias dashboard in option D is a good idea that satisfies a different
+  obligation.</div>
+</div>
+
+<p>Work the mapping in one direction only. Name the obligation, then name the thing you
+build. An answer that names a document where the obligation demands a mechanism is the
+distractor, every time.</p>
+<nav class="pager">
+  <a class="prev" href="04-failure-modes.html"><span>Previous</span>04 Failure modes and mitigations</a>
+  <a class="next" href="06-anthropic-posture.html"><span>Next</span>06 Anthropic posture and practice</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

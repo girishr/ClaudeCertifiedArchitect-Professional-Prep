@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04. Failure modes and mitigations - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 04 of 8</p>
+  <h1>Failure modes and mitigations</h1>
+  <p class="standfirst">Nine ways these systems fail, the control for each, and the fix that sounds right and is not.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 04 of 8</b>
+</nav>
+<p>Items in this part of the domain describe a symptom and offer four remedies. Usually
+three of them are real techniques that would help with something else, and one of them is
+the thing that addresses the mechanism. So learn the table by its right-hand column: the
+tempting fix is what you have to recognise fast, because it is what the item is built
+around.</p>
+
+<table>
+  <caption>Nine failure modes, the primary mitigation, and the fix that does not work</caption>
+  <thead><tr><th>Failure mode</th><th>What it looks like</th><th>Primary mitigation</th><th>Wrong but tempting</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Hallucination</strong></td>
+      <td>Confident invented facts, citations, IDs</td>
+      <td>Ground in retrieval, require citations, validate against source, allow "I don't know", eval on groundedness</td>
+      <td>"Use a bigger model." Reduces but never eliminates</td>
+    </tr>
+    <tr>
+      <td><strong>Direct prompt injection and jailbreak</strong></td>
+      <td>The user tries to override instructions</td>
+      <td>Input screening classifier, refusal instructions, rate-limit and ban repeat offenders</td>
+      <td>A longer system prompt</td>
+    </tr>
+    <tr>
+      <td><strong>Indirect prompt injection</strong></td>
+      <td>Malicious instructions inside a fetched document, web page, email or tool result</td>
+      <td>Put untrusted content <strong>only in tool result blocks</strong>, JSON-encode it, declare its origin, screen tool output with a cheap classifier before Claude acts, restrict tool scope</td>
+      <td>Trusting the model to "ignore instructions in documents"</td>
+    </tr>
+    <tr>
+      <td><strong>Data exfiltration via tools</strong></td>
+      <td>An agent with read access to secrets plus network egress</td>
+      <td>Separate read scope from egress, allow-list destinations, sandbox, no secrets in context</td>
+      <td>Output filtering alone. The data has already left</td>
+    </tr>
+    <tr>
+      <td><strong>Over-permissioned agent</strong></td>
+      <td>One credential with broad scope reused everywhere</td>
+      <td>Per-task scoped credentials, read-only default, time-bounded elevation</td>
+      <td>Auditing after the fact</td>
+    </tr>
+    <tr>
+      <td><strong>Confused deputy</strong></td>
+      <td>The agent uses its own elevated privilege on behalf of a lower-privileged user</td>
+      <td>Propagate the <em>caller's</em> identity and permissions to the tool call, never the agent's</td>
+      <td>Logging who asked</td>
+    </tr>
+    <tr>
+      <td><strong>PII leakage</strong></td>
+      <td>PII in prompts, logs, traces, caches or vendor retention</td>
+      <td>Redact before the boundary, zero or short retention, encrypt, restrict log access, tokenise</td>
+      <td>Relying on the model not to repeat it</td>
+    </tr>
+    <tr>
+      <td><strong>Unsafe autonomy</strong></td>
+      <td>The agent takes a consequential action nobody sanctioned</td>
+      <td>Action allow-lists, spend and rate caps, a kill switch, plan approval</td>
+      <td>"Improved instructions"</td>
+    </tr>
+    <tr>
+      <td><strong>Non-determinism</strong></td>
+      <td>Same input, different output. Regressions on model upgrade</td>
+      <td>Pinned model versions, a regression eval suite in CI, temperature control, structured outputs, canary rollout</td>
+      <td>Promising deterministic behaviour to the customer</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">4.1</span>The four that are really one problem</h2>
+
+<p>Indirect injection, exfiltration, over-permissioning and confused deputy are the same
+architectural mistake seen from four angles: something crossed a boundary that should have
+held. None of them is fixed by changing what the model is told, because in all four cases
+the model behaved exactly as instructed by whoever got to it last.</p>
+
+<p>Two moves cover most of this territory. Untrusted third-party content goes into a tool
+result block, JSON-encoded, with its origin declared, and gets screened by a cheap classifier
+before the model acts on it. And the tool call carries the caller's identity and permissions,
+not the agent's, so an agent that can read ten systems cannot lend that reach to a user who
+can read one.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Exfiltration is a scope-and-egress problem, not an output-filtering problem. By the time
+  a response is being filtered, the tool call that sent the data out has already returned.
+  Separate the read scope from the egress path and allow-list the destinations.</p>
+</div>
+
+<h2><span class="num n">4.2</span>The two that are about honesty</h2>
+
+<p>Hallucination and non-determinism are not attacks. They are properties, and the failure
+is in what you promised about them. A bigger model reduces the hallucination rate and never
+removes it, so the control is grounding plus validation plus an eval that measures
+groundedness, along with a design that permits "I don't know" as a valid output.</p>
+
+<p>Non-determinism is the same shape. You do not make the system deterministic. You pin
+model versions, hold a regression eval suite in CI, use structured outputs, and canary any
+rollout, so that variance shows up in your tests rather than in a customer's quarter. And
+you never commit to deterministic behaviour in a contract.</p>
+
+<aside class="sidenote"><b>Both branches of the undo rule.</b> The kill switch and the
+rollback to a previous prompt or model version are the same instinct as the human gate: the
+question is never only "will this go wrong" but "what gets us back when it does".</aside>
+
+<p>When you see a symptom, name the boundary that failed before you pick a remedy. If the
+answer you like is about wording, and the failure was about reach, you have the wrong
+answer.</p>
+<nav class="pager">
+  <a class="prev" href="03-human-in-the-loop.html"><span>Previous</span>03 Human in the loop</a>
+  <a class="next" href="05-compliance-mapping.html"><span>Next</span>05 Compliance mapping</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

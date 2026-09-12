@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03. Settings and permissions precedence - Module 5</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 5 &middot; Section 03 of 7</p>
+  <h1>Settings and permissions precedence</h1>
+  <p class="standfirst">Five ranks, and one step in the order that is the inverse of what habit tells you.</p>
+  <div class="meta"><span>Exam domain 7</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 5</a> <span>/</span> <b>Section 03 of 7</b>
+</nav>
+<p>The requirement usually arrives in one sentence from someone in security. Nobody reads
+<code>.env</code>. Nothing runs <code>terraform apply</code> outside the pipeline. The
+interesting part is never which rule to write, it is where to write it so that it still
+applies when an engineer edits the repo, passes their own flags, or keeps a personal
+settings file with different ideas.</p>
+
+<p>That makes the precedence order the examinable thing in this section, and one step of it
+is genuinely surprising.</p>
+
+<figure class="diagram" id="fig-settings-precedence">
+<svg viewBox="0 0 760 324" role="img" aria-label="The five settings sources ranked from highest precedence to lowest, with managed settings above command-line arguments" xmlns="http://www.w3.org/2000/svg"><text x="0" y="12" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Precedence, highest first. Anything above beats anything below.</tspan></text><rect x="0" y="24" width="760" height="44" rx="8" class="dg-box hi"/><circle cx="24" cy="46" r="12" class="dg-dot"/><text x="24" y="50.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">1</tspan></text><text x="46" y="51" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Managed settings</tspan></text><text x="250" y="51" class="dg-s" text-anchor="start"><tspan x="250" dy="0">managed-settings.json, deployed by IT. Outranks even command-line flags.</tspan></text><rect x="0" y="76" width="760" height="44" rx="8" class="dg-box"/><circle cx="24" cy="98" r="12" class="dg-dot"/><text x="24" y="102.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">2</tspan></text><text x="46" y="103" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Command-line args</tspan></text><text x="250" y="103" class="dg-s" text-anchor="start"><tspan x="250" dy="0">--permission-mode, --allowedTools, --settings. Per run, beats every file on disk.</tspan></text><rect x="0" y="128" width="760" height="44" rx="8" class="dg-box"/><circle cx="24" cy="150" r="12" class="dg-dot"/><text x="24" y="154.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">3</tspan></text><text x="46" y="155" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Local settings</tspan></text><text x="250" y="155" class="dg-s" text-anchor="start"><tspan x="250" dy="0">.claude/settings.local.json. Personal and gitignored. Never team standards.</tspan></text><rect x="0" y="180" width="760" height="44" rx="8" class="dg-box"/><circle cx="24" cy="202" r="12" class="dg-dot"/><text x="24" y="206.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">4</tspan></text><text x="46" y="207" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Project settings</tspan></text><text x="250" y="207" class="dg-s" text-anchor="start"><tspan x="250" dy="0">.claude/settings.json. Committed, and the shared team baseline.</tspan></text><rect x="0" y="232" width="760" height="44" rx="8" class="dg-box"/><circle cx="24" cy="254" r="12" class="dg-dot"/><text x="24" y="258.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">5</tspan></text><text x="46" y="259" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">User settings</tspan></text><text x="250" y="259" class="dg-s" text-anchor="start"><tspan x="250" dy="0">~/.claude/settings.json. Your defaults, lowest rank of the five.</tspan></text><text x="0" y="298" class="dg-s" text-anchor="start"><tspan x="0" dy="0">The step worth memorising is 1 above 2. Managed policy outranks command-line arguments, which is the inverse of</tspan><tspan x="0" dy="1.3em">nearly every other tool you use. If the org must not be able to opt out, the rule goes at rank 1 and nowhere else.</tspan></text></svg>
+<figcaption>Managed settings, command-line args, local, project, user. One list, five ranks, and the top two in that order.</figcaption>
+</figure>
+
+<h2><span class="num n">3.1</span>Writing the rules</h2>
+
+<p>Rules live under <code>permissions</code> as <code>allow</code>, <code>ask</code> and
+<code>deny</code>, and the syntax names a tool and a pattern:
+<code>Bash(npm run test *)</code>, <code>Read(./.env)</code>. Pattern matching is more
+literal than it looks, and the whitespace is load-bearing.</p>
+
+<table>
+  <caption>The space before the wildcard changes what the rule catches</caption>
+  <thead><tr><th>Rule</th><th>What it matches</th></tr></thead>
+  <tbody>
+    <tr><td><code>Bash(git diff *)</code></td><td>A prefix match on <code>git diff</code> followed by arguments</td></tr>
+    <tr><td><code>Bash(git diff*)</code></td><td>The same, and also <code>git diff-index</code> and anything else beginning with those characters</td></tr>
+  </tbody>
+</table>
+
+<p>Which way round you want depends on the rule. In an <code>allow</code> list the loose
+form quietly permits commands you did not consider; in a <code>deny</code> list the loose
+form is often exactly what you want. Read your own wildcards in both directions before you
+ship them.</p>
+
+<h2><span class="num n">3.2</span>Taking the choice away</h2>
+
+<p>Two managed-only controls exist for the case where the floor has to be a floor.
+<code>allowManagedPermissionRulesOnly</code> stops user and project settings from defining
+any permission rules at all, so the managed set is the whole set.
+<code>allowedMcpServers</code> and <code>deniedMcpServers</code> do the equivalent job for
+which MCP servers may be connected at all, at org level.</p>
+
+<p>Underneath all of it is one division of labour worth stating flatly, because it decides a
+large share of this domain's questions: <strong>enforcement belongs in settings, behavioural
+guidance belongs in CLAUDE.md</strong>. The two are not interchangeable and neither one
+substitutes for the other.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Two placements look like policy and are not. A rule in the committed project
+  <code>CLAUDE.md</code> is advisory: it is context, and any contributor can edit it in a
+  pull request. A rule in <code>.claude/settings.local.json</code> is real enforcement but
+  personal: the file is gitignored, so it protects you and nobody else. Team standards go in
+  the committed <code>.claude/settings.json</code>; standards nobody may opt out of go in
+  managed settings.</p>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A payments company runs Claude Code across nine repositories. Security
+  has one non-negotiable: no session may read <code>.env</code> files, on any machine, in any
+  repo. The engineers are experienced, they pass their own flags routinely, several keep
+  personal settings files with relaxed rules, and all nine repos are open to internal
+  contributors who can edit any committed file through review.</p>
+  <p class="stem">Where does the rule go?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Committed project settings are real enforcement, but they sit at rank 4. A local settings file at rank 3 and a command-line flag at rank 2 both sit above them, and any contributor can amend the committed file itself.">A <code>permissions.deny</code> rule for <code>Read(./.env)</code> in each repo's committed <code>.claude/settings.json</code>, with the reason documented in <code>CLAUDE.md</code></li>
+    <li data-key="B" data-why="Managed settings are the only rank that survives a personal settings file and a command-line flag, and the managed-only switch stops anyone reintroducing rules of their own underneath it.">A <code>permissions.deny</code> rule in <code>managed-settings.json</code> on every machine, with <code>allowManagedPermissionRulesOnly</code> set</li>
+    <li data-key="C" data-why="A PreToolUse hook can block, so the mechanism is sound, but the hook lives in the repo alongside everything else contributors can edit, it has to be duplicated nine times, and a bare or flag-driven run can skip repo-level discovery entirely.">A <code>PreToolUse</code> hook in each repo's <code>.claude/</code> that inspects the tool call and exits 2 on any path ending in <code>.env</code></li>
+    <li data-key="D" data-why="This is the domain's signature wrong answer. CLAUDE.md is context: it shapes behaviour without guaranteeing it, and the file itself is editable by every contributor.">A prominent instruction never to read <code>.env</code> at the top of the managed policy <code>CLAUDE.md</code>, which cannot be excluded</li>
+  </ol>
+  <div class="verdict" hidden><b>Managed settings, rank 1.</b> Three constraints in the stem
+  eliminate everything else: engineers pass their own flags, which kills anything below rank
+  2; personal settings files exist, which kills rank 4; and contributors can edit committed
+  files, which kills any repo-resident mechanism including the hook. Option D is the trap in
+  its strongest form, because the managed policy file really is unexcludable, and it is still
+  only context.</div>
+</div>
+
+<p>When a requirement has the word "must" in it and a named person who will be asked why it
+failed, work down from rank 1 rather than up from the repo.</p>
+
+<nav class="pager">
+  <a class="prev" href="02-claude-md.html"><span>Previous</span>02 The CLAUDE.md hierarchy</a>
+  <a class="next" href="04-extension-mechanisms.html"><span>Next</span>04 Extension mechanisms</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 5 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05. Headless runs and CI - Module 5</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 5 &middot; Section 05 of 7</p>
+  <h1>Headless runs and CI</h1>
+  <p class="standfirst">Making a non-interactive run give the same answer on every machine, and knowing what it picks up when you do not.</p>
+  <div class="meta"><span>Exam domain 7</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 5</a> <span>/</span> <b>Section 05 of 7</b>
+</nav>
+<p>A headless run in CI has a property interactive use does not: nobody is watching, and
+nobody is there to answer a prompt. Which means two things stop being conveniences and become
+correctness problems. Whatever the run discovers on disk, it uses. Whatever it cannot get
+permission for, it either does silently or fails silently.</p>
+
+<p>The reproducibility question is the one the exam asks. A pipeline step that behaves
+differently depending on whose laptop image the runner was built from is not a pipeline
+step.</p>
+
+<h2><span class="num n">5.1</span>The flags that decide the run</h2>
+
+<table>
+  <caption>What each one settles</caption>
+  <thead><tr><th>Flag</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>claude -p "prompt"</code></td><td>The non-interactive run itself. Exit 0 on success, non-zero on failure, so the shell semantics a pipeline expects are already there</td></tr>
+    <tr><td><code>--bare</code></td><td>Skips auto-discovery of hooks, skills, plugins, MCP servers, auto memory and CLAUDE.md. The recommended mode for CI and scripts, and slated to become the <code>-p</code> default. Needs <code>ANTHROPIC_API_KEY</code>, not a subscription login</td></tr>
+    <tr><td><code>--output-format text | json | stream-json</code></td><td><code>json</code> carries <code>total_cost_usd</code> and per-model cost, which are client-side estimates rather than billed figures, plus the session id</td></tr>
+    <tr><td><code>--json-schema</code></td><td>Adds a validated <code>structured_output</code> field, for when a later step has to parse the result rather than a human read it</td></tr>
+    <tr><td><code>--allowedTools "Bash,Read,Edit"</code></td><td>The explicit tool allowlist. In CI, write it out rather than inheriting whatever the environment had</td></tr>
+    <tr><td><code>--permission-mode dontAsk</code></td><td>Locked-down CI: denies anything that is not explicitly allowed or read-only, instead of hanging on a prompt nobody can answer. <code>acceptEdits</code> is the looser choice for lint-fix style jobs</td></tr>
+    <tr><td><code>--append-system-prompt</code></td><td>Per-run role framing, for example the same repo reviewed as a security reviewer in one job and a docs reviewer in another</td></tr>
+    <tr><td><code>--continue</code> and <code>--resume &lt;session_id&gt;</code></td><td>Multi-step pipelines that need the earlier steps' context rather than a fresh start each time</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">5.2</span>Why <code>--bare</code> is the answer to a reproducibility question</h2>
+
+<p>Without it, a <code>-p</code> run in an untrusted folder still executes that repo's hooks
+and connects its <code>.mcp.json</code> servers, because there is no trust dialog in the
+headless path to ask about it. It also picks up the runner's <code>~/.claude</code>. So the
+result depends on the repo you checked out and the image the runner came from, which is the
+definition of a flaky step.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"A team member's local configuration could change the CI result" is not a vague worry,
+  it is the argument for <code>--bare</code>, and it is how this item tends to be worded. If a
+  stem mentions inconsistent CI behaviour across machines or runners, <code>--bare</code> plus
+  an explicit tool allowlist is the shape of the answer. Remember that bare mode also gives up
+  CLAUDE.md, so anything the run genuinely needs to know has to arrive through the prompt,
+  <code>--append-system-prompt</code>, or an explicitly passed setting source.</p>
+</div>
+
+<h2><span class="num n">5.3</span>Failing the build for the right reason</h2>
+
+<p>A run whose plugin failed to load, or whose MCP server never connected, can still exit 0
+having done less than you asked. The <code>system/init</code> event carries
+<code>plugin_errors</code> and <code>mcp_server_errors</code>: check them and fail the build
+on a non-empty list, rather than discovering weeks later that a gate has been a no-op.</p>
+
+<p>One operational limit worth remembering because it turns into a mysterious truncation:
+piped stdin caps at 10MB. Anything larger goes to a file, and you pass the path.</p>
+
+<p>For CI, the default to reach for is <code>--bare</code>, an explicit
+<code>--allowedTools</code>, <code>--permission-mode dontAsk</code>,
+<code>--output-format json</code> captured as a build artefact, and a check on the init
+event's error lists.</p>
+
+<nav class="pager">
+  <a class="prev" href="04-extension-mechanisms.html"><span>Previous</span>04 Extension mechanisms</a>
+  <a class="next" href="06-rollout-readiness.html"><span>Next</span>06 Rollout and operational readiness</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 5 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

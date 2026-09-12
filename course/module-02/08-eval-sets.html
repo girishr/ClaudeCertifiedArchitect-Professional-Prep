@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08. Eval sets and grading methods - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 08 of 12</p>
+  <h1>Eval sets and grading methods</h1>
+  <p class="standfirst">What goes in the golden set, how big it has to be to mean anything, and which grader each output shape earns.</p>
+  <div class="meta"><span>Exam domain 4</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 08 of 12</b>
+</nav>
+<p>Every Domain 4 question depends on one prior decision: whether the number you are about
+to act on means anything. Two things break that, and both are design errors rather than
+measurement errors. The eval's distribution does not match production, or the sample is too
+small to see the difference you care about. Fix those and most of the rest of this domain is
+choosing the cheapest grader that can see the thing you are grading.</p>
+
+<h2><span class="num n">8.1</span>Building the set</h2>
+
+<table>
+  <caption>Seven properties of an eval set you can act on</caption>
+  <thead><tr><th>Property</th><th>What it means in practice</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Mirrors the real task distribution</strong></td><td>Then deliberately add edge cases on top. An eval whose distribution differs from production tells you nothing about production, and no amount of rigour downstream repairs that</td></tr>
+    <tr><td><strong>Volume beats per-item polish</strong></td><td>Anthropic's stated preference is many questions with slightly noisier automated grading over a few hand-graded gems. Use Claude to expand a hand-written seed set</td></tr>
+    <tr><td><strong>A golden dataset</strong></td><td>Inputs plus verified expected outputs or acceptance criteria. Version-controlled, owned, with provenance. Every production bug becomes a new case</td></tr>
+    <tr><td><strong>A holdout split</strong></td><td>Tune on one split, validate on a split you never iterate against. Anthropic says this explicitly for agent-assisted tool refinement, because otherwise you overfit descriptions to your own eval</td></tr>
+    <tr><td><strong>Sized for the difference you care about</strong></td><td>At roughly 90% accuracy, tens of cases give about plus or minus 10 points. Detecting a few-point regression needs a few hundred. If two variants differ by 2 points on 50 cases, you have measured nothing</td></tr>
+    <tr><td><strong>Verifiable without being over-strict</strong></td><td>Pair each prompt with a verifiable outcome, but do not fail valid alternative phrasings or formatting</td></tr>
+    <tr><td><strong>Realistic and multi-step for agents</strong></td><td>Schedule the meeting, attach the doc, book the room. Not single lookups</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>The sample-size point is the one that shows up disguised as a reasonable conclusion.
+  A scenario reports variant B beating variant A by two points on fifty cases and asks what
+  to do next. The answer is not "ship B". It is that the run cannot distinguish them.</p>
+</div>
+
+<h2><span class="num n">8.2</span>Four grading methods</h2>
+
+<p>Pick by the shape of the output, not by how thorough the method sounds. The last column
+is the one to read first.</p>
+
+<table>
+  <caption>Grading methods on four axes</caption>
+  <thead><tr><th>Method</th><th>Speed</th><th>Reliability</th><th>Scale</th><th>Nuance</th><th>Use when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Code or exact match</strong></td><td>Fastest</td><td>Highest</td><td>Highest</td><td>None</td><td>Classification, extraction, schema conformance, tool-argument checks</td></tr>
+    <tr><td><strong>Fuzzy or structural</strong> (regex, contains, embedding similarity)</td><td>Fast</td><td>Medium</td><td>High</td><td>Low</td><td>Required facts present, format checks</td></tr>
+    <tr><td><strong>LLM-as-judge</strong></td><td>Fast</td><td>Good if validated</td><td>High</td><td>High</td><td>Open-ended text, summaries, tone, multi-criteria rubrics</td></tr>
+    <tr><td><strong>Human review</strong></td><td>Slow</td><td>High</td><td>Poor</td><td>Highest</td><td>Calibrating the judge, safety sign-off, ambiguous new domains</td></tr>
+  </tbody>
+</table>
+
+<p>Humans are not the premium option you buy when budget allows. They are the calibration
+instrument. Spend them on validating the judge and on safety sign-off, and automate the
+volume.</p>
+
+<h2><span class="num n">8.3</span>LLM-judge discipline</h2>
+
+<p>This is where the pitfall questions live, because an unvalidated judge is an opinion with
+a p-value. Six rules:</p>
+
+<ol>
+  <li><strong>A detailed rubric with hard rules.</strong> "Must mention Acme Inc. in the
+  first sentence, otherwise incorrect."</li>
+  <li><strong>Force discrete output.</strong> Correct or incorrect, or a 1 to 5 scale. Never
+  free-form praise.</li>
+  <li><strong>Reason first, then score</strong>, and discard the reasoning.</li>
+  <li><strong>Validate against human labels</strong> before you trust it.</li>
+  <li><strong>Name the biases</strong>: position bias in pairwise comparisons, which you fix
+  by randomising order; verbosity bias; self-preference; and leniency drift as rubrics get
+  vaguer.</li>
+  <li><strong>Never use the same model and prompt as both generator and sole judge</strong>
+  for a gate you will act on.</li>
+</ol>
+
+<div class="quiz" data-answer="A,C">
+  <p class="scenario">A support-triage system returns two things per ticket: one of 14
+  category labels, and a one-sentence justification that must name the policy clause it
+  relied on. The team wants a nightly regression suite over 800 saved tickets, running in
+  CI, on a small budget. They have about two hours of a domain expert's time per week.</p>
+  <p class="stem">Select TWO grading methods for the nightly run.</p>
+  <ol class="options">
+    <li data-key="A" data-why="The category is a closed set of 14 values. Exact match is the fastest, most reliable and most scalable grader available, and nuance is not needed to compare two strings.">Exact match on the category label</li>
+    <li data-key="B" data-why="Right instinct, wrong economics, and it does not fit in two hours a week. Automate the grading and spend the human on calibrating the judge instead.">Human review of all 800 justifications each night</li>
+    <li data-key="C" data-why="The justification is open-ended text with a hard rule in it, which is exactly the judge's case. The validation clause is what makes it usable as a gate, and the expert's two hours are what pays for it.">An LLM judge on the justification, against a rubric, validated against human labels first</li>
+    <li data-key="D" data-why="Embedding similarity is a fuzzy structural check. Applied to the whole output it blurs the category and the justification together, so a wrong label can be hidden by a well-phrased sentence.">Embedding similarity between the whole output and a reference answer</li>
+  </ol>
+  <div class="verdict" hidden><b>Two output shapes, two graders.</b> A closed label set never
+  needs a judge, and an open sentence with a hard rule in it cannot be graded by string
+  comparison. The scarce human time is the detail that tells you where the calibration
+  happens: on the judge, once, not on 800 items a night.</div>
+</div>
+
+<p>So the rule to carry: grade with the cheapest method that can actually see the property
+you care about, and let the output shape decide, one property at a time.</p>
+<nav class="pager">
+  <a class="prev" href="07-observability.html"><span>Previous</span>07 Observability across multi-step systems</a>
+  <a class="next" href="09-metrics-and-agents.html"><span>Next</span>09 Metrics and agent evaluation</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

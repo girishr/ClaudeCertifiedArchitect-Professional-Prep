@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01. Running it without you - Module 5</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 5 &middot; Section 01 of 7</p>
+  <h1>Running it without you</h1>
+  <p class="standfirst">Everything in this domain is one question: does the thing you left behind enforce the behaviour, or only suggest it?</p>
+  <div class="meta"><span>Exam domain 7</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 5</a> <span>/</span> <b>Section 01 of 7</b>
+</nav>
+<p>The system works. The evals pass, the pilot is signed off, the security reviewer is
+satisfied. Then you roll off, and eight engineers who did not design it have to run it,
+extend it, and keep it inside the boundaries you drew. What holds those boundaries in place
+is a set of files in a repository and a policy file on the fleet.</p>
+
+<p>So the domain is not about tooling. It is about which of those files is a guarantee and
+which is a suggestion. CLAUDE.md is context: it shapes behaviour without ensuring it. Hooks
+and permission rules are enforcement: they run whatever the model decided. Roughly half the
+wrong answers here are "put it in CLAUDE.md" for something that has to happen every single
+time, or "write a hook" for something that was only ever guidance.</p>
+
+<div class="flag">
+  <span class="label">This is the module not to overinvest in</span>
+  <p>Domain 7 is 7 percent of the paper, the smallest of the seven, which is about four
+  questions out of 63. The official module is 45 minutes, the shortest in the path. The
+  material is not hard and it is not deep: it is four ordered lists you either recall or do
+  not, plus the enforce-versus-suggest distinction above. Cover it once, drill the lists
+  until they come out in order, and move on. If you find yourself on a third pass here
+  while Module 2 is still shaky, you are optimising the wrong 7 percent.</p>
+</div>
+
+<h2><span class="num n">1.1</span>The two shapes a Domain 7 question takes</h2>
+
+<p><strong>Precedence.</strong> Two pieces of configuration disagree and the item asks which
+one applies. There are four ordered lists in this domain and they are all worth knowing
+cold: settings, the CLAUDE.md scopes, subagent definitions, and MCP servers. The settings
+list is the one with a counter-intuitive step in it, so that is the one to expect.</p>
+
+<p><strong>Mechanism fit.</strong> The stem gives you a requirement, usually in the words a
+security reviewer or a tech lead would use, and the options are all real mechanisms. The
+requirement's wording tells you the answer. "Must happen on every write, regardless of what
+Claude decides" is a hook. "Nobody in the org may turn this off" is managed settings.
+"Engineers should follow this convention" is CLAUDE.md or a path-scoped rule. Read the stem
+for the strength of the obligation before you read the options.</p>
+
+<aside class="sidenote"><b>The test that resolves most of them.</b> Ask whether the
+requirement survives an engineer who ignores it and a model that happens to choose
+otherwise. If it has to, it belongs in code or in policy, not in prose.</aside>
+
+<h2><span class="num n">1.2</span>The arc</h2>
+
+<table>
+  <caption>Five sections, then the recap</caption>
+  <thead><tr><th>#</th><th>Section</th><th>The decision it trains</th></tr></thead>
+  <tbody>
+    <tr><td>02</td><td><a href="02-claude-md.html">The CLAUDE.md hierarchy</a></td><td>Which scope a piece of context belongs in, and when a path-scoped rule beats putting it in the main file</td></tr>
+    <tr><td>03</td><td><a href="03-settings-and-permissions.html">Settings and permissions precedence</a></td><td>Where a rule goes when it has to survive both a committed file and a command-line flag</td></tr>
+    <tr><td>04</td><td><a href="04-extension-mechanisms.html">Extension mechanisms</a></td><td>Which of the six mechanisms carries the guarantee the requirement asks for</td></tr>
+    <tr><td>05</td><td><a href="05-headless-and-ci.html">Headless runs and CI</a></td><td>How to make a non-interactive run reproducible, and what it picks up if you do not</td></tr>
+    <tr><td>06</td><td><a href="06-rollout-readiness.html">Rollout and operational readiness</a></td><td>The order you standardise a team in, and what you can prove after the fact</td></tr>
+    <tr><td>07</td><td><a href="07-recap.html">Recap</a></td><td>The lists, the heuristics, the distractors, and the exam plan for the time you have left</td></tr>
+  </tbody>
+</table>
+
+<p>Read them in order once. Then treat section 7 as the page and the rest as the
+explanation you only need if section 7 does not stick.</p>
+
+<nav class="pager">
+  
+  <a class="next" href="02-claude-md.html"><span>Next</span>02 The CLAUDE.md hierarchy</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 5 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

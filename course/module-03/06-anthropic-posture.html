@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06. Anthropic posture and practice - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 06 of 8</p>
+  <h1>Anthropic posture and practice</h1>
+  <p class="standfirst">What the vendor already gives you, what it does not, and the habits that turn responsible AI into something operational.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 06 of 8</b>
+</nav>
+<p>A security review asks three questions: is our data used for training, how long is it
+kept, and where does it sit. You need the answers cold, because every one of them has a
+default, an exception, and a distractor built on confusing the two.</p>
+
+<h2><span class="num n">6.1</span>Training, retention and ZDR</h2>
+
+<p>By default Anthropic does not use commercial product inputs or outputs to train models.
+That covers the API, Claude for Work and Claude Gov. Exceptions are opt-in: thumbs feedback,
+which retains the related conversation for up to five years and may be used for training,
+and programmes such as the Development Partner Program. Consumer plans, Free, Pro and Max,
+run under a separate regime. On the API, Anthropic is a <strong>processor</strong> and you
+are the controller.</p>
+
+<p>Commercial API conversation content is not retained by default. Zero data retention goes
+further and is narrower than people assume.</p>
+
+<table>
+  <caption>What ZDR covers and does not cover</caption>
+  <thead><tr><th></th><th>Scope</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Covered</strong></td><td>The Messages and Token Counting APIs on eligible features, Claude Code with commercial API keys, and Claude Platform on AWS</td></tr>
+    <tr><td><strong>Not covered</strong></td><td>Console and Workbench, consumer products, and stateful managed-agent sessions</td></tr>
+    <tr><td><strong>Incompatible by design</strong></td><td>Features that inherently need storage: Files API, Batch, code execution, the MCP connector, agent skills</td></tr>
+    <tr><td><strong>Excluded entirely</strong></td><td>Some newer "covered models" carry mandatory 30-day retention. The docs currently name Claude Fable 5 and Mythos 5; verify the current list before you quote it</td></tr>
+    <tr><td><strong>Either way</strong></td><td>Retained data is never used for training without express permission</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>ZDR is not the healthcare answer. For PHI the arrangement is a HIPAA-ready
+  configuration with a BAA, meaning encryption, access control and audit logging. ZDR's
+  immediate deletion destroys exactly the auditability HIPAA wants. This pair, PHI in the stem
+  and ZDR in the options, is a classic and it appears often.</p>
+</div>
+
+<h2><span class="num n">6.2</span>Certifications, and what they buy you</h2>
+
+<p>SOC 2 Type I and II, ISO/IEC 27001:2022, ISO/IEC 42001:2023 for AI management systems,
+and a HIPAA-ready configuration with BAAs. Evidence comes through the Trust Center. All of
+it applies to the commercial products, not to consumer plans.</p>
+
+<p>What it buys you is inherited evidence for your own audit, and nothing more. "Anthropic is
+SOC 2 certified so we are compliant" is a wrong answer in every form it appears in. A vendor
+attestation covers the vendor. Your application's controls are still yours to build and
+evidence.</p>
+
+<h2><span class="num n">6.3</span>Residency and deployment</h2>
+
+<p>On the first-party API there are two independent settings, and confusing them is the trap.
+<code>inference_geo</code> sets where inference runs, per request, on Claude 4.6 and later
+models. Values are <code>"global"</code>, the default, or <code>"us"</code>; US pinning costs
+1.1x. Workspace geo governs storage at rest and endpoint processing, is fixed at workspace
+creation, and is currently <code>"us"</code> only. Legacy global-routing opt-outs were
+auto-migrated to <code>allowed_inference_geos: ["us"]</code>.</p>
+
+<p>On Bedrock and Vertex the parameter does not apply at all. Region comes from the endpoint
+or the inference profile.</p>
+
+<table>
+  <caption>Three deployments, three postures</caption>
+  <thead><tr><th>Deployment</th><th>Contract and BAA</th><th>Residency lever</th><th>Notable posture</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Claude API</strong> (first-party)</td>
+      <td>Anthropic commercial terms, DPA, BAA available</td>
+      <td><code>inference_geo</code> per request, plus workspace geo</td>
+      <td>Fastest access to new models and features. ZDR available on eligible surfaces</td>
+    </tr>
+    <tr>
+      <td><strong>Amazon Bedrock</strong></td>
+      <td>AWS contract, AWS BAA, AWS is your processor relationship</td>
+      <td>AWS region, or GovCloud</td>
+      <td>The path to FedRAMP High and DoD IL4/IL5. Inherits AWS controls, IAM, CloudTrail, KMS</td>
+    </tr>
+    <tr>
+      <td><strong>Google Vertex AI</strong></td>
+      <td>Google Cloud contract and BAA</td>
+      <td>GCP region, or inference profile</td>
+      <td>Useful when the enterprise is already GCP-standardised for VPC-SC, CMEK and org policy</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">The sentence to memorise</span>
+  <p>Deployment choice changes <strong>who you contract with, which audit evidence you
+  inherit, and where data sits</strong>. It does not change model behaviour, and it does not
+  reduce your obligation to build guardrails. Any option that treats a deployment change as a
+  substitute for a control is wrong.</p>
+</div>
+
+<h2><span class="num n">6.4</span>The Usage Policy, and the high-risk list</h2>
+
+<p>Two separate things sit under the Usage Policy and the exam tests the second one more.</p>
+
+<p>Universal restrictions cover CSAM, weapons, critical infrastructure attack, malicious
+cyber activity, fraud, election interference and privacy violation. Separately,
+<strong>High-Risk Use Case Requirements</strong> apply to consumer-facing outputs in legal,
+healthcare and mental health, insurance, financial and lending decisions, employment and
+housing eligibility, academic assessment, and automated journalism. Those require
+<strong>review by a qualified professional</strong> plus <strong>disclosure that AI was
+involved</strong>. The 2025 update confirmed these apply to consumer-facing contexts, not
+pure B2B. Consumer-facing chatbots must disclose AI at session start.</p>
+
+<aside class="sidenote"><b>Two reasons, one control.</b> For a consumer-facing decision in
+one of those sectors, qualified human review is required by regulation <em>and</em> by the
+Usage Policy independently. An option that satisfies only one of them still leaves the other
+unmet.</aside>
+
+<h2><span class="num n">6.5</span>Responsible AI as an operating habit</h2>
+
+<table>
+  <caption>Four practices, and what each one actually requires</caption>
+  <thead><tr><th>Practice</th><th>What it requires</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Bias testing</strong></td>
+      <td>Test disaggregated slices, not aggregate accuracy. Build a counterfactual eval set: swap protected attributes and expect stable outputs. Keep monitoring after launch, because bias shows up in production distributions you never sampled. Fine-tuning is not a bias control programme</td>
+    </tr>
+    <tr>
+      <td><strong>Transparency</strong></td>
+      <td>Disclose at first contact, not in the terms. Model and system cards document intended use, limitations and evaluation results, and they feed EU AI Act technical documentation rather than replacing it</td>
+    </tr>
+    <tr>
+      <td><strong>Explainability, honestly bounded</strong></td>
+      <td>A chain of thought is a plausible narrative, not a faithful account of the computation, and it is not an audit trail. What you can legitimately provide: the retrieved sources, the inputs, the prompt and model versions, the policy applied, and the human who signed off</td>
+    </tr>
+    <tr>
+      <td><strong>Incident response</strong></td>
+      <td>Severity levels, a kill switch that works without a deploy, rollback to the previous prompt or model version, user-notification criteria, and a post-incident review that produces a new eval case</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>A kill switch that needs a deploy is not a kill switch, and an incident that does not
+  generate a regression test will recur. Both are versions of the same requirement: the
+  system has to be able to get back to a known-good state, and to remember that it once
+  could not.</p>
+</div>
+
+<p>Treat the vendor posture as a set of facts you inherit and the practices as work you own.
+The exam consistently rewards architects who can say which is which.</p>
+<nav class="pager">
+  <a class="prev" href="05-compliance-mapping.html"><span>Previous</span>05 Compliance mapping</a>
+  <a class="next" href="07-risk-framing.html"><span>Next</span>07 Risk framing</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

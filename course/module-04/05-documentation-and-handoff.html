@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05. Documentation and handoff - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 05 of 8</p>
+  <h1>Documentation and handoff</h1>
+  <p class="standfirst">The seven artefacts an implementation team needs to be able to change the system without breaking it.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 05 of 8</b>
+</nav>
+<p>A handoff has one test and it is not whether documents exist. It is whether a team that
+was not in the room can <strong>change</strong> the system safely: adjust a prompt, swap a
+model, widen the scope, and know within an hour whether they have made it worse.</p>
+
+<p>Most handoffs fail that test while looking complete, because the documents produced are
+the ones that were easy to write. What follows is the priority order, which is also roughly
+the order in which the missing one hurts.</p>
+
+<h2><span class="num n">5.1</span>The seven artefacts</h2>
+
+<table>
+  <caption>What implementation teams actually need, in rough priority order</caption>
+  <thead><tr><th>Artefact</th><th>Contains</th><th>Why it matters</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Architecture decision records</strong></td><td>Decision, context, options, consequences, date, owner</td><td>Stops the team relitigating settled questions, and explains why the obvious alternative was rejected. Without it, the obvious alternative gets rebuilt in six months</td></tr>
+    <tr><td><strong>Prompt artefacts</strong></td><td>Versioned prompts, rationale, few-shot sets, changelog</td><td>Prompts are code. <strong>Unversioned prompts are the top handoff failure</strong></td></tr>
+    <tr><td><strong>Eval suite</strong></td><td>Golden dataset, scoring method, thresholds, CI integration</td><td>Without it nobody can safely change anything. This is the artefact that makes the system maintainable rather than frozen</td></tr>
+    <tr><td><strong>Runbook</strong></td><td>Failure modes, alerts, kill switch, rollback steps, escalation contacts, on-call</td><td>The difference between a pilot and a product</td></tr>
+    <tr><td><strong>Guardrail and permission spec</strong></td><td>Which layer catches what, tool scopes, approval matrix</td><td>Audit evidence, and the fastest way to onboard an engineer into what the system is allowed to do</td></tr>
+    <tr><td><strong>Cost and capacity model</strong></td><td>Token math, rate limits, scaling assumptions</td><td>Prevents the surprise invoice, which is the fastest way to lose a sponsor who was otherwise happy</td></tr>
+    <tr><td><strong>Known limitations</strong></td><td>What it cannot do, out-of-scope inputs, disclosure text</td><td>Sets user expectations and protects the team. Publishing the limits is what buys trust, not what costs it</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Hand over the prompts in a shared doc" is the distractor, and it is tempting because it
+  is fast, cooperative and visibly generous: the receiving team gets everything today rather
+  than after a week of tooling. What it costs is the ability to diagnose. Three months later
+  the output has changed, nobody knows which edit did it, there is no changelog and no version
+  to roll back to, and the only remaining move is to rewrite the prompt from scratch and
+  re-earn the confidence the pilot had already bought. Prompts are versioned artefacts with a
+  changelog, and they arrive with the eval suite that scores them.</p>
+</div>
+
+<aside class="sidenote"><b>The pairing to remember.</b> Prompt artefacts and the eval suite
+are one deliverable in two files. Versioned prompts without evals give you a history you
+cannot evaluate. Evals without versioned prompts tell you something broke and not what.</aside>
+
+<h2><span class="num n">5.2</span>The decision record, and the two sections people skip</h2>
+
+<p>An ADR is short and its value is concentrated in the parts that are least satisfying to
+write. A decision record that lists only the decision is a decision <em>announcement</em>,
+and exam items about documentation quality turn on exactly that distinction.</p>
+
+<table>
+  <caption>Which sections carry the weight</caption>
+  <thead><tr><th>Section</th><th>What it must contain</th></tr></thead>
+  <tbody>
+    <tr><td>Status</td><td>Proposed, accepted, superseded. One word, and it stops people acting on a draft</td></tr>
+    <tr><td>Context</td><td>The baselines and constraints from discovery, with numbers, and an explicit note of what you do not yet know</td></tr>
+    <tr><td>Decision</td><td>The choice, in one sentence</td></tr>
+    <tr><td><strong>Options considered</strong></td><td><strong>Each rejected option with a concrete reason for rejection.</strong> Not "we preferred the chosen approach" but the token count that exceeded the window, the cost per call, the reason a similarity search was the wrong shape for the retrieval this task needs</td></tr>
+    <tr><td><strong>Consequences</strong></td><td>Positive and negative, whether the decision is reversible, and <strong>what would make us revisit it</strong>. The revisit trigger is what keeps the record alive rather than historical</td></tr>
+    <tr><td>Assumptions to validate</td><td>Each one paired with the measurement that would validate it, which links the record to the eval suite and the rollout plan</td></tr>
+  </tbody>
+</table>
+
+<details class="fold">
+<summary>The skeleton, for the one you write in the lab</summary>
+<pre><code># ADR-001: Retrieval strategy for the review assistant
+
+## Status
+Proposed
+
+## Context
+[Baselines and constraints from discovery, with numbers. What we do not yet know.]
+
+## Decision
+[The choice, in one sentence.]
+
+## Options considered
+1. [Option] Rejected: [concrete reason, with the number that killed it]
+2. [Option] Rejected: [concrete reason]
+3. [Option] Chosen.
+
+## Consequences
+Positive: [...]  Negative: [...]  Reversible? [...]
+What would make us revisit this? [...]
+
+## Assumptions to validate in phase 1
+[Each with the measurement that validates it.]</code></pre>
+</details>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p><a href="../../labs.md">Lab 8</a>, step 2, is one ADR for the single most consequential
+  choice in a real engagement of your own, with at least two rejected options carrying
+  concrete reasons and a stated revisit trigger. Twenty minutes. It is the cheapest way to
+  stop confusing a decision record with a design document, which is the distinction section
+  7's engineering audience turns on.</p>
+</div>
+
+<p>Judge your own handover by asking what the receiving team would have to reverse-engineer.
+Anything on that list is a missing artefact, and the one most often on it is the changelog.</p>
+<nav class="pager">
+  <a class="prev" href="04-slas-and-business-case.html"><span>Previous</span>04 SLAs and the business case</a>
+  <a class="next" href="06-lifecycle-and-rollout.html"><span>Next</span>06 Lifecycle and rollout</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

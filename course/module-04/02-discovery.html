@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02. Discovery - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 02 of 8</p>
+  <h1>Discovery</h1>
+  <p class="standfirst">What the client asked for, what the client actually needs, and which of the two you design against.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 02 of 8</b>
+</nav>
+<p>"We want a chatbot on our docs." Build that literally and you may well ship something
+that works and changes nothing, because the thing paying for it was never the chatbot. It
+was that tickets cost too much and take three days.</p>
+
+<p>So the first act of discovery is to split one sentence into three, and to keep them
+separate on the page. Solving the stated ask literally when the stem has described a
+different job is one of the most reliable wrong answers in this domain.</p>
+
+<table>
+  <caption>Three things a single request contains</caption>
+  <thead><tr><th>Layer</th><th>In the example</th><th>What it is for</th></tr></thead>
+  <tbody>
+    <tr><td><strong>The stated ask</strong></td><td>"A chatbot on our docs"</td><td>A solution somebody has already picked. Useful as a clue to what they have seen elsewhere, not as a specification</td></tr>
+    <tr><td><strong>The underlying job</strong></td><td>"Tickets cost too much and take three days"</td><td>The thing being paid for. Design against this</td></tr>
+    <tr><td><strong>The success measure</strong></td><td>"Deflection rate, time to first response"</td><td>How anyone will know it worked. Design against this too, and agree it before you build</td></tr>
+  </tbody>
+</table>
+
+<p>When the two diverge, say so out loud rather than quietly redesigning. "You asked for a
+chatbot. What I think you are buying is three days off the resolution clock, and here is why
+that changes the design" is the move. Silent substitution loses you the sponsor when the demo
+does not look like the thing he described.</p>
+
+<h2><span class="num n">2.1</span>The qualification questions</h2>
+
+<p>Six questions. Any one of them left unanswered is a risk you will carry into the pilot,
+and each maps directly onto a decision you will have to make later.</p>
+
+<table>
+  <caption>What each question is really buying you</caption>
+  <thead><tr><th>Ask</th><th>What the answer decides</th></tr></thead>
+  <tbody>
+    <tr><td>Who is the user, and what do they do with the output?</td><td>The entry point, the interface, and whether the output needs to be verifiable by the person receiving it</td></tr>
+    <tr><td>What happens today without AI, and what does it cost?</td><td>The baseline. Without it there is no business case and no way to define good enough</td></tr>
+    <tr><td>What does a wrong answer cost, and can it be undone?</td><td>The risk tier, and where the human gate goes. This is the question that connects to the whole of Domain 5</td></tr>
+    <tr><td>Where is ground truth, is it current and is it permissioned?</td><td>Whether retrieval is even possible, and whether you are about to build a data access problem rather than an AI problem</td></tr>
+    <tr><td>How will we know it worked, in a number?</td><td>The acceptance criteria. "In a number" is the operative phrase; adjectives are not criteria</td></tr>
+    <tr><td>Who owns it after go-live?</td><td>Whether this is a pilot that will be abandoned or a product that will be run. A named owner is a production gate, not a nicety</td></tr>
+  </tbody>
+</table>
+
+<aside class="sidenote"><b>Run it as an interview, not a form.</b> <a href="../../labs.md">Lab
+8</a> has you conduct discovery against three stakeholders in character, each of whom
+volunteers nothing and pushes back on any claim without a number. The discipline it teaches
+is the one the exam tests: writing the stated request and the underlying problem down as two
+separate lines, with real baselines against each.</aside>
+
+<h2><span class="num n">2.2</span>Is AI even the right tool</h2>
+
+<p>Answering "no" is a legitimate and frequently correct consulting outcome, and it appears
+as a correct answer on the paper. The test is not enthusiasm, it is fit.</p>
+
+<table>
+  <caption>Which technology earns the work</caption>
+  <thead><tr><th>Send it to conventional software when</th><th>An LLM earns its place when</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>The task is deterministic, fully specified and expressible as rules. Conventional software wins outright on cost, latency and auditability, and those three are the arguments you will be held to later</td>
+      <td>Inputs are unstructured, language is central to the work, and the long tail of cases is wide enough that rules would never cover it</td>
+    </tr>
+    <tr>
+      <td>The correct output for a given input is knowable in advance and a person could write the branch</td>
+      <td>"Approximately right, reviewed by a human" beats the status quo, which is often nothing at all</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If the stem describes a rule-expressible task, the answer that recommends conventional
+software is not a cop-out. It is the key.</p>
+
+<h2><span class="num n">2.3</span>Feasibility against value, and where projects die</h2>
+
+<p>Score candidate use cases on two axes, both of which decompose into things you can
+actually ask about.</p>
+
+<ul>
+  <li><strong>Value</strong> = frequency x unit value x adoption likelihood. The third factor
+  is the one people drop, and it is the one that turns a good saving into a small one.</li>
+  <li><strong>Feasibility</strong> = data availability, evaluability, integration cost, risk
+  tier.</li>
+</ul>
+
+<table>
+  <caption>The four quadrants, and what each one does to you</caption>
+  <thead><tr><th>Quadrant</th><th>What happens</th></tr></thead>
+  <tbody>
+    <tr><td><strong>High value, high feasibility</strong></td><td>This goes first. Always. It is the only quadrant that buys you the credibility to attempt the others</td></tr>
+    <tr><td><strong>High value, low feasibility</strong></td><td><strong>Where projects die</strong>, and exactly where sponsors want to start, because the value is the part they can see. Park it, name the feasibility gap, and come back when the gap has closed</td></tr>
+    <tr><td><strong>Low value, high feasibility</strong></td><td>Builds the easy thing nobody needed. Cheap to deliver, impossible to defend at the next budget review</td></tr>
+    <tr><td><strong>Low value, low feasibility</strong></td><td>Decline it in discovery, in writing, with the reason</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Start with the highest-value use case" is the most seductive option in this section, and
+  it is wrong whenever the stem has told you the data does not exist, the task cannot be
+  evaluated, or the integration is deep. It is seductive because agreeing with the sponsor's
+  instinct is what a good partner appears to do. What it costs is the whole engagement: you
+  spend the one pilot you were given on the quadrant with the lowest chance of producing a
+  number, and the honest report at the end reads as your failure rather than as a feasibility
+  finding you could have named on day two.</p>
+</div>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>The other trap here is diligence in the wrong direction: <strong>building the full
+  production architecture during discovery</strong>. Guardrail stack, CI-integrated eval
+  suite, on-call rotation, cost controls, all before a single user has confirmed the job is
+  worth doing. It looks rigorous and it is over-engineering ahead of proven value. Match the
+  investment to the stage you are in, which is the habit the whole of section 6 is about.</p>
+</div>
+
+<p>Leave discovery with three lines written down: the job in the stakeholder's own words, the
+baseline as a number, and the measure that would settle the argument. If you cannot write the
+third one, you are not ready to start the pilot, and that is the finding to report.</p>
+<nav class="pager">
+  <a class="prev" href="01-introduction.html"><span>Previous</span>01 The half that decides whether it ships</a>
+  <a class="next" href="03-expectation-management.html"><span>Next</span>03 Expectation management</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

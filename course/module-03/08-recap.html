@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08. Recap and what is next - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 08 of 8</p>
+  <h1>Recap and what is next</h1>
+  <p class="standfirst">The takeaways, the heuristics, the distractors, a closed-book self-test, and where Module 4 picks up.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 08 of 8</b>
+</nav>
+<p>Six takeaways, and one idea running under all of them: the design that keeps the ability
+to undo is the one that survives both an incident and an exam item.</p>
+
+<table>
+  <caption>The six takeaways</caption>
+  <thead><tr><th>#</th><th>Takeaway</th><th>The operative detail</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td>Proportionality is the skill being tested</td><td>Control cost tracks expected loss, severity multiplied by likelihood, not the loudest stakeholder's anxiety. Maximum control is a wrong answer when the stem gives low severity, reversibility and cost pressure</td></tr>
+    <tr><td>02</td><td>Depth means independence, not count</td><td>Two layers that fail for the same reason are one layer. A prompt plus a model refusal are correlated; a prompt plus a hard tool boundary are not</td></tr>
+    <tr><td>03</td><td>Reversibility decides where the human goes</td><td>Blast radius breaks ties. Irreversible and externally visible means a synchronous gate on the action. Reversible means build the undo first, then sample. Approve the plan, not every step</td></tr>
+    <tr><td>04</td><td>Injection and exfiltration live in scope, not wording</td><td>Untrusted content goes in a tool result block, JSON-encoded, origin declared, screened before the model acts. Tool calls carry the caller's identity, not the agent's</td></tr>
+    <tr><td>05</td><td>Compliance is obligation to mechanism, one row at a time</td><td>An answer naming a document where the obligation demands a mechanism is the distractor. PHI wants BAA plus HIPAA configuration plus audit logging, not ZDR. A DPA is not a transfer mechanism</td></tr>
+    <tr><td>06</td><td>Risk is sized by the architect and accepted by the business</td><td>Register with owner, score, inherent against residual, control mapping, named sign-off. An architect accepting residual risk alone is always wrong</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">8.1</span>The decision heuristics, in the order you apply them</h2>
+
+<table>
+  <caption>When X, do Y</caption>
+  <thead><tr><th>When the stem says</th><th>Do this</th></tr></thead>
+  <tbody>
+    <tr><td>Irreversible and externally visible</td><td>Insert a synchronous approval gate. Everything else is secondary</td></tr>
+    <tr><td>Reversible</td><td>Invest in rollback and monitoring before you invest in gates</td></tr>
+    <tr><td>Injection or exfiltration</td><td>Answer in tool scope and sandboxing, not prompt wording</td></tr>
+    <tr><td>Untrusted third-party content enters the loop</td><td>Tool result block, JSON-encoded, origin declared, screened before the model acts on it</td></tr>
+    <tr><td>PHI</td><td>BAA plus HIPAA configuration plus audit logging. Not ZDR</td></tr>
+    <tr><td>Data must not leave the region</td><td>Pin inference geo on first-party, or choose the region or endpoint on Bedrock and Vertex, and confirm the feature you need is available there</td></tr>
+    <tr><td>US federal or CUI</td><td>Route to Bedrock in AWS GovCloud</td></tr>
+    <tr><td>Reviewers approve nearly everything</td><td>Switch to risk-weighted sampling and spend the savings on evals</td></tr>
+    <tr><td>Solely automated, with legal or significant effect on a person</td><td>Human intervention with authority to overturn</td></tr>
+    <tr><td>Consumer-facing in law, medicine, finance, employment, housing or insurance</td><td>Qualified human review <em>and</em> AI disclosure</td></tr>
+    <tr><td>Cost or latency pressure plus low severity</td><td>The correct control stack is smaller than the maximal one</td></tr>
+    <tr><td>A model version changes</td><td>Run the regression eval suite and canary before rollout. Never "it should be better"</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">8.2</span>The distractors, by the sentence they hide behind</h2>
+
+<table>
+  <caption>Twelve wrong answers that read as diligent</caption>
+  <thead><tr><th>The option</th><th>Why it fails</th></tr></thead>
+  <tbody>
+    <tr><td>"Strengthen the system prompt" against injection or exfiltration</td><td>Prompts are not a security boundary. The right answer lives in permissioning</td></tr>
+    <tr><td>"Apply ZDR" in a healthcare scenario</td><td>ZDR removes the audit trail HIPAA expects. BAA plus HIPAA configuration is the pairing</td></tr>
+    <tr><td>"Review 100 percent of outputs" for high-volume, low-severity work</td><td>Kills the ROI and induces rubber-stamping, which is worse than no gate</td></tr>
+    <tr><td>"Fine-tune to remove bias"</td><td>Changes behaviour, is not a bias control programme. You still need disaggregated testing and monitoring</td></tr>
+    <tr><td>"Use a larger model to eliminate hallucination"</td><td>Reduces the rate, never eliminates it. Grounding and validation are the controls</td></tr>
+    <tr><td>"Show chain of thought to satisfy the right to explanation"</td><td>Reasoning traces are not faithful explanations and not an audit artefact</td></tr>
+    <tr><td>"Get a DPA" as the whole answer on cross-border transfer</td><td>A DPA covers processor duties. The transfer needs a Chapter V mechanism or in-region processing</td></tr>
+    <tr><td>"Anthropic is SOC 2 certified so we are compliant"</td><td>Vendor attestations cover the vendor. Your application's controls are yours</td></tr>
+    <tr><td>"Log everything, forever"</td><td>Over-retention creates its own GDPR and DPDP exposure and expands breach blast radius</td></tr>
+    <tr><td>"The architect accepts the residual risk"</td><td>Risk acceptance belongs to the accountable business owner</td></tr>
+    <tr><td>"High-risk EU AI Act obligations bite in August 2026"</td><td>Deferred to December 2027 for Annex III. August 2026 is transparency and general applicability</td></tr>
+    <tr><td>"Deploying on Bedrock makes us FedRAMP compliant"</td><td>It makes an authorised path available. Your own system still needs its own authorisation</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">8.3</span>How these items are built</h2>
+
+<p>Four structural tells worth knowing before you read the options.</p>
+
+<ul>
+  <li><strong>Select TWO or THREE</strong> items in this domain usually pair one preventive
+  control with one detective control, or one technical action with one stakeholder action. If
+  both your picks are technical, or both preventive, re-read.</li>
+  <li><strong>When two options are both correct in isolation</strong>, pick the one that
+  matches the lifecycle stage named in the stem. A control that is right in production is
+  often wrong during discovery.</li>
+  <li><strong>"Immediately"</strong> in an option is often a tell for an over-reaction.
+  <strong>"Before proceeding"</strong> often flags the correct sequencing answer.</li>
+  <li><strong>Anything you cannot verify</strong> against a primary source is directional. The
+  two areas most likely to have moved: EU AI Act sub-deadlines, and the exact list of Anthropic
+  features and models eligible for ZDR.</li>
+</ul>
+
+<h2><span class="num n">8.4</span>Closed-book self-test</h2>
+
+<p>No scrolling. Anything you cannot produce cleanly is the section to reread, not the whole
+module.</p>
+
+<ol>
+  <li>What decides where the human gate goes, and what breaks a tie? Give the pattern for an
+  irreversible external action and for a reversible one.</li>
+  <li>For a multi-step agent, what do you ask a human to approve, and why is step-by-step
+  confirmation worse than it looks?</li>
+  <li>Untrusted third-party content arrives from a fetched web page. Where does it go in the
+  request, how is it encoded, what is declared about it, and what happens before the model
+  acts on it?</li>
+  <li>What is the fix for confused deputy, and what is the non-fix that appears alongside it?</li>
+  <li>Name what ZDR does not cover, the feature classes it is incompatible with, and the one
+  scenario where reaching for ZDR is the wrong answer.</li>
+  <li>State <code>inference_geo</code>'s two values, which models it applies to, the price
+  multiplier for US pinning, and what workspace geo governs instead.</li>
+  <li>Walk the EU AI Act dates in order: prohibitions, GPAI, transparency, Annex III high-risk,
+  Annex I. Then state the DPDP breach-reporting window and the minimum security-log retention.</li>
+  <li>Name the four NIST AI RMF functions, say which is cross-cutting, list the columns of the
+  risk register, and say who signs off the residual risk.</li>
+</ol>
+
+<p>Two more worth adding if the first eight came easily: reproduce the obligation-to-control
+table from section 5 from memory, and name the five guardrail layers with what each one cannot
+catch.</p>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p><a href="../module-04/index.html"><strong>Module 4, Stakeholder Engagement, Lifecycle &amp; GTM</strong></a> covers exam domain 6 at 14 percent.
+  It takes the same system and asks who you are talking to about it: how the risk you just
+  sized gets communicated to an executive, a security reviewer and a delivery team, and how the
+  deployment moves through discovery, pilot and production. This module and that one are 28
+  percent of the paper between them, and the two share a habit: the answer usually depends on
+  the stage you are in and the audience in front of you.</p>
+</div>
+<nav class="pager">
+  <a class="prev" href="07-risk-framing.html"><span>Previous</span>07 Risk framing</a>
+  
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

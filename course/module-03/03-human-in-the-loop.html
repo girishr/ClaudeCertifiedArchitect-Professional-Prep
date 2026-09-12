@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03. Human in the loop - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 03 of 8</p>
+  <h1>Human in the loop</h1>
+  <p class="standfirst">Where the human goes, decided by reversibility, with blast radius as the tiebreaker.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 03 of 8</b>
+</nav>
+<p>Nobody fails this domain by forgetting the human. They fail it by putting the human in
+the wrong place: a gate in front of work that could simply have been undone, or sampled
+review behind an action that moved money out of the company.</p>
+
+<p>Placement is the whole question, and one property decides it. Can the action be undone
+cheaply? If not, the human goes before it. If it can, spend the same effort on making the
+undo reliable and watch the output afterwards.</p>
+
+<figure class="diagram" id="fig-gate-placement">
+<svg viewBox="0 0 760 320" role="img" aria-label="Reversibility decides whether the human reviews before or after the action" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m31" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="230" y="0" width="300" height="44" rx="8" class="dg-box hi"/><text x="380" y="20" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Can this action be undone, cheaply?</tspan></text><text x="380" y="36" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">asked before any control is priced</tspan></text><path d="M320 47L170 97" class="dg-arrow" marker-end="url(#m31)"/><path d="M440 47L590 97" class="dg-arrow" marker-end="url(#m31)"/><rect x="0" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="14" y="124" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">No: irreversible, externally visible</tspan></text><text x="14" y="146" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Payment, email to a customer, filing,</tspan><tspan x="14" dy="1.3em">deletion, contract</tspan></text><rect x="10" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="20" y="200" class="dg-t" text-anchor="start"><tspan x="20" dy="0">Synchronous approval gate on the action</tspan></text><rect x="420" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="434" y="124" class="dg-t-b" text-anchor="start"><tspan x="434" dy="0">Yes: cheap rollback exists</tspan></text><text x="434" y="146" class="dg-s" text-anchor="start"><tspan x="434" dy="0">Draft, internal ticket, staged change</tspan></text><rect x="430" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="440" y="200" class="dg-t" text-anchor="start"><tspan x="440" dy="0">Build the undo, then sample the output</tspan></text><text x="0" y="244" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Tiebreaker when reversibility is unclear</tspan></text><text x="0" y="266" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Blast radius. How many people, how much money, how visible it is outside the company.</tspan></text><text x="0" y="300" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Gate the action, not the reasoning. For a multi-step agent, approve the plan once rather than each step.</tspan></text></svg>
+<figcaption>One question splits the design. Everything else is a detail of the branch you land in.</figcaption>
+</figure>
+
+<table>
+  <caption>Five situations and the pattern each one calls for</caption>
+  <thead><tr><th>Situation</th><th>Pattern</th><th>The operative detail</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Irreversible, externally visible.</strong> Payment, email to a customer, regulatory filing, deletion, contract</td>
+      <td>Synchronous approval gate before the action</td>
+      <td>Gate the <em>action</em>, not the reasoning. Approving a plan is cheaper than approving each step</td>
+    </tr>
+    <tr>
+      <td><strong>Reversible with cheap rollback.</strong> A draft, an internal ticket, a staged change</td>
+      <td>Post-hoc sampled review plus easy undo</td>
+      <td>Build the undo before you build the gate</td>
+    </tr>
+    <tr>
+      <td><strong>High volume, low unit severity</strong></td>
+      <td>Statistical sampling, risk-weighted</td>
+      <td>Sample more where confidence is low or value is high. Reviewing 100% destroys the ROI and is a common wrong answer</td>
+    </tr>
+    <tr>
+      <td><strong>Regulated decision affecting a person.</strong> Credit, hiring, medical, legal, insurance</td>
+      <td>A qualified human reviews before the decision takes effect, plus disclosure that AI assisted</td>
+      <td>This is both a regulatory requirement and an Anthropic Usage Policy requirement. Two independent reasons, one design</td>
+    </tr>
+    <tr>
+      <td><strong>Novel or ambiguous cases the model flags</strong></td>
+      <td>Escalation path with an SLA, a defined owner, and a feedback loop back into evals</td>
+      <td>Escalation without a named owner and a time bound is theatre</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">3.1</span>Approve the plan, not every step</h2>
+
+<p>For multi-step agents, plan-level approval beats step-level approval. Approving a full
+plan before execution gives the human meaningful influence at the point where influence is
+possible, which is before anything has happened.</p>
+
+<p>Step-by-step confirmation looks stricter and is worse. It trains users to click through,
+and a reviewer who clicks through is worse than no reviewer at all, because the design now
+carries false assurance: the log says a human approved each action, and nobody did.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>If a stem tells you reviewers approve 98 percent of items unchanged, that is not a
+  detail of scale. It is the answer. The reviewer is adding no signal, so move to
+  risk-weighted sampling and reinvest the saved effort in evals. Full review is only correct
+  when volume is low, severity is high, <em>and</em> the reviewer genuinely adds signal.</p>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A logistics firm runs a Claude workflow over inbound carrier
+  invoices. Two outcomes are possible per invoice: attach a discrepancy note to an internal
+  dispute ticket, or release payment to the carrier through the payments API. Every output
+  currently goes to a two-person review queue, which approves 97 percent unchanged and is
+  eight working days behind. Finance wants the queue gone and has asked for a design that
+  clears the backlog without "taking the humans out".</p>
+  <p class="stem">What review design should the architect propose?</p>
+  <ol class="options">
+    <li data-key="A" data-why="Adding reviewers scales the cost of a control that is already producing almost no signal. A 97 percent unchanged rate is evidence the gate is misplaced, not under-resourced.">Keep reviewing 100 percent of outputs and add two more reviewers to clear the backlog</li>
+    <li data-key="B" data-why="Right. The two outcomes differ on the only property that matters. Payment release is irreversible and external, so it keeps a synchronous gate. The dispute note is internal and trivially undone, so it moves to risk-weighted sampling with a reliable undo.">A synchronous approval gate on payment release only, with risk-weighted sampling plus easy undo on the dispute-note path</li>
+    <li data-key="C" data-why="This removes the gate from an irreversible external financial action and replaces it with prompt wording and after-the-fact detection. Monitoring is not prevention, and a prompt is not a boundary.">Remove human review, tighten the system prompt to forbid incorrect payments, and add a payment-anomaly dashboard</li>
+    <li data-key="D" data-why="Step-level confirmation on every tool call is the fatigue pattern. It gates the reasoning rather than the consequential action, and a queue already eight days behind will click through it.">Require step-by-step human confirmation for every tool call the workflow makes</li>
+  </ol>
+  <div class="verdict" hidden><b>Split the paths by reversibility.</b> The stem hides one
+  irreversible external action inside a high-volume, low-severity stream, and the 97 percent
+  unchanged rate tells you the current uniform gate is paying for nothing on most items. One
+  design, two branches: gate the payment, sample the note, and make sure the note can be
+  pulled back.</div>
+</div>
+
+<p>Ask where the undo lives before you ask where the reviewer sits. If there is a cheap
+undo, the reviewer can stand behind the action. If there is not, someone has to stand in
+front of it, and the design has to make that person's approval mean something.</p>
+<nav class="pager">
+  <a class="prev" href="02-guardrail-stack.html"><span>Previous</span>02 The layered guardrail stack</a>
+  <a class="next" href="04-failure-modes.html"><span>Next</span>04 Failure modes and mitigations</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

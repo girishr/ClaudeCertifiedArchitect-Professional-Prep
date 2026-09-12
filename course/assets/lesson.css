@@ -3,10 +3,10 @@
    Tufte-influenced: generous measure, restrained rules, sidenotes, prints well. */
 
 :root {
-  --prose: 28rem;
+  --prose: 29rem;
   /* Palette and type live in print.css, loaded by nav.js before this file.
      These two are this stylesheet's own: the page and the prose measure. */
-  --page:    62rem;
+  --page:    50rem;
   --measure: 40rem;
 }
 
@@ -600,7 +600,7 @@ figure.diagram svg {
   font-family: var(--ui);
   overflow: visible;
 }
-figure.diagram.wide { overflow-x: auto; }
+figure.diagram.wide { overflow-x: auto; padding-left: 30px; padding-right: 12px; }
 figure.diagram.wide svg { min-width: 640px; }
 figure.diagram figcaption {
   font-family: var(--ui);
@@ -612,7 +612,7 @@ figure.diagram figcaption {
 }
 
 .dg-box    { fill: var(--flag); stroke: var(--rule); stroke-width: 1; }
-.dg-box.hi { stroke: var(--accent); stroke-width: 1.5; }
+.dg-box.hi { fill: color-mix(in srgb, var(--accent) 12%, var(--flag)); stroke: var(--accent); stroke-width: 1; }
 .dg-strip  { fill: var(--accent-dim); stroke: none; }
 .dg-window { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 3; }
 .dg-edge   { stroke: var(--ink); stroke-width: 1.5; }
@@ -626,7 +626,7 @@ figure.diagram figcaption {
 .dg-t      { fill: var(--ink); font-size: 13px; }
 .dg-t-b    { fill: var(--ink); font-size: 13.5px; font-weight: 650; }
 .dg-s      { fill: var(--ink-soft); font-size: 11.5px; }
-.dg-k      { fill: var(--ink-faint); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.dg-k      { fill: var(--ink-faint); font-size: 9.5px; letter-spacing: .07em; text-transform: uppercase; font-weight: 600; }
 .dg-k-good { fill: var(--good); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
 .dg-k-bad  { fill: var(--bad);  font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
 .dg-num    { fill: var(--paper); font-size: 12px; font-weight: 700; }
@@ -649,7 +649,7 @@ figure.diagram figcaption {
 .dg-k2       { fill: var(--ink-faint); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
 
 @media print {
-  figure.diagram.wide { overflow: visible; }
+  figure.diagram.wide { overflow: visible; padding-left: 22px; }
   figure.diagram.wide svg { min-width: 0; }
 }
 
@@ -793,6 +793,7 @@ code, pre code { font-family: var(--num); }
   text-align: right;
   margin: 0 0 1.4rem;
   padding-top: .1rem;
+  font-size: 11.5px;
 }
 
 /* Prose holds a reading measure of its own, set for the face it is set in;

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11. Diagnosis and optimisation - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 11 of 12</p>
+  <h1>Diagnosis and optimisation</h1>
+  <p class="standfirst">Naming the failure from its symptom, then fixing it with the cheapest lever that can reach it.</p>
+  <div class="meta"><span>Exam domain 4</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 11 of 12</b>
+</nav>
+<p>This is the page the rest of Domain 4 exists to support. Most questions in the domain are
+an incident report with four fixes attached, and the fixes are all real techniques. What
+separates them is whether they act on the layer that is actually broken. So there are two
+ordered lists to hold: one that names the failure, and one that spends money in the right
+order once you have named it.</p>
+
+<h2><span class="num n">11.1</span>The diagnosis tree</h2>
+
+<p>Work it in order and stop at the first branch that fits. Skipping to step 5 because the
+output looks like a reasoning problem is how teams end up rewriting prompts against a
+retrieval bug.</p>
+
+<figure class="diagram wide" id="fig-diagnosis">
+<svg viewBox="0 0 760 372" role="img" aria-label="A root-cause decision tree: five questions asked in order, each with the failure mode it names" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m11a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="12" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Start from the raw transcript, not the summary. Then ask these five, in order.</tspan></text><rect x="0" y="20" width="760" height="30" rx="6" class="dg-strip"/><text x="12" y="39" class="dg-t" text-anchor="start"><tspan x="12" dy="0">1. Reproduce with the raw transcript: actual calls, arguments, results, token counts</tspan></text><rect x="0" y="60" width="310" height="72" rx="6" class="dg-box hi"/><circle cx="22" cy="82" r="11" class="dg-dot"/><text x="22" y="86.5" class="dg-num" text-anchor="middle"><tspan x="22" dy="0">2</tspan></text><text x="42" y="84" class="dg-t" text-anchor="start"><tspan x="42" dy="0">Was the needed information</tspan><tspan x="42" dy="1.3em">in context at generation time?</tspan></text><path d="M313 96L337 96" class="dg-arrow" marker-end="url(#m11a)"/><rect x="340" y="60" width="420" height="72" rx="6" class="dg-box-bad"/><text x="352" y="80" class="dg-s" text-anchor="start"><tspan x="352" dy="0">In the corpus but not retrieved: retrieval failure</tspan><tspan x="352" dy="1.4em">Never existed anywhere: coverage gap</tspan><tspan x="352" dy="1.4em">There earlier, not now: context overflow or compaction loss</tspan></text><rect x="0" y="142" width="310" height="48" rx="6" class="dg-box"/><circle cx="22" cy="166" r="11" class="dg-dot"/><text x="22" y="170.5" class="dg-num" text-anchor="middle"><tspan x="22" dy="0">3</tspan></text><text x="42" y="170" class="dg-t" text-anchor="start"><tspan x="42" dy="0">Did a tool fail or return junk?</tspan></text><path d="M313 166L337 166" class="dg-arrow" marker-end="url(#m11a)"/><rect x="340" y="142" width="420" height="48" rx="6" class="dg-box-bad"/><text x="352" y="162" class="dg-s" text-anchor="start"><tspan x="352" dy="0">Tool failure, not model failure: schema, description,</tspan><tspan x="352" dy="1.4em">response shape, pagination</tspan></text><rect x="0" y="200" width="310" height="48" rx="6" class="dg-box"/><circle cx="22" cy="224" r="11" class="dg-dot"/><text x="22" y="228.5" class="dg-num" text-anchor="middle"><tspan x="22" dy="0">4</tspan></text><text x="42" y="228" class="dg-t" text-anchor="start"><tspan x="42" dy="0">Facts present, assertion false?</tspan></text><path d="M313 224L337 224" class="dg-arrow" marker-end="url(#m11a)"/><rect x="340" y="200" width="420" height="48" rx="6" class="dg-box-bad"/><text x="352" y="220" class="dg-s" text-anchor="start"><tspan x="352" dy="0">Hallucination: cite sources, require quoting, allow</tspan><tspan x="352" dy="1.4em">I do not know, penalise unsupported claims</tspan></text><rect x="0" y="258" width="310" height="48" rx="6" class="dg-box"/><circle cx="22" cy="282" r="11" class="dg-dot"/><text x="22" y="286.5" class="dg-num" text-anchor="middle"><tspan x="22" dy="0">5</tspan></text><text x="42" y="278" class="dg-t" text-anchor="start"><tspan x="42" dy="0">Reasoning wrong, and clearer</tspan><tspan x="42" dy="1.3em">instructions fix it on a sample?</tspan></text><path d="M313 282L337 282" class="dg-arrow" marker-end="url(#m11a)"/><rect x="340" y="258" width="420" height="48" rx="6" class="dg-box-bad"/><text x="352" y="278" class="dg-s" text-anchor="start"><tspan x="352" dy="0">Prompt problem: clearer instructions,</tspan><tspan x="352" dy="1.4em">decomposition, few-shot examples</tspan></text><rect x="0" y="316" width="310" height="48" rx="6" class="dg-box"/><circle cx="22" cy="340" r="11" class="dg-dot"/><text x="22" y="344.5" class="dg-num" text-anchor="middle"><tspan x="22" dy="0">6</tspan></text><text x="42" y="336" class="dg-t" text-anchor="start"><tspan x="42" dy="0">Fails with a hand-perfect prompt,</tspan><tspan x="42" dy="1.3em">full context, correct tools?</tspan></text><path d="M313 340L337 340" class="dg-arrow" marker-end="url(#m11a)"/><rect x="340" y="316" width="420" height="48" rx="6" class="dg-box-bad"/><text x="352" y="336" class="dg-s" text-anchor="start"><tspan x="352" dy="0">Model capability mismatch: move up a tier,</tspan><tspan x="352" dy="1.4em">or decompose the task</tspan></text></svg>
+<figcaption>Five questions, asked in order. The first one that fits names the failure, and the failure names the layer you are allowed to change.</figcaption>
+</figure>
+
+<p>Step 2 has three distinct answers and they need three different fixes, so it is worth
+separating them explicitly.</p>
+
+<table>
+  <caption>Step 2 in full: information missing from context</caption>
+  <thead><tr><th>What you find</th><th>The failure</th><th>The fix</th></tr></thead>
+  <tbody>
+    <tr><td>Not in context, but it is in the corpus</td><td><strong>Retrieval failure</strong></td><td>Check recall@k. Fix with hybrid search, contextual chunks, reranking</td></tr>
+    <tr><td>Not in context, and it never existed</td><td><strong>Coverage gap</strong></td><td>No prompt change helps. The corpus has to change</td></tr>
+    <tr><td>It was there earlier in the conversation but not now</td><td><strong>Context overflow or compaction loss</strong></td><td>Check input tokens against the window. Fix with a compaction policy, structured note-taking, or subagents returning summaries</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">11.2</span>Fast discriminators</h2>
+
+<p>Often the scenario gives you the discriminator instead of the diagnosis, and expects you
+to convert. This table is the conversion.</p>
+
+<table>
+  <caption>Symptom to failure mode</caption>
+  <thead><tr><th>The symptom in the scenario</th><th>The failure it names</th></tr></thead>
+  <tbody>
+    <tr><td>Varies with how the question is phrased</td><td>Prompt problem</td></tr>
+    <tr><td>Varies with the query but not with the prompt</td><td>Retrieval problem</td></tr>
+    <tr><td>Error-rate spike in one span</td><td>Tool problem</td></tr>
+    <tr><td>Stable across every prompt you try</td><td>Capability problem</td></tr>
+    <tr><td>Correlates with conversation length or input size</td><td>Context problem</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">An internal research assistant answers questions over 40,000 policy
+  documents. Users report that about 8% of answers cite a clause that does not exist in the
+  document the answer names. The team measures recall@20 against their labelled
+  query-to-chunk set at 94%, unchanged since the corpus expansion three months ago. Tool
+  error rates are flat. The behaviour appears at the same rate however the question is
+  phrased.</p>
+  <p class="stem">What is the correct next change?</p>
+  <ol class="options">
+    <li data-key="A" data-why="A retrieval lever against a retrieval metric that is already healthy and stable. Recall@20 at 94% is the sentence that rules this out, and raising top-K would add context without adding truth.">Rebuild the index with a larger embedding model and raise top-K from 20 to 50</li>
+    <li data-key="B" data-why="The facts are reaching the model and the assertion is still false, which is hallucination. Grounding instructions, a quoting requirement, an explicit escape hatch and an eval that punishes unsupported claims all attack that layer directly.">Require the answer to quote the supporting passage, allow "I do not know", and penalise unsupported claims in the eval</li>
+    <li data-key="C" data-why="Capability mismatch is the last branch of the tree, reached only when the failure survives a hand-perfect prompt, full context and correct tools. None of that has been tried, so this is expensive and premature.">Move the assistant to a higher model tier</li>
+    <li data-key="D" data-why="Few-shot examples are cheap and good for format and edge cases. They are the wrong layer for a grounding failure: showing well-formed answers does not stop an unsupported claim.">Add ten few-shot examples of well-formed answers to the system prompt</li>
+  </ol>
+  <div class="verdict" hidden><b>Recall is healthy, so the index is exonerated.</b> Phrasing
+  independence rules out a plain prompt-clarity problem and tempts you towards capability,
+  but the tree puts hallucination before capability for a reason: the facts were present and
+  the model asserted something else. Grounding is the cheapest lever that can reach it.</div>
+</div>
+
+<h2><span class="num n">11.3</span>The optimisation ladder</h2>
+
+<p>Once the failure is named, the fix order is fixed too. Cheapest and fastest first, and
+each rung down costs more to build and more to maintain.</p>
+
+<figure class="diagram wide" id="fig-opt-ladder">
+<svg viewBox="0 0 760 322" role="img" aria-label="The optimisation ladder: eight levers ordered cheapest first, from prompt fixes down to fine-tuning-like alternatives" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m11b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="12" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Cheapest and fastest at the top. Do not skip a rung because a later one sounds more thorough.</tspan></text><rect x="34" y="22" width="726" height="30" rx="6" class="dg-strip"/><circle cx="16" cy="37" r="11" class="dg-dot"/><text x="16" y="41.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">1</tspan></text><text x="46" y="41" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Prompt fixes</tspan></text><text x="286" y="41" class="dg-s" text-anchor="start"><tspan x="286" dy="0">Clearer instructions, explicit output format, decomposition. Free, immediate</tspan></text><rect x="34" y="56" width="726" height="30" rx="6" class="dg-strip"/><circle cx="16" cy="71" r="11" class="dg-dot"/><text x="16" y="75.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">2</tspan></text><text x="46" y="75" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Tool and schema fixes</tspan></text><text x="286" y="75" class="dg-s" text-anchor="start"><tspan x="286" dy="0">Descriptions, error strings, response_format, pagination defaults</tspan></text><rect x="34" y="90" width="726" height="30" rx="6" class="dg-strip"/><circle cx="16" cy="105" r="11" class="dg-dot"/><text x="16" y="109.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">3</tspan></text><text x="46" y="109" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Few-shot examples</tspan></text><text x="286" y="109" class="dg-s" text-anchor="start"><tspan x="286" dy="0">Cheap for format and edge cases. Costs tokens on every call, so cache them</tspan></text><rect x="34" y="124" width="726" height="30" rx="6" class="dg-strip"/><circle cx="16" cy="139" r="11" class="dg-dot"/><text x="16" y="143.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">4</tspan></text><text x="46" y="143" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Prompt caching</tspan></text><text x="286" y="143" class="dg-s" text-anchor="start"><tspan x="286" dy="0">Reads 0.1x base input, 5-minute writes 1.25x, 1-hour writes 2x, 4 breakpoints</tspan></text><rect x="34" y="158" width="726" height="30" rx="6" class="dg-strip"/><circle cx="16" cy="173" r="11" class="dg-dot"/><text x="16" y="177.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">5</tspan></text><text x="46" y="177" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Context reduction</tspan></text><text x="286" y="177" class="dg-s" text-anchor="start"><tspan x="286" dy="0">Trim chunks, concise tool responses, compact history, sandbox intermediates</tspan></text><rect x="34" y="192" width="726" height="30" rx="6" class="dg-strip"/><circle cx="16" cy="207" r="11" class="dg-dot"/><text x="16" y="211.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">6</tspan></text><text x="46" y="211" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Model downgrade or routing</tspan></text><text x="286" y="211" class="dg-s" text-anchor="start"><tspan x="286" dy="0">Classify first, route easy cases to Haiku-class, escalate the rest</tspan></text><rect x="34" y="226" width="726" height="30" rx="6" class="dg-strip"/><circle cx="16" cy="241" r="11" class="dg-dot"/><text x="16" y="245.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">7</tspan></text><text x="46" y="245" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Batch processing</tspan></text><text x="286" y="245" class="dg-s" text-anchor="start"><tspan x="286" dy="0">50% off anything not user-facing: evals, backfills, moderation, bulk</tspan></text><rect x="34" y="260" width="726" height="30" rx="6" class="dg-box-bad"/><circle cx="16" cy="275" r="11" class="dg-dot-bad"/><text x="16" y="279.5" class="dg-num" text-anchor="middle"><tspan x="16" dy="0">8</tspan></text><text x="46" y="279" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Fine-tuning-like, last</tspan></text><text x="286" y="279" class="dg-s" text-anchor="start"><tspan x="286" dy="0">Heavy few-shot, distillation, specialised workflow. Invalidated by upgrades</tspan></text><text x="0" y="310" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Stop at the rung that clears the eval. Each one below costs more to build and more to keep.</tspan></text></svg>
+<figcaption>Eight levers, cheapest first. Anthropic's own biggest wins came from rung 2, which is the one most teams skip.</figcaption>
+</figure>
+
+<p>Two details on the ladder are worth stating separately because they get asked directly.
+Rung 4, prompt caching: the prefix order is <strong>tools, then system, then messages</strong>,
+so changing tool definitions invalidates everything downstream, and the breakpoint goes on
+the last block that is byte-identical across requests. Up to 4 breakpoints, with a 20-block
+lookback. Rung 6, routing: classify first, then validate <em>both</em> paths on the same eval
+set, because a router that is right 95% of the time has a 5% failure mode you have not
+measured.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Caching changes cost and TTFT, not quality. "Enable prompt caching" is never the answer
+  to an accuracy complaint. Similarly, "raise temperature" when the complaint is
+  inconsistency makes it worse, and "fine-tune the model" is almost never the first move.</p>
+</div>
+
+<h2><span class="num n">11.4</span>Latency is its own ladder</h2>
+
+<p>Engineer for quality first and optimise second. Then: reduce output tokens, using
+<code>max_tokens</code> and sentence or paragraph limits rather than word counts, which
+models follow poorly; pick a faster model; and stream. Remember what streaming buys.
+<strong>Streaming improves TTFT only, not total latency.</strong> If the constraint is a
+total-latency SLA, streaming does nothing for you.</p>
+
+<p>The habit to leave with: name the failure before naming the fix, and when two fixes both
+reach the named failure, take the cheaper one and measure it.</p>
+<nav class="pager">
+  <a class="prev" href="10-rollout-safety.html"><span>Previous</span>10 Rollout safety and regression control</a>
+  <a class="next" href="12-recap.html"><span>Next</span>12 Recap and what is next</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

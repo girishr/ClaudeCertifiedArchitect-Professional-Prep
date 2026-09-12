@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08. Recap and what is next - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 08 of 8</p>
+  <h1>Recap and what is next</h1>
+  <p class="standfirst">The takeaways, the heuristics, the distractors, a closed-book self-test, and where Module 5 picks up.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 08 of 8</b>
+</nav>
+<p>Six takeaways, and one habit running under all of them: write the thing down before it is
+contested. Almost every failure in this domain is an unwritten assumption meeting a
+disappointed person.</p>
+
+<table>
+  <caption>The six takeaways</caption>
+  <thead><tr><th>#</th><th>Takeaway</th><th>The operative detail</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td>Design against the underlying job, not the stated ask</td><td>The ask is a clue about what someone has seen elsewhere. The job and the success measure are the specification. When they diverge, say so out loud rather than quietly substituting one for the other</td></tr>
+    <tr><td>02</td><td>Acceptance criteria are agreed before the pilot, in writing</td><td>Metric, dataset, threshold, measurement method, signatory. When a stakeholder moves the goalposts, the answer is to pause and agree the criteria, never to argue the number</td></tr>
+    <tr><td>03</td><td>You commit to targets and processes, never to guarantees</td><td>An accuracy target on a named eval set, with a confidence interval and a fallback. In the contract: availability, p50/p95/p99, and a quality <em>process</em>. Never a contractual accuracy percentage on open-ended generation</td></tr>
+    <tr><td>04</td><td>The stage you are in decides what the right action is</td><td>POC proves feasibility, pilot proves value, production adds SLOs, on-call and rollback. The same action is diligent at one stage and over-engineering at another, and the ramp retires one unknown per phase</td></tr>
+    <tr><td>05</td><td>A handoff is judged by whether someone else can change the system safely</td><td>Versioned prompts with a changelog, and an eval suite in CI. Those two are one deliverable. Everything else on the artefact list protects them</td></tr>
+    <tr><td>06</td><td>Bad news travels early and arrives with options</td><td>Diagnose first, because a large share of misses are measurement problems. Then report with a recommendation. Descoping to the high-confidence subset is usually better than missing the target on everything</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">8.1</span>The decision heuristics</h2>
+
+<table>
+  <caption>When X, do Y</caption>
+  <thead><tr><th>When the stem says</th><th>Do this</th></tr></thead>
+  <tbody>
+    <tr><td>Acceptance criteria were never agreed</td><td>Stop and agree them before arguing about performance</td></tr>
+    <tr><td>The stated ask and the underlying job differ</td><td>Design for the job, and say so explicitly rather than substituting silently</td></tr>
+    <tr><td>The task is deterministic and rule-expressible</td><td>Recommend conventional software. It wins on cost, latency and auditability</td></tr>
+    <tr><td>A subset of the scope meets the bar</td><td>Descope and ship the subset, routing the remainder to humans</td></tr>
+    <tr><td>The sponsor asks for a guarantee</td><td>Offer an accuracy target on a named eval set, plus a fallback path</td></tr>
+    <tr><td>A POC is being promoted straight to production</td><td>Insert a pilot with real users and a measured baseline</td></tr>
+    <tr><td>Adoption is low but accuracy is fine</td><td>The problem is workflow, trust or enablement. Not the model</td></tr>
+    <tr><td>The audience is compliance</td><td>Lead with data flow and human control, not accuracy</td></tr>
+    <tr><td>A pilot is behind</td><td>Report early with options. Never let the sponsor discover it</td></tr>
+    <tr><td>Cost per task exceeds budget</td><td>Look at model routing, caching, prompt size and review minutes before declaring it infeasible</td></tr>
+    <tr><td>The vendor capability is undifferentiated</td><td>Buy it. Build where the workflow is the differentiator, the data cannot leave, or integration depth is the value</td></tr>
+    <tr><td>An option offers "add more features" against a missed target</td><td>It is wrong. Narrow the scope, or fix the measurement</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">8.2</span>The distractors, by the sentence they hide behind</h2>
+
+<p>Read this list for its common shape. Every entry is the most accommodating available
+response to the person in the room, which is what makes it hard to eliminate under time
+pressure.</p>
+
+<table>
+  <caption>Eleven wrong answers that read as good client service</caption>
+  <thead><tr><th>The option</th><th>Why it fails</th></tr></thead>
+  <tbody>
+    <tr><td>"Extend the pilot by a quarter"</td><td>With no change to hypothesis, scope or measurement. Time is not an intervention</td></tr>
+    <tr><td>"Build the full production architecture during discovery"</td><td>Over-engineering before value is proven. Match investment to the stage</td></tr>
+    <tr><td>"Present the architecture to the executive sponsor"</td><td>Wrong artefact for the audience. He wants the recommendation and three numbers</td></tr>
+    <tr><td>"Commit to 99 percent accuracy in the SLA"</td><td>Open-ended generation quality is not contractually guaranteeable, however good the pilot number was</td></tr>
+    <tr><td>"Train users more"</td><td>When the workflow itself got worse for them, training accelerates a rejection</td></tr>
+    <tr><td>"Escalate to the steering committee"</td><td>Before diagnosing. Escalation without a recommendation reads as abdication</td></tr>
+    <tr><td>"Start with the highest-value use case"</td><td>Ignoring feasibility. High value with low feasibility is the quadrant where pilots die</td></tr>
+    <tr><td>"Swap to a bigger model"</td><td>Before checking whether the eval set is representative of real inputs</td></tr>
+    <tr><td>"Hand over prompts in a shared doc"</td><td>Prompts need versioning, evals and a changelog. Unversioned prompts are the top handoff failure</td></tr>
+    <tr><td>"Roll out to everyone because the pilot went well"</td><td>Pilot distribution rarely survives the full population</td></tr>
+    <tr><td>"Let the sponsor lower the target"</td><td>Without recording that it moved and why. A silent change is worse than no target</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">8.3</span>Two structural tells specific to this domain</h2>
+
+<ul>
+  <li><strong>Select TWO items here usually pair one technical action with one stakeholder
+  action.</strong> Fix the eval set <em>and</em> tell the sponsor. Route the long tail to
+  humans <em>and</em> record the scope change. If both your picks are technical, or both are
+  conversations, re-read.</li>
+  <li><strong>The stage named in the stem is the strongest filter available.</strong> Two
+  options can both describe good practice, with only one of them appropriate during discovery
+  or during a pilot or after go-live. Find the stage word before you read the options, and
+  treat "before proceeding" as a likely sequencing key.</li>
+</ul>
+
+<h2><span class="num n">8.4</span>Closed-book self-test</h2>
+
+<p>No scrolling. Anything you cannot produce cleanly is the section to reread, not the whole
+module.</p>
+
+<ol>
+  <li>Separate the stated ask, the underlying job and the success measure for "we want a
+  chatbot on our docs", and say what you do when the first two diverge.</li>
+  <li>Name the five elements of an agreed acceptance criterion, and say what "good enough"
+  is defined against.</li>
+  <li>List the six components of cost per task, and name the two that teams forget.</li>
+  <li>State what an SLA may commit to, and the one commitment it must never contain. Then
+  say why that one is not defensible.</li>
+  <li>Write the ROI formula, then apply the adoption discount to a 40 percent saving at 30
+  percent adoption.</li>
+  <li>Name the eight pilot-to-production gates.</li>
+  <li>Say what POC, pilot and production each prove, then name the four rollout phases in
+  order and the unknown each one retires.</li>
+  <li>Walk the five moves when a pilot misses its target, in order, and name the three things
+  you never do.</li>
+</ol>
+
+<p>Two more worth adding if the first eight came easily: reproduce the audience matrix from
+section 7 from memory, including the "avoid" column, and give the exec message and the
+compliance message in one line each.</p>
+
+<aside class="sidenote"><b>Then go and write the artefacts.</b> <a href="../../labs.md">Lab
+8</a> is 120 minutes for a discovery interview, an ADR, a metrics table, a phased rollout
+plan, an exec one-pager and a team enablement set. This domain rewards format discipline, and
+format discipline comes from having produced the format once under a clock.</aside>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p><a href="../module-05/index.html">Module 5</a>, Team Enablement &amp; Operational
+  Productivity, covers exam domain 7 at 7 percent. It is the last and smallest module in the path, and it is the natural continuation
+  of section 5 and section 6: how you enable a team of fifty without becoming their
+  bottleneck, and why the answer is checked-in configuration rather than a training session.
+  Small enough to finish in one sitting, and cheap marks once the artefacts are familiar.</p>
+</div>
+<nav class="pager">
+  <a class="prev" href="07-audiences-and-failure.html"><span>Previous</span>07 Audiences and failure conversations</a>
+
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

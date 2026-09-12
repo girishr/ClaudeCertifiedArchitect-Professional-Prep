@@ -35,10 +35,28 @@ following Anthropic's own structure rather than an inference from the objectives
 seven lessons overlapped six of those twelve, used a "six patterns" counting the module
 does not use, and were deleted rather than maintained alongside it.
 
-Module 1 is complete. Modules 2 to 5 of the official path are still unwritten:
-Enterprise Integration & Production (158 min), Responsible AI, Safety & Risk (114 min),
-Stakeholder Engagement, Lifecycle & GTM (178 min), Team Enablement & Operational
-Productivity (45 min).
+Module 1 is complete and distilled from the official module itself.
+
+**Modules 2 to 5 written 12 Sep 2026, from a different source.** The official content for
+those four is behind the Partner Academy enrolment and was not readable during that
+session, so they were not distilled. They were built from this repo's own domain notes
+instead, arranged to follow the official module order:
+
+| Module | Sections | Built from | Domain |
+|---|---|---|---|
+| 2 Enterprise Integration & Production | 12 | `notes/02-integration-evals.md` | 3 and 4, 35% |
+| 3 Responsible AI, Safety & Risk | 8 | `notes/03-governance-stakeholder.md`, Domain 5 part | 5, 14% |
+| 4 Stakeholder, Lifecycle & GTM | 8 | `notes/03-governance-stakeholder.md` Domain 6 part, plus Lab 8 | 6, 14% |
+| 5 Team Enablement & Productivity | 7 | `notes/01-solution-design-models-devprod.md`, Domain 7 part | 7, 7% |
+
+The distinction is load-bearing and is stated on every one of those module index pages in
+a "Where this is from" flag, because learning record 0002 is exactly the failure this
+would repeat otherwise: a syllabus inferred from the domain list, published as though it
+followed Anthropic's own. No page in modules 2 to 5 cites a screen number or says "in the
+original", and their section `.meta` rows read "From this kit's domain notes".
+
+If the official modules become readable later, distil them section by section the way
+Module 1 was done, and replace these rather than editing them to match.
 
 `index.html` at the workspace root is the front door and every section links back to it.
 

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09. Metrics and agent evaluation - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 09 of 12</p>
+  <h1>Metrics and agent evaluation</h1>
+  <p class="standfirst">Choosing the one metric the system is judged on, and why an agent is graded on where it ended up rather than how it got there.</p>
+  <div class="meta"><span>Exam domain 4</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 09 of 12</b>
+</nav>
+<p>Questions in this area hand you a system and ask for the primary metric, or for two
+metrics. The mistake is picking the metric that is easiest to collect rather than the one
+that moves when the thing you care about breaks. Tokens per second is easy to collect and
+tells a chat user nothing.</p>
+
+<h2><span class="num n">9.1</span>Eight metrics and when each is primary</h2>
+
+<table>
+  <caption>The metric table. The right column is the examinable part</caption>
+  <thead><tr><th>Metric</th><th>Definition</th><th>Primary when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Accuracy / task fidelity</strong></td><td>Correct outputs over total</td><td>Classification, extraction, deterministic answers</td></tr>
+    <tr><td><strong>Task completion rate</strong></td><td>Goal achieved end to end without human rescue</td><td>Agents doing multi-step work</td></tr>
+    <tr><td><strong>TTFT</strong></td><td>Time to first token</td><td>Streaming, chat, anything a human is watching</td></tr>
+    <tr><td><strong>Total latency</strong></td><td>Prompt to final token</td><td>Synchronous batch-ish jobs, API contracts</td></tr>
+    <tr><td><strong>Throughput</strong></td><td>Requests or tokens per unit time</td><td>Bulk pipelines, capacity planning</td></tr>
+    <tr><td><strong>Cost per task</strong></td><td>All model calls in one task, not per request</td><td>Agents, where one task is many calls</td></tr>
+    <tr><td><strong>Safety and security</strong></td><td>Refusal correctness, injection resistance, PII leakage, unsafe tool-call rate</td><td>Anything with write-capable tools or user-generated input</td></tr>
+    <tr><td><strong>Business KPI</strong></td><td>Deflection, time saved, conversion, resolution rate</td><td>The thing your sponsor funds</td></tr>
+  </tbody>
+</table>
+
+<p>Two of these carry a trap each. <strong>Cost per task</strong> is the right unit for
+agents because per-token cost can fall while task cost rises, when the agent simply takes
+more turns. And <strong>agent latency is dominated by the number of sequential tool
+calls</strong>, not by tokens per second, so a faster model may not move it at all.</p>
+
+<p>Define success criteria as <strong>SMAR</strong>: specific, measurable, achievable,
+relevant. Expect them to be <strong>multidimensional</strong> rather than one number, which
+is also why the multiple-response items in this domain ask for two metrics rather than one.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Measure tokens per second" as the user-facing latency metric for chat is wrong. TTFT is
+  what the user feels. Streaming improves TTFT only and does nothing to total latency, so
+  "enable streaming" is not an answer to a total-latency constraint either.</p>
+</div>
+
+<h2><span class="num n">9.2</span>Agents are graded on the end state</h2>
+
+<table>
+  <caption>Two evaluation modes, and which one is primary</caption>
+  <thead><tr><th>Mode</th><th>What it asks</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Final-outcome, or end-state</strong></td><td>Did the database end up right. Was the ticket created with the right fields</td><td><strong>Primary signal.</strong> Robust to alternative valid paths</td></tr>
+    <tr><td><strong>Trajectory</strong></td><td>Was the sequence of calls correct, efficient and safe</td><td>Diagnostic by default. Primary only when the path itself matters: compliance, irreversible actions, cost control</td></tr>
+  </tbody>
+</table>
+
+<p>The corresponding trap is grading against a single golden trajectory when many paths are
+valid. It is over-strict, it fails correct runs, and it quietly trains you to make the agent
+imitate one route rather than achieve the goal.</p>
+
+<p><strong>Tool-call correctness</strong> decomposes into five checks, and a question may
+ask for the list: the right tool, the right arguments, the right order, correct handling of
+a returned error, and no unnecessary calls.</p>
+
+<h2><span class="num n">9.3</span>Instrument beyond accuracy</h2>
+
+<p>The extra series are not decoration. Each one points at a specific defect.</p>
+
+<table>
+  <caption>What to record, and what it tells you</caption>
+  <thead><tr><th>Series</th><th>Reads as</th></tr></thead>
+  <tbody>
+    <tr><td>Per-call runtime and total task duration</td><td>Where the sequential tool calls are going</td></tr>
+    <tr><td>Number of tool calls per task</td><td>Consolidation debt. Tasks completing in twelve calls that should take three</td></tr>
+    <tr><td>Total tokens</td><td>Context pressure, and the input to cost per task</td></tr>
+    <tr><td>Error rate <em>by error type</em></td><td>Repeated near-duplicate calls point at pagination defaults. Invalid-parameter errors point at descriptions</td></tr>
+  </tbody>
+</table>
+
+<aside class="sidenote"><b>The diagnostic move.</b> Splitting error rate by type is what
+turns "the agent is flaky" into "the page size is 10 and the model keeps paging". Aggregate
+error rate cannot tell you that.</aside>
+
+<h2><span class="num n">9.4</span>Multi-turn evaluation</h2>
+
+<p>Single-turn evals miss the failures conversational systems actually have: state that does
+not carry over, corrections that are ignored ("no, the other account"), context that is
+dropped mid-conversation. Use <strong>scripted user simulators</strong> and
+<strong>grade the conversation, not isolated turns</strong>.</p>
+
+<p>The short form for the exam: one metric for an agent is task completion rate, guarded by
+cost per task and unsafe-action rate. If the scenario says the path is regulated or the
+actions are irreversible, trajectory moves from diagnostic to primary.</p>
+<nav class="pager">
+  <a class="prev" href="08-eval-sets.html"><span>Previous</span>08 Eval sets and grading methods</a>
+  <a class="next" href="10-rollout-safety.html"><span>Next</span>10 Rollout safety and regression control</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

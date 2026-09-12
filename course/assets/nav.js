@@ -68,7 +68,55 @@
       { n: "11", t: "Assembly",                     u: "module-01/11-assembly.html" },
       { n: "12", t: "Recap and what is next",       u: "module-01/12-recap.html" }
     ]},
-    { h: "Modules 2 to 5 · official only", items: [
+    { h: "Module 2 · Enterprise Integration & Production", items: [
+      { t: "Contents", u: "module-02/index.html" },
+      { n: "01", t: "What changes in production",        u: "module-02/01-introduction.html" },
+      { n: "02", t: "Choosing the mechanism",            u: "module-02/02-integration-mechanism.html" },
+      { n: "03", t: "MCP in depth",                      u: "module-02/03-mcp-in-depth.html" },
+      { n: "04", t: "Tool design and bloat",             u: "module-02/04-tool-design.html" },
+      { n: "05", t: "Security and authentication",       u: "module-02/05-security-and-auth.html" },
+      { n: "06", t: "RAG in production",                 u: "module-02/06-rag-in-production.html" },
+      { n: "07", t: "Observability",                     u: "module-02/07-observability.html" },
+      { n: "08", t: "Eval sets and grading",             u: "module-02/08-eval-sets.html" },
+      { n: "09", t: "Metrics and agent evaluation",      u: "module-02/09-metrics-and-agents.html" },
+      { n: "10", t: "Rollout safety",                    u: "module-02/10-rollout-safety.html" },
+      { n: "11", t: "Diagnosis and optimisation",        u: "module-02/11-diagnosis-and-optimisation.html" },
+      { n: "12", t: "Recap and what is next",            u: "module-02/12-recap.html" }
+    ]},
+    { h: "Module 3 · Responsible AI, Safety & Risk", items: [
+      { t: "Contents", u: "module-03/index.html" },
+      { n: "01", t: "Designing the safety stack",        u: "module-03/01-introduction.html" },
+      { n: "02", t: "The layered guardrail stack",       u: "module-03/02-guardrail-stack.html" },
+      { n: "03", t: "Human in the loop",                 u: "module-03/03-human-in-the-loop.html" },
+      { n: "04", t: "Failure modes and mitigations",     u: "module-03/04-failure-modes.html" },
+      { n: "05", t: "Compliance mapping",                u: "module-03/05-compliance-mapping.html" },
+      { n: "06", t: "Anthropic posture and practice",    u: "module-03/06-anthropic-posture.html" },
+      { n: "07", t: "Risk framing",                      u: "module-03/07-risk-framing.html" },
+      { n: "08", t: "Recap and what is next",            u: "module-03/08-recap.html" }
+    ]},
+    { h: "Module 4 · Stakeholder, Lifecycle & GTM", items: [
+      { t: "Contents", u: "module-04/index.html" },
+      { n: "01", t: "The half that decides",             u: "module-04/01-introduction.html" },
+      { n: "02", t: "Discovery",                         u: "module-04/02-discovery.html" },
+      { n: "03", t: "Expectation management",            u: "module-04/03-expectation-management.html" },
+      { n: "04", t: "SLAs and the business case",        u: "module-04/04-slas-and-business-case.html" },
+      { n: "05", t: "Documentation and handoff",         u: "module-04/05-documentation-and-handoff.html" },
+      { n: "06", t: "Lifecycle and rollout",             u: "module-04/06-lifecycle-and-rollout.html" },
+      { n: "07", t: "Audiences and failure",             u: "module-04/07-audiences-and-failure.html" },
+      { n: "08", t: "Recap and what is next",            u: "module-04/08-recap.html" }
+    ]},
+    { h: "Module 5 · Team Enablement & Productivity", items: [
+      { t: "Contents", u: "module-05/index.html" },
+      { n: "01", t: "Running it without you",            u: "module-05/01-introduction.html" },
+      { n: "02", t: "The CLAUDE.md hierarchy",           u: "module-05/02-claude-md.html" },
+      { n: "03", t: "Settings and permissions",          u: "module-05/03-settings-and-permissions.html" },
+      { n: "04", t: "Extension mechanisms",              u: "module-05/04-extension-mechanisms.html" },
+      { n: "05", t: "Headless runs and CI",              u: "module-05/05-headless-and-ci.html" },
+      { n: "06", t: "Rollout and readiness",             u: "module-05/06-rollout-readiness.html" },
+      { n: "07", t: "Recap and what to do next",         u: "module-05/07-recap.html" }
+    ]},
+    { h: "Official path", items: [
+      { t: "1 Claude Platform & Solution Design",   x: "https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/claude-platform-solution-design" },
       { t: "2 Enterprise Integration & Production", x: "https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/enterprise-integration-production" },
       { t: "3 Responsible AI, Safety & Risk",       x: "https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/responsible-ai-safety-risk-for-architects" },
       { t: "4 Stakeholder, Lifecycle & GTM",        x: "https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/stakeholder-engagement-lifecycle-gtm" },
@@ -142,8 +190,8 @@
     }
 
     var settings = el("div", { "class": "sidenav-settings" }, [
-      seg("Theme", KEY_THEME, [{ t: "Dark", v: "dark" }, { t: "Light", v: "light" }],
-          function () { return root.getAttribute("data-theme") === "light" ? "light" : "dark"; },
+      seg("Theme", KEY_THEME, [{ t: "Light", v: "light" }, { t: "Dark", v: "dark" }],
+          function () { return root.getAttribute("data-theme") === "dark" ? "dark" : "light"; },
           function (v) { root.setAttribute("data-theme", v); var hb = document.getElementById("theme-btn"); if (hb) hb.textContent = v === "dark" ? "Light" : "Dark"; }),
       seg("Font", KEY_FONT, [{ t: "Default", v: "default" }, { t: "Dyslexia-friendly", v: "dyslexic" }],
           function () { return root.classList.contains("font-dyslexic") ? "dyslexic" : "default"; },

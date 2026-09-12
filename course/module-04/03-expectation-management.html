@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03. Expectation management - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 03 of 8</p>
+  <h1>Expectation management</h1>
+  <p class="standfirst">What you may promise about a system that is probabilistic by construction, and what has to be signed before the pilot starts.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 03 of 8</b>
+</nav>
+<p>The sponsor asks the question every sponsor asks: "so will it be right?" There is a true
+answer and an accommodating answer, they are different sentences, and which one you say
+decides whether the rest of the engagement is a quality conversation or a breach
+conversation.</p>
+
+<p>This is the conceptual centre of the domain. Everything downstream, the SLA, the pilot
+gates, the failure conversation, is downstream of whether the expectation was set against a
+probabilistic system or against deterministic software. Set it wrong here and no later
+section can recover it.</p>
+
+<h2><span class="num n">3.1</span>Never a guarantee, always a target on a named set</h2>
+
+<p>Replace the guarantee with three things that travel together, and never send one without
+the other two.</p>
+
+<table>
+  <caption>The substitution</caption>
+  <thead><tr><th>Do not say</th><th>Say instead</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>"It will be accurate." "We guarantee 99 percent." "It will not make things up."</td>
+      <td>An <strong>accuracy target</strong>, measured on a <strong>named eval set</strong>, with a <strong>confidence interval</strong> and a <strong>stated fallback for when it misses</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The named set is what makes the number meaningful and what makes it arguable in a useful
+way. "94 percent on the 300-case support set as of March, plus or minus 3 points, with
+anything below the confidence threshold routed to a human" is a claim you can defend, retest
+and be held to. "99 percent accurate" is a claim nobody can defend, including you.</p>
+
+<h2><span class="num n">3.2</span>Good enough is defined against the human baseline</h2>
+
+<p>Perfection is the wrong comparator and nobody in the room is currently achieving it. The
+comparator is the process being replaced.</p>
+
+<p>If humans are 92 percent consistent on the same task, then 90 percent with a review gate
+and an audit trail is a win, and it is a win you can show. Two sentences follow from that,
+and both are worth having ready: the baseline has to be <em>measured</em> rather than
+assumed, and a target set against an unmeasured human baseline is one of the commonest causes
+of a pilot "failing" while performing perfectly well.</p>
+
+<aside class="sidenote"><b>Where this bites later.</b> Section 7 opens with diagnosis before
+reporting, and a large share of apparent misses turn out to be measurement problems of
+exactly this kind. The fix for those is upstream, here, in how the target was set.</aside>
+
+<h2><span class="num n">3.3</span>Explaining non-determinism without the word temperature</h2>
+
+<p>An executive does not need the mechanism. They need to know what will be visibly different
+from the software they are used to, and what you have built to contain it.</p>
+
+<table>
+  <caption>The same fact, translated</caption>
+  <thead><tr><th>What they will observe</th><th>What controls it</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>The same question asked twice can come back worded differently. The substance should be the same; the sentences will not be</td>
+      <td><strong>Pinned model versions</strong>, so behaviour does not move under you when a new model ships</td>
+    </tr>
+    <tr>
+      <td>Downstream systems need a shape they can rely on, not prose</td>
+      <td><strong>Structured outputs</strong>, so the contract with the next system is deterministic even when the language is not</td>
+    </tr>
+    <tr>
+      <td>A change to a prompt or a model could silently make something else worse</td>
+      <td>A <strong>regression suite</strong>, run on every change, which is what turns "we think it is fine" into evidence</td>
+    </tr>
+    <tr>
+      <td>Performance can decay over months without anyone touching the code</td>
+      <td><strong>Drift monitoring</strong> on the input distribution, because the world changes even when the system does not</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>No temperature talk with executives. Not because it is too technical, but because it
+answers a question they did not ask and leaves the one they did ask unanswered.</p>
+
+<h2><span class="num n">3.4</span>Acceptance criteria, agreed before the pilot starts</h2>
+
+<p>Five elements, in writing, before a single user touches the system.</p>
+
+<table>
+  <caption>What an agreed criterion contains</caption>
+  <thead><tr><th>Element</th><th>Why it is in the list</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Metric</strong></td><td>Named and singular. "Better handling of tickets" is not a metric</td></tr>
+    <tr><td><strong>Dataset</strong></td><td>Which cases the metric is computed over. Without this the metric can be moved by changing the sample</td></tr>
+    <tr><td><strong>Threshold</strong></td><td>The number that counts as passing, fixed in advance</td></tr>
+    <tr><td><strong>Measurement method</strong></td><td>Who computes it and how. Two people measuring "accuracy" differently is a dispute waiting to happen</td></tr>
+    <tr><td><strong>Signatory</strong></td><td>A named person who agreed all four. This is the element that makes the other four binding</td></tr>
+  </tbody>
+</table>
+
+<p>A criterion you cannot fail is not a criterion. Write them as falsifiable statements: given
+this input class, the system does this, verified against this many historical cases, at this
+threshold.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>The single most common scenario in this domain is a pilot running with no agreed
+  criteria and a stakeholder moving the goalposts. The fix is always to <strong>pause and
+  agree the criteria</strong>, not to argue about the number. Arguing the number is the
+  accommodating move: it engages on the stakeholder's terms, feels collaborative, and cedes
+  the thing actually in dispute, which is who gets to define success and when. You can win
+  that argument three times and still lose the project the fourth time the target moves.</p>
+  <p>Related and equally tempting: letting the sponsor quietly lower the target. If the target
+  moves, it moves in writing, with the reason, and with everyone who signed the original told
+  that it moved. A target that changed without a record is worse than no target, because it
+  looks like a target to everyone reading the deck later.</p>
+</div>
+
+<h2><span class="num n">3.5</span>Three families of metric, and which one goes in the business case</h2>
+
+<p>Keep these apart. Mixing them is how a deck ends up unable to answer the only question the
+person paying actually has.</p>
+
+<table>
+  <caption>Quality, experience, business</caption>
+  <thead><tr><th>Family</th><th>Examples</th><th>Who it is for</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Quality</strong></td><td>Accuracy, groundedness, task completion</td><td>You and the engineering team. Evidence the thing works</td></tr>
+    <tr><td><strong>Experience</strong></td><td>Latency, adoption, CSAT</td><td>The product owner and the users. Evidence the thing gets used</td></tr>
+    <tr><td><strong>Business</strong></td><td>Cost per task, deflection, cycle time</td><td>The sponsor and finance. <strong>Only this family belongs in the business case</strong></td></tr>
+  </tbody>
+</table>
+
+<p>Groundedness at 0.91 is a real achievement and it is not a business case. Cycle time from
+26 hours to 16 is. Both are true at once, which is why the one-artefact rule in section 7
+exists.</p>
+
+<p>Leave this section able to answer the sponsor's question in one sentence that contains a
+number, a named dataset and a fallback. That sentence is the whole of expectation management,
+and everything the rest of the module does is protect it.</p>
+<nav class="pager">
+  <a class="prev" href="02-discovery.html"><span>Previous</span>02 Discovery</a>
+  <a class="next" href="04-slas-and-business-case.html"><span>Next</span>04 SLAs and the business case</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

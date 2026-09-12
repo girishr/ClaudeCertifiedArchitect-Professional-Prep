@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01. Designing the safety stack - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 01 of 8</p>
+  <h1>Designing the safety stack</h1>
+  <p class="standfirst">Safety in this domain is something you build, not something you write down.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 01 of 8</b>
+</nav>
+<p>An enterprise buyer asks what happens when the system gets it wrong. The weak answer is
+a document: a policy, an acceptable-use statement, a commitment to review. The answer this
+domain trains is a set of components with names, positions in the request path, and costs
+you can defend in a budget conversation.</p>
+
+<p>That is the shift. Governance here is not a layer laid over the architecture after it
+works. It is part of the architecture, and every control you add has a latency number, a
+money number, and something it demonstrably cannot catch.</p>
+
+<h2><span class="num n">1.1</span>What the exam is actually testing</h2>
+
+<p>Not whether you can list controls. Whether you can pick a <strong>proportionate</strong>
+stack and justify it. Almost every distractor in this domain is a legitimate control that
+is either too heavy for the stated risk, which kills the business case, or too light, which
+leaves unacceptable residual risk.</p>
+
+<p>The examiner wants an architect who can say "reversible, low blast radius, internal, so
+sampled review plus logging is enough" and equally "irreversible external financial action,
+so a synchronous gate is non-negotiable even at a latency cost". Both sentences are correct
+answers. Which one is correct depends entirely on what the stem told you.</p>
+
+<div class="flag">
+  <span class="label">Read every stem for three signals</span>
+  <p><strong>Who is harmed</strong>, <strong>can it be undone</strong>, and <strong>what
+  lifecycle stage are we in</strong>. Those three usually determine the key before you have
+  read a single option. The second one carries the most weight, and it is the spine of this
+  whole module: when a governance question is genuinely close, the answer that preserves the
+  ability to undo is the one to pick.</p>
+</div>
+
+<p>Certain words in a stem are load-bearing and should change your reading of every option
+underneath them: <em>irreversible</em>, <em>externally visible</em>, <em>regulated</em>,
+<em>customer-facing</em>, <em>PHI</em>, <em>minors</em>, <em>autonomous</em>. Their presence
+raises the floor on what an acceptable answer looks like. Their absence, particularly
+alongside a mention of latency or cost pressure, lowers the ceiling.</p>
+
+<h2><span class="num n">1.2</span>The arc of this module</h2>
+
+<p>Five moves, in the order an architect makes them.</p>
+
+<table>
+  <caption>What each section adds to the picture</caption>
+  <thead><tr><th>#</th><th>The move</th><th>What you leave with</th></tr></thead>
+  <tbody>
+    <tr><td>02</td><td>Build the stack</td><td>Five guardrail layers, what each one catches, and what it cannot. Independence between layers is what makes depth real rather than repetition</td></tr>
+    <tr><td>03</td><td>Decide who holds the gate</td><td>Human placement driven by reversibility, blast radius as the tiebreaker, and why approving a plan beats approving every step</td></tr>
+    <tr><td>04</td><td>Know what fails</td><td>Nine failure modes with their primary mitigation, and for each one the tempting fix that does not work</td></tr>
+    <tr><td>05</td><td>Map obligation to control</td><td>What each regime actually obliges you to build. GDPR, HIPAA, SOC 2, FedRAMP, the EU AI Act, India's DPDP</td></tr>
+    <tr><td>06 and 07</td><td>Know the posture, frame the risk</td><td>Anthropic's own contractual and retention position, then a risk frame you can present, with the residual risk signed off by someone entitled to sign it</td></tr>
+  </tbody>
+</table>
+
+<aside class="sidenote"><b>Weight.</b> Domain 5 is 14 percent of the paper, roughly nine
+questions of 63. Small enough that nobody revises it properly, and consistent enough in
+shape that it is cheap marks once you can price a control against a harm.</aside>
+
+<p>Work through it asking one question of every scenario: if this goes wrong, what gets us
+back? If the design has no answer, no amount of upstream filtering fixes it.</p>
+<nav class="pager">
+  
+  <a class="next" href="02-guardrail-stack.html"><span>Next</span>02 The layered guardrail stack</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

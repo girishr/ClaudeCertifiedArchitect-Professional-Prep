@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02. The layered guardrail stack - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 02 of 8</p>
+  <h1>The layered guardrail stack</h1>
+  <p class="standfirst">Five layers, what each one cannot do, and how much of the stack the stated risk actually pays for.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 02 of 8</b>
+</nav>
+<p>You are shown a design and asked which controls it needs. The wrong instinct is to add
+everything, because the list is finite and each item sounds responsible. The stack is not a
+checklist you complete. It is five layers that catch different failure classes at different
+prices, and the examinable knowledge is what each one <em>cannot</em> do.</p>
+
+<figure class="diagram wide" id="fig-guardrail-stack">
+<svg viewBox="0 0 760 352" role="img" aria-label="The five guardrail layers, what each catches and what each cannot catch" xmlns="http://www.w3.org/2000/svg"><text x="0" y="10" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Layer and cost</tspan></text><text x="182" y="10" class="dg-k-good" text-anchor="start"><tspan x="182" dy="0">Catches</tspan></text><text x="470" y="10" class="dg-k-bad" text-anchor="start"><tspan x="470" dy="0">Cannot catch</tspan></text><rect x="0" y="20" width="170" height="52" rx="8" class="dg-box"/><text x="14" y="42" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Input filtering</tspan></text><text x="14" y="60" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Low cost, low latency</tspan></text><text x="182" y="41" class="dg-s" text-anchor="start"><tspan x="182" dy="0">Known-pattern injection, obvious abuse,</tspan><tspan x="182" dy="1.3em">PII entering the boundary at all</tspan></text><text x="470" y="41" class="dg-s" text-anchor="start"><tspan x="470" dy="0">Novel phrasing; indirect injection that</tspan><tspan x="470" dy="1.3em">arrives later via a tool result</tspan></text><rect x="0" y="78" width="170" height="52" rx="8" class="dg-box"/><text x="14" y="100" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Prompt constraints</tspan></text><text x="14" y="118" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Free</tspan></text><text x="182" y="99" class="dg-s" text-anchor="start"><tspan x="182" dy="0">Drift, scope creep, casual misuse</tspan></text><text x="470" y="99" class="dg-s" text-anchor="start"><tspan x="470" dy="0">Determined adversaries. Never a security</tspan><tspan x="470" dy="1.3em">boundary on its own</tspan></text><rect x="0" y="136" width="170" height="52" rx="8" class="dg-box"/><text x="14" y="158" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Tool permissioning</tspan></text><text x="14" y="176" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Design cost, some friction</tspan></text><text x="182" y="157" class="dg-s" text-anchor="start"><tspan x="182" dy="0">Exfiltration, confused deputy,</tspan><tspan x="182" dy="1.3em">over-broad blast radius</tspan></text><text x="470" y="157" class="dg-s" text-anchor="start"><tspan x="470" dy="0">Anything inside the granted scope</tspan></text><rect x="0" y="194" width="170" height="52" rx="8" class="dg-box"/><text x="14" y="216" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Output validation</tspan></text><text x="14" y="234" class="dg-s" text-anchor="start"><tspan x="14" dy="0">A model call, more latency</tspan></text><text x="182" y="215" class="dg-s" text-anchor="start"><tspan x="182" dy="0">Hallucinated facts and fields, unsafe</tspan><tspan x="182" dy="1.3em">content, malformed handoffs downstream</tspan></text><text x="470" y="215" class="dg-s" text-anchor="start"><tspan x="470" dy="0">Plausible-but-wrong content that passes</tspan><tspan x="470" dy="1.3em">every rule</tspan></text><rect x="0" y="252" width="170" height="52" rx="8" class="dg-box hi"/><text x="14" y="274" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Post-hoc monitoring</tspan></text><text x="14" y="292" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Ongoing operational cost</tspan></text><text x="182" y="273" class="dg-s" text-anchor="start"><tspan x="182" dy="0">Slow degradation, novel attacks,</tspan><tspan x="182" dy="1.3em">aggregate bias</tspan></text><text x="470" y="273" class="dg-s" text-anchor="start"><tspan x="470" dy="0">Nothing in real time. It is detection,</tspan><tspan x="470" dy="1.3em">not prevention</tspan></text><text x="0" y="326" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Two layers that fail for the same reason are one layer. Independence is what turns a list into depth.</tspan></text><text x="0" y="344" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Monitoring prevents nothing, and it is the only layer that catches what the other four never saw coming.</tspan></text></svg>
+<figcaption>The five layers in request order, with the blind spot of each. The highlighted layer is the one teams skip.</figcaption>
+</figure>
+
+<table>
+  <caption>The mechanism at each layer, and its blind spot</caption>
+  <thead><tr><th>Layer</th><th>Mechanism</th><th>Catches</th><th>Misses</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Input filtering</strong></td>
+      <td>Regex and deny-lists, PII redaction, a cheap classifier (Haiku-class) screening the user turn</td>
+      <td>Known-pattern injection, obvious abuse, PII entering the boundary at all</td>
+      <td>Novel phrasing. Indirect injection arriving later via tools</td>
+    </tr>
+    <tr>
+      <td><strong>Prompt-level constraints</strong></td>
+      <td>System prompt scope, refusal instructions, declaring untrusted content as untrusted, role boundaries</td>
+      <td>Drift, scope creep, casual misuse</td>
+      <td>Determined adversaries. Never a security boundary on its own</td>
+    </tr>
+    <tr>
+      <td><strong>Tool permissioning</strong></td>
+      <td>Least-privilege scopes, read-only defaults, allow / approve / block per action, sandboxing, egress restriction</td>
+      <td>Exfiltration, confused deputy, over-broad blast radius</td>
+      <td>Anything within the granted scope</td>
+    </tr>
+    <tr>
+      <td><strong>Output validation</strong></td>
+      <td>Schema and structured-output enforcement, groundedness and citation checks, a safety classifier on the response, business-rule assertions</td>
+      <td>Hallucinated facts and fields, unsafe content, malformed handoffs to downstream systems</td>
+      <td>Plausible-but-wrong content that passes every rule</td>
+    </tr>
+    <tr>
+      <td><strong>Post-hoc monitoring</strong></td>
+      <td>Logging, sampled human review, drift and refusal-rate dashboards, incident alerting, red-team cadence</td>
+      <td>Slow-moving degradation, novel attacks, aggregate bias</td>
+      <td>Nothing in real time. It is detection, not prevention</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <caption>What each layer costs, and what makes you reach for it</caption>
+  <thead><tr><th>Layer</th><th>Cost</th><th>Reach for it when</th></tr></thead>
+  <tbody>
+    <tr><td>Input filtering</td><td>Low latency, low cost</td><td>Always for PII. Beyond that, when abuse volume is high enough to justify pre-screening</td></tr>
+    <tr><td>Prompt-level constraints</td><td>Free</td><td>Always, but never as the only control</td></tr>
+    <tr><td>Tool permissioning</td><td>Design cost, some friction</td><td>Any agent with write access or network reach</td></tr>
+    <tr><td>Output validation</td><td>Adds a model call and latency</td><td>When the output is consumed by a system or shown to a customer</td></tr>
+    <tr><td>Post-hoc monitoring</td><td>Ongoing operational cost</td><td>Always. This is the layer teams skip and the exam punishes</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">2.1</span>Proportionality</h2>
+
+<p>Control cost should track expected loss, meaning severity multiplied by likelihood. It
+should not track the loudest stakeholder's anxiety, and it should not track how
+sophisticated the stack looks in a slide.</p>
+
+<p>So maximum control is a wrong answer, not a safe one, when the stem gives you a
+low-severity, reversible, internal use case and mentions latency or cost pressure. The
+correct stack there is prompt constraints plus logging plus sampled review, and
+<strong>nothing else yet</strong>. The phrase "nothing else yet" is doing real work: you are
+not refusing the other layers, you are refusing to pay for them before the risk earns them.</p>
+
+<aside class="sidenote"><b>The cheap half comes first.</b> Prompt constraints are free and
+monitoring is the layer that tells you which of the expensive layers you actually need.
+Starting there is not cutting corners, it is how you find out where the money should go.</aside>
+
+<h2><span class="num n">2.2</span>Defence in depth is about independence, not count</h2>
+
+<p>Two layers that fail for the same reason are one layer. A prompt instruction and a
+model-based refusal are correlated: both are the model deciding to behave, and both give way
+to the same pressure. A prompt instruction and a hard tool-permission boundary are not
+correlated, because the second one holds whatever the model decides.</p>
+
+<p>This is also why the stack is ordered the way it is. Input filtering and prompt
+constraints shape intent. Tool permissioning caps consequence. Output validation checks the
+result. Monitoring is the only one that operates after the fact, which is exactly why it is
+the layer that finds the attack nobody designed for.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Strengthen the system prompt" offered against a security problem is almost always the
+  distractor. It is free, it sounds diligent, and it is correlated with the control that
+  already failed. If the threat is injection, exfiltration or an over-broad agent, the answer
+  lives in tool scope and sandboxing.</p>
+</div>
+
+<p>Price the stack against the harm, and put the independent boundary where the consequence
+is. A design where the cheapest layer is the only thing standing between the model and an
+irreversible action has no depth at all, however many controls are on the diagram.</p>
+<nav class="pager">
+  <a class="prev" href="01-introduction.html"><span>Previous</span>01 Designing the safety stack</a>
+  <a class="next" href="03-human-in-the-loop.html"><span>Next</span>03 Human in the loop</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

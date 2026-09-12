@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01. What changes in production - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 01 of 12</p>
+  <h1>What changes in production</h1>
+  <p class="standfirst">What the two heaviest domains on the paper are actually testing, and the order this module attacks them in.</p>
+  <div class="meta"><span>Exam domains 3 and 4</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 01 of 12</b>
+</nav>
+<p>A design that works in a notebook has no integration surface, no failure boundary and
+no evidence. It calls one API, the data is whatever you pasted in, the tools are three
+functions you wrote that morning, and "it works" means you liked the last four outputs.
+Production removes all three of those comforts at once. The capability now has to be
+reachable by other systems, it has to fail in a bounded way when something it depends on
+breaks, and somebody is going to ask you to prove it is better than what they had.</p>
+
+<p>This module is those three problems. It carries 35 percent of the paper across two
+domains, which is more than any other module, and the two halves are tested in genuinely
+different registers.</p>
+
+<table>
+  <caption>The two domains and what each one is really asking</caption>
+  <thead><tr><th>Domain</th><th>Weight</th><th>What it is really testing</th></tr></thead>
+  <tbody>
+    <tr><td><strong>3. Integration</strong></td><td>19%</td><td>Not "name the MCP primitives" but "given this constraint, which coupling mechanism is correct, and what breaks if you pick wrong". Almost every scenario hands you a constraint that eliminates three of four options: the tool is stateful, the data changes hourly, there are 400 tools, a third party owns the API, the corpus is 80k tokens. Find the constraint, then pick. The second recurring theme is blast radius: who holds the token, what the tool can destroy, what happens when a tool result contains attacker-controlled text</td></tr>
+    <tr><td><strong>4. Evaluation, Testing &amp; Optimization</strong></td><td>16%</td><td>Whether you attach the right measurement to the right failure, and whether you reach for the cheapest fix first. Scenarios read like incident reports: quality dropped after a model upgrade, cost tripled, the agent completes tasks but takes twelve tool calls. Wrong answers are real techniques applied too early (fine-tune before prompt work) or at the wrong layer (few-shot examples to fix a retrieval miss)</td></tr>
+  </tbody>
+</table>
+
+<p>Together that is about 22 questions on a 63-question paper, and five or six of them
+will be multiple-response. The multiple-response items cluster in Domain 4, around
+"select TWO metrics" and "select TWO grading methods", so the lists in sections 8 and 9
+are worth holding in memory rather than reasoning out on the day.</p>
+
+<h2><span class="num n">1.1</span>The arc</h2>
+
+<p>The sections narrow. Each one assumes the previous decision is already made, which is
+also the order the decisions arrive in a real design review.</p>
+
+<table>
+  <caption>What each section decides, in the order the decision arrives</caption>
+  <thead><tr><th>#</th><th>Section</th><th>The question it settles</th></tr></thead>
+  <tbody>
+    <tr><td>02</td><td>Mechanism</td><td>How does Claude reach this capability at all? Direct SDK call, local MCP server, remote MCP server, the Messages API connector, a delegated subagent, or retrieval with no actions</td></tr>
+    <tr><td>03</td><td>MCP</td><td>If the answer was MCP, what is actually in the protocol, and which parts of what you half-remember have been deprecated</td></tr>
+    <tr><td>04</td><td>Tools</td><td>What makes a tool one Claude uses correctly, and what to do when there are more tools than fit in context</td></tr>
+    <tr><td>05</td><td>Security</td><td>Who holds the token, what the token is allowed to be, and why every tool result is untrusted input</td></tr>
+    <tr><td>06</td><td>Retrieval</td><td>When retrieval is the right integration, how to make it hit, and when to skip it and inline the corpus</td></tr>
+    <tr><td>07</td><td>Observability</td><td>What you can see while a multi-step run is happening, and what you must not export to see it</td></tr>
+    <tr><td>08 to 11</td><td>Proof</td><td>Eval sets and graders, the primary metric, the rollout mechanism, and the diagnosis-to-fix ladder that everything else in Domain 4 hangs from</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Several confident-sounding answers in this domain were correct eighteen months ago.
+  MCP sampling, an <code>initialize</code> handshake, connection-scoped sessions and
+  Dynamic Client Registration all appear in third-party exam guides and all are behind the
+  current spec. Section 3 and section 5 flag each one where it comes up, because the stale
+  answer is built from exactly these.</p>
+</div>
+
+<p>One habit to carry through the whole module: read every scenario for the sentence that
+eliminates options rather than the sentence that describes the goal. The goal is usually
+generic. The constraint is the question.</p>
+<nav class="pager">
+  
+  <a class="next" href="02-integration-mechanism.html"><span>Next</span>02 Choosing the integration mechanism</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

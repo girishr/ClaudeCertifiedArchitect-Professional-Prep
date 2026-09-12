@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07. Observability across multi-step systems - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 07 of 12</p>
+  <h1>Observability across multi-step systems</h1>
+  <p class="standfirst">Tracing an agent run well enough to debug it, without exporting anything the data agreement does not cover.</p>
+  <div class="meta"><span>Exam domain 3</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 07 of 12</b>
+</nav>
+<p>A single call either worked or it did not. A twelve-step agent run fails in the middle,
+and the only question that matters is which step, with what arguments, holding what context.
+So the unit of observability is not the request. It is the <strong>trace</strong>: one span
+per agent turn, child spans per model request and per tool call.</p>
+
+<p>The Claude Agent SDK emits exactly that shape, which is worth knowing because a scenario
+may name the spans.</p>
+
+<table>
+  <caption>The span structure the Agent SDK emits</caption>
+  <thead><tr><th>Span</th><th>Covers</th></tr></thead>
+  <tbody>
+    <tr><td><code>claude_code.interaction</code></td><td>One turn</td></tr>
+    <tr><td><code>claude_code.llm_request</code></td><td>One model request: model, latency, token counts</td></tr>
+    <tr><td><code>claude_code.tool</code></td><td>One tool call, with children <code>claude_code.tool.blocked_on_user</code> and <code>claude_code.tool.execution</code></td></tr>
+    <tr><td><code>claude_code.hook</code></td><td>Hook execution</td></tr>
+  </tbody>
+</table>
+
+<p>Subagent spans nest under the parent's tool span, so a delegation chain reads as one
+trace rather than three disconnected ones. W3C trace context propagates automatically, so
+the agent run also nests inside your application's own trace.</p>
+
+<h2><span class="num n">7.1</span>Three signals, three switches</h2>
+
+<table>
+  <caption>The exporters and the master switch</caption>
+  <thead><tr><th>Signal</th><th>Variable</th><th>Note</th></tr></thead>
+  <tbody>
+    <tr><td>Master switch</td><td><code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code></td><td>Nothing is emitted without it</td></tr>
+    <tr><td>Metrics</td><td><code>OTEL_METRICS_EXPORTER</code></td><td>Independent of the others</td></tr>
+    <tr><td>Log events</td><td><code>OTEL_LOGS_EXPORTER</code></td><td>Independent of the others</td></tr>
+    <tr><td>Traces</td><td><code>OTEL_TRACES_EXPORTER</code></td><td>Beta. Also needs <code>CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1</code></td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">7.2</span>Telemetry is structural by default, and that is the answer</h2>
+
+<p>What you get without asking: durations, model names, tool names, token counts. Prompt and
+tool content is <strong>opt-in</strong>, through <code>OTEL_LOG_USER_PROMPTS</code>,
+<code>OTEL_LOG_TOOL_DETAILS</code>, <code>OTEL_LOG_TOOL_CONTENT</code> and
+<code>OTEL_LOG_RAW_API_BODIES</code>. Leave them off unless the pipeline is cleared for that
+data.</p>
+
+<p>This is the answer to any scenario phrased as "we need traces without exporting customer
+PII". You do not need a redaction layer or a separate collector. The default already
+excludes content, and the named mistake is turning an opt-in on for convenience.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Enable <code>OTEL_LOG_RAW_API_BODIES</code> for better debugging" is a real setting and
+  a wrong answer unless the scenario has told you the pipeline is approved for full
+  conversation content. Read the data-handling sentence in the scenario as a constraint, not
+  as background.</p>
+</div>
+
+<h2><span class="num n">7.3</span>Attribution, and the operational traps</h2>
+
+<table>
+  <caption>What to attach, and what breaks if you do not</caption>
+  <thead><tr><th>Concern</th><th>What to do</th></tr></thead>
+  <tbody>
+    <tr><td>Cost and token attribution</td><td>Stitch calls together with <code>session.id</code></td></tr>
+    <tr><td>Per-tenant cost and per-user audit</td><td>Add <code>enduser.id</code> and <code>tenant.id</code> as resource attributes, then feed <code>tool_decision</code>, <code>tool_result</code>, <code>mcp_server_connection</code> and <code>permission_mode_changed</code> events into a SIEM</td></tr>
+    <tr><td>Short-lived processes losing telemetry</td><td>Batched exports are dropped when the process exits. Lower <code>OTEL_*_EXPORT_INTERVAL</code>. Defaults are 60s for metrics, 5s for traces and logs</td></tr>
+    <tr><td>The <code>console</code> exporter</td><td>Never use it under the SDK. It collides with the message channel</td></tr>
+    <tr><td>Replay and debugging</td><td>Keep raw transcripts of tool calls and results, not just final answers</td></tr>
+  </tbody>
+</table>
+
+<aside class="sidenote"><b>Why raw transcripts.</b> Anthropic's own tool-improvement loop
+reads them, and what the agent <em>omits</em> from its own feedback is often more
+informative than what it says. A summary has already thrown away the evidence.</aside>
+
+<h2><span class="num n">7.4</span>Domain 3 decision heuristics</h2>
+
+<p>This is the whole domain compressed into conditions and moves. If you can run this table
+from memory you can answer most Domain 3 questions without reconstructing the reasoning.</p>
+
+<table>
+  <caption>When X, do Y</caption>
+  <thead><tr><th>When</th><th>Do</th></tr></thead>
+  <tbody>
+    <tr><td>The capability must touch the user's machine</td><td>stdio MCP server. If many users share it instead, remote MCP over Streamable HTTP</td></tr>
+    <tr><td>You need MCP resources or prompts</td><td>A real MCP client. The Messages API connector is tools-only</td></tr>
+    <tr><td>The corpus is under roughly 200k tokens and reasonably static</td><td>Long context plus prompt caching, not RAG</td></tr>
+    <tr><td>Retrieval misses exact identifiers</td><td>Add BM25 and go hybrid, not a bigger embedding model</td></tr>
+    <tr><td>Retrieval recall is fine but answers are wrong</td><td>Fix generation, not the index</td></tr>
+    <tr><td>Tool definitions exceed roughly 1 to 5% of the context window, or you cross 30 to 50 tools</td><td>Defer loading and add tool search</td></tr>
+    <tr><td>The task chains tools with large intermediates</td><td>Programmatic tool calling in a sandbox</td></tr>
+    <tr><td>An MCP server proxies a third-party API with a static client ID</td><td>Per-client consent stored server-side is mandatory</td></tr>
+    <tr><td>A token was not issued for this server</td><td>Reject it. Never forward it</td></tr>
+    <tr><td>A tool result feeds another tool</td><td>Treat it as untrusted user input</td></tr>
+    <tr><td>The model calls a tool with bad arguments repeatedly</td><td>Fix the description and the error message before the system prompt</td></tr>
+    <tr><td>The model needs a confirmation or a missing value mid-call</td><td>Elicitation. Not a guess, and not a new tool</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">7.5</span>Common distractors, Domain 3</h2>
+
+<table>
+  <caption>Eleven wrong answers and the one word that kills each</caption>
+  <thead><tr><th>The option</th><th>Why it is wrong</th></tr></thead>
+  <tbody>
+    <tr><td>"Use MCP sampling so the server stays model-agnostic"</td><td>Deprecated in <code>2026-07-28</code></td></tr>
+    <tr><td>"Register the client dynamically (RFC 7591)"</td><td>Deprecated in favour of Client ID Metadata Documents</td></tr>
+    <tr><td>"Validate the token's signature"</td><td>Necessary but insufficient. The named requirement is <strong>audience</strong> validation</td></tr>
+    <tr><td>"Add PKCE to prevent mix-up attacks"</td><td>PKCE protects the code, not the authorization server's identity. Issuer validation is the stated mitigation</td></tr>
+    <tr><td>"Expose all endpoints as tools for full capability"</td><td>Directly contradicted. Consolidate around workflows</td></tr>
+    <tr><td>"Increase top-K to fix retrieval"</td><td>Wrong when the failure is lexical or the chunks are context-poor</td></tr>
+    <tr><td>"Chunk smaller to improve recall"</td><td>Smaller chunks lose the context that makes them retrievable. Add chunk-level context instead</td></tr>
+    <tr><td>"Set <code>idempotentHint: true</code> to make retries safe"</td><td>Annotations are untrusted hints, not behaviour</td></tr>
+    <tr><td>"Enable <code>OTEL_LOG_RAW_API_BODIES</code> for better debugging"</td><td>Only when the pipeline is approved for full conversation content</td></tr>
+    <tr><td>"Sandbox the code, so the script's calls are pre-approved"</td><td>The broker must still evaluate each call</td></tr>
+    <tr><td>"Cache the deferred tool definitions"</td><td><code>defer_loading</code> plus <code>cache_control</code> on one tool is a 400</td></tr>
+  </tbody>
+</table>
+
+<p>Domain 3 is done. The pattern across all of it: the constraint in the scenario picks the
+mechanism, and the security answer is always the one that narrows what a single compromised
+component can reach.</p>
+<nav class="pager">
+  <a class="prev" href="06-rag-in-production.html"><span>Previous</span>06 RAG in production</a>
+  <a class="next" href="08-eval-sets.html"><span>Next</span>08 Eval sets and grading methods</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

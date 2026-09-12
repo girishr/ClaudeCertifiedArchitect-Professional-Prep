@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02. The CLAUDE.md hierarchy - Module 5</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 5 &middot; Section 02 of 7</p>
+  <h1>The CLAUDE.md hierarchy</h1>
+  <p class="standfirst">Four scopes, all concatenated rather than overriding, and a context budget you spend whether you meant to or not.</p>
+  <div class="meta"><span>Exam domain 7</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 5</a> <span>/</span> <b>Section 02 of 7</b>
+</nav>
+<p>Two things go wrong with CLAUDE.md on real teams, and both are decisions rather than
+accidents. The first is putting a rule in it that had to be guaranteed, which section 3
+deals with. The second is treating it as documentation: everything anyone might need,
+imported from three other files, four hundred lines long, contradicting itself in two
+places. That version loads on every single turn and gets followed less than the short one
+did.</p>
+
+<p>So the decision here is scope and size. Which of the four files does this belong in, and
+does it belong in a file that is always in context at all.</p>
+
+<figure class="diagram" id="fig-claudemd-hierarchy">
+<svg viewBox="0 0 760 320" role="img" aria-label="The four CLAUDE.md scopes stacked in load order, broadest first, all concatenated" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m51" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="12" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Load order, broadest scope first</tspan></text><rect x="0" y="24" width="760" height="48" rx="8" class="dg-box"/><circle cx="24" cy="48" r="12" class="dg-dot"/><text x="24" y="52.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">1</tspan></text><text x="46" y="43" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Managed policy</tspan></text><text x="46" y="61" class="dg-s" text-anchor="start"><tspan x="46" dy="0">/etc/claude-code/CLAUDE.md on Linux, with macOS and Windows equivalents. Cannot be excluded.</tspan></text><path d="M24 74L24 84" class="dg-arrow" marker-end="url(#m51)"/><rect x="0" y="86" width="760" height="48" rx="8" class="dg-box"/><circle cx="24" cy="110" r="12" class="dg-dot"/><text x="24" y="114.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">2</tspan></text><text x="46" y="105" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">User</tspan></text><text x="46" y="123" class="dg-s" text-anchor="start"><tspan x="46" dy="0">~/.claude/CLAUDE.md. Your own machine, every project you open on it.</tspan></text><path d="M24 136L24 146" class="dg-arrow" marker-end="url(#m51)"/><rect x="0" y="148" width="760" height="48" rx="8" class="dg-box"/><circle cx="24" cy="172" r="12" class="dg-dot"/><text x="24" y="176.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">3</tspan></text><text x="46" y="167" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Project</tspan></text><text x="46" y="185" class="dg-s" text-anchor="start"><tspan x="46" dy="0">./CLAUDE.md or ./.claude/CLAUDE.md. Committed and shared, so any contributor can edit it.</tspan></text><path d="M24 198L24 208" class="dg-arrow" marker-end="url(#m51)"/><rect x="0" y="210" width="760" height="48" rx="8" class="dg-box hi"/><circle cx="24" cy="234" r="12" class="dg-dot"/><text x="24" y="238.5" class="dg-num" text-anchor="middle"><tspan x="24" dy="0">4</tspan></text><text x="46" y="229" class="dg-t-b" text-anchor="start"><tspan x="46" dy="0">Local</tspan></text><text x="46" y="247" class="dg-s" text-anchor="start"><tspan x="46" dy="0">./CLAUDE.local.md. Personal, gitignored, never a team artefact.</tspan></text><text x="0" y="280" class="dg-s" text-anchor="start"><tspan x="0" dy="0">All four are concatenated, not overridden. Claude also walks up the directory tree from cwd, loading every CLAUDE.md and</tspan><tspan x="0" dy="1.3em">CLAUDE.local.md it finds, ordered root-down, so the file closest to cwd is read last. Subdirectory files load on demand.</tspan><tspan x="0" dy="1.3em">Conflicting rules are not resolved for you: Claude may pick either one. Remove the contradiction instead.</tspan></text></svg>
+<figcaption>Four scopes in load order. Nothing here overrides anything, which is why a contradiction between two of these files is a defect and not a precedence question.</figcaption>
+</figure>
+
+<details class="fold">
+<summary>The exact locations, per platform</summary>
+<table>
+  <caption>Where each scope's file lives</caption>
+  <thead><tr><th>Scope</th><th>Location</th></tr></thead>
+  <tbody>
+    <tr><td>Managed policy</td><td>macOS <code>/Library/Application Support/ClaudeCode/CLAUDE.md</code>; Linux and WSL <code>/etc/claude-code/CLAUDE.md</code>; Windows <code>C:\Program Files\ClaudeCode\CLAUDE.md</code></td></tr>
+    <tr><td>User</td><td><code>~/.claude/CLAUDE.md</code></td></tr>
+    <tr><td>Project</td><td><code>./CLAUDE.md</code> or <code>./.claude/CLAUDE.md</code></td></tr>
+    <tr><td>Local</td><td><code>./CLAUDE.local.md</code>, which you gitignore</td></tr>
+  </tbody>
+</table>
+<p>Managed policy CLAUDE.md cannot be excluded. Everything else can be filtered out with
+<code>claudeMdExcludes</code> globs. If you would rather not ship a file to every machine,
+<code>claudeMd</code> inside <code>managed-settings.json</code> does the same job from the
+policy file.</p>
+</details>
+
+<h2><span class="num n">2.1</span>Imports, and what they do not save you</h2>
+
+<p><code>@path</code> imports expand at launch, relative to the importing file, to a maximum
+depth of four hops. An import written inside backticks or a fenced code block is not
+followed, which is how you show an example of one without triggering it.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Importing a large document into CLAUDE.md does not reduce context cost. The import
+  expands at launch and you pay for every token of it on every turn, exactly as if you had
+  pasted it in. Imports are an organisation device for the humans editing the file, nothing
+  more. The two mechanisms that genuinely keep content out of context until it is needed are
+  path-scoped rules and Skills.</p>
+</div>
+
+<h2><span class="num n">2.2</span>Deciding where a piece of context goes</h2>
+
+<table>
+  <caption>The scope follows from how widely the context actually applies</caption>
+  <thead><tr><th>The context</th><th>Where it goes</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Applies to every task in this repo: build commands, repo layout, the conventions a new joiner would ask about</td><td>Project <code>CLAUDE.md</code>, committed</td><td>Reviewable in pull requests, and the project-root file is the one that gets re-injected after <code>/compact</code></td></tr>
+    <tr><td>Only matters for part of the tree: the migrations directory, the generated clients, the one service with different lint rules</td><td><code>.claude/rules/*.md</code> with <code>paths:</code> frontmatter</td><td>It loads only when a matching file is touched, so the rest of the time you are not paying for it</td></tr>
+    <tr><td>Your own working preferences, across all your projects</td><td><code>~/.claude/CLAUDE.md</code></td><td>Yours, not the team's, and not something colleagues should inherit by accident</td></tr>
+    <tr><td>Notes for this checkout only, mid-investigation</td><td><code>./CLAUDE.local.md</code>, gitignored</td><td>Personal and temporary. Anything you would be annoyed to lose does not belong here</td></tr>
+    <tr><td>An org-wide floor that individuals must not be able to remove</td><td>Managed policy CLAUDE.md, or <code>claudeMd</code> in <code>managed-settings.json</code></td><td>The only CLAUDE.md scope that cannot be excluded. If the requirement is enforcement rather than guidance, see section 3 instead</td></tr>
+  </tbody>
+</table>
+
+<p>Three practical rules hold across all of them. Keep each file under 200 lines, because
+longer files reduce adherence rather than increasing it. Be concrete: "use 2-space
+indentation" is a rule, "format properly" is a wish. And remove contradictions rather than
+ranking them, since nothing in this hierarchy overrides anything and Claude may pick either
+side of a conflict.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Project-root CLAUDE.md is re-injected after <code>/compact</code>. Nested and
+  path-scoped rules are not. So a long session that has compacted once is still following
+  the root file and may no longer be following the rule that covered the directory it is
+  working in. If a constraint must hold for the whole of a long session, the root file is
+  where it survives.</p>
+</div>
+
+<p>Treat CLAUDE.md as the shortest possible answer to "what would I tell a competent new
+joiner on day one", put anything narrower behind a <code>paths:</code> rule, and put
+anything that must not be editable somewhere else entirely.</p>
+
+<nav class="pager">
+  <a class="prev" href="01-introduction.html"><span>Previous</span>01 Running it without you</a>
+  <a class="next" href="03-settings-and-permissions.html"><span>Next</span>03 Settings and permissions precedence</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 5 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

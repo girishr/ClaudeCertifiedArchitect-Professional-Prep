@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02. Choosing the integration mechanism - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 02 of 12</p>
+  <h1>Choosing the integration mechanism</h1>
+  <p class="standfirst">Six ways Claude can reach a capability, and the constraint that eliminates five of them.</p>
+  <div class="meta"><span>Exam domain 3</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 02 of 12</b>
+</nav>
+<p>The first integration question is never "should we use MCP". It is "where does this
+capability live, who else needs it, and what is not allowed to move". Answer those three
+and the mechanism is usually forced. Get them in the wrong order and you end up building
+an MCP server for a function two services call, or wiring a direct SDK integration into
+four applications that will now drift apart.</p>
+
+<p>Six mechanisms, and the exam expects you to place a scenario in one of them on sight.</p>
+
+<table>
+  <caption>The six mechanisms, with the conditions that select and disqualify each</caption>
+  <thead><tr><th>Mechanism</th><th>Use when</th><th>Do not use when</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Direct API or SDK tool use</strong></td><td>You own both ends, the tool set is small and stable, and you want tight control over schemas and latency</td><td>The same tools must be reusable across many hosts, or a third party supplies the capability</td></tr>
+    <tr><td><strong>MCP server, local (stdio)</strong></td><td>The capability needs filesystem or process access on the user's machine, or the data must not leave the device</td><td>Many clients need it concurrently, or it must be centrally patched</td></tr>
+    <tr><td><strong>MCP server, remote (Streamable HTTP)</strong></td><td>Many hosts share one capability, and you need central auth, audit and versioning</td><td>The data is local-only, or the latency budget cannot absorb a network hop per call</td></tr>
+    <tr><td><strong>MCP connector on the Messages API</strong></td><td>You want a remote MCP server attached to API calls without writing an MCP client yourself</td><td>You need MCP prompts or resources, because the connector is tools-only, or the server is stdio</td></tr>
+    <tr><td><strong>Agent-to-agent or subagent delegation</strong></td><td>The remote unit is opaque, reasons over multiple steps, has its own context window, and returns a condensed result</td><td>The remote unit is a plain schema-shaped function call</td></tr>
+    <tr><td><strong>Plain RAG (retrieve then answer)</strong></td><td>Read-only grounded question answering over a corpus, citations required, no actions taken</td><td>The task requires acting, the corpus fits in context, or freshness is measured in seconds</td></tr>
+  </tbody>
+</table>
+
+<aside class="sidenote"><b>Two of these are not integrations at all.</b> Subagent
+delegation and plain RAG are in the same table because scenarios offer them as options
+against the other four. The tell for delegation is that the far end reasons; the tell for
+RAG is that nothing is written.</aside>
+
+<h2><span class="num n">2.1</span>Four anti-patterns to recognise on sight</h2>
+
+<p>These are not subtle mistakes. They are the shapes that recur in distractors, and each
+one has a stated right answer behind it.</p>
+
+<table>
+  <caption>Named anti-patterns and what to do instead</caption>
+  <thead><tr><th>Anti-pattern</th><th>Why it fails</th><th>Instead</th></tr></thead>
+  <tbody>
+    <tr><td>Wrapping every REST endpoint as a tool</td><td>Anthropic's guidance is explicit: build for high-impact workflows, not API parity. Endpoint-shaped tools push orchestration into the model and burn context on definitions nobody calls</td><td>One <code>schedule_event</code> beats <code>list_users</code> plus <code>list_events</code> plus <code>create_event</code></td></tr>
+    <tr><td>Using MCP as an inter-service RPC layer between backends you own</td><td>MCP is a context protocol for model-facing capability, not a service mesh. You pay protocol overhead for no model-facing benefit</td><td>Call the service directly. Reserve MCP for capability a model consumes</td></tr>
+    <tr><td>Using an agent where a workflow suffices</td><td>Workflows orchestrate models through predefined code paths; agents let the model direct its own process. Agents cost more, need sandboxing, and compound errors</td><td>Order of preference: single call, then workflow, then agent</td></tr>
+    <tr><td>Standing up a vector database for a small corpus</td><td>Under roughly 200k tokens there is nothing for retrieval to win, and you have added a whole failure mode</td><td>Inline the corpus and use prompt caching. Section 6 has the numbers</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Expose all endpoints as tools for full capability" reads like thoroughness and is
+  directly contradicted by the guidance. Any option whose justification is completeness of
+  coverage rather than a workflow the user actually performs is the wrong option.</p>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">An insurer wants a policy-lookup capability available three ways: in
+  Claude Desktop for the claims team, inside two internal web applications, and from a
+  nightly batch job. Security has said there must be one place to rotate the backing
+  credential and one audit log covering every lookup. The claims team also wants a set of
+  pre-written claim-summary templates available to them as slash commands. Policy data
+  already lives in a central service with a 40 ms API.</p>
+  <p class="stem">Which integration mechanism fits?</p>
+  <ol class="options">
+    <li data-key="A" data-why="A local stdio server is right when data must not leave the device or the capability needs the user's filesystem. Neither applies, and it makes the two things security asked for impossible: credentials would sit on each analyst's machine and there would be no central patch path.">A local stdio MCP server installed on each analyst's machine</li>
+    <li data-key="B" data-why="Many hosts share one capability and central auth, audit and versioning are required, which is the remote Streamable HTTP case. Each host runs its own client against the one server, and prompts surface to the desktop users as slash commands.">A remote MCP server over Streamable HTTP, with each host running its own MCP client</li>
+    <li data-key="C" data-why="Tempting, because it is the least work for the batch job and the web apps. It fails on one word in the brief: the connector is tools-only, so the claim-summary templates have nowhere to live.">The MCP connector on the Messages API, pointed at a remote server</li>
+    <li data-key="D" data-why="Right when you own both ends and the tool set is small and stable, wrong when the same tools must be reusable across many hosts. This is three implementations that will drift, and three audit trails to reconcile.">Direct SDK tool use, implemented separately in each of the three applications</li>
+  </ol>
+  <div class="verdict" hidden><b>Templates as slash commands means prompts, and prompts
+  mean a real MCP client.</b> Central credential rotation and one audit log already rule
+  out local and per-application integrations. The only line that separates B from C is the
+  request for templates, because MCP prompts are a primitive the Messages API connector
+  does not carry.</div>
+</div>
+
+<p>When you cannot tell two mechanisms apart, say out loud who else consumes the
+capability and what is not permitted to move. Those two sentences have decided it in every
+scenario worth asking about.</p>
+<nav class="pager">
+  <a class="prev" href="01-introduction.html"><span>Previous</span>01 What changes in production</a>
+  <a class="next" href="03-mcp-in-depth.html"><span>Next</span>03 MCP in depth</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

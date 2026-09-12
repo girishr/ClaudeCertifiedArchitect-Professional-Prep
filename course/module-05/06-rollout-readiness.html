@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06. Rollout and operational readiness - Module 5</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 5 &middot; Section 06 of 7</p>
+  <h1>Rollout and operational readiness</h1>
+  <p class="standfirst">The order you standardise a team in, and what you can still prove about a run six weeks later.</p>
+  <div class="meta"><span>Exam domain 7</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 5</a> <span>/</span> <b>Section 06 of 7</b>
+</nav>
+<p>Rollout questions in this domain almost always turn on sequence. Someone proposes
+building the team a plugin on day one, or shipping managed settings before anyone has agreed
+what the conventions are. Both are the right mechanisms in the wrong order, and the cost is
+that you are now distributing a standard nobody has used yet.</p>
+
+<p>The order below works because each step assumes the one above it exists and has been lived
+with for a while.</p>
+
+<table>
+  <caption>Standardise in this order</caption>
+  <thead><tr><th>#</th><th>What you add</th><th>Why here and not earlier</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>A committed project <code>CLAUDE.md</code>. <code>/init</code> bootstraps a first draft, <code>/doctor</code> proposes trims</td><td>The conventions have to be written down before anything can enforce them, and writing them reveals which ones the team does not actually agree on</td></tr>
+    <tr><td>2</td><td><code>.claude/settings.json</code> with a shared allow and deny baseline</td><td>Now that the conventions exist, the subset that is not negotiable can be moved from prose into enforcement, in the committed file the whole team shares</td></tr>
+    <tr><td>3</td><td><code>.claude/agents/</code> with the roles the team keeps recreating by hand, typically a reviewer and an explorer</td><td>You only know which roles are worth defining after people have delegated the same work a few times. In the repo, so they are shared and reviewable</td></tr>
+    <tr><td>4</td><td>Hooks for the non-negotiables: format on write, block secret reads, run lint</td><td>By now you know which rules people forget, and those are precisely the ones that should stop depending on anyone remembering</td></tr>
+    <tr><td>5</td><td>Package the lot as a plugin, distributed through a private marketplace</td><td>Only once more than one repository needs the same setup. Before that, the plugin is versioning overhead around a single directory</td></tr>
+  </tbody>
+</table>
+
+<p>Underneath all five, managed settings and a managed CLAUDE.md provide the org-wide floor
+that individuals cannot override. That floor is a separate decision from the rollout, not the
+last step of it: it exists because someone outside the team requires it, and it is deliberately
+not the team's to change.</p>
+
+<aside class="sidenote"><b>Two naming details once plugins are in play.</b> Plugin skills are
+namespaced as <code>/plugin-name:skill-name</code>, so two plugins can ship a skill with the
+same short name. And a project or user agent overrides a same-named plugin agent, which is how
+one team adjusts a distributed definition without forking the plugin.</aside>
+
+<h2><span class="num n">6.1</span>What you can prove afterwards</h2>
+
+<p>The handover question a security reviewer asks is not "is it configured correctly" but
+"show me what actually loaded on that run". Six things answer it.</p>
+
+<table>
+  <caption>Reproducibility and audit</caption>
+  <thead><tr><th>Tool</th><th>What it establishes</th></tr></thead>
+  <tbody>
+    <tr><td><code>--bare</code> in CI</td><td>That the run did not depend on the repo's hooks, the runner's home directory, or anyone's local configuration</td></tr>
+    <tr><td><code>/context</code></td><td>What is actually in context right now, which is how you catch an instruction file you assumed was loaded and is not</td></tr>
+    <tr><td><code>/status</code></td><td>Which setting sources are in play, which is the fastest way to explain a precedence surprise</td></tr>
+    <tr><td><code>InstructionsLoaded</code> hooks</td><td>A logged record of instruction provenance, per session, rather than a reconstruction after the fact</td></tr>
+    <tr><td><code>--output-format json</code></td><td>Cost and session id captured per run, so a given output can be traced back to the run that produced it</td></tr>
+    <tr><td><code>CLAUDE_CODE_ENABLE_TELEMETRY</code></td><td>Fleet-level metrics, for the adoption and spend questions that arrive a quarter later</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Auto memory is not a team artefact. It is machine-local, Claude-authored and unversioned,
+  so it is not shared across machines, not reviewable, and not something a colleague inherits.
+  Any proposal that uses it as the team knowledge base is wrong for three independent reasons.
+  Team knowledge goes in the committed <code>CLAUDE.md</code>, in path-scoped rules, or in a
+  Skill.</p>
+</div>
+
+<p>What you hand over, then, is a repository whose <code>.claude/</code> directory explains
+itself, a short list of things that are enforced rather than suggested, and a CI step that
+produces the same result no matter who triggered it.</p>
+
+<nav class="pager">
+  <a class="prev" href="05-headless-and-ci.html"><span>Previous</span>05 Headless runs and CI</a>
+  <a class="next" href="07-recap.html"><span>Next</span>07 Recap and what to do next</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 5 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

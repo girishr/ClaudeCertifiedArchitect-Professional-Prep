@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07. Recap and what to do next - Module 5</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 5 &middot; Section 07 of 7</p>
+  <h1>Recap and what to do next</h1>
+  <p class="standfirst">The takeaways, the heuristics, the distractors, a self-test, and how to spend the evenings you have left.</p>
+  <div class="meta"><span>Exam domain 7</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 5</a> <span>/</span> <b>Section 07 of 7</b>
+</nav>
+<p>This is the page to come back to. Everything below is either an ordered list to recall or
+a decision to make quickly, which is all this domain asks for.</p>
+
+<table>
+  <caption>The six takeaways</caption>
+  <thead><tr><th>#</th><th>Takeaway</th><th>The operative detail</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td>Some mechanisms enforce and some only suggest</td><td>CLAUDE.md, Skills and MCP servers are context and capability: they shape behaviour without guaranteeing it. Hooks, permission rules and a subagent's tool allowlist are enforcement. Read the strength of the obligation in the stem before you read the options</td></tr>
+    <tr><td>02</td><td>Managed settings outrank command-line arguments</td><td>The order is managed, CLI args, local, project, user. That top pair is the inverse of how most tooling behaves and it is the likeliest single item in the domain</td></tr>
+    <tr><td>03</td><td>The CLAUDE.md scopes concatenate, they do not override</td><td>Managed policy, user, project, local, all loaded, closest to cwd read last. So a contradiction between two of them is a defect to remove, not a precedence question to reason about</td></tr>
+    <tr><td>04</td><td>Only two things keep content out of context until needed</td><td>Path-scoped rules in <code>.claude/rules/</code> and Skills. Imports are organisation for the humans: they expand at launch and cost the same tokens as pasting the text in</td></tr>
+    <tr><td>05</td><td>Reproducibility in CI is a flag, not a convention</td><td><code>--bare</code> plus an explicit <code>--allowedTools</code>. Without it the run executes the repo's hooks, connects its <code>.mcp.json</code> servers, and inherits the runner's home directory</td></tr>
+    <tr><td>06</td><td>Standardise in order, and keep the org floor separate</td><td>CLAUDE.md, then shared settings, then agents, then hooks, then a plugin once a second repo needs it. Managed settings and a managed CLAUDE.md are a different decision, made by someone outside the team</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">7.1</span>The decision heuristics</h2>
+
+<table>
+  <caption>Read the left column in the stem's own words, take the right column</caption>
+  <thead><tr><th>When the requirement is</th><th>Reach for</th></tr></thead>
+  <tbody>
+    <tr><td>It must happen every time, regardless of what Claude decides</td><td>A hook or a permission rule. Never CLAUDE.md</td></tr>
+    <tr><td>It is guidance the model should weigh</td><td>CLAUDE.md, or a rule</td></tr>
+    <tr><td>It only matters for part of the tree</td><td><code>.claude/rules/</code> with <code>paths:</code> frontmatter, so it loads only when a matching file is touched</td></tr>
+    <tr><td>It is a multi-step procedure invoked occasionally</td><td>A Skill, so it stays out of context until it is needed</td></tr>
+    <tr><td>The output would be verbose and you only need the conclusion</td><td>A subagent, with its own fresh context</td></tr>
+    <tr><td>The side task needs the current conversation</td><td>A fork, not a fresh subagent</td></tr>
+    <tr><td>The org must not be able to opt out</td><td>Managed settings and a managed CLAUDE.md</td></tr>
+    <tr><td>The run is in CI</td><td><code>--bare</code> and an explicit tool allowlist</td></tr>
+    <tr><td>A team member's local config could change the CI result</td><td>That sentence is the argument for <code>--bare</code></td></tr>
+    <tr><td>Two repositories need the same setup</td><td>Promote the <code>.claude/</code> config into a plugin</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">7.2</span>Common distractors</h2>
+
+<table>
+  <caption>Each of these is a real mechanism offered for the wrong requirement</caption>
+  <thead><tr><th>The option</th><th>Why it fails</th></tr></thead>
+  <tbody>
+    <tr><td>Put the security policy in the project CLAUDE.md</td><td>A committed CLAUDE.md is advisory and any contributor can edit it. Use managed settings <code>permissions.deny</code></td></tr>
+    <tr><td>Use a <code>PostToolUse</code> hook to prevent a dangerous command</td><td>Too late. <code>PostToolUse</code> cannot block. <code>PreToolUse</code> can</td></tr>
+    <tr><td>Rely on <code>.claude/settings.local.json</code> for team standards</td><td>It is gitignored and personal. It protects you and nobody else</td></tr>
+    <tr><td>Give every engineer their own subagents in <code>~/.claude/agents/</code></td><td>Not shared and not reviewable. Use <code>.claude/agents/</code> in the repo</td></tr>
+    <tr><td>Assume CLI flags beat managed settings</td><td>They do not. Managed settings sit above command-line arguments</td></tr>
+    <tr><td>Import a large document into CLAUDE.md to organise it</td><td>Imports expand fully at launch and cost the same context. Path-scoped rules and Skills reduce context; imports do not</td></tr>
+    <tr><td>Expect a subagent to know what the main thread just discussed</td><td>It gets CLAUDE.md and a git status snapshot, not the conversation. Only a fork inherits that</td></tr>
+    <tr><td>Run <code>claude -p</code> in CI without <code>--bare</code> and expect reproducibility</td><td>It picks up the repo's hooks, its <code>.mcp.json</code>, and the runner's <code>~/.claude</code></td></tr>
+    <tr><td>Use auto memory as the team knowledge base</td><td>Machine-local, Claude-authored and unversioned. Not a team artefact at all</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">7.3</span>Closed-book self-test</h2>
+
+<p>Six questions, no scrolling. This domain is recall, so a hesitation is a real signal:
+anything that does not come out cleanly is one list to reread, not a section to redo.</p>
+
+<ol>
+  <li>State the settings precedence from highest to lowest, all five ranks, and name the pair
+  whose order is counter-intuitive.</li>
+  <li>State the four CLAUDE.md scopes in load order. Do later ones override earlier ones?
+  Which single file is re-injected after <code>/compact</code>, and which are not? Which scope
+  cannot be excluded, and what handles excluding the rest?</li>
+  <li>Which hook events can block, which one notoriously cannot, and what does exit code 2 do
+  when the JSON output says <code>permissionDecision: "allow"</code>?</li>
+  <li>Name the three MCP scopes with their precedence order, and say what a <code>claude -p</code>
+  run does with a project <code>.mcp.json</code> that an interactive session would have prompted
+  about.</li>
+  <li>What does <code>--bare</code> skip, why is it the CI recommendation, and what credential
+  does it require?</li>
+  <li>Give the five-step standardisation order for a team, and name the two artefacts that put a
+  floor under it which individuals cannot override.</li>
+</ol>
+
+<p>If those came easily, two more worth having: the subagent precedence order and what a
+subagent inherits versus what a fork inherits; and the difference between
+<code>Bash(git diff *)</code> and <code>Bash(git diff*)</code>.</p>
+
+<h2><span class="num n">7.4</span>What this buys on the exam</h2>
+
+<p>Domain 7, Developer Productivity and Operational Enablement, is 7 percent of the paper.
+About four questions, and they are the most mechanically answerable four on it: if the lists
+above are solid, you should expect to get all of them. That is the end of the reading.</p>
+
+<div class="flag">
+  <span class="label">Where to go now</span>
+  <p>This is the last module in the path, so there is nothing further to read. Go back to the
+  <a href="../../index.html">study hub</a> and switch modes: the
+  <a href="../../index.html#tab-practice">practice tab</a> holds the question engine, and the
+  study plan on the same page lays out the remaining evenings. Spend what is left answering
+  questions rather than rereading pages. Work mixed-domain sets under time pressure so you
+  practise recognising which domain a stem belongs to, which is half the difficulty of the real
+  paper. Turn the four precedence lists from this module into flashcards and give them five
+  minutes a day rather than another hour once. And when you get something wrong, go back only to
+  the section the wrong answer traces to. Modules 1 and 2 are 65 percent of the paper between
+  them, so if a review pass has to be rationed, that is where it goes. Do not spend it
+  here.</p>
+</div>
+<nav class="pager">
+  <a class="prev" href="06-rollout-readiness.html"><span>Previous</span>06 Rollout and operational readiness</a>
+  
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 5 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

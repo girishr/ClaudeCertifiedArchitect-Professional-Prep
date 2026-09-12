@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05. Security and authentication - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 05 of 12</p>
+  <h1>Security and authentication</h1>
+  <p class="standfirst">Who holds the token, what the token is allowed to be, and why every tool result is untrusted input.</p>
+  <div class="meta"><span>Exam domain 3</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 05 of 12</b>
+</nav>
+<p>The second recurring theme of Domain 3 is blast radius, and this is where it is tested
+directly. Questions here quote the spec's MUST and MUST NOT language closely, so this is
+one of the few places in the course where verbatim recall beats reasoning. The wrong answers
+are usually real security measures that are necessary but not the named requirement.</p>
+
+<h2><span class="num n">5.1</span>OAuth 2.1 for remote MCP servers</h2>
+
+<p>Three roles, and mixing them up is the root of most confusion. The <strong>MCP server is
+the OAuth resource server</strong>. The <strong>MCP client is the OAuth client</strong>. The
+<strong>authorization server is a separate party</strong>. The chain runs:</p>
+
+<ol>
+  <li>The client makes an unauthenticated request.</li>
+  <li>The server answers <code>401</code> with <code>WWW-Authenticate</code> carrying
+  <code>resource_metadata</code> and a <code>scope</code> hint.</li>
+  <li>The client fetches Protected Resource Metadata (RFC 9728, which servers
+  <strong>MUST</strong> implement).</li>
+  <li>The client discovers the authorization server (RFC 8414 or OIDC Discovery).</li>
+  <li>The client obtains a client ID.</li>
+  <li>The client runs authorization code plus PKCE, with a <code>resource</code> parameter
+  (RFC 8707) naming the canonical server URI.</li>
+  <li>The client validates <code>iss</code> on the response (RFC 9207).</li>
+  <li>The client exchanges the code, then sends <code>Authorization: Bearer</code> on
+  <strong>every</strong> request.</li>
+</ol>
+
+<table>
+  <caption>Rules worth memorising verbatim</caption>
+  <thead><tr><th>Rule</th><th>Why it is the named requirement</th></tr></thead>
+  <tbody>
+    <tr><td>Servers <strong>MUST</strong> validate that the token's audience is themselves, and <strong>MUST NOT</strong> accept or transit tokens issued for anything else</td><td>Signature validation proves the token is genuine, not that it was meant for you. Audience is the stated requirement, and "validate the token's signature" is the distractor built from it</td></tr>
+    <tr><td>Clients <strong>MUST NOT</strong> send a token to a server other than the one its authorization server issued it for</td><td>The client side of the same rule</td></tr>
+    <tr><td><strong>Token passthrough is the named anti-pattern</strong>: accepting a client token and forwarding it unmodified downstream</td><td>Breaks rate limiting, audit trails and trust boundaries, and creates the confused deputy</td></tr>
+    <tr><td>Tokens <strong>MUST NOT</strong> appear in URI query strings</td><td>They leak into logs, referrers and history</td></tr>
+    <tr><td><strong>Client ID Metadata Documents</strong> are the preferred registration path</td><td>Dynamic Client Registration is <strong>deprecated</strong>, retained only for backwards compatibility. "Register the client dynamically (RFC 7591)" is a stale answer</td></tr>
+    <tr><td>stdio servers <strong>SHOULD NOT</strong> use this flow</td><td>Take credentials from the environment instead</td></tr>
+  </tbody>
+</table>
+
+<table>
+  <caption>Status codes, which get asked about directly</caption>
+  <thead><tr><th>Code</th><th>Means</th><th>Carries</th></tr></thead>
+  <tbody>
+    <tr><td><code>400</code></td><td>Malformed request</td><td>-</td></tr>
+    <tr><td><code>401</code></td><td>Unauthenticated, or the token is invalid</td><td><code>WWW-Authenticate</code> with <code>resource_metadata</code> and a scope hint</td></tr>
+    <tr><td><code>403</code></td><td>Insufficient scope</td><td><code>error="insufficient_scope"</code> and the scope that is needed</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">5.2</span>The confused deputy</h2>
+
+<p>This one is worth knowing as a set of conditions rather than a slogan, because scenarios
+describe the conditions and expect you to name the attack.</p>
+
+<table>
+  <caption>Conditions, attack, mitigation</caption>
+  <thead><tr><th>Stage</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td>Conditions, all four</td><td>An MCP proxy uses a <strong>static client ID</strong> with a third-party authorization server; it lets MCP clients register dynamically; the third-party authorization server sets a consent cookie; and the proxy does no per-client consent</td></tr>
+    <tr><td>The attack</td><td>An attacker registers a client with <code>redirect_uri: attacker.com</code>. The victim's existing consent cookie skips the third-party consent screen, so the authorization code lands at the attacker</td></tr>
+    <tr><td>Mitigation</td><td>Per-user, per-<code>client_id</code> consent checked <strong>before</strong> forwarding. Exact-string <code>redirect_uri</code> matching with no wildcards. Single-use <code>state</code> stored only <strong>after</strong> consent is approved. Cookies that are <code>__Host-</code> prefixed, <code>Secure</code>, <code>HttpOnly</code> and <code>SameSite=Lax</code></td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Add PKCE to prevent mix-up attacks" is wrong, and it is wrong in a way that rewards
+  precision. PKCE protects the authorization code. It says nothing about which
+  authorization server answered. Issuer validation is the stated mitigation for mix-up.</p>
+</div>
+
+<h2><span class="num n">5.3</span>The other named risks</h2>
+
+<table>
+  <caption>Risks and their stated defences</caption>
+  <thead><tr><th>Risk</th><th>Defence</th></tr></thead>
+  <tbody>
+    <tr><td><strong>SSRF</strong> via attacker-controlled OAuth discovery URLs</td><td>Block private and link-local ranges including <code>169.254.169.254</code>, enforce HTTPS, validate every redirect hop, and route through an egress proxy</td></tr>
+    <tr><td><strong>Mix-up attacks</strong></td><td><code>iss</code> validation. PKCE does not help</td></tr>
+    <tr><td><strong>State handle hijacking</strong></td><td>Bind handles to the authenticated principal, use high-entropy opaque IDs, and expire them</td></tr>
+    <tr><td><strong>Local server compromise</strong></td><td>Sandbox, least privilege, and show the exact startup command before launching</td></tr>
+    <tr><td><strong>Malicious authorization URLs</strong></td><td>Allowlist <code>https:</code>, reject <code>javascript:</code>, <code>data:</code> and <code>file:</code>, and never open a URL through a shell</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">5.4</span>Prompt injection in a tool-calling system</h2>
+
+<p>Treat every tool result as untrusted input, <strong>including results flowing from one
+server into another</strong>. That second clause is the one scenarios test: server A returns
+text, the model passes it to server B, and nobody validated it because it came from inside
+the system.</p>
+
+<p>The defences that appear as correct answers:</p>
+
+<ul>
+  <li>Human-in-the-loop confirmation for sensitive or destructive calls.</li>
+  <li>Showing tool inputs before execution.</li>
+  <li>Allowlisting tools per agent role.</li>
+  <li>Least-privilege OAuth scopes.</li>
+  <li>Sandboxing with no direct network egress.</li>
+  <li>Output validation and truncation.</li>
+  <li>Per-call authorization <strong>even for calls originating inside an approved
+  script</strong>. Approving a script is not blanket approval for every call it makes.</li>
+</ul>
+
+<aside class="sidenote"><b>The sandbox distractor.</b> "Sandbox the code, so the script's
+calls are pre-approved" merges two independent controls. The sandbox bounds what the code
+can reach. The broker still has to evaluate each call.</aside>
+
+<h2><span class="num n">5.5</span>Least privilege on scopes</h2>
+
+<p><code>scopes_supported</code> should be the minimal set needed for basic function, with
+incremental escalation through <code>WWW-Authenticate</code> challenges as the client needs
+more. Wildcard or omnibus scopes such as <code>*</code> or <code>full-access</code> are a
+listed common mistake. Note that clients accumulate scopes by union when they
+re-authorize, so a careless escalation path quietly becomes an omnibus grant.</p>
+
+<p>The one-line version of this whole section: a token belongs to exactly one server, a
+handle belongs to exactly one authenticated user, and a tool result belongs to nobody you
+trust.</p>
+<nav class="pager">
+  <a class="prev" href="04-tool-design.html"><span>Previous</span>04 Tool design and capability bloat</a>
+  <a class="next" href="06-rag-in-production.html"><span>Next</span>06 RAG in production</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

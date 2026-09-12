@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07. Audiences and failure conversations - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 07 of 8</p>
+  <h1>Audiences and failure conversations</h1>
+  <p class="standfirst">Who you are talking to decides what you lead with, and nothing decides your credibility faster than how you deliver a miss.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 07 of 8</b>
+</nav>
+<p>Two ways to lose a project that is working. Send the architecture deck to the executive
+sponsor, or tell the sponsor about the miss after he has heard about it from someone else.
+Both are communication failures rather than technical ones, and both are examined here.</p>
+
+<h2><span class="num n">7.1</span>The audience matrix</h2>
+
+<p>Learn this table. Items in this domain are written straight out of it: an audience is
+named, an artefact or an opening line is offered, and you choose the one that fits. Read the
+last column as hard as the others, because the distractors are built from it.</p>
+
+<table>
+  <caption>Five audiences, and what each of them is actually buying</caption>
+  <thead><tr><th>Audience</th><th>They actually want</th><th>Lead with</th><th>Avoid</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Executives</strong></td>
+      <td>Decision, money, risk, timing</td>
+      <td>The <strong>recommendation first</strong>, then the two or three numbers behind it, then the ask</td>
+      <td>Architecture diagrams, token economics, and hedging without a recommendation</td>
+    </tr>
+    <tr>
+      <td><strong>Legal and compliance</strong></td>
+      <td>Where data goes, who can see it, what is logged, what the human control is, what the contract says</td>
+      <td>Data flow, residency, retention, BAA and DPA status, the approval gate, the audit trail</td>
+      <td>"The model is very accurate" as a compliance argument. It answers a question they did not ask</td>
+    </tr>
+    <tr>
+      <td><strong>Engineering</strong></td>
+      <td>Interfaces, constraints, failure modes, how to test it</td>
+      <td>Contracts and schemas, the eval harness, latency and cost budgets, and the non-goals</td>
+      <td>Business rationale as a substitute for a spec</td>
+    </tr>
+    <tr>
+      <td><strong>End users</strong></td>
+      <td>Will this make my day better, and can I trust it</td>
+      <td>What it does well, what it does badly, how to override it, how to escalate</td>
+      <td>Overselling capability and hiding limitations. They will find the limits on day one either way</td>
+    </tr>
+    <tr>
+      <td><strong>Procurement and finance</strong></td>
+      <td>Total cost, commitment, exit</td>
+      <td>Cost per task, run rate, contract shape, switching cost</td>
+      <td>Per-token pricing without volume assumptions, which is a number they cannot use</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Two rows are worth reading twice. Compliance is not persuaded by accuracy, it is persuaded
+by data flow and human control. And engineering is not persuaded by the business case, it
+needs the contract, the failure modes and the non-goals, because the non-goals are what stop
+a team quietly building the thing you decided not to build.</p>
+
+<h2><span class="num n">7.2</span>The one-artefact rule, and the exec one-pager</h2>
+
+<p>Write the deck once, then cut three versions from it. One body of evidence, three
+depths. What you must never do is send the engineering version to the sponsor: it reads as an
+inability to say what you think.</p>
+
+<p>The executive version is the recommendation and three numbers. On one page, in this
+order:</p>
+
+<ol>
+  <li>The problem, <strong>with a number</strong>.</li>
+  <li>The recommendation, in one sentence.</li>
+  <li>The cost, as a range.</li>
+  <li>The expected return, with the assumption it rests on stated rather than buried.</li>
+  <li>The top three risks, each with its mitigation.</li>
+  <li>The decision you are asking for, <strong>with a date</strong>.</li>
+</ol>
+
+<p>No architecture diagram. No model names. If the CFO cannot read it in ninety seconds you
+have written a design document with a one-pager's title.</p>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p><a href="../../labs.md">Lab 8</a>, step 5, is that one-pager followed by the part that
+  makes it work: a hostile pass that lists every claim lacking a number or resting on an
+  unstated assumption, with no suggestions attached. Fixing the holes is worth more than the
+  first draft, and the lab's harder variant is worth doing too. Write the opposite
+  recommendation from the same discovery notes, arguing not to build it, then decide which is
+  actually right. Recommending against building is a correct answer often enough on this
+  domain that you want to have written one.</p>
+</div>
+
+<h2><span class="num n">7.3</span>When the pilot misses: five moves in order</h2>
+
+<p>78 percent against a 90 percent target, three weeks of budget cycle left. The order of
+what you do next is the whole examinable content of this part, and step 1 is the one
+candidates skip.</p>
+
+<table>
+  <caption>The sequence, and what each step is defending against</caption>
+  <thead><tr><th>#</th><th>Move</th><th>The detail that matters</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong>Diagnose before you report</strong></td>
+      <td>Is the gap <strong>capability, data, scope or measurement</strong>? A large share of misses are measurement problems: the eval set does not reflect real inputs, or the target was set against an unmeasured human baseline. Reporting a capability failure that was a measurement artefact is a mistake you cannot take back</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>Report early, with a recommendation</strong></td>
+      <td>Bad news arriving with three options and a preferred one keeps you credible. Late bad news destroys the relationship whatever the technical outcome. The clock, not the number, is what damages you</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Descope when a subset clears the bar</strong></td>
+      <td>94 percent on the top three intents covering 70 percent of volume, 61 percent on the long tail: ship the three, route the rest to humans. <strong>Narrowing scope is the most common correct answer in this domain</strong></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>Change the control stack when a human closes the gap</strong></td>
+      <td>82 percent with a review gate can still beat baseline economics. The system does not have to clear the bar alone, it has to clear it as deployed</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>Kill it, honestly</strong></td>
+      <td>When the underlying job is not valuable, the data does not exist, the risk tier makes the controls uneconomic, or two focused iterations barely moved the number. Frame the kill around what was learned and where the budget should go instead. Kill criteria are defined at pilot start, not invented at pilot end</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">7.4</span>Three things you never do</h2>
+
+<p>Each of these is what the room would most like to happen, which is precisely why they are
+on the paper.</p>
+
+<table>
+  <caption>The accommodating move and its bill</caption>
+  <thead><tr><th>Never</th><th>What it costs</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Quietly extend the pilot</strong></td>
+      <td>Buys a quarter of calm and spends your credibility. Nothing about the hypothesis, scope or measurement changed, so the same number returns later, now accompanied by the question of why nobody was told. Time is not an intervention</td>
+    </tr>
+    <tr>
+      <td><strong>Re-run against an easier eval set</strong></td>
+      <td>Produces a number that passes and a system that does not. If it ships on that basis, the gap surfaces in production in front of users, and the eval suite is now evidence of a decision made badly rather than a tool for making it well</td>
+    </tr>
+    <tr>
+      <td><strong>Take the target down without telling the sponsor it moved</strong></td>
+      <td>Converts a recoverable technical shortfall into a question about your honesty. Targets can move; they move in writing, with a reason, told to everyone who signed the original</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Escalate to the steering committee" is the fourth member of that family and it looks
+  like diligence. Escalation <em>before</em> diagnosis reads as abdication: you have asked the
+  most expensive people in the company to do the analysis you were hired to do. Escalate after
+  step 1, with a recommendation attached, or not at all.</p>
+</div>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">Your eight-week support-triage pilot ends on Friday, measured at 78
+  percent against the 90 percent agreed with the operations director, who signed the criteria
+  himself. The breakdown you ran this morning shows 94 percent on the three highest-volume
+  intents, which are 70 percent of tickets, and 61 percent across a long tail of roughly forty
+  rare intents. A spot check of 50 long-tail cases shows the eval labels are sound and the
+  failures are genuine. The director's budget submission for next year is due in ten days and
+  he has told you twice that he needs a success to point at.</p>
+  <p class="stem">What do you do first?</p>
+  <ol class="options">
+    <li data-key="A" data-why="The accommodating answer, and the one this domain punishes hardest. It defers the bad news past the budget submission, which means the director makes a funding commitment without information you already hold. Time is also not an intervention: nothing about the hypothesis, scope or measurement changes, so the same shortfall arrives later with your credibility attached to the delay.">Ask for a four-week extension to keep iterating on the long tail, and report the final number once there is better news to deliver</li>
+    <li data-key="B" data-why="Correct. The diagnosis is done and the gap is scope, not measurement: a clear subset clears the bar on most of the volume. So the news goes now, before the submission, with a descope recommendation the director can actually fund and a named fallback for everything outside it.">Report this week with options, recommending the pilot ship for the three high-volume intents at 94 percent and route the long tail to human agents, with the coverage and cost figures for that split</li>
+    <li data-key="C" data-why="A real technique at the wrong moment. Model swaps are for when capability is the binding constraint and the eval set is known representative; here the breakdown already shows the gap is concentrated in rare intents, which is a scope finding. It also spends the ten days you have on an experiment rather than on a decision the sponsor needs.">Move the long-tail cases to a larger model and re-measure before reporting anything, since the headline number is what the director will be judged on</li>
+    <li data-key="D" data-why="Escalation before a recommendation reads as abdication, and here the diagnosis is already complete, so there is nothing for the committee to decide that you cannot recommend. It also routes around the signatory who agreed the criteria, which is the relationship you most need intact.">Escalate to the steering committee to decide whether the 90 percent target should be revised, given the pilot's mixed results</li>
+  </ol>
+  <div class="verdict" hidden><b>B.</b> Two constraints in the stem settle it. The spot check
+  has already ruled out the measurement explanation, so the gap is scope, and a subset clearing
+  the bar on 70 percent of volume is the classic descope. And the budget submission in ten days
+  is a deadline for the <em>sponsor's</em> decision, not yours: any option that reports after
+  it has him commit money without information you were holding. Bad news early, with options
+  and a preferred one.</div>
+</div>
+
+<p>The rule under all of it: the sponsor should never learn something about your project from
+anybody but you, and should never learn it without a recommendation attached.</p>
+<nav class="pager">
+  <a class="prev" href="06-lifecycle-and-rollout.html"><span>Previous</span>06 Lifecycle and rollout</a>
+  <a class="next" href="08-recap.html"><span>Next</span>08 Recap and what is next</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

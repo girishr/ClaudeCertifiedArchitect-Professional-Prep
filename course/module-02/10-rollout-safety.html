@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10. Rollout safety and regression control - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 10 of 12</p>
+  <h1>Rollout safety and regression control</h1>
+  <p class="standfirst">Five ways to put a change in front of reality, and the four inputs you have to version separately to know which one moved.</p>
+  <div class="meta"><span>Exam domain 4</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 10 of 12</b>
+</nav>
+<p>"Quality dropped and nothing changed" is the most common incident in this domain, and it
+is almost always false. Something changed: a floating model alias resolved to a new version,
+the retrieval index was rebuilt, someone edited a tool description. The point of everything
+in this section is to make that sentence impossible to say.</p>
+
+<h2><span class="num n">10.1</span>Five rollout mechanisms</h2>
+
+<p>They are not a ladder. Each one buys a different kind of evidence at a different price,
+and the scenario's constraint picks.</p>
+
+<table>
+  <caption>What each mechanism gives you, and what it costs</caption>
+  <thead><tr><th>Mechanism</th><th>Gives you</th><th>Cost or risk</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Offline regression suite in CI</strong></td><td>Blocks known-bad changes pre-merge</td><td>Only covers what you encoded</td></tr>
+    <tr><td><strong>Shadow</strong> (mirror traffic, discard output)</td><td>Real-distribution comparison at zero user risk</td><td>Doubles inference spend, and gives no user-reaction signal</td></tr>
+    <tr><td><strong>Canary</strong> (small live percentage)</td><td>Real user signal with a bounded blast radius</td><td>Needs fast rollback and per-cohort metrics</td></tr>
+    <tr><td><strong>A/B test</strong></td><td>A statistically comparable effect on the KPI</td><td>Needs traffic volume and a fixed stopping rule</td></tr>
+    <tr><td><strong>Progressive rollout by tenant</strong></td><td>Contains risk for high-value accounts</td><td>Slower, more operational overhead</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Two distractors live in this table. "Ship to 100% and monitor" is what canary and shadow
+  exist to prevent. And "A/B test it" is wrong twice over: when traffic cannot reach
+  significance, and when a shadow run would answer the same question with no user risk at
+  all. Read the traffic volume in the scenario before choosing A/B.</p>
+</div>
+
+<h2><span class="num n">10.2</span>Pin the version, and change one input at a time</h2>
+
+<p><strong>Pin model versions in production and in CI.</strong> A floating alias is how
+"nothing changed but quality dropped" happens, and it is an unlogged deploy. Run the golden
+set on a new model version <em>before</em> switching, and keep the old version available for
+rollback.</p>
+
+<p>Then treat these four as independently versioned inputs, and change one at a time while
+diagnosing:</p>
+
+<ol>
+  <li>The prompt.</li>
+  <li>The tool schemas.</li>
+  <li>The retrieval index.</li>
+  <li>The model version.</li>
+</ol>
+
+<p>Log a <strong>request ID and a config hash</strong> with every eval run, so a regression
+can be bisected rather than argued about.</p>
+
+<aside class="sidenote"><b>The diagnostic shortcut.</b> Quality regressed with no repo
+change, so check for a floating model alias or a rebuilt retrieval index. Those are the two
+inputs that can move without a commit.</aside>
+
+<h2><span class="num n">10.3</span>Run large eval sets on the Batch API</h2>
+
+<p>Evals are the canonical batch workload: nobody is waiting, and they are large enough for
+the discount to matter.</p>
+
+<table>
+  <caption>Message Batches API, the numbers</caption>
+  <thead><tr><th>Property</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>Price</td><td>50% cheaper</td></tr>
+    <tr><td>Typical completion</td><td>Most batches within an hour</td></tr>
+    <tr><td>Ceiling</td><td>24 hours</td></tr>
+    <tr><td>Size</td><td>Up to 100,000 requests or 256 MB</td></tr>
+    <tr><td>Streaming</td><td>None</td></tr>
+  </tbody>
+</table>
+
+<p>Those last two rows are why "use batch processing" is a wrong answer for anything
+interactive. No streaming and a 24-hour ceiling is disqualifying for a user-facing path, and
+perfectly fine for evals, backfills, moderation and bulk generation.</p>
+
+<p>So the posture: pinned versions, a golden set run before the switch, one input changed at
+a time, and the cheapest mechanism that produces the evidence the decision actually needs.
+Shadow when you need distribution and no risk, canary when you need user reaction, A/B only
+when the traffic can carry it.</p>
+<nav class="pager">
+  <a class="prev" href="09-metrics-and-agents.html"><span>Previous</span>09 Metrics and agent evaluation</a>
+  <a class="next" href="11-diagnosis-and-optimisation.html"><span>Next</span>11 Diagnosis and optimisation</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

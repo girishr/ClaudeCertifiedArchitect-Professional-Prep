@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03. MCP in depth - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 03 of 12</p>
+  <h1>MCP in depth</h1>
+  <p class="standfirst">The participants, the two layers, the primitives, and the four things you probably still believe that the spec has dropped.</p>
+  <div class="meta"><span>Exam domain 3</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 03 of 12</b>
+</nav>
+<p>Section 2 decided that this capability wants MCP. This section is what you are
+committing to when you say that, and it matters more than usual because MCP has moved. The
+spec revision to hold in mind is <code>2026-07-28</code>, and several features that older
+exam guides still teach as live are deprecated in it. A distractor built from a deprecated
+feature is the hardest kind to reject, because it sounds like something you read.</p>
+
+<h2><span class="num n">3.1</span>Participants and layers</h2>
+
+<p>The host is the AI application. It creates <strong>one client per server</strong>, and
+each client holds its own dedicated connection. "Local" and "remote" describe where the
+server runs, not two different protocols. Local stdio servers typically serve one client;
+remote HTTP servers serve many.</p>
+
+<figure class="diagram wide" id="fig-mcp-path">
+<svg viewBox="0 0 760 282" role="img" aria-label="The MCP request path: a host holding one client per server, two transports, and the two protocol layers every message crosses" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="14" class="dg-k" text-anchor="start"><tspan x="0" dy="0">One client per server. Local and remote say where the server runs, not which protocol.</tspan></text><rect x="0" y="28" width="196" height="168" rx="8" class="dg-box hi"/><text x="98" y="50" class="dg-t-b" text-anchor="middle"><tspan x="98" dy="0">Host</tspan></text><text x="98" y="66" class="dg-s" text-anchor="middle"><tspan x="98" dy="0">the AI application</tspan></text><rect x="16" y="78" width="164" height="30" rx="6" class="dg-box"/><text x="98" y="97" class="dg-t" text-anchor="middle"><tspan x="98" dy="0">Client 1</tspan></text><rect x="16" y="114" width="164" height="30" rx="6" class="dg-box"/><text x="98" y="133" class="dg-t" text-anchor="middle"><tspan x="98" dy="0">Client 2</tspan></text><rect x="16" y="150" width="164" height="30" rx="6" class="dg-box"/><text x="98" y="169" class="dg-t" text-anchor="middle"><tspan x="98" dy="0">Client 3</tspan></text><path d="M199 93L249 93" class="dg-arrow" marker-end="url(#m2a)"/><path d="M199 129L249 129" class="dg-arrow" marker-end="url(#m2a)"/><path d="M199 165L249 165" class="dg-arrow" marker-end="url(#m2a)"/><rect x="252" y="78" width="320" height="30" rx="6" class="dg-box"/><text x="412" y="97" class="dg-t" text-anchor="middle"><tspan x="412" dy="0">stdio server, a client-launched subprocess</tspan></text><rect x="252" y="114" width="320" height="30" rx="6" class="dg-box"/><text x="412" y="133" class="dg-t" text-anchor="middle"><tspan x="412" dy="0">Streamable HTTP, POST to one endpoint</tspan></text><rect x="252" y="150" width="320" height="30" rx="6" class="dg-box"/><text x="412" y="169" class="dg-t" text-anchor="middle"><tspan x="412" dy="0">Streamable HTTP, same server, many hosts</tspan></text><text x="584" y="97" class="dg-s" text-anchor="start"><tspan x="584" dy="0">credentials from env</tspan></text><text x="584" y="133" class="dg-s" text-anchor="start"><tspan x="584" dy="0">bearer token every request</tspan></text><text x="584" y="169" class="dg-s" text-anchor="start"><tspan x="584" dy="0">central auth and audit</tspan></text><text x="0" y="202" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Two layers, and every message crosses both</tspan></text><rect x="0" y="208" width="760" height="30" rx="6" class="dg-strip"/><text x="12" y="227" class="dg-t" text-anchor="start"><tspan x="12" dy="0">Data layer: JSON-RPC 2.0 messages, capabilities, primitives, notifications</tspan></text><rect x="0" y="242" width="760" height="30" rx="6" class="dg-strip"/><text x="12" y="261" class="dg-t" text-anchor="start"><tspan x="12" dy="0">Transport layer: framing, connection, authorization</tspan></text></svg>
+<figcaption>One client per server, two transport shapes, and the two layers the data and the plumbing are split across.</figcaption>
+</figure>
+
+<table>
+  <caption>The two transports</caption>
+  <thead><tr><th>Transport</th><th>Shape</th><th>What to remember</th></tr></thead>
+  <tbody>
+    <tr><td><strong>stdio</strong></td><td>Newline-delimited JSON-RPC over a client-launched subprocess</td><td>Credentials come from the environment, not OAuth. A one-click install MUST show the exact command and get explicit consent</td></tr>
+    <tr><td><strong>Streamable HTTP</strong></td><td>Each message is an HTTP POST to one MCP endpoint; the reply is JSON or a request-scoped SSE stream</td><td>Bearer token on every request. Never put tokens in the query string</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">3.2</span>Primitives, and who controls each</h2>
+
+<p>The control column is the examinable part. Which party decides that a given primitive
+gets used is what separates a tool from a resource from a prompt.</p>
+
+<table>
+  <caption>Primitives and their controller</caption>
+  <thead><tr><th>Primitive</th><th>Side</th><th>Controlled by</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Tools</strong></td><td>Server</td><td>The model</td><td>The model decides when to call one. <code>tools/list</code>, <code>tools/call</code></td></tr>
+    <tr><td><strong>Resources</strong></td><td>Server</td><td>The application</td><td>Read-only, URI-addressed, direct or templated. <code>resources/list</code>, <code>resources/read</code></td></tr>
+    <tr><td><strong>Prompts</strong></td><td>Server</td><td>The user</td><td>Templates, typically surfaced as slash commands. <code>prompts/list</code>, <code>prompts/get</code></td></tr>
+    <tr><td><strong>Elicitation</strong></td><td>Client</td><td>The server asks, the user answers</td><td><code>elicitation/create</code>, for a confirmation or a missing value mid-call. The surviving client-facing feature</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>When the model needs a confirmation or a value it does not have part way through a
+  call, the answer is elicitation. Not guessing a default, and not adding a second tool
+  whose only job is to ask.</p>
+</div>
+
+<h2><span class="num n">3.3</span>The deltas that make distractors</h2>
+
+<p>Every row here is something a plausible option will assert. Learn them as rejections.</p>
+
+<table>
+  <caption>What changed in spec revision 2026-07-28</caption>
+  <thead><tr><th>The stale belief</th><th>The current position</th></tr></thead>
+  <tbody>
+    <tr><td>"Use MCP sampling so the server stays model-agnostic"</td><td><strong>Sampling, Roots and Logging are all deprecated</strong>, along with the legacy HTTP+SSE transport, on a twelve-month minimum deprecation window. Integrate with the provider directly. Elicitation is the surviving client-facing feature</td></tr>
+    <tr><td>"Use the server-to-client logging utility for observability"</td><td>Logging is deprecated. Log to stderr on stdio, or use OpenTelemetry</td></tr>
+    <tr><td>"The connection opens with an <code>initialize</code> handshake and holds a session"</td><td><strong>MCP is stateless.</strong> No <code>initialize</code>, no protocol-level session. Every request carries the protocol version and client capabilities in <code>_meta</code>, and servers advertise through <code>server/discover</code></td></tr>
+    <tr><td>"Cache hints live on <code>server/discover</code>"</td><td><code>ttlMs</code> and <code>cacheScope</code> are documented on the list responses, meaning <code>tools/list</code>, <code>prompts/list</code> and <code>resources/list</code>, not on <code>server/discover</code> itself</td></tr>
+    <tr><td>"The server keeps per-connection state for me"</td><td>Server state uses <strong>explicit handles</strong> returned from a creation tool and passed back as an ordinary argument. A handle is a name, not a capability: bind it server-side to the authenticated user and validate it on every call</td></tr>
+    <tr><td>"The server pushes tool-list changes, so polling is unnecessary"</td><td>Change notifications are <strong>opt-in</strong>. The client opens <code>subscriptions/listen</code> naming the types it wants, and the server then sends <code>notifications/tools/list_changed</code>. Best-effort, so still poll</td></tr>
+    <tr><td>"Hold the connection open for the long-running job"</td><td>The <strong>Tasks extension</strong> returns a durable handle instead</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">3.4</span>Connectors and the MCP connector are not the same thing</h2>
+
+<p>Two things share a name, and questions exploit it.</p>
+
+<ul>
+  <li><strong>Connectors</strong> in the Claude apps are packaged remote MCP servers for
+  end users.</li>
+  <li>The <strong>MCP connector</strong> on the Messages API is the API equivalent.
+  <code>mcp_servers</code> supplies url, name and <code>authorization_token</code>, and an
+  <code>mcp_toolset</code> entry in <code>tools</code> enables or disables individual tools
+  through <code>default_config</code> plus per-tool <code>configs</code>, so you can
+  allowlist or denylist without touching the server.</li>
+</ul>
+
+<p>Its limits are the examinable part: <strong>tools only, HTTPS only, no stdio</strong>.
+The moment a brief needs resources or prompts, the connector is out and you need a real
+MCP client.</p>
+
+<details class="fold">
+<summary>Methods worth being able to name</summary>
+<p><code>tools/list</code>, <code>tools/call</code>, <code>resources/list</code>,
+<code>resources/read</code>, <code>prompts/list</code>, <code>prompts/get</code>,
+<code>elicitation/create</code>, <code>server/discover</code>,
+<code>subscriptions/listen</code>, <code>notifications/tools/list_changed</code>. The
+pattern is <code>*/list</code> and <code>*/get</code> for discovery, then a verb.</p>
+</details>
+
+<p>If you remember one sentence from this section, make it this: MCP in its current form is
+stateless, tools are model-controlled, and anything you think the client can be asked to do
+for the server is probably elicitation or deprecated.</p>
+<nav class="pager">
+  <a class="prev" href="02-integration-mechanism.html"><span>Previous</span>02 Choosing the integration mechanism</a>
+  <a class="next" href="04-tool-design.html"><span>Next</span>04 Tool design and capability bloat</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 2: Enterprise Integration &amp; Production</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead" style="display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap">
+  <img src="../assets/badge.png" alt="Claude Certified Architect Professional badge" width="76" height="76" style="flex:none; margin-top:6px">
+  <div style="flex:1; min-width:260px">
+  <p class="eyebrow">CCAR-P &middot; Module 2 of 5</p>
+  <h1>Enterprise Integration &amp; Production</h1>
+  <p class="standfirst">The heaviest module on the paper. How Claude couples to the rest of
+  the estate, and how you prove the result is any good before and after it ships.</p>
+  <div class="meta">
+    <span>12 sections</span>
+    <span>Exam domains 3 and 4, 35% of the paper</span>
+    <span>Official module: 158 min</span>
+  </div>
+  </div>
+</header>
+
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <b>Module 2</b>
+</nav>
+
+<div class="flag">
+  <span class="label">Where this is from</span>
+  <p>Module 1 was distilled from Anthropic's official module, section by section. This
+  module is not. It is built from this kit's own domain notes, arranged to follow the
+  official module's place in the path, and it has not been checked against Anthropic's
+  screens. The official module is free, authoritative, and linked at the foot of this
+  page; read it for the version that counts.</p>
+</div>
+
+<div class="flag">
+  <span class="label">How to work through this</span>
+  <p>Sections 2 to 7 are Domain 3, sections 8 to 11 are Domain 4, and they are ordered so
+  each one narrows the last: mechanism, then the protocol, then the tools, then who holds
+  the token, then retrieval, then what you can see when it goes wrong. Read them in order
+  the first time. Together the two domains are roughly 22 of 63 questions, five or six of
+  them multiple-response, so this is the module to give two evenings rather than one.</p>
+</div>
+
+<h2><span class="num">Contents</span>The twelve sections</h2>
+
+<table>
+  <caption>Domain 3 in sections 2 to 7, Domain 4 in sections 8 to 11</caption>
+  <thead><tr><th>#</th><th>Section</th><th>What it decides</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td><a href="01-introduction.html">What changes in production</a></td><td>What the two domains are actually testing, and the arc of the module.</td></tr>
+    <tr><td>02</td><td><a href="02-integration-mechanism.html">Choosing the integration mechanism</a></td><td>Direct SDK, local MCP, remote MCP, connector, subagent or plain RAG.</td></tr>
+    <tr><td>03</td><td><a href="03-mcp-in-depth.html">MCP in depth</a></td><td>Participants, layers, transports, primitives, and the deprecations that make distractors.</td></tr>
+    <tr><td>04</td><td><a href="04-tool-design.html">Tool design and capability bloat</a></td><td>Descriptions, response shape, errors, and what to do when there are 400 tools.</td></tr>
+    <tr><td>05</td><td><a href="05-security-and-auth.html">Security and authentication</a></td><td>OAuth 2.1 for remote servers, the confused deputy, and prompt injection through tool results.</td></tr>
+    <tr><td>06</td><td><a href="06-rag-in-production.html">RAG in production</a></td><td>Contextual retrieval, the numbers, and when not to build RAG at all.</td></tr>
+    <tr><td>07</td><td><a href="07-observability.html">Observability across multi-step systems</a></td><td>Tracing an agent run without exporting customer data, plus the Domain 3 heuristics.</td></tr>
+    <tr><td>08</td><td><a href="08-eval-sets.html">Eval sets and grading methods</a></td><td>What goes in the golden set, and which grader each output shape earns.</td></tr>
+    <tr><td>09</td><td><a href="09-metrics-and-agents.html">Metrics and agent evaluation</a></td><td>Picking one primary metric, and how agents are graded differently.</td></tr>
+    <tr><td>10</td><td><a href="10-rollout-safety.html">Rollout safety and regression control</a></td><td>Offline suite, shadow, canary, A/B, and the four inputs you version separately.</td></tr>
+    <tr><td>11</td><td><a href="11-diagnosis-and-optimisation.html">Diagnosis and optimisation</a></td><td>Naming the failure from its symptom, then fixing it with the cheapest lever.</td></tr>
+    <tr><td>12</td><td><a href="12-recap.html">Recap and what is next</a></td><td>Takeaways for both domains, the Domain 4 traps, a self-test, and where Module 3 picks up.</td></tr>
+  </tbody>
+</table>
+
+<p style="margin-top:1.6rem"><a href="01-introduction.html"><strong>Start at section 1 &rarr;</strong></a></p>
+
+<h2><span class="num">Weighting</span>Where the time actually goes</h2>
+
+<p>Domain 3 is 19 percent and Domain 4 is 16 percent, so the integration half is slightly
+heavier, but Domain 4 is where the multiple-response items cluster: "select TWO metrics",
+"select TWO grading methods". Those are the questions where a half-remembered list costs
+you the whole item, so sections 8 and 9 repay memorisation in a way the rest of the module
+does not.</p>
+
+<p>Three sections carry more exam weight than their length suggests. Section 4 on tool
+design and capability bloat is the densest page here, and it is the one Anthropic's own
+engineering writing keeps returning to. Section 5 on authentication contains the MUST and
+MUST NOT rules that get quoted almost verbatim in questions. Section 11 on diagnosis is
+the page that turns an incident-report scenario into a single named failure mode, which is
+the exact shape most Domain 4 questions take.</p>
+
+<div class="course-nav">
+  <h3>Reference</h3>
+  <ul>
+    <li><a href="../reference/glossary.html">Glossary</a> - the vocabulary the course holds to</li>
+    <li><a href="../reference/pattern-selection.html">Pattern selection</a> - one page, prints well</li>
+    <li><a href="../module-01/index.html">Module 1</a> - platform and solution design, read this first</li>
+    <li><a href="https://anthropic-partners.skilljar.com/path/claude-certified-architect-professional/enterprise-integration-production">The official module</a> on Anthropic's Partner Academy</li>
+  </ul>
+</div>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

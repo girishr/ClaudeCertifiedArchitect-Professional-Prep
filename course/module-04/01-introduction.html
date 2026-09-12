@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01. The half that decides whether it ships - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 01 of 8</p>
+  <h1>The half that decides whether it ships</h1>
+  <p class="standfirst">A technically correct architecture that nobody adopts has failed, and this is the domain that decides which it will be.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 01 of 8</b>
+</nav>
+<p>Three modules of work can produce a design that is right in every particular and still
+never reach a user. The pattern was correct, the controls were proportionate, the evals
+passed, and the sponsor quietly stopped funding it because the pilot had no agreed success
+criteria and the number that came back was not the number he had in his head. That project
+failed. Not partially: a system nobody adopts delivers nothing, and the architecture is what
+it delivers.</p>
+
+<p>So treat this domain as engineering, because that is how it is examined. It is not
+tested as soft skills or stakeholder charm. It is tested as <strong>judgement about people
+and money under uncertainty</strong>, and the wrong answers are as precise and as
+technically literate as the wrong answers anywhere else on the paper.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>This is the domain most likely to be underestimated, and underestimating it is
+  structural rather than careless. Everything in it looks like something you already do. The
+  gap is that you do it by feel, and the exam tests it as a set of rules with names: which
+  metric belongs to which stakeholder, what may appear in an SLA, which stage of the
+  lifecycle you are standing in, and what you say first when the news is bad.</p>
+</div>
+
+<h2><span class="num n">1.1</span>What the exam is actually testing</h2>
+
+<p>Picture the room the items are written from. A sponsor who wants a guarantee. A compliance
+lead who wants a veto. An engineering lead who wants a spec. And a pilot sitting at 78
+percent against a 90 percent target, with three weeks left in the budget cycle.</p>
+
+<p>Against that, the examiner rewards answers that <strong>make uncertainty explicit and
+agree a decision rule in advance</strong>. It punishes three things specifically: promising
+determinism, over-engineering before value is proven, and escalating before diagnosing.</p>
+
+<p>That gives you a tiebreaker worth memorising, because this domain's options are unusually
+close. When every option looks like something a competent consultant might reasonably do,
+pick the one that either <strong>reduces ambiguity about success criteria</strong> or
+<strong>surfaces bad news early with a recommendation attached</strong>. One of those two is
+very often the key.</p>
+
+<h2><span class="num n">1.2</span>The trap this domain sets</h2>
+
+<p>Most domains build distractors from real techniques used at the wrong time. This one
+builds them from something harder to resist: <strong>the most accommodating thing you could
+say to the person in front of you.</strong></p>
+
+<p>Every wrong answer below is what a stakeholder would most like to hear in the moment. That
+is what makes them work as distractors, and the defence is to price the accommodation. Ask
+what it costs when the bill arrives.</p>
+
+<table>
+  <caption>The accommodating answer, and what it costs later</caption>
+  <thead><tr><th>What the stakeholder wants to hear</th><th>What it costs when the bill arrives</th></tr></thead>
+  <tbody>
+    <tr><td>"Yes, we can commit to 99 percent accuracy in the contract"</td><td>You have signed a guarantee on open-ended generation that no eval can defend. The first disputed output is a contractual breach rather than a quality conversation</td></tr>
+    <tr><td>"Let's start with the highest-value use case"</td><td>High value with low feasibility is the quadrant where pilots die. You spend the sponsor's goodwill on the hardest problem and have nothing to show at the end of it</td></tr>
+    <tr><td>"We'll give you another quarter to get there"</td><td>Time is not an intervention. Nothing about the hypothesis, the scope or the measurement changed, so the same number arrives a quarter later with less credibility behind it</td></tr>
+    <tr><td>"Fine, let's call 80 percent the target"</td><td>The target moved and nobody recorded that it moved or why. Every later conversation about performance is now unanchored, and you own the ambiguity</td></tr>
+    <tr><td>"We'll run more training sessions to lift adoption"</td><td>If the new workflow is worse for the user, training teaches them faster access to something they do not want. The workflow, not the knowledge, is the defect</td></tr>
+    <tr><td>"Let me take this to the steering committee"</td><td>Escalation before diagnosis reads as abdication. You have spent the committee's attention without a recommendation to spend it on</td></tr>
+  </tbody>
+</table>
+
+<p>None of those is stupid. Each is what a reasonable person says under pressure, which is
+exactly why they are on the paper.</p>
+
+<h2><span class="num n">1.3</span>The arc of this module</h2>
+
+<p>Six moves, in the order the engagement makes them.</p>
+
+<table>
+  <caption>What each section adds to the picture</caption>
+  <thead><tr><th>#</th><th>The move</th><th>What you leave with</th></tr></thead>
+  <tbody>
+    <tr><td>02</td><td>Find out what the job is</td><td>The stated ask, the underlying job and the success measure, held apart. Whether AI belongs here at all, and why the highest-value idea is rarely where to start</td></tr>
+    <tr><td>03</td><td>Set the expectation</td><td>The conceptual centre of the domain. What you can promise about a system that is probabilistic by construction, and the criteria that have to be signed before a pilot begins</td></tr>
+    <tr><td>04</td><td>Make the commercial commitment</td><td>Cost per task, the latency budget, the line an SLA must not cross, the ROI discounted for adoption, and build against buy</td></tr>
+    <tr><td>05</td><td>Hand it over</td><td>Seven artefacts in priority order, and the test of whether the handover is real: can somebody who was not in the room change the system safely</td></tr>
+    <tr><td>06</td><td>Get it into use</td><td>POC, pilot and production as three different promises, the phased ramp, and adoption as a workflow problem rather than a training problem</td></tr>
+    <tr><td>07</td><td>Talk to people, including when it is going badly</td><td>Five audiences and what each of them buys, then the failure conversation: diagnose, report early with options, descope, change the control stack, or kill it honestly</td></tr>
+  </tbody>
+</table>
+
+<aside class="sidenote"><b>Weight.</b> Domain 6 is 14 percent of the paper, roughly nine
+questions of 63, and the official module is the second longest in the path at 178 minutes.
+Read that as a deliberate weighting rather than generosity: Anthropic is treating the
+engagement as part of the architecture.</aside>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p>The lab that pairs with this module is <a href="../../labs.md">Lab 8</a>, a timeboxed
+  run at the four artefacts this domain is examined on: a discovery interview you have to
+  actually conduct, an architecture decision record, a phased rollout plan with kill criteria,
+  and an executive one-pager that survives a hostile reader. Reading the formats is worth
+  something; writing one of each is worth considerably more, because what the exam tests is
+  format discipline under a stem's time pressure.</p>
+</div>
+
+<p>Work through the module asking one question of every scenario: what has been agreed, in
+writing, with whom. Most of the failures in this domain are failures of an unwritten
+assumption, and most of the correct answers are the act of writing one down.</p>
+<nav class="pager">
+
+  <a class="next" href="02-discovery.html"><span>Next</span>02 Discovery</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

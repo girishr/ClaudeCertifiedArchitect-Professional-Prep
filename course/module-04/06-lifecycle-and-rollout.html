@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06. Lifecycle and rollout - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 06 of 8</p>
+  <h1>Lifecycle and rollout</h1>
+  <p class="standfirst">Three stages that make three different promises, a ramp that retires one unknown at a time, and why adoption fails when accuracy is fine.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 06 of 8</b>
+</nav>
+<p>The demo worked on eight examples, the room applauded, and somebody asked how quickly it
+could go live. That moment is a named exam scenario and the answer is always the same: a POC
+promoted straight to production is wrong, because the only stage that measures whether anyone
+gets value from it has been skipped.</p>
+
+<p>POC, pilot and production are not three sizes of the same thing. They make three different
+promises and they earn three different levels of investment.</p>
+
+<table>
+  <caption>Three stages, three promises</caption>
+  <thead><tr><th>Stage</th><th>What it proves</th><th>What it requires</th><th>Output</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>POC</strong></td>
+      <td>That the task is <strong>technically possible</strong></td>
+      <td>A handful of examples. No production constraints, no real users, no integration</td>
+      <td>A yes or a no. Nothing else</td>
+    </tr>
+    <tr>
+      <td><strong>Pilot</strong></td>
+      <td>That there is <strong>value</strong>, with real users, real data, real constraints and a <strong>measured baseline</strong></td>
+      <td>Pre-agreed acceptance criteria, an eval set, monitoring, and an end date</td>
+      <td>A number against an agreed threshold, and a decision</td>
+    </tr>
+    <tr>
+      <td><strong>Production</strong></td>
+      <td>That it will <strong>keep working</strong> under load, drift and staff turnover</td>
+      <td>SLOs, on-call, rollback, security review, cost controls, a named owner. The eight gates in section 4</td>
+      <td>A system somebody runs</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The end date on the pilot is load-bearing. A pilot without one becomes a permanent state
+in which nobody has to decide anything, and "extend the pilot" becomes the path of least
+resistance every quarter.</p>
+
+<figure class="diagram wide" id="fig-lifecycle">
+<svg viewBox="0 0 760 316" role="img" aria-label="POC, pilot and production as three stages, the wrong shortcut between them, and the four-phase ramp inside production" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m41" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="10" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Three stages, three different promises</tspan></text><rect x="0" y="16" width="232" height="84" rx="8" class="dg-box"/><text x="12" y="38" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">POC</tspan></text><text x="12" y="56" class="dg-s" text-anchor="start"><tspan x="12" dy="0">is the task possible at all?</tspan></text><text x="12" y="71" class="dg-s" text-anchor="start"><tspan x="12" dy="0">a handful of examples, no</tspan></text><text x="12" y="86" class="dg-s" text-anchor="start"><tspan x="12" dy="0">production constraints. Yes/no</tspan></text><path d="M234 58L260 58" class="dg-arrow" marker-end="url(#m41)"/><rect x="264" y="16" width="232" height="84" rx="8" class="dg-box hi"/><text x="276" y="38" class="dg-t-b" text-anchor="start"><tspan x="276" dy="0">Pilot</tspan></text><text x="276" y="56" class="dg-s" text-anchor="start"><tspan x="276" dy="0">does it create value with real</tspan></text><text x="276" y="71" class="dg-s" text-anchor="start"><tspan x="276" dy="0">users and real data? Needs</tspan></text><text x="276" y="86" class="dg-s" text-anchor="start"><tspan x="276" dy="0">agreed criteria and an end date</tspan></text><path d="M498 58L524 58" class="dg-arrow" marker-end="url(#m41)"/><rect x="528" y="16" width="232" height="84" rx="8" class="dg-box"/><text x="540" y="38" class="dg-t-b" text-anchor="start"><tspan x="540" dy="0">Production</tspan></text><text x="540" y="56" class="dg-s" text-anchor="start"><tspan x="540" dy="0">will it keep working? SLOs,</tspan></text><text x="540" y="71" class="dg-s" text-anchor="start"><tspan x="540" dy="0">on-call, rollback, security</tspan></text><text x="540" y="86" class="dg-s" text-anchor="start"><tspan x="540" dy="0">review, cost controls, owner</tspan></text><path d="M116 100C116 130 644 130 644 100" class="dg-window"/><text x="380" y="142" class="dg-k-bad" text-anchor="middle"><tspan x="380" dy="0">The named wrong answer</tspan></text><text x="380" y="158" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">A POC promoted straight to production skips the only stage that measures value.</tspan></text><text x="0" y="188" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Inside production: the phased ramp</tspan></text><rect x="0" y="196" width="184" height="66" rx="8" class="dg-box"/><circle cx="18" cy="216" r="11" class="dg-dot"/><text x="18" y="220.5" class="dg-num" text-anchor="middle"><tspan x="18" dy="0">1</tspan></text><text x="36" y="220" class="dg-t-b" text-anchor="start"><tspan x="36" dy="0">Dogfood</tspan></text><text x="12" y="240" class="dg-s" text-anchor="start"><tspan x="12" dy="0">your own team first. Worst</tspan></text><text x="12" y="254" class="dg-s" text-anchor="start"><tspan x="12" dy="0">case is embarrassment</tspan></text><rect x="192" y="196" width="184" height="66" rx="8" class="dg-box"/><circle cx="210" cy="216" r="11" class="dg-dot"/><text x="210" y="220.5" class="dg-num" text-anchor="middle"><tspan x="210" dy="0">2</tspan></text><text x="228" y="220" class="dg-t-b" text-anchor="start"><tspan x="228" dy="0">Friendly cohort</tspan></text><text x="204" y="240" class="dg-s" text-anchor="start"><tspan x="204" dy="0">users who will forgive and</tspan></text><text x="204" y="254" class="dg-s" text-anchor="start"><tspan x="204" dy="0">report rather than churn</tspan></text><rect x="384" y="196" width="184" height="66" rx="8" class="dg-box"/><circle cx="402" cy="216" r="11" class="dg-dot"/><text x="402" y="220.5" class="dg-num" text-anchor="middle"><tspan x="402" dy="0">3</tspan></text><text x="420" y="220" class="dg-t-b" text-anchor="start"><tspan x="420" dy="0">Ramp + canary</tspan></text><text x="396" y="240" class="dg-s" text-anchor="start"><tspan x="396" dy="0">automatic rollback triggers</tspan></text><text x="396" y="254" class="dg-s" text-anchor="start"><tspan x="396" dy="0">armed before the ramp</tspan></text><rect x="576" y="196" width="184" height="66" rx="8" class="dg-box"/><circle cx="594" cy="216" r="11" class="dg-dot"/><text x="594" y="220.5" class="dg-num" text-anchor="middle"><tspan x="594" dy="0">4</tspan></text><text x="612" y="220" class="dg-t-b" text-anchor="start"><tspan x="612" dy="0">GA</tspan></text><text x="588" y="240" class="dg-s" text-anchor="start"><tspan x="588" dy="0">the full input distribution</tspan></text><text x="588" y="254" class="dg-s" text-anchor="start"><tspan x="588" dy="0">arrives here, not earlier</tspan></text><text x="0" y="288" class="dg-t" text-anchor="start"><tspan x="0" dy="0">At each gate, ask whether the previous stage&#x27;s metrics held at higher volume and a wider input</tspan><tspan x="0" dy="1.3em">distribution. If you cannot answer that, the ramp is not a ramp, it is a launch in instalments.</tspan></text></svg>
+<figcaption>The stages above, the ramp inside the last of them. The dashed shortcut is the scenario to recognise.</figcaption>
+</figure>
+
+<h2><span class="num n">6.1</span>The phased ramp, one unknown at a time</h2>
+
+<p>Each phase exists to retire a specific unknown, and a phase that does not name its unknown
+is just a delay. Give every phase an exit criterion <em>and</em> a kill criterion, because a
+phase you cannot fail tells you nothing, and name the person who is allowed to stop the
+rollout.</p>
+
+<table>
+  <caption>Four phases, and what each one is for</caption>
+  <thead><tr><th>Phase</th><th>Who sees it</th><th>The unknown it retires</th><th>What must be in place</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>1 Internal dogfood</strong></td>
+      <td>Your own team</td>
+      <td>Does it survive contact with people who did not build it, on inputs nobody curated?</td>
+      <td>Somewhere to log every surprise. The worst outcome at this phase is embarrassment, which is what makes it the cheapest place to learn</td>
+    </tr>
+    <tr>
+      <td><strong>2 Friendly cohort</strong></td>
+      <td>A small set of real users who will tolerate a rough edge and report it</td>
+      <td>Does it hold on live traffic, and do users act on the output?</td>
+      <td>A visible feedback path and someone answering it. A cohort chosen for goodwill, not for volume</td>
+    </tr>
+    <tr>
+      <td><strong>3 Percentage ramp with canary</strong></td>
+      <td>A growing share of the population</td>
+      <td>Does it hold at volume and at cost, on a wider input distribution?</td>
+      <td><strong>Automatic rollback triggers, armed before the ramp begins.</strong> A canary nobody is watching is not a canary</td>
+    </tr>
+    <tr>
+      <td><strong>4 GA</strong></td>
+      <td>Everyone</td>
+      <td>Nothing. By here the unknowns should be retired</td>
+      <td>The runbook, the owner and the on-call rotation actually in use rather than written down</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"The pilot went well, so roll it out to everyone" is the accommodating answer at this
+  stage and it is wrong for a structural reason rather than a cautious one: <strong>pilot
+  distribution rarely survives the full population.</strong> The pilot cohort volunteered,
+  which means they were more motivated, more tolerant and working on more typical inputs than
+  the average. What it costs is the one thing you cannot buy back, which is first impressions
+  across an entire organisation. A failure at 5 percent is a rollback; the same failure at 100
+  percent is the story people tell about AI at that company for two years.</p>
+</div>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p><a href="../../labs.md">Lab 8</a>, step 4, is a four-phase plan where every phase names
+  the unknown it retires, an exit criterion, a kill criterion, a rollback plan and a named
+  person who can stop it. It also asks you to state what you will <em>not</em> measure, which
+  is what stops a success story being retro-fitted to whatever happened.</p>
+</div>
+
+<h2><span class="num n">6.2</span>Change management is not training</h2>
+
+<p>When adoption is low and accuracy is fine, the model is not the problem. In exam stems,
+adoption failures come from <strong>workflow disruption</strong> or <strong>lack of
+trust</strong>, and rarely from missing features. Six moves, none of which is a training
+session.</p>
+
+<table>
+  <caption>What actually moves adoption</caption>
+  <thead><tr><th>Move</th><th>Why it works</th></tr></thead>
+  <tbody>
+    <tr><td>Identify who <strong>loses time or status</strong></td><td>Every deployment has someone whose job got worse or whose expertise got commoditised. Unnamed, that person becomes quiet, effective resistance</td></tr>
+    <tr><td>Name the "what's in it for me", per role</td><td>The organisational benefit is not a personal benefit. Cycle time down 40 percent can read to a reviewer as more work arriving faster</td></tr>
+    <tr><td>Recruit <strong>champions per team</strong></td><td>Adoption travels between peers, not down from a programme. One credible colleague per team beats any amount of central communication</td></tr>
+    <tr><td>Train on the <strong>new workflow</strong>, not the tool</td><td>People do not need to be taught the interface. They need to know what their job looks like on Monday</td></tr>
+    <tr><td><strong>Publish what the system cannot do</strong></td><td>Users calibrate on the first failure. If you named it in advance, the failure confirms your credibility; if you did not, it destroys it</td></tr>
+    <tr><td>Give a visible feedback path, with <strong>evidence that feedback changed something</strong></td><td>A feedback form nobody hears back from is worse than none. The evidence, not the channel, is what buys trust</td></tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>"Run more training sessions" is the distractor whenever the stem has said the workflow
+  itself got worse for the people using it. It is attractive because it is an action, it is
+  cheap, and it puts the burden on the users rather than on the design. What it costs is a
+  second failed rollout: you have taught people to use something faster that they were
+  rejecting on the merits, and you have spent the goodwill that would have funded the
+  workflow fix.</p>
+</div>
+
+<h2><span class="num n">6.3</span>The post-launch loop</h2>
+
+<p>Go-live is where the lifecycle starts repeating, and a system without this loop degrades
+quietly.</p>
+
+<ul>
+  <li>Feedback signals land in a <strong>triage queue</strong> that somebody owns.</li>
+  <li><strong>Every failure case becomes an eval case.</strong> This is the single habit that
+  compounds: the suite gets stronger exactly where the system is weak, and a regression you
+  have seen once you never ship twice.</li>
+  <li>A <strong>monthly eval review</strong>, which is also the review the SLA's quality
+  process committed to in section 4.</li>
+  <li><strong>Quarterly re-baselining</strong> against newer models, because the cheapest
+  performance improvement available is usually a model that shipped after you built.</li>
+  <li><strong>Drift monitoring</strong> on the input distribution and the refusal rate. A
+  rising refusal rate is often the first visible sign that the inputs have moved.</li>
+</ul>
+
+<p>Match the investment to the stage and keep the ability to stop. A rollout you cannot halt
+and a pilot you cannot fail are the same mistake wearing different clothes.</p>
+<nav class="pager">
+  <a class="prev" href="05-documentation-and-handoff.html"><span>Previous</span>05 Documentation and handoff</a>
+  <a class="next" href="07-audiences-and-failure.html"><span>Next</span>07 Audiences and failure conversations</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

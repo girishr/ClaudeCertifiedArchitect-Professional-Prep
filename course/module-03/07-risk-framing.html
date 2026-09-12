@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07. Risk framing - Module 3</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 3 &middot; Section 07 of 8</p>
+  <h1>Risk framing</h1>
+  <p class="standfirst">Four functions, one register, and a signature that is not yours to give.</p>
+  <div class="meta"><span>Exam domain 5</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 3</a> <span>/</span> <b>Section 07 of 8</b>
+</nav>
+<p>The controls are built and some risk is left over. That leftover is the thing you have to
+name, size and hand to somebody, and the last move in this domain is knowing who that
+somebody is.</p>
+
+<p>NIST's AI Risk Management Framework gives the shape. Four functions, one of which is not a
+stage at all.</p>
+
+<figure class="diagram" id="fig-nist-rmf">
+<svg viewBox="0 0 760 272" role="img" aria-label="Govern cuts across Map, Measure and Manage in the NIST AI Risk Management Framework" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m71" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="760" height="40" rx="8" class="dg-strip"/><text x="380" y="18" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Govern: policy, roles, accountability, culture</tspan></text><text x="380" y="33" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">not a stage. It cuts across the other three</tspan></text><rect x="0" y="60" width="240" height="110" rx="8" class="dg-box"/><text x="14" y="86" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Map</tspan></text><text x="14" y="110" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Context, use case, stakeholders,</tspan><tspan x="14" dy="1.3em">what could go wrong</tspan></text><path d="M243 115L257 115" class="dg-arrow" marker-end="url(#m71)"/><rect x="260" y="60" width="240" height="110" rx="8" class="dg-box"/><text x="274" y="86" class="dg-t-b" text-anchor="start"><tspan x="274" dy="0">Measure</tspan></text><text x="274" y="110" class="dg-s" text-anchor="start"><tspan x="274" dy="0">Evals, metrics, red teaming,</tspan><tspan x="274" dy="1.3em">quantify residual risk</tspan></text><path d="M503 115L517 115" class="dg-arrow" marker-end="url(#m71)"/><rect x="520" y="60" width="240" height="110" rx="8" class="dg-box hi"/><text x="534" y="86" class="dg-t-b" text-anchor="start"><tspan x="534" dy="0">Manage</tspan></text><text x="534" y="110" class="dg-s" text-anchor="start"><tspan x="534" dy="0">Prioritise, treat, monitor, respond</tspan></text><text x="0" y="196" class="dg-k" text-anchor="start"><tspan x="0" dy="0">The artefact that shows you did it</tspan></text><text x="0" y="216" class="dg-s" text-anchor="start"><tspan x="0" dy="0">A risk register: owner, severity x likelihood score, inherent vs residual risk, control mapping, sign-off.</tspan></text><text x="0" y="250" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Residual risk is accepted by a named business owner, never by the architect alone.</tspan></text></svg>
+<figcaption>Govern is the band, not a box. Map, Measure and Manage run underneath it.</figcaption>
+</figure>
+
+<table>
+  <caption>The four functions and what each one produces</caption>
+  <thead><tr><th>Function</th><th>What it covers</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Govern</strong></td><td>Policy, roles, accountability, culture. Cuts across the other three rather than sitting alongside them</td></tr>
+    <tr><td><strong>Map</strong></td><td>Context, use case, stakeholders, what could go wrong</td></tr>
+    <tr><td><strong>Measure</strong></td><td>Evals, metrics, red teaming, quantifying residual risk</td></tr>
+    <tr><td><strong>Manage</strong></td><td>Prioritise, treat, monitor, respond</td></tr>
+  </tbody>
+</table>
+
+<p>If an item asks which function is cross-cutting, it is Govern. If an item describes a team
+that has done evals but has no named owner and no policy, it is Govern that is missing, not
+more measurement.</p>
+
+<h2><span class="num n">7.1</span>The register, and the signature</h2>
+
+<p>The practical artefact is a risk register, and its columns are the examinable part: owner,
+a severity multiplied by likelihood score, inherent risk against residual risk, control
+mapping, and an accepted-risk sign-off by a named business owner.</p>
+
+<p>That last column is the one the exam cares about. <strong>Risk acceptance is a business
+decision, not an architect's decision.</strong> The architect's job is to make the residual
+risk legible: here is what is left, here is how big it is, here is what it would cost to
+reduce further. Signing it off is somebody else's authority.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>If a stem has an architect unilaterally accepting residual risk, that is the wrong
+  answer, however sensible the rest of the option sounds. The same goes for an option where
+  the risk is simply not recorded: an unregistered risk has not been accepted by anyone, and
+  nobody can reverse a decision that was never written down.</p>
+</div>
+
+<p>Inherent against residual is worth holding separately, because it is what lets you defend
+the proportionality argument from section 2. Inherent risk is what the use case carries before
+controls. Residual is what survives them. The gap between the two is the value of your stack,
+and it is the number that tells a business owner whether the next control is worth buying.</p>
+
+<aside class="sidenote"><b>Where this joins up.</b> Rollback, undo, kill switch, canary and an
+overturnable human decision are all the same property expressed at different layers. A design
+that keeps them is a design whose residual risk is small enough for someone to sign.</aside>
+
+<p>Frame the risk so it can be owned. Size it, map it to controls, state what is left, and put
+the name of the person who accepted it on the page.</p>
+<nav class="pager">
+  <a class="prev" href="06-anthropic-posture.html"><span>Previous</span>06 Anthropic posture and practice</a>
+  <a class="next" href="08-recap.html"><span>Next</span>08 Recap and what is next</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 3 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

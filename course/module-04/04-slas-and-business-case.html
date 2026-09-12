@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04. SLAs and the business case - Module 4</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 4 &middot; Section 04 of 8</p>
+  <h1>SLAs and the business case</h1>
+  <p class="standfirst">What the unit of cost is, what the latency budget is spent on, what you may sign, and when to buy instead of build.</p>
+  <div class="meta"><span>Exam domain 6</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 4</a> <span>/</span> <b>Section 04 of 8</b>
+</nav>
+<p>Section 3 set the expectation. This section turns it into numbers somebody signs, and the
+signing is where a careless sentence becomes a liability. There are three ways to get it
+wrong: quote a cost per task that omits half the cost, allocate a latency budget after the
+build rather than before it, and commit contractually to something no eval can defend.</p>
+
+<h2><span class="num n">4.1</span>Cost per task, the unit that travels</h2>
+
+<p>Cost per task is the number that survives translation between engineering and finance, so
+it is the number to get right. Six components, and teams routinely count three.</p>
+
+<table>
+  <caption>What goes into one task</caption>
+  <thead><tr><th>Component</th><th>Note</th></tr></thead>
+  <tbody>
+    <tr><td>Input tokens</td><td>Including the system prompt, retrieved context and few-shot examples, on every call</td></tr>
+    <tr><td>Output tokens</td><td>Priced higher than input on every route</td></tr>
+    <tr><td>Retries</td><td>A validation failure or a refusal that triggers a second attempt costs a second task</td></tr>
+    <tr><td><strong>Guardrail and classifier calls</strong></td><td><strong>Routinely forgotten.</strong> A pre-filter and a post-check are two more model calls per task</td></tr>
+    <tr><td>Retrieval</td><td>Embedding, vector search, reranking where used</td></tr>
+    <tr><td><strong>Human review minutes</strong></td><td><strong>Routinely forgotten, and usually the largest line.</strong> A review gate is a labour cost per task, and it is the cost that decides whether the ROI is real</td></tr>
+  </tbody>
+</table>
+
+<p>The two bold rows are the reason teams miss their cost target having done the token
+arithmetic correctly. If a stem says cost per task is over budget, the first places to look
+are model routing, caching, prompt size and review minutes, in that order, before anyone
+declares the use case infeasible.</p>
+
+<h2><span class="num n">4.2</span>The latency budget is allocated, not discovered</h2>
+
+<p>Split the end-to-end budget across <strong>retrieval, model, validation and
+network</strong> up front, and hold each stage to its slice. A budget discovered after the
+build is a series of arguments about whose component is at fault.</p>
+
+<table>
+  <caption>Levers when the budget is tight</caption>
+  <thead><tr><th>Lever</th><th>What it actually buys</th></tr></thead>
+  <tbody>
+    <tr><td>A smaller model for sub-steps</td><td>Real time, on classification, routing and extraction, where the cheap model is not measurably worse</td></tr>
+    <tr><td>Prompt caching</td><td>Real time and real money on a stable prefix. Free win where the system prompt and corpus dominate the input</td></tr>
+    <tr><td>Streaming</td><td><strong>Perceived</strong> latency only. Total time to completion is unchanged, and that is the honest way to describe it. Still often the right answer for a user-facing surface</td></tr>
+    <tr><td>Validation off the critical path</td><td>Real time, <em>where safe</em>. Not available when the validation is the control preventing a harmful output from reaching a user</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">4.3</span>What an SLA may commit to</h2>
+
+<p>This is the highest-consequence table in the module. An SLA written for deterministic
+software is the classic wrong commitment, and it is wrong on a specific line rather than in
+spirit.</p>
+
+<table>
+  <caption>The line the commitment must not cross</caption>
+  <thead><tr><th>Commit to</th><th>Shape it takes</th><th>Never commit to</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Availability</strong></td><td>An uptime percentage, measured the way any service is measured. Deterministic, monitorable, defensible</td><td rowspan="3"><strong>A contractual accuracy percentage on open-ended generation.</strong> It is not measurable in a way that survives a dispute, the output space is unbounded, and you have converted every quality disagreement into a breach of contract</td></tr>
+    <tr><td><strong>Latency percentiles</strong></td><td>p50, p95 and p99, each with a number. Percentiles rather than an average, because the average hides the experience that generates the complaint</td></tr>
+    <tr><td><strong>A process for quality</strong></td><td>A named eval set, a monthly review of results against it, and a defined remediation path when the number moves. You are committing to the machinery that keeps quality honest, which is a commitment you can keep</td></tr>
+  </tbody>
+</table>
+
+<p>Note what the third row does. It is not a refusal to talk about quality. It is a
+substitution of something contractible for something that is not, and the client gets more
+from it: a review cadence and a remediation path are worth more than a percentage nobody can
+adjudicate.</p>
+
+<div class="quiz" data-answer="B">
+  <p class="scenario">A legal services firm is contracting you to build an assistant that
+  drafts first-pass summaries of incoming case correspondence for paralegals, who edit before
+  anything is filed. Procurement will not sign without a quality clause, and the general
+  counsel has said plainly that a services agreement in this firm always carries a measurable
+  performance commitment. Your pilot measured 91 percent on a 400-document set against a
+  human baseline of 88 percent, and the sponsor is happy to write 90 percent into the
+  contract to get it signed this quarter.</p>
+  <p class="stem">What do you put in the SLA?</p>
+  <ol class="options">
+    <li data-key="A" data-why="The accommodating answer, and the named wrong one. Drafting a summary is open-ended generation: the output space is unbounded and there is no adjudicable definition of a correct summary. You have turned every editorial disagreement into a contractual breach, and the 400-document set will not be the corpus anyone argues about.">90 percent accuracy on the named 400-document eval set, since the pilot already exceeded it and the set is specified in the contract</li>
+    <li data-key="B" data-why="Availability and latency percentiles are deterministic and monitorable, so they can be committed. Quality is committed as machinery rather than as a number: a named eval set, a monthly review and a remediation path. Procurement gets a measurable commitment, and none of it is a guarantee on generated text.">Availability, p50, p95 and p99 latency, plus a quality process: the named eval set, a monthly review against it, and a defined remediation path if results move</li>
+    <li data-key="C" data-why="Caps the damages but not the exposure of the wrong commitment. It is still a contractual accuracy percentage on open-ended generation, so the argument about whether a summary was correct still happens, just with a smaller invoice at the end of it.">90 percent accuracy, with liability capped at the monthly fee and a carve-out for atypical documents</li>
+    <li data-key="D" data-why="Overcorrects, and is not true. Availability, latency and a quality process are all commitable today, so refusing everything until production is both unnecessary and a good way to lose the engagement. This domain rewards making uncertainty explicit, not refusing to commit.">No quality commitment until after six months in production, when there is enough data to know what is safe to promise</li>
+  </ol>
+  <div class="verdict" hidden><b>B, and the deciding word in the stem is "drafts".</b> The
+  work is open-ended generation, which is what rules out a contractual accuracy percentage
+  however good the pilot number was and however specific the eval set is. Commit to
+  availability, to latency percentiles, and to the process that keeps quality measured. The
+  91 percent still belongs in the conversation, as a target on a named set with a fallback,
+  which is section 3's sentence and not a contract term.</div>
+</div>
+
+<h2><span class="num n">4.4</span>ROI, discounted for the ramp</h2>
+
+<p>The formula is unglamorous and you should be able to write it out:</p>
+
+<pre><code>(baseline cost - new cost - run cost) x volume, minus build cost, over a stated horizon</code></pre>
+
+<p>Three things people get wrong. <strong>Run cost is not build cost</strong>, and a business
+case that shows only build cost is understating the total. <strong>The horizon must be
+stated</strong>, because the same project is a triumph over three years and a loss over one.
+And <strong>the saving must be discounted by the adoption ramp</strong>: a 40 percent saving
+achieved at 30 percent adoption is a 12 percent saving. Quote the 40 percent alone and you
+will be held to the 40 percent.</p>
+
+<h2><span class="num n">4.5</span>The pilot-to-production gates</h2>
+
+<p>Eight gates. All eight, not most of them, and they are worth memorising as a list because
+items are written by removing one and seeing whether you notice.</p>
+
+<ol>
+  <li>Eval threshold met <strong>on held-out data</strong></li>
+  <li>Cost inside budget, measured as cost per task</li>
+  <li>Latency inside budget, at the committed percentiles</li>
+  <li>Guardrail incidents at or below the agreed threshold</li>
+  <li>A <strong>named owner</strong> for the system after go-live</li>
+  <li>Runbook complete</li>
+  <li>Rollback <strong>tested</strong>, not merely documented</li>
+  <li>Security and compliance signed off</li>
+</ol>
+
+<aside class="sidenote"><b>Note the shape of that list.</b> Two are quality, two are
+performance, and four are operational. The operational half is what distinguishes a pilot
+from a product, and it is the half an enthusiastic team skips because the demo already
+works.</aside>
+
+<h2><span class="num n">4.6</span>Build against buy</h2>
+
+<table>
+  <caption>Which side of the line the capability sits on</caption>
+  <thead><tr><th>Buy when</th><th>Build when</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>The capability is <strong>undifferentiated</strong> and a vendor's roadmap will outrun yours. You will never out-invest a company whose only product this is</td>
+      <td>The <strong>workflow is your differentiator</strong>. Buying it means buying your competitor's workflow with your logo on it</td>
+    </tr>
+    <tr>
+      <td>Time to value matters more than fit, and the vendor is close enough on fit</td>
+      <td>The <strong>data cannot leave your boundary</strong>, which is a constraint rather than a preference and settles the question on its own</td>
+    </tr>
+    <tr>
+      <td>The cost of running it yourself, including the people, exceeds the licence</td>
+      <td><strong>Integration depth is the value</strong>. If the point is that it reaches into six internal systems, the integration is the product</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>When a stem pairs a <strong>tight timeline</strong> with a <strong>proprietary
+  workflow</strong>, the answer is usually <strong>hybrid</strong>: buy the platform, build
+  the domain logic on top of it. Both pure options are wrong for a stated reason. Building
+  everything misses the date; buying everything discards the differentiator you were hired to
+  protect. The hybrid option is easy to skip in a list because it reads as a compromise, and
+  here it is the engineering answer.</p>
+</div>
+
+<p>Leave this section able to state a cost per task with all six components in it, a latency
+budget with four named slices, and an SLA that commits availability and percentiles and a
+quality process, and nothing else.</p>
+<nav class="pager">
+  <a class="prev" href="03-expectation-management.html"><span>Previous</span>03 Expectation management</a>
+  <a class="next" href="05-documentation-and-handoff.html"><span>Next</span>05 Documentation and handoff</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 4 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

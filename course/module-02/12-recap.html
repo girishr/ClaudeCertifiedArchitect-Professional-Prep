@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12. Recap and what is next - Module 2</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 2 &middot; Section 12 of 12</p>
+  <h1>Recap and what is next</h1>
+  <p class="standfirst">The takeaways for both domains, the Domain 4 heuristics and traps, a closed-book self-test, and where Module 3 picks up.</p>
+  <div class="meta"><span>Exam domains 3 and 4</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 2</a> <span>/</span> <b>Section 12 of 12</b>
+</nav>
+<p>Six takeaways, three per domain. Notice that five of the six are about restraint: pick the
+weakest coupling that works, consolidate before you scale, refuse to build retrieval you do
+not need, grade with the cheapest instrument that can see the property, and fix at the
+cheapest layer that reaches the failure.</p>
+
+<table>
+  <caption>The six takeaways</caption>
+  <thead><tr><th>#</th><th>Takeaway</th><th>The operative detail</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td>The constraint in the scenario picks the mechanism</td><td>Where the capability lives, who else consumes it, and what is not allowed to move. Those three sentences eliminate three of four options before cost or elegance enters. Data must stay on the device means stdio; many hosts plus central audit means remote; resources or prompts means a real client, not the connector</td></tr>
+    <tr><td>02</td><td>Tool descriptions and error strings are the two highest-value things you control</td><td>Before the system prompt, before the model tier. Consolidate around workflows rather than endpoints, bound the response, resolve UUIDs to names, and put the actionable sentence in the <code>isError: true</code> result. Past 30 to 50 tools, defer loading and add search</td></tr>
+    <tr><td>03</td><td>Every token belongs to one server and every tool result is untrusted</td><td>Audience validation, not signature validation. Never forward a token you were given. Per-client consent before forwarding when a proxy holds a static client ID. A result flowing from one server into another is still attacker-controlled text</td></tr>
+    <tr><td>04</td><td>An eval number only means something if the distribution and the sample size hold</td><td>Mirror production then add edge cases, keep a holdout you never tune against, and prefer many auto-graded cases to few hand-graded ones. Two points on fifty cases is not a result</td></tr>
+    <tr><td>05</td><td>Pick the metric that moves when the thing you care about breaks</td><td>TTFT for anything a human watches, cost per task for agents, end-state as the primary agent signal with trajectory as the diagnostic. Criteria are SMAR and usually multidimensional</td></tr>
+    <tr><td>06</td><td>Name the failure before naming the fix, then take the cheapest lever that reaches it</td><td>Transcript, context presence, tool errors, hallucination, prompt, capability. Then prompt, tools, few-shot, caching, context reduction, routing, batch, and fine-tuning-like last. Pin the model version so the failure has somewhere to be traced to</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">12.1</span>Domain 4 decision heuristics</h2>
+
+<p>Section 7 carried the Domain 3 table. This is its counterpart, and between the two they
+are most of what the module is for.</p>
+
+<table>
+  <caption>When X, do Y</caption>
+  <thead><tr><th>When</th><th>Do</th></tr></thead>
+  <tbody>
+    <tr><td>Outputs are deterministic or schema-shaped</td><td>Code-based grading. Do not reach for a judge</td></tr>
+    <tr><td>You are using an LLM judge</td><td>Validate against human labels first, and force a discrete scale</td></tr>
+    <tr><td>Eval and production distributions differ</td><td>Fix the eval before trusting any number from it</td></tr>
+    <tr><td>You need one metric for an agent</td><td>Task completion rate, guarded by cost per task and unsafe-action rate</td></tr>
+    <tr><td>Users watch the stream</td><td>TTFT is the latency metric. Otherwise total latency</td></tr>
+    <tr><td>You are changing model version</td><td>Run the golden set behind a shadow or canary first, and keep the version pinned</td></tr>
+    <tr><td>Quality regressed with no repo change</td><td>Check for a floating model alias or a changed retrieval index</td></tr>
+    <tr><td>Recall@k is healthy but answers are wrong</td><td>The fault is downstream: prompt, grounding instructions, or model tier</td></tr>
+    <tr><td>Cost is the problem</td><td>Cache, shorten context, route smaller, batch. Fine-tuning is not the first answer</td></tr>
+    <tr><td>Tasks complete but take too many calls</td><td>Consolidate tools and fix pagination defaults</td></tr>
+    <tr><td>It fails on every phrasing with perfect context</td><td>It is capability, and prompt work will not save it</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">12.2</span>Common distractors, Domain 4</h2>
+
+<table>
+  <caption>Twelve wrong answers, each a real technique in the wrong place</caption>
+  <thead><tr><th>The option</th><th>Why it is wrong</th></tr></thead>
+  <tbody>
+    <tr><td>"Fine-tune the model"</td><td>Almost never the first move</td></tr>
+    <tr><td>"Add more few-shot examples", offered against a retrieval miss or a tool error</td><td>Wrong layer</td></tr>
+    <tr><td>"Use an LLM judge for a classification eval"</td><td>Slower, noisier and less reliable than exact match</td></tr>
+    <tr><td>"Have the model grade its own output"</td><td>With no rubric and no human calibration, that is not a measurement</td></tr>
+    <tr><td>"Hand-grade 1,000 items"</td><td>Right instinct, wrong economics. Automate grading, spend humans on calibration</td></tr>
+    <tr><td>"Ship to 100% and monitor"</td><td>Canary and shadow exist to avoid exactly this</td></tr>
+    <tr><td>"A/B test it"</td><td>Wrong when traffic cannot reach significance, or when a shadow run would answer it with no user risk</td></tr>
+    <tr><td>"Grade against the golden trajectory"</td><td>Over-strict whenever multiple valid paths exist</td></tr>
+    <tr><td>"Measure tokens per second" as the user-facing latency metric for chat</td><td>TTFT is what the user feels</td></tr>
+    <tr><td>"Enable prompt caching" to fix accuracy</td><td>Caching changes cost and TTFT, not quality</td></tr>
+    <tr><td>"Use batch processing" for anything interactive</td><td>No streaming, and up to 24 hours</td></tr>
+    <tr><td>"Raise temperature" when the complaint is inconsistency</td><td>That makes it worse</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num n">12.3</span>Closed-book self-test</h2>
+
+<p>No scrolling. Twelve items, drawn from both domains. Anything you cannot produce cleanly
+is the section to reread, not the whole module.</p>
+
+<ol>
+  <li>How many MCP clients does a host create, what are the two transports, and which party controls tools, resources and prompts respectively?</li>
+  <li>Name four things deprecated in the <code>2026-07-28</code> spec, and the one client-facing feature that survived. What replaced protocol-level session state?</li>
+  <li>What are the two error channels in tool calling, which one can the model act on, and what belongs in it?</li>
+  <li>Give the three bloat numbers: where selection accuracy starts to degrade, the context reduction tool search reports, and the threshold at which progressive discovery is worth building.</li>
+  <li>What must a server validate about an incoming token, and what are the four conditions that together create the confused deputy?</li>
+  <li>Recite the contextual retrieval reductions for the three configurations against baseline, and the corpus size below which you should not build RAG at all.</li>
+  <li>Which telemetry is on by default and which is opt-in, and what is the answer to "we need traces without exporting customer PII"?</li>
+  <li>Rank the four grading methods on reliability and nuance, and give the four-part LLM-judge recipe plus three named judge biases.</li>
+  <li>What is the primary metric for an agent, what two metrics guard it, and why is cost per task rather than cost per request the right unit?</li>
+  <li>Contrast shadow and canary in one sentence each, and give the Batch API's discount, typical completion, ceiling and size limits.</li>
+  <li>Walk the six steps of the diagnosis order, then name the discriminator for a prompt problem, a retrieval problem, a context problem and a capability problem.</li>
+  <li>List the optimisation levers in order, cheapest first, and give the prompt-cache prefix order plus the three cache multipliers.</li>
+</ol>
+
+<h2><span class="num n">12.4</span>What this buys on the exam</h2>
+
+<p>Module 2 maps to Domain 3, Integration (19 percent), and Domain 4, Evaluation, Testing
+&amp; Optimization (16 percent). That is 35 percent of the paper, the heaviest of the five
+modules, and roughly 22 questions on a 63-question exam. Five or six of them will be
+multiple-response, clustered in Domain 4.</p>
+
+<p>The two domains reward different revision. Domain 3 rewards recall of exact rules: the
+MUST and MUST NOT language in section 5, the deprecations in section 3, the thresholds in
+section 4. Domain 4 rewards the two ordered lists in section 11 and nothing else nearly as
+much. If you have one evening left before the paper, spend it on section 5 and section 11.</p>
+
+<div class="flag">
+  <span class="label">Next</span>
+  <p><a href="../module-03/index.html"><strong>Module 3, Responsible AI, Safety &amp; Risk</strong></a> is Domain 5 at 14 percent of the paper. It
+  takes the production system this module just built and asks what it is allowed to do:
+  harm categories and mitigations, guardrail placement, human oversight, and the risk
+  assessment an enterprise buyer will ask for before any of this ships. It is a smaller
+  module than this one, and it inherits the tool-safety and injection material from section
+  5 directly.</p>
+</div>
+<nav class="pager">
+  <a class="prev" href="11-diagnosis-and-optimisation.html"><span>Previous</span>11 Diagnosis and optimisation</a>
+  
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 2 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

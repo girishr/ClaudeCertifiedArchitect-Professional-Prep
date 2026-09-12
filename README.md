@@ -8,9 +8,11 @@ Study material for the Anthropic **Claude Certified Architect - Professional** (
 
 ### [Module 1: Claude Platform & Solution Design](course/module-01/index.html)
 
-Anthropic's prep path is **five modules and 733 minutes**. All five are listed on [the course page](course/index.html), in the official order, with what exists here for each.
+Anthropic's prep path is **five modules and 733 minutes**. All five now have pages here, listed on [the course page](course/index.html) in the official order.
 
 Module 1 is the foundation and the longest: **34 screens, 12 sections, 11 checkpoints, 238 minutes.** It is distilled here section by section, in the same order, so you can read it rather than sit through it. Every page has a previous and a next, so [start at section 1](course/module-01/01-introduction.html) and keep going.
+
+**Modules 2 to 5 come from a different source, and it matters.** Module 1 was distilled from Anthropic's official module. Modules [2](course/module-02/index.html), [3](course/module-03/index.html), [4](course/module-04/index.html) and [5](course/module-05/index.html) were not: their official content sits behind the Partner Academy enrolment, so they are built from this repo's own domain notes, arranged to follow the official module order. Every one of those pages says so. The official modules are free and authoritative; read them for the version that counts.
 
 It covers exam **Domains 1 and 2, 30% of the paper**: the four model properties you design around, the three platform layers and seven primitives, decomposition and the delegation tests, pattern selection with its five-factor sequence, multi-agent orchestration, the five reference architectures, RAG chunking and indexing, model selection and the four context strategies, prompting as architecture, and entry points, delivery routes and regulated-industry constraints. A drill on every decision that carries weight.
 
@@ -38,7 +40,7 @@ The spine of the study plan is Anthropic's own free [prep course](https://anthro
 | [`notes/03-governance-stakeholder.md`](notes/03-governance-stakeholder.md) | Domains 5 and 6: governance and safety and risk, stakeholder communication and lifecycle |
 | [`labs.md`](labs.md) | Eight time-boxed builds, 60 to 150 minutes each |
 | [`questions.json`](questions.json) | The question bank, with explanations and per-distractor notes |
-| [`course/`](course/) | **The course.** All five official modules listed in [`course/index.html`](course/index.html); Module 1 distilled across twelve sections in [`course/module-01/`](course/module-01/); two reference sheets |
+| [`course/`](course/) | **The course.** All five modules, listed in [`course/index.html`](course/index.html). Module 1 distilled from the official module across twelve sections; modules 2 to 5 built from this repo's domain notes, 35 sections between them; two reference sheets |
 | [`tools/`](tools/) | `build_hub.py` and its template generate `index.html`. The course pages are plain HTML, edited directly |
 
 Each notes file follows the same shape per domain: a framing paragraph on what the exam is really testing, comparative tables, decision heuristics, a common-distractors list, and a set of one-line recalls for the final week.

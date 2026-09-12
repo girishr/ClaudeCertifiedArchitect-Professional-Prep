@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04. Extension mechanisms - Module 5</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/badge-180.png">
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/nav.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">Module 5 &middot; Section 04 of 7</p>
+  <h1>Extension mechanisms</h1>
+  <p class="standfirst">Six ways to extend a session, and the only column that decides between them is whether the behaviour is guaranteed.</p>
+  <div class="meta"><span>Exam domain 7</span><span>From this kit's domain notes</span></div>
+</header>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 5</a> <span>/</span> <b>Section 04 of 7</b>
+</nav>
+<p>Given a requirement, pick the mechanism. That is the whole exercise, and the tempting
+answers are all real mechanisms used slightly early or slightly late: a Skill for something
+that had to happen every time, a hook for something that was only a convention, a fresh
+subagent for work that needed the conversation it came from.</p>
+
+<table>
+  <caption>The six mechanisms, with the guarantee each one carries</caption>
+  <thead><tr><th>Mechanism</th><th>Scope</th><th>Use for</th><th>Enforces?</th></tr></thead>
+  <tbody>
+    <tr><td><strong>CLAUDE.md and rules</strong></td><td>Always in context, though rules can be path-scoped</td><td>Standing conventions, architecture, build commands</td><td>No</td></tr>
+    <tr><td><strong>Skill</strong><br><code>SKILL.md</code></td><td>Loads on trigger</td><td>Repeatable multi-step workflows, packaged expertise</td><td>No</td></tr>
+    <tr><td><strong>Subagent</strong><br><code>.claude/agents/*.md</code></td><td>Isolated fresh context</td><td>Verbose or self-contained work that should return a summary; restricting tools by role</td><td>The tool allowlist, yes</td></tr>
+    <tr><td><strong>Hook</strong></td><td>Fires at lifecycle events</td><td>Anything that must happen every time, regardless of what the model chose</td><td>Yes</td></tr>
+    <tr><td><strong>MCP server</strong></td><td>Tool surface</td><td>External systems, live data, APIs</td><td>No</td></tr>
+    <tr><td><strong>Plugin</strong></td><td>A bundle of all of the above</td><td>Distribution across a team or an org, with versioning</td><td>Through its bundled settings and hooks</td></tr>
+  </tbody>
+</table>
+
+<p>Read the <em>Enforces</em> column first and the <em>Use for</em> column second. A
+requirement phrased as an obligation has exactly two homes in this table, and the other four
+rows are distractors no matter how well they fit the description of the work.</p>
+
+<h2><span class="num n">4.1</span>Subagents, and the one thing they do not inherit</h2>
+
+<p>A subagent starts fresh. It receives CLAUDE.md and a git status snapshot. It does
+<strong>not</strong> receive the conversation history, the output style, or the main thread's
+auto memory. So a subagent cannot act on something you established three turns ago unless
+you restate it in the delegation.</p>
+
+<p>The exception is a <strong>fork</strong>, via <code>/subtask</code>, which inherits the
+full conversation and shares the parent's prompt cache. When you need the current context in
+a side task, that is the mechanism. When you want the context kept out, use a subagent.</p>
+
+<p>Subagent definitions resolve in their own precedence order: <strong>managed settings, the
+<code>--agents</code> flag, <code>.claude/agents/</code>, <code>~/.claude/agents/</code>,
+then plugin <code>agents/</code></strong>. Project and user agents override a same-named
+plugin agent, which is how a team adjusts a distributed definition without forking the
+plugin.</p>
+
+<aside class="sidenote"><b>Frontmatter worth recognising in a stem.</b>
+<code>name</code>, <code>description</code> (this is what drives auto-delegation, and
+"use proactively" in it makes delegation more likely), <code>tools</code> and
+<code>disallowedTools</code>, <code>model</code> including <code>inherit</code>,
+<code>permissionMode</code>, <code>maxTurns</code>, <code>memory</code>, <code>skills</code>,
+<code>isolation: worktree</code>, and <code>effort</code>.</aside>
+
+<h2><span class="num n">4.2</span>Hooks: where they fire and which ones can stop you</h2>
+
+<table>
+  <caption>The events, grouped by whether they can block</caption>
+  <thead><tr><th>Event</th><th>Can block</th><th>Reach for it when</th></tr></thead>
+  <tbody>
+    <tr><td><code>PreToolUse</code></td><td>Yes</td><td>A specific tool call must be prevented before it runs. The only correct place for a veto</td></tr>
+    <tr><td><code>UserPromptSubmit</code></td><td>Yes</td><td>A prompt must be checked, enriched or refused before the model sees it</td></tr>
+    <tr><td><code>Stop</code>, <code>SubagentStop</code></td><td>Yes</td><td>The session or subagent should not be allowed to finish yet, for example with a check unmet</td></tr>
+    <tr><td><code>PreCompact</code></td><td>Yes</td><td>Something must be preserved or recorded before context is compacted away</td></tr>
+    <tr><td><code>PostToolUse</code></td><td>No</td><td>Reacting after the call has already happened: format the file just written, log it, run a test</td></tr>
+    <tr><td><code>SessionStart</code>, <code>SessionEnd</code></td><td>No</td><td>Setting up or tearing down around a session, and emitting a record of it</td></tr>
+    <tr><td><code>SubagentStart</code>, <code>PostCompact</code></td><td>No</td><td>Re-establishing state after a boundary the session just crossed</td></tr>
+    <tr><td><code>PermissionRequest</code></td><td>It decides</td><td>Answering a permission prompt programmatically, with <code>permissionDecision</code></td></tr>
+    <tr><td><code>InstructionsLoaded</code></td><td>No</td><td>Logging which instruction files actually loaded. The debugging and audit hook</td></tr>
+    <tr><td><code>ConfigChange</code></td><td>No</td><td>Reacting when configuration changes during a session</td></tr>
+  </tbody>
+</table>
+
+<p>Exit codes carry the semantics. <strong>Exit 0 succeeds. Exit 2 blocks, and it beats a
+JSON <code>permissionDecision: "allow"</code>.</strong> Other codes are non-blocking unless
+the JSON says otherwise. JSON control lives under <code>hookSpecificOutput</code>, where
+<code>permissionDecision</code> takes <code>allow</code>, <code>deny</code> or
+<code>ask</code>.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>A <code>PostToolUse</code> hook cannot prevent anything. If a stem describes stopping a
+  dangerous command and an option offers <code>PostToolUse</code>, the option is wrong by
+  timing alone, however good the logic inside the hook is. The same goes for a subagent
+  expected to know what the main thread just discussed: it does not, unless it is a fork.</p>
+</div>
+
+<h2><span class="num n">4.3</span>MCP scopes</h2>
+
+<table>
+  <caption>Three scopes, and who ends up with the server</caption>
+  <thead><tr><th>Scope</th><th>Stored in</th><th>Who gets it</th></tr></thead>
+  <tbody>
+    <tr><td><code>local</code>, the default</td><td><code>~/.claude.json</code></td><td>You, in this project only</td></tr>
+    <tr><td><code>project</code></td><td><code>.mcp.json</code>, committed</td><td>The whole team, through the repo</td></tr>
+    <tr><td><code>user</code></td><td>Your user config</td><td>You, across all your projects</td></tr>
+  </tbody>
+</table>
+
+<p>Precedence runs <strong>local, project, user, plugin, then claude.ai
+connectors</strong>.</p>
+
+<div class="flag">
+  <span class="label">Watch out</span>
+  <p>Project servers prompt for approval interactively, so an engineer opening an unfamiliar
+  repo gets asked. <code>claude -p</code>, the Agent SDK and cloud sessions do not ask: there
+  is no trust dialog in those paths, and the repo's <code>.mcp.json</code> servers are
+  connected. If a particular server must not load in those contexts, keep it out explicitly
+  with <code>disabledMcpjsonServers</code> or <code>--setting-sources</code>, and see section
+  5 for the blunter instrument.</p>
+</div>
+
+<p>Work from the obligation backwards. Must happen every time: a hook, or a permission rule.
+Should be followed: CLAUDE.md, or a path-scoped rule. Occasionally invoked and multi-step: a
+Skill. Verbose work where you only want the conclusion: a subagent. Needs what was just
+said: a fork.</p>
+
+<nav class="pager">
+  <a class="prev" href="03-settings-and-permissions.html"><span>Previous</span>03 Settings and permissions precedence</a>
+  <a class="next" href="05-headless-and-ci.html"><span>Next</span>05 Headless runs and CI</a>
+</nav>
+<p class="pager-up"><a href="index.html">Back to the Module 5 contents</a> &middot; <a href="../reference/glossary.html">Glossary</a></p>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
