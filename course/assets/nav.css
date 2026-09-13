@@ -124,19 +124,35 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
 .nav-foldall:hover { color: var(--nv-accent); }
 
 .nav-group-fold > summary {
-  display: flex; align-items: center; gap: .4rem;
-  margin: 0 -.5rem .35rem; padding: .18rem .5rem;
+  display: flex; align-items: center; gap: .15rem;
+  margin: 0 -.5rem .35rem; padding: 0 .5rem;
   cursor: pointer; list-style: none; user-select: none;
 }
 .nav-group-fold > summary::-webkit-details-marker { display: none; }
-.nav-group-fold > summary:hover { background: var(--nv-hover); }
-.nav-group-fold > summary:hover .nav-group-t { color: var(--nv-ink); }
 .nav-group-fold > summary:focus-visible { outline: 1px solid var(--nv-accent); outline-offset: 1px; }
+
+/* The heading is the module's own page. It is a link, so it takes the hover and
+   the padding rather than the summary: hovering the row should not suggest that
+   the whole row navigates, because only this part of it does. */
 .nav-group-t {
   font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
   color: var(--nv-faint); font-weight: 600;
+  padding: .18rem .25rem; border-radius: 0;
+  text-decoration: none; flex: 1 1 auto; min-width: 0;
 }
-.nav-caret { display: flex; flex: none; color: var(--nv-faint); transition: transform .15s ease; }
+a.nav-group-t:hover { color: var(--nv-ink); background: var(--nv-hover); }
+a.nav-group-t:focus-visible { outline: 1px solid var(--nv-accent); outline-offset: 1px; }
+.nav-group-fold > summary a.nav-group-t[aria-current="page"] { color: var(--nv-accent); }
+
+/* The caret is the fold control, so it gets a hit area of its own rather than
+   being a 9px glyph inside a row that does something else. */
+.nav-caret {
+  display: flex; align-items: center; justify-content: center; flex: none;
+  width: 1.15rem; height: 1.15rem; color: var(--nv-faint);
+  transition: transform .15s ease; cursor: pointer;
+}
+.nav-caret:hover { color: var(--nv-ink); }
+.nav-caret:focus-visible { outline: 1px solid var(--nv-accent); outline-offset: 1px; }
 .nav-group-fold[open] > summary .nav-caret { transform: rotate(90deg); }
 /* A closed group still says where you are. */
 .nav-group-fold:not([open]) > summary:has(+ ul li.here) .nav-caret,

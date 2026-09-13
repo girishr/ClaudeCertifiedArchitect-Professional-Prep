@@ -54,8 +54,7 @@
     { h: "Course", items: [
       { t: "All five modules", u: "index.html" }
     ]},
-    { h: "Module 1 · Claude Platform & Solution Design", k: "m1", items: [
-      { t: "Contents", u: "module-01/index.html" },
+    { h: "Module 1 · Claude Platform & Solution Design", k: "m1", u: "module-01/index.html", items: [
       { n: "01", t: "Module introduction",          u: "module-01/01-introduction.html" },
       { n: "02", t: "How Claude behaves",           u: "module-01/02-how-claude-behaves.html" },
       { n: "03", t: "Platform map and primitives",  u: "module-01/03-platform-map.html" },
@@ -69,8 +68,7 @@
       { n: "11", t: "Assembly",                     u: "module-01/11-assembly.html" },
       { n: "12", t: "Recap and what is next",       u: "module-01/12-recap.html" }
     ]},
-    { h: "Module 2 · Enterprise Integration & Production", k: "m2", items: [
-      { t: "Contents", u: "module-02/index.html" },
+    { h: "Module 2 · Enterprise Integration & Production", k: "m2", u: "module-02/index.html", items: [
       { n: "01", t: "What changes in production",        u: "module-02/01-introduction.html" },
       { n: "02", t: "Choosing the mechanism",            u: "module-02/02-integration-mechanism.html" },
       { n: "03", t: "MCP in depth",                      u: "module-02/03-mcp-in-depth.html" },
@@ -84,8 +82,7 @@
       { n: "11", t: "Diagnosis and optimisation",        u: "module-02/11-diagnosis-and-optimisation.html" },
       { n: "12", t: "Recap and what is next",            u: "module-02/12-recap.html" }
     ]},
-    { h: "Module 3 · Responsible AI, Safety & Risk", k: "m3", items: [
-      { t: "Contents", u: "module-03/index.html" },
+    { h: "Module 3 · Responsible AI, Safety & Risk", k: "m3", u: "module-03/index.html", items: [
       { n: "01", t: "Designing the safety stack",        u: "module-03/01-introduction.html" },
       { n: "02", t: "The layered guardrail stack",       u: "module-03/02-guardrail-stack.html" },
       { n: "03", t: "Human in the loop",                 u: "module-03/03-human-in-the-loop.html" },
@@ -95,8 +92,7 @@
       { n: "07", t: "Risk framing",                      u: "module-03/07-risk-framing.html" },
       { n: "08", t: "Recap and what is next",            u: "module-03/08-recap.html" }
     ]},
-    { h: "Module 4 · Stakeholder, Lifecycle & GTM", k: "m4", items: [
-      { t: "Contents", u: "module-04/index.html" },
+    { h: "Module 4 · Stakeholder, Lifecycle & GTM", k: "m4", u: "module-04/index.html", items: [
       { n: "01", t: "The half that decides",             u: "module-04/01-introduction.html" },
       { n: "02", t: "Discovery",                         u: "module-04/02-discovery.html" },
       { n: "03", t: "Expectation management",            u: "module-04/03-expectation-management.html" },
@@ -106,8 +102,7 @@
       { n: "07", t: "Audiences and failure",             u: "module-04/07-audiences-and-failure.html" },
       { n: "08", t: "Recap and what is next",            u: "module-04/08-recap.html" }
     ]},
-    { h: "Module 5 · Team Enablement & Productivity", k: "m5", items: [
-      { t: "Contents", u: "module-05/index.html" },
+    { h: "Module 5 · Team Enablement & Productivity", k: "m5", u: "module-05/index.html", items: [
       { n: "01", t: "Running it without you",            u: "module-05/01-introduction.html" },
       { n: "02", t: "The CLAUDE.md hierarchy",           u: "module-05/02-claude-md.html" },
       { n: "03", t: "Settings and permissions",          u: "module-05/03-settings-and-permissions.html" },
@@ -155,6 +150,16 @@
     return best || fallback;
   }
 
+  /* Whether the page open right now is a module's own index page. The module
+     heading links there, and that link is the only thing marking it, now that
+     the groups no longer carry a "Contents" child. */
+  function hereIsIndex(u) {
+    if (!u) return false;
+    var here, there;
+    try { here = new URL(location.href); there = new URL(COURSE + u); } catch (e) { return false; }
+    return here.pathname === there.pathname;
+  }
+
   var CARET = '<svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2l4 4-4 4"/></svg>';
 
   /* The set of collapsed groups, stored as a comma-separated list of keys. */
@@ -195,14 +200,39 @@
          decided; the current module always wins so you never land inside a
          group you cannot see. */
       var holdsHere = g.items.indexOf(hereItem) !== -1;
+
+      /* The heading is the module's own page, so the caret is what folds the
+         group: two targets, one job each. Without stopping the click here the
+         <summary> would swallow it and toggle instead of following the link. */
+      var title = g.u
+        ? el("a", { "class": "nav-group-t", href: COURSE + g.u, text: g.h })
+        : el("span", { "class": "nav-group-t", text: g.h });
+      if (g.u) {
+        /* preventDefault, not stopPropagation: the <summary> toggles on the
+           default action, so cancelling that is enough to stop the fold, and
+           the click still reaches the menu's own handler, which closes the
+           overlay on a narrow screen. The navigation is done by hand since
+           preventDefault would otherwise cancel that too. */
+        title.addEventListener("click", function (e) {
+          if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          location.href = title.href;
+        });
+        if (hereIsIndex(g.u)) title.setAttribute("aria-current", "page");
+      }
+
+      var caret = el("span", { "class": "nav-caret", html: CARET, role: "button", tabindex: "0",
+                               "aria-label": "Expand or collapse " + g.h });
       var d = el("details", { "class": "nav-group nav-group-fold" }, [
-        el("summary", null, [
-          el("span", { "class": "nav-caret", "aria-hidden": "true", html: CARET }),
-          el("span", { "class": "nav-group-t", text: g.h })
-        ]),
+        el("summary", null, [caret, title]),
         ul
       ]);
-      if (holdsHere || !shut(g.k)) d.open = true;
+      /* The caret is focusable in its own right, so it answers the keyboard the
+         way the summary used to. */
+      caret.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); d.open = !d.open; }
+      });
+      if (holdsHere || hereIsIndex(g.u) || !shut(g.k)) d.open = true;
       d.addEventListener("toggle", function () { setShut(g.k, !d.open); });
       folds[g.k] = d;
       return d;
@@ -337,7 +367,9 @@
     window.addEventListener("hashchange", function () {
       var now = hereHref(all);
       aside.querySelectorAll("li.here").forEach(function (li) { li.className = ""; li.querySelector("a").removeAttribute("aria-current"); });
-      aside.querySelectorAll(".nav-group a").forEach(function (a) {
+      /* Only the section links in the list: the heading link is a sibling of
+         the <ul>, and marking its parent <summary> "here" would be wrong. */
+      aside.querySelectorAll(".nav-group ul a").forEach(function (a) {
         if (now && a.getAttribute("href") === (now.x || (COURSE + now.u))) {
           a.parentNode.className = "here"; a.setAttribute("aria-current", "page");
           var fold = a.closest("details.nav-group-fold");
