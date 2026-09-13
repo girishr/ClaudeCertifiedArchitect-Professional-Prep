@@ -453,6 +453,9 @@ body > table { width: 100%; }
   :root { --page: 100%; --measure: 100%; }
 }
 
+/* A module landing page is a contents table, not prose. It gets a wider column. */
+body.wide { max-width: none; margin-left: 0; }
+
 /* ---------- learning path (course/index.html) ----------
    Laid out like Anthropic's own path page: a statement of the whole, a progress
    line, then one card per module. Our palette, their structure. */
@@ -686,6 +689,8 @@ details.fold table { margin-top: .4rem; }
     margin-left: calc(var(--nav-w) + max(0px, (100vw - var(--nav-w) - var(--page)) / 2));
     margin-right: 0;
   }
+  /* A wide page sits against the menu rather than being centred beside it. */
+  html.nav-open body.wide { margin-left: var(--nav-w); }
 }
 @media print { html.nav-open body { margin-left: 0; } }
 

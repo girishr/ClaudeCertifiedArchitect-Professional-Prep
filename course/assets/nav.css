@@ -140,7 +140,11 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
   font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
   color: var(--nv-faint); font-weight: 600;
   padding: .18rem .25rem; border-radius: 0;
+  /* Pulled back by its own padding so the text starts on the same line as a
+     plain group's h3. A module is a peer of Course, not a child of it. */
+  margin-left: -.25rem;
   text-decoration: none; flex: 1 1 auto; min-width: 0;
+  order: 1;
 }
 a.nav-group-t:hover { color: var(--nv-ink); background: var(--nv-hover); }
 a.nav-group-t:focus-visible { outline: 1px solid var(--nv-accent); outline-offset: 1px; }
@@ -152,6 +156,7 @@ a.nav-group-t:focus-visible { outline: 1px solid var(--nv-accent); outline-offse
   display: flex; align-items: center; justify-content: center; flex: none;
   width: 1.15rem; height: 1.15rem; color: var(--nv-faint);
   transition: transform .15s ease; cursor: pointer;
+  order: 2;
 }
 .nav-caret:hover { color: var(--nv-ink); }
 .nav-caret:focus-visible { outline: 1px solid var(--nv-accent); outline-offset: 1px; }
