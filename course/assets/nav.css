@@ -101,13 +101,15 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
 }
 .nav-group ul { list-style: none; margin: 0; padding: 0; }
 .nav-group li { margin: 0; }
-.nav-group a {
+/* Scoped to the list: the module heading is an anchor too, and it is a heading,
+   not one of the section links. */
+.nav-group ul a {
   display: flex; gap: .55rem; align-items: baseline;
   color: var(--nv-soft); text-decoration: none;
   padding: .28rem .5rem; margin: 0 -.5rem; border-radius: 0;
   font-weight: 400;
 }
-.nav-group a:hover { background: var(--nv-hover); color: var(--nv-ink); }
+.nav-group ul a:hover { background: var(--nv-hover); color: var(--nv-ink); }
 .nav-group a .n { color: var(--nv-faint); font-variant-numeric: tabular-nums; flex: none; font-size: .78em; }
 .nav-group a .ext { margin-left: auto; color: var(--nv-faint); font-size: .8em; }
 .nav-group li.here a { background: var(--nv-accent-dim); color: var(--nv-ink); font-weight: 600; }
@@ -216,6 +218,20 @@ html.font-dyslexic strong, html.font-dyslexic b, html.font-dyslexic th { font-we
   font-size: .7rem;
   letter-spacing: .16em;
 }
+/* The group titles are the menu's headings, so they carry more weight than the
+   section links beneath them: a step up in size, bolder, and in full ink
+   rather than the faint grey the links sit in. */
+.nav-group h3, .nav-group .nav-group-t {
+  font-size: .86rem;
+  letter-spacing: .13em;
+  font-weight: 700;
+  color: var(--nv-ink);
+}
+/* Re-asserted after the block above, which sets a colour on the same elements:
+   the accent still has to win on the module you are actually in. */
+.nav-group-fold > summary a.nav-group-t[aria-current="page"],
+.nav-group-fold > summary:has(+ ul li.here) .nav-group-t { color: var(--nv-accent); }
+
 .nav-group a .n { font-family: var(--ui); }
 .nav-group li.here a {
   background: none;

@@ -64,6 +64,10 @@
   /* One face sets the whole sheet. The four names are kept because they mark
      what each role is for -- running text, headings, labels, figures -- and
      are referenced throughout lesson.css and nav.css. */
+  /* The widest a sheet of text is allowed to get, on any page of the kit.
+     Past this a line is too long to track back to the start of the next. */
+  --page-max: 100rem;
+
   --sans: "Hanken Grotesk VF", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ui:   var(--sans);
   --read: var(--sans);

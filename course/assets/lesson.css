@@ -10,7 +10,7 @@
      text fills the sheet, so resizing the window or shrinking the type widens
      the column instead of banking the difference as gutter. --page-max is the
      one stop: past it a line gets too long to track back to the next one. */
-  --page-max: 100rem;
+  /* --page-max is set in print.css, which every page of the kit loads. */
   --page:    min(100%, var(--page-max));
   --measure: 100%;
   --prose:   100%;

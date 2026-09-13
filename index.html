@@ -33,7 +33,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.wrap { max-width: 68rem; margin: 0 auto; padding: 24px 20px 96px; }
+/* Fluid, like the course sheet: the workbench fills the window it is given
+   rather than banking the difference as gutter on both sides. --page-max is
+   the one stop, past which a line gets too long to track back to the next. */
+.wrap { max-width: min(100%, var(--page-max, 100rem)); margin: 0; padding: 24px 20px 96px; }
 html:not(.nav-open) .wrap { padding-top: 64px; }
 @media (min-width: 64.01rem) { html.nav-open body { padding-left: var(--nav-w, 17rem); } }
 @media print { html.nav-open body { padding-left: 0; } }
