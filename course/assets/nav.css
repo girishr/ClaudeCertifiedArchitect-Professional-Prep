@@ -14,14 +14,16 @@
   --nv-hover:      var(--code-bg,    var(--ghost,          rgba(0,0,0,.05)));
   --nv-paper:      var(--paper,      var(--plane,          #ffffff));
 }
-:root { --nav-w: 17rem; }
+/* px, not rem: nav.js stores a dragged width in px and the panel must keep the
+   width the reader chose when the type size changes with the dyslexic face. */
+:root { --nav-w: 289px; }
 
 .nav-toggle {
   position: fixed;
   top: .85rem;
   left: .85rem;
   z-index: 41;
-  font-family: var(--ui, system-ui, sans-serif);
+  font-family: var(--ui, system-ui, -apple-system, "Segoe UI", sans-serif);
   font-size: .78rem;
   font-weight: 600;
   color: var(--nv-ink);
@@ -50,7 +52,7 @@ html.nav-open .nav-toggle { display: none; }
   background: var(--nv-bg);
   border-right: 1px solid var(--nv-rule);
   padding: .9rem 1rem 2rem;
-  font-family: var(--ui, system-ui, sans-serif);
+  font-family: var(--ui, system-ui, -apple-system, "Segoe UI", sans-serif);
   font-size: .84rem;
   line-height: 1.4;
   color: var(--nv-ink);
@@ -111,6 +113,37 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
 .nav-group li.here a { background: var(--nv-accent-dim); color: var(--nv-ink); font-weight: 600; }
 .nav-group li.here a .n { color: var(--nv-accent); }
 
+/* The module groups fold. Their summary carries the same label type as a
+   plain group's h3, plus a caret that turns when the group is open. */
+.nav-foldbar { display: flex; justify-content: flex-end; margin: .2rem 0 -.4rem; }
+.nav-foldall {
+  font: inherit; font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--nv-faint); background: none; border: 0; border-radius: 0;
+  padding: .2rem 0; cursor: pointer; font-weight: 600;
+}
+.nav-foldall:hover { color: var(--nv-accent); }
+
+.nav-group-fold > summary {
+  display: flex; align-items: center; gap: .4rem;
+  margin: 0 -.5rem .35rem; padding: .18rem .5rem;
+  cursor: pointer; list-style: none; user-select: none;
+}
+.nav-group-fold > summary::-webkit-details-marker { display: none; }
+.nav-group-fold > summary:hover { background: var(--nv-hover); }
+.nav-group-fold > summary:hover .nav-group-t { color: var(--nv-ink); }
+.nav-group-fold > summary:focus-visible { outline: 1px solid var(--nv-accent); outline-offset: 1px; }
+.nav-group-t {
+  font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--nv-faint); font-weight: 600;
+}
+.nav-caret { display: flex; flex: none; color: var(--nv-faint); transition: transform .15s ease; }
+.nav-group-fold[open] > summary .nav-caret { transform: rotate(90deg); }
+/* A closed group still says where you are. */
+.nav-group-fold:not([open]) > summary:has(+ ul li.here) .nav-caret,
+.nav-group-fold:not([open]) > summary:has(+ ul li.here) .nav-group-t { color: var(--nv-accent); }
+
+@media (prefers-reduced-motion: reduce) { .nav-caret { transition: none; } }
+
 .sidenav-settings { margin-top: 1.4rem; padding-top: .9rem; border-top: 1px solid var(--nv-rule); }
 .seg { display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; margin-bottom: .55rem; }
 .seg-l { font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--nv-faint); width: 3.4rem; font-weight: 600; }
@@ -146,6 +179,11 @@ html.nav-resizing, html.nav-resizing * { cursor: col-resize !important; user-sel
   src: url("fonts/opendyslexic-latin-700-normal.woff2") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
 }
+/* OpenDyslexic sets bigger than Hanken Grotesk at the same nominal size, so it
+   is stepped down to sit alongside it. Unlike the serif this replaced, Hanken
+   Grotesk's x-height and cap-height are in ordinary proportion, so one size
+   matches both: at 15.5px OpenDyslexic's x-height is 8.36px against 8.38px and
+   its capitals 11.76px against 11.85px, at the 17px default. */
 html.font-dyslexic { font-size: 15.5px; }
 html.font-dyslexic body,
 html.font-dyslexic body *:not(code):not(pre):not(pre *):not(svg):not(svg *) {
@@ -156,13 +194,13 @@ html.font-dyslexic strong, html.font-dyslexic b, html.font-dyslexic th { font-we
 
 
 /* Security Print: the menu is the sheet's index, set like one. */
-.sidenav-head .brand { font-family: var(--cut); font-weight: 700; letter-spacing: -.008em; font-size: 1.02rem; }
-.nav-group h4, .seg-l {
-  font-family: var(--num);
+.sidenav-head .brand { font-family: var(--ui); font-weight: 700; letter-spacing: -.008em; font-size: 1.02rem; }
+.nav-group h3, .nav-group-t, .nav-foldall, .seg-l {
+  font-family: var(--ui);
   font-size: .7rem;
   letter-spacing: .16em;
 }
-.nav-group a .n { font-family: var(--num); }
+.nav-group a .n { font-family: var(--ui); }
 .nav-group li.here a {
   background: none;
   border-left: 1px solid var(--nv-accent);
@@ -172,4 +210,17 @@ html.font-dyslexic strong, html.font-dyslexic b, html.font-dyslexic th { font-we
 }
 .nav-group li.here a .n { color: var(--nv-accent); }
 .seg button[aria-pressed="true"] { border-color: var(--nv-accent); color: var(--nv-accent); }
-.nav-toggle { font-family: var(--num); letter-spacing: .12em; text-transform: uppercase; font-size: .72rem; }
+.nav-toggle { font-family: var(--ui); letter-spacing: .12em; text-transform: uppercase; font-size: .72rem; }
+
+/* The dyslexia-friendly face has to be re-asserted after the block above:
+   those rules are more specific than the generic override, so without this
+   the brand and the small-caps labels would stay in Hanken Grotesk. */
+html.font-dyslexic .sidenav-head .brand,
+html.font-dyslexic .nav-group h3,
+html.font-dyslexic .nav-group-t,
+html.font-dyslexic .nav-foldall,
+html.font-dyslexic .nav-group a .n,
+html.font-dyslexic .seg-l,
+html.font-dyslexic .nav-toggle {
+  font-family: "OpenDyslexic", "Comic Sans MS", "Trebuchet MS", sans-serif;
+}
