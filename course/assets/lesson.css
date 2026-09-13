@@ -612,7 +612,6 @@ figure.diagram figcaption {
 }
 
 .dg-box    { fill: var(--flag); stroke: var(--rule); stroke-width: 1; }
-.dg-box.hi { fill: color-mix(in srgb, var(--accent) 12%, var(--flag)); stroke: var(--accent); stroke-width: 1; }
 .dg-strip  { fill: var(--accent-dim); stroke: none; }
 .dg-window { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 3; }
 .dg-edge   { stroke: var(--ink); stroke-width: 1.5; }
