@@ -3,11 +3,17 @@
    Tufte-influenced: generous measure, restrained rules, sidenotes, prints well. */
 
 :root {
-  --prose: 29rem;
   /* Palette and type live in print.css, loaded by nav.js before this file.
-     These two are this stylesheet's own: the page and the prose measure. */
-  --page:    50rem;
-  --measure: 40rem;
+     These three are this stylesheet's own: the page and the two measures.
+
+     They are fluid, not fixed. The sheet fills the window it is given and the
+     text fills the sheet, so resizing the window or shrinking the type widens
+     the column instead of banking the difference as gutter. --page-max is the
+     one stop: past it a line gets too long to track back to the next one. */
+  --page-max: 100rem;
+  --page:    min(100%, var(--page-max));
+  --measure: 100%;
+  --prose:   100%;
 }
 
 * { box-sizing: border-box; }
@@ -447,10 +453,6 @@ body > ol { max-width: var(--prose); }
 
 body > table { width: 100%; }
 
-@media (max-width: 64rem) {
-  :root { --page: 100%; --measure: 100%; }
-}
-
 /* ---------- learning path (course/index.html) ----------
    Laid out like Anthropic's own path page: a statement of the whole, a progress
    line, then one card per module. Our palette, their structure. */
@@ -612,7 +614,6 @@ figure.diagram figcaption {
 }
 
 .dg-box    { fill: var(--flag); stroke: var(--rule); stroke-width: 1; }
-.dg-box.hi { fill: color-mix(in srgb, var(--accent) 12%, var(--flag)); stroke: var(--accent); stroke-width: 1; }
 .dg-strip  { fill: var(--accent-dim); stroke: none; }
 .dg-window { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 3; }
 .dg-edge   { stroke: var(--ink); stroke-width: 1.5; }
@@ -679,20 +680,29 @@ details.fold table { margin-top: .4rem; }
 
 :root { --nav-w: 17rem; }
 
+/* The page clears the menu and then takes the rest of the window. It is not
+   re-centred in what is left over: that was what put a gutter on both sides. */
 @media (min-width: 64.01rem) {
   html.nav-open body {
-    margin-left: calc(var(--nav-w) + max(0px, (100vw - var(--nav-w) - var(--page)) / 2));
+    margin-left: var(--nav-w);
     margin-right: 0;
+    max-width: min(calc(100vw - var(--nav-w)), var(--page-max));
   }
 }
 @media print { html.nav-open body { margin-left: 0; } }
 
 /* ---------- dyslexia-friendly font, course-specific adjustments ----------
    The font itself and the body rules live in assets/nav.css. */
-html.font-dyslexic h1 { font-size: 1.7rem; letter-spacing: 0; line-height: 1.25; }
-html.font-dyslexic h2 { font-size: 1.25rem; }
+html.font-dyslexic h1 { font-size: 2rem; letter-spacing: 0; line-height: 1.25; }
+html.font-dyslexic h2 { font-size: 1.4rem; }
 html.font-dyslexic .standfirst { font-style: normal; }
-html.font-dyslexic p, html.font-dyslexic li { max-width: 62ch; }
+/* The measures are percentages now, so they no longer shrink with the type and
+   need no pinning here. Only the padding does: it is in rem, and at the smaller
+   dyslexic root the column would otherwise drift left. */
+html.font-dyslexic body { padding: 68px 34px 136px; }
+@media (max-width: 34rem) {
+  html.font-dyslexic body { padding: 34px 19px 85px; }
+}
 
 /* ======================================================================
    Security Print: the engraving layer.
@@ -796,8 +806,8 @@ code, pre code { font-family: var(--num); }
   font-size: 11.5px;
 }
 
-/* Prose holds a reading measure of its own, set for the face it is set in;
-   --measure stays the wider structural width. */
+/* Prose runs to the same width as the headings and figures above it, so the
+   column has one right edge rather than two. */
 p, ul, ol { max-width: var(--prose); }
 table p, table ul, table ol,
 .quiz p, .quiz ul, .quiz ol,

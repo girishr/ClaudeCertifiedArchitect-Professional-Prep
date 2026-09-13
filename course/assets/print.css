@@ -9,9 +9,10 @@
  *
  * The palette and the lettering are Anthropic's own, read off anthropic.com:
  * the warm slate/ivory ramp, clay #d97757 as the one accent, olive and their
- * error red as the two semantic inks. Anthropic's sans (Styrene A) and serif
- * (Copernicus) are licensed and cannot ship here, so this uses the closest
- * free faces; the mono is the one Anthropic actually uses, JetBrains Mono.
+ * error red as the two semantic inks. Anthropic's sans (Styrene A) is licensed
+ * and cannot ship here, so this uses the closest free face, Hanken Grotesk.
+ * The sheet is set in that one face throughout; the weight range, the small
+ * letterspaced caps and the rules carry the distinctions a second face would.
  */
 
 /* ---- 1. the type, self-hosted ---------------------------------------- */
@@ -23,29 +24,6 @@
   font-display: swap;
   font-weight: 100 900;
   src: url(fonts/hanken-grotesk-latin-wght-normal.woff2) format("woff2-variations");
-}
-@font-face {
-  /* Stand-in for Anthropic's serif (Copernicus / anthropicSerif), also licensed. */
-  font-family: "Faustina VF";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 300 800;
-  src: url(fonts/faustina-latin-wght-normal.woff2) format("woff2-variations");
-}
-@font-face {
-  font-family: "Faustina VF";
-  font-style: italic;
-  font-display: swap;
-  font-weight: 300 800;
-  src: url(fonts/faustina-latin-wght-italic.woff2) format("woff2-variations");
-}
-@font-face {
-  /* The mono Anthropic ships on anthropic.com, and it is free. */
-  font-family: "JetBrains Mono VF";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 800;
-  src: url(fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2-variations");
 }
 
 /* ---- 2. the two inks and the two stocks ------------------------------ */
@@ -83,10 +61,14 @@
   --code-bg:    #1a1918;
   --quiet:      rgba(250, 249, 245, .05);
 
-  --ui:   "Hanken Grotesk VF", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --read: "Faustina VF", "Iowan Old Style", Charter, Georgia, serif;
-  --cut:  "Hanken Grotesk VF", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --num:  "JetBrains Mono VF", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* One face sets the whole sheet. The four names are kept because they mark
+     what each role is for -- running text, headings, labels, figures -- and
+     are referenced throughout lesson.css and nav.css. */
+  --sans: "Hanken Grotesk VF", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ui:   var(--sans);
+  --read: var(--sans);
+  --cut:  var(--sans);
+  --num:  var(--sans);
 }
 
 :root[data-theme="light"] {
