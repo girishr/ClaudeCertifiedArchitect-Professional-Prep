@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s11">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 11 of 12</p>
   <h1>Assembly</h1>
@@ -19,6 +21,19 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 11 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="fixed" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">A partner's brief arrives, and four candidate architectures come with it. Three of them fail. <b>What do you check each candidate against first?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="cost">Cost and latency against the partner's target</button>
+    <button type="button" data-v="fixed">What the brief fixed, before what it left to you</button>
+    <button type="button" data-v="pattern">Whether it is an agent or a workflow</button>
+    <button type="button" data-v="tier">The model tier and the context strategy</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>One brief, and every decision the module has taught, made at once. This is the closest
 thing in Module 1 to an exam question, so work it properly rather than reading the
 answer.</p>
@@ -58,21 +73,102 @@ strategy, and the human-in-the-loop posture.</p>
 <p>All four commit to all five decisions. Three fail on exactly one. That is the diagnostic
 skill: find the single decision that breaks each one.</p>
 
+<table class="predict" data-options="Entry point|Context strategy|Pattern and tier|Holds" data-where="11.2 Candidates" data-truth-prefix="">
+  <caption>What fails, and where. Call the break before the verdict shows</caption>
+  <thead><tr><th>Option</th><th>Breaks on</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr data-truth="Entry point" data-name="Option A">
+      <td><strong>A.</strong> Claude.ai, associates upload each contract into a Project holding the playbook as reference files. Parallelised review by section. Sonnet, progressive context. Senior associate reviews everything</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text"><strong>Fails on the entry point.</strong> The pattern, model and human gate are all fine. Privilege excludes the consumer-grade surface, and that constraint was stated in the brief</span></td>
+    </tr>
+    <tr data-truth="Context strategy" data-name="Option B">
+      <td><strong>B.</strong> API or SDK behind a thin internal app, SSO, approved gateway. The playbook loaded into the system prompt in full on every call. Parallelised by section. Sonnet. Senior associate reviews everything</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text"><strong>Fails on context strategy.</strong> A monolithic playbook on every call is the working-memory cliff and the silent budget killer, and it freezes a document the firm updates. Retrieve the playbook per clause</span></td>
+    </tr>
+    <tr data-truth="Pattern and tier" data-name="Option C">
+      <td><strong>C.</strong> API or SDK behind a thin internal app, SSO, approved gateway. An open-ended agent given the contract and the iManage tools, deciding for itself how to work through the document. Playbook retrieved per clause. Opus on every call. Senior associate reviews everything</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text"><strong>Fails on pattern, and on tier.</strong> The path through a 35-page contract is enumerable, so autonomy buys nothing and costs audit clarity in a privileged setting. Opus everywhere is the untested default the module warns about</span></td>
+    </tr>
+    <tr data-truth="Holds" data-name="Option D">
+      <td><strong>D.</strong> API or SDK behind a thin internal app, SSO, approved gateway. Parallelised review by section with an evaluator pass enforcing a strict schema on flagged clauses. Claude extracts, classifies against the playbook and drafts redlines. The playbook stays in the firm's systems as a versioned source of truth, retrieved per clause. iManage fetches documents. Sonnet with progressive context, extended thinking per clause only where an eval justifies it. Senior associate signs off on every output, low-confidence clauses flagged</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text"><strong>Holds.</strong> Every constraint in the brief is respected and every decision is one you can defend out loud</span></td>
+    </tr>
+  </tbody>
+</table>
+<div class="tally"
+  data-perfect="Four of four. You found the single break in each one, which is the skill the item tests."
+  data-good="Check which break you missed. Each failing option is clean on four decisions, and the one it fails is either a constraint the brief stated or a default the module warned about."
+  data-poor="Go back to the brief and list what it fixed: privilege, the gateway, iManage, the final reviewer. Check each option against those first, then against the module's defaults on pattern and tier."></div>
+
 <figure class="diagram wide" id="fig-option-matrix">
-<svg viewBox="0 0 760 248" role="img" aria-label="The four candidate architectures scored against the five decisions" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m27" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="120.8" y="14" class="dg-k2" text-anchor="middle"><tspan x="120.8" dy="0">Entry point</tspan></text><text x="210.4" y="14" class="dg-k2" text-anchor="middle"><tspan x="210.4" dy="0">Pattern</tspan></text><text x="300" y="14" class="dg-k2" text-anchor="middle"><tspan x="300" dy="0">Split of work</tspan></text><text x="389.6" y="14" class="dg-k2" text-anchor="middle"><tspan x="389.6" dy="0">Model, context</tspan></text><text x="479.2" y="14" class="dg-k2" text-anchor="middle"><tspan x="479.2" dy="0">Human gate</tspan></text><rect x="0" y="26" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="51" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option A</tspan></text><circle cx="120.8" cy="45" r="9" class="dg-dot-bad"/><text x="120.8" y="49" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✗</tspan></text><circle cx="210.4" cy="45" r="9" class="dg-dot-good"/><text x="210.4" y="49" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="45" r="9" class="dg-dot-good"/><text x="300" y="49" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="45" r="9" class="dg-dot-good"/><text x="389.6" y="49" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✓</tspan></text><circle cx="479.2" cy="45" r="9" class="dg-dot-good"/><text x="479.2" y="49" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="51" class="dg-s" text-anchor="end"><tspan x="748" dy="0">Claude.ai, privilege excludes it</tspan></text><rect x="0" y="70" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="95" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option B</tspan></text><circle cx="120.8" cy="89" r="9" class="dg-dot-good"/><text x="120.8" y="93" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="89" r="9" class="dg-dot-good"/><text x="210.4" y="93" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="89" r="9" class="dg-dot-good"/><text x="300" y="93" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="89" r="9" class="dg-dot-bad"/><text x="389.6" y="93" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✗</tspan></text><circle cx="479.2" cy="89" r="9" class="dg-dot-good"/><text x="479.2" y="93" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="95" class="dg-s" text-anchor="end"><tspan x="748" dy="0">playbook monolithic on every call</tspan></text><rect x="0" y="114" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="139" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option C</tspan></text><circle cx="120.8" cy="133" r="9" class="dg-dot-good"/><text x="120.8" y="137" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="133" r="9" class="dg-dot-bad"/><text x="210.4" y="137" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✗</tspan></text><circle cx="300" cy="133" r="9" class="dg-dot-good"/><text x="300" y="137" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="133" r="9" class="dg-dot-bad"/><text x="389.6" y="137" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✗</tspan></text><circle cx="479.2" cy="133" r="9" class="dg-dot-good"/><text x="479.2" y="137" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="139" class="dg-s" text-anchor="end"><tspan x="748" dy="0">open-ended agent, Opus everywhere</tspan></text><rect x="0" y="158" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="183" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option D</tspan></text><circle cx="120.8" cy="177" r="9" class="dg-dot-good"/><text x="120.8" y="181" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="177" r="9" class="dg-dot-good"/><text x="210.4" y="181" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="177" r="9" class="dg-dot-good"/><text x="300" y="181" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="177" r="9" class="dg-dot-good"/><text x="389.6" y="181" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✓</tspan></text><circle cx="479.2" cy="177" r="9" class="dg-dot-good"/><text x="479.2" y="181" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="183" class="dg-s" text-anchor="end"><tspan x="748" dy="0">holds on all five</tspan></text><text x="0" y="218" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Three look reasonable and each fails on exactly one decision. Find the single break; that is the</tspan><tspan x="0" dy="1.3em">diagnostic skill the item tests.</tspan></text></svg>
+<svg viewBox="0 0 760 248" role="img" aria-label="The four candidate architectures scored against the five decisions" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m27" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="120.8" y="14" class="dg-k2" text-anchor="middle"><tspan x="120.8" dy="0">Entry point</tspan></text><text x="210.4" y="14" class="dg-k2" text-anchor="middle"><tspan x="210.4" dy="0">Pattern</tspan></text><text x="300" y="14" class="dg-k2" text-anchor="middle"><tspan x="300" dy="0">Split of work</tspan></text><text x="389.6" y="14" class="dg-k2" text-anchor="middle"><tspan x="389.6" dy="0">Model, context</tspan></text><text x="479.2" y="14" class="dg-k2" text-anchor="middle"><tspan x="479.2" dy="0">Human gate</tspan></text><rect x="0" y="26" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="51" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option A</tspan></text><circle cx="120.8" cy="45" r="9" class="dg-dot-bad"/><text x="120.8" y="49" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✗</tspan></text><circle cx="210.4" cy="45" r="9" class="dg-dot-good"/><text x="210.4" y="49" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="45" r="9" class="dg-dot-good"/><text x="300" y="49" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="45" r="9" class="dg-dot-good"/><text x="389.6" y="49" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✓</tspan></text><circle cx="479.2" cy="45" r="9" class="dg-dot-good"/><text x="479.2" y="49" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="51" class="dg-s" text-anchor="end"><tspan x="748" dy="0">Claude.ai, privilege excludes it</tspan></text><rect x="0" y="70" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="95" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option B</tspan></text><circle cx="120.8" cy="89" r="9" class="dg-dot-good"/><text x="120.8" y="93" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="89" r="9" class="dg-dot-good"/><text x="210.4" y="93" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="89" r="9" class="dg-dot-good"/><text x="300" y="93" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="89" r="9" class="dg-dot-bad"/><text x="389.6" y="93" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✗</tspan></text><circle cx="479.2" cy="89" r="9" class="dg-dot-good"/><text x="479.2" y="93" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="95" class="dg-s" text-anchor="end"><tspan x="748" dy="0">playbook monolithic on every call</tspan></text><rect x="0" y="114" width="760" height="38" rx="6" class="dg-box"/><text x="14" y="139" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option C</tspan></text><circle cx="120.8" cy="133" r="9" class="dg-dot-good"/><text x="120.8" y="137" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="133" r="9" class="dg-dot-bad"/><text x="210.4" y="137" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✗</tspan></text><circle cx="300" cy="133" r="9" class="dg-dot-good"/><text x="300" y="137" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="133" r="9" class="dg-dot-bad"/><text x="389.6" y="137" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✗</tspan></text><circle cx="479.2" cy="133" r="9" class="dg-dot-good"/><text x="479.2" y="137" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="139" class="dg-s" text-anchor="end"><tspan x="748" dy="0">open-ended agent, Opus everywhere</tspan></text><rect x="0" y="158" width="760" height="38" rx="6" class="dg-box hi"/><text x="14" y="183" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Option D</tspan></text><circle cx="120.8" cy="177" r="9" class="dg-dot-good"/><text x="120.8" y="181" class="dg-mark" text-anchor="middle"><tspan x="120.8" dy="0">✓</tspan></text><circle cx="210.4" cy="177" r="9" class="dg-dot-good"/><text x="210.4" y="181" class="dg-mark" text-anchor="middle"><tspan x="210.4" dy="0">✓</tspan></text><circle cx="300" cy="177" r="9" class="dg-dot-good"/><text x="300" y="181" class="dg-mark" text-anchor="middle"><tspan x="300" dy="0">✓</tspan></text><circle cx="389.6" cy="177" r="9" class="dg-dot-good"/><text x="389.6" y="181" class="dg-mark" text-anchor="middle"><tspan x="389.6" dy="0">✓</tspan></text><circle cx="479.2" cy="177" r="9" class="dg-dot-good"/><text x="479.2" y="181" class="dg-mark" text-anchor="middle"><tspan x="479.2" dy="0">✓</tspan></text><text x="748" y="183" class="dg-s" text-anchor="end"><tspan x="748" dy="0">holds on all five</tspan></text><text x="0" y="218" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Three look reasonable and each fails on exactly one decision. Find the single break; that is the</tspan><tspan x="0" dy="1.3em">diagnostic skill the item tests.</tspan></text></svg>
 <figcaption>Separate what the brief fixed from what it left to you, then check each option against the fixed items first.</figcaption>
 </figure>
 
-<table>
-  <caption>What fails, and where</caption>
-  <thead><tr><th>Option</th><th>Verdict</th></tr></thead>
+<p>Now the same test on the case you have carried since Section 4. Six assembled choices
+for the claims triage assistant. Some are the module's, some are the substitutions that look
+reasonable in isolation. Call each one before the reason shows.</p>
+
+<table class="predict" data-options="Holds|Breaks" data-where="11.2 Claims case" data-truth-prefix="">
+  <caption>The claims triage assistant, assembled. Which choices hold</caption>
+  <thead><tr><th>Assembled choice</th><th>Call</th><th>Why</th></tr></thead>
   <tbody>
-    <tr><td><strong>A.</strong> Claude.ai, associates upload each contract into a Project holding the playbook as reference files. Parallelised review by section. Sonnet, progressive context. Senior associate reviews everything</td><td><strong>Fails on the entry point.</strong> The pattern, model and human gate are all fine. Privilege excludes the consumer-grade surface, and that constraint was stated in the brief</td></tr>
-    <tr><td><strong>B.</strong> API or SDK behind a thin internal app, SSO, approved gateway. The playbook loaded into the system prompt in full on every call. Parallelised by section. Sonnet. Senior associate reviews everything</td><td><strong>Fails on context strategy.</strong> A monolithic playbook on every call is the working-memory cliff and the silent budget killer, and it freezes a document the firm updates. Retrieve the playbook per clause</td></tr>
-    <tr><td><strong>C.</strong> API or SDK behind a thin internal app, SSO, approved gateway. An open-ended agent given the contract and the iManage tools, deciding for itself how to work through the document. Playbook retrieved per clause. Opus on every call. Senior associate reviews everything</td><td><strong>Fails on pattern, and on tier.</strong> The path through a 35-page contract is enumerable, so autonomy buys nothing and costs audit clarity in a privileged setting. Opus everywhere is the untested default the module warns about</td></tr>
-    <tr><td><strong>D.</strong> API or SDK behind a thin internal app, SSO, approved gateway. Parallelised review by section with an evaluator pass enforcing a strict schema on flagged clauses. Claude extracts, classifies against the playbook and drafts redlines. The playbook stays in the firm's systems as a versioned source of truth, retrieved per clause. iManage fetches documents. Sonnet with progressive context, extended thinking per clause only where an eval justifies it. Senior associate signs off on every output, low-confidence clauses flagged</td><td><strong>Holds.</strong> Every constraint in the brief is respected and every decision is one you can defend out loud</td></tr>
+    <tr data-truth="Holds" data-name="Entry point">
+      <td><strong>Entry point.</strong> API or SDK behind the insurer's own claims application, on whichever cloud route the insurer has already committed to. Adjusters never see a chat window or a terminal</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Holds. Adjusters are not engineers and the work is embedded in the claims system, so Claude.ai and Claude Code are the wrong shape; the SDK is the default for embedding Claude in a product. The route is procurement, not engineering. It lands on the cloud the CIO has already cleared</span></td>
+    </tr>
+    <tr data-truth="Breaks" data-name="Pattern">
+      <td><strong>Pattern.</strong> An agent. Give Claude the claim and tools for the rule engine, the coverage source and email, and let it decide how to work through each claim</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Breaks on pattern. Read, priority, coverage, draft, gate, send: the path can be written in advance, so this is a workflow, a chain with a deterministic gate before the send. Autonomy buys nothing here and costs the audit trail. When someone asks which step approved a payout email, you want a step to point at, not a model turn</span></td>
+    </tr>
+    <tr data-truth="Holds" data-name="Split of work">
+      <td><strong>Split of work.</strong> Claude reads the claim and drafts the email. The rule engine sets priority. Coverage is a tool call against the live policy source. The email system sends</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Holds. This is the Section 4 map. Claude owns the language work; the systems the insurer already paid to make reliable keep the deterministic and live-state work; a person signs above the threshold</span></td>
+    </tr>
+    <tr data-truth="Breaks" data-name="Coverage lookup">
+      <td><strong>Reference architecture.</strong> Ticket-triage routing, with coverage handled by retrieval over a nightly export of the policy tables so Claude can answer coverage from context</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Breaks on the coverage lookup. Retrieval is for stable knowledge; coverage is live state owned by the policy system, and a nightly index is wrong the moment a policy changes. The routing shape is right. The coverage lane is a tool call, which is the module's most common mistake in one sentence</span></td>
+    </tr>
+    <tr data-truth="Holds" data-name="Model and context">
+      <td><strong>Model and context.</strong> Sonnet on every step, progressive context carrying only what the next step needs, extended thinking off until an eval shows a gap it closes</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Holds. Sonnet is the default and moves happen on evidence, not instinct. A staged workflow with narrow handoffs is where progressive context earns its place, and thinking is a bill, so it waits for a measured accuracy gap</span></td>
+    </tr>
+    <tr data-truth="Breaks" data-name="Human gate">
+      <td><strong>Human gate.</strong> Every adjuster email goes out automatically. Claude only drafts, the rule engine already set priority, and a review step would eat into the time saving</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Breaks on the human gate. Above the value threshold a person approves the send, because a send is irreversible and someone has to answer for it. Section 4 fixed that gate. Assembly is not where it gets reopened, however sensible the time saving sounds</span></td>
+    </tr>
   </tbody>
 </table>
+<div class="tally"
+  data-perfect="Six of six. Your claims assistant matches the module's: a workflow behind the insurer's own app, Claude on the language work, tool calls on live state, Sonnet with progressive context, and a person above the threshold."
+  data-good="Look at which breaks you waved through. Each is a default the module warns about: autonomy the path does not need, retrieval on live state, or a gate treated as a tradeoff when it was a requirement."
+  data-poor="Reread your own stamps from Sections 4 to 10 in the case file. Every one of these six rows is a decision you already made; assembly only asks you to hold them all at once."></div>
+
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">Four candidate architectures, three of them wrong. <b>What do you check each candidate against first?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="cost">Cost and latency against the partner's target</button>
+    <button type="button" data-v="fixed">What the brief fixed, before what it left to you</button>
+    <button type="button" data-v="pattern">Whether it is an agent or a workflow</button>
+    <button type="button" data-v="tier">The model tier and the context strategy</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. Separate what the brief fixed from what it left to you, and check each option against the fixed items first: privilege, the gateway, iManage, the final reviewer. An option that trades one of those away is wrong however sensible it sounds in isolation.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the four candidates did that. Pattern, tier and cost are decisions the brief left to you. Privilege, the gateway, iManage and the final reviewer it fixed, and an option that trades one of them away is out before its cleverness gets a hearing.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The section's habit is to separate what the brief fixed from what it left to you, and to check the fixed items first. Pattern, tier, context and cost are real decisions, but they only get a say once privilege, the gateway, iManage and the final reviewer have ruled options out.</template>
+</section>
 
 <div class="quiz" data-answer="D">
   <p class="scenario">Same firm, same brief. A fifth proposal arrives: API behind the
@@ -93,6 +189,23 @@ skill: find the single decision that breaks each one.</p>
   pattern, sub-pattern, tier, context strategy, and where retrieval fits. An option that
   optimises a fixed constraint is wrong however sensible it sounds in isolation.</div>
 </div>
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>This section assembles the case. The decisions you made for the claims triage assistant one section at a time are called here against the module's, and the stamps travel with the file into Module 2.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="10-entry-points.html"><span>Previous</span>10 Entry points and governance</a>
   <a class="next" href="12-recap.html"><span>Next</span>12 Recap and what is next</a>

@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s09">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 09 of 12</p>
   <h1>Prompting as architecture</h1>
@@ -19,6 +21,19 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 09 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="contract" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">A support organisation runs one prompt hundreds of times a day: given a ticket and a manual section, draft a reply. The reply must never promise a refund or a timeline the agent has not approved. <b>Where does the never-promise rule live in the prompt?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="role">A sentence in the role text at the top</button>
+    <button type="button" data-v="fewshot">A few-shot example of a reply that declines to promise</button>
+    <button type="button" data-v="contract">A structural constraint in the output contract</button>
+    <button type="button" data-v="after">After the breakpoint, next to the ticket, so it is fresh every call</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>The other major lever alongside model and context is the prompt itself. At enterprise
 scale a prompt is not a sentence you type, it is an asset you design, version, cache and
 govern. Four screens in the official module, and the part of it least visible from the
@@ -60,21 +75,53 @@ content and inherits the guardrails without re-authoring them.</p>
   </tbody>
 </table>
 
-<figure class="diagram wide" id="fig-technique-ladder">
-<svg viewBox="0 0 760 200" role="img" aria-label="The three prompting techniques as a ladder of rising cost" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m23" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="70" width="232" height="58" rx="8" class="dg-box"/><text x="12" y="92" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Zero-shot</tspan></text><text x="12" y="110" class="dg-s" text-anchor="start"><tspan x="12" dy="0">instruction only</tspan></text><text x="12" y="144" class="dg-s" text-anchor="start"><tspan x="12" dy="0">the default to try first</tspan></text><path d="M236 99L246 69" class="dg-arrow" marker-end="url(#m23)"/><rect x="250" y="40" width="232" height="58" rx="8" class="dg-box"/><text x="262" y="62" class="dg-t-b" text-anchor="start"><tspan x="262" dy="0">Few-shot</tspan></text><text x="262" y="80" class="dg-s" text-anchor="start"><tspan x="262" dy="0">a handful of examples</tspan></text><text x="262" y="114" class="dg-s" text-anchor="start"><tspan x="262" dy="0">when the format is easier to show</tspan></text><text x="262" y="128" class="dg-s" text-anchor="start"><tspan x="262" dy="0">than describe</tspan></text><path d="M486 69L496 39" class="dg-arrow" marker-end="url(#m23)"/><rect x="500" y="10" width="232" height="58" rx="8" class="dg-box"/><text x="512" y="32" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">Chain-of-thought</tspan></text><text x="512" y="50" class="dg-s" text-anchor="start"><tspan x="512" dy="0">reason step by step first</tspan></text><text x="512" y="84" class="dg-s" text-anchor="start"><tspan x="512" dy="0">when the path matters to the</tspan></text><text x="512" y="98" class="dg-s" text-anchor="start"><tspan x="512" dy="0">answer</tspan></text><path d="M0 178L760 178" class="dg-arrow" marker-end="url(#m23)"/><text x="0" y="172" class="dg-k" text-anchor="start"><tspan x="0" dy="0">tokens and latency per call</tspan></text><text x="760" y="194" class="dg-s" text-anchor="end"><tspan x="760" dy="0">reach for the lightest technique that meets the requirement</tspan></text></svg>
-<figcaption>Start at the bottom. Climb only when the task's structure demands it, and re-check the pairing on every model swap.</figcaption>
+<figure class="stepper wide" id="fig-technique-ladder">
+<svg viewBox="0 0 760 200" role="img" aria-label="The three prompting techniques as a ladder of rising cost" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m23" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><g data-at="1"><rect x="0" y="70" width="232" height="58" rx="8" class="dg-box hi"/><text x="12" y="92" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Zero-shot</tspan></text><text x="12" y="110" class="dg-s" text-anchor="start"><tspan x="12" dy="0">instruction only</tspan></text><text x="12" y="144" class="dg-s" text-anchor="start"><tspan x="12" dy="0">the default to try first</tspan></text></g><g data-at="2"><path d="M236 99L246 69" class="dg-arrow" marker-end="url(#m23)"/><rect x="250" y="40" width="232" height="58" rx="8" class="dg-box"/><text x="262" y="62" class="dg-t-b" text-anchor="start"><tspan x="262" dy="0">Few-shot</tspan></text><text x="262" y="80" class="dg-s" text-anchor="start"><tspan x="262" dy="0">a handful of examples</tspan></text><text x="262" y="114" class="dg-s" text-anchor="start"><tspan x="262" dy="0">when the format is easier to show</tspan></text><text x="262" y="128" class="dg-s" text-anchor="start"><tspan x="262" dy="0">than describe</tspan></text></g><g data-at="3"><path d="M486 69L496 39" class="dg-arrow" marker-end="url(#m23)"/><rect x="500" y="10" width="232" height="58" rx="8" class="dg-box"/><text x="512" y="32" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">Chain-of-thought</tspan></text><text x="512" y="50" class="dg-s" text-anchor="start"><tspan x="512" dy="0">reason step by step first</tspan></text><text x="512" y="84" class="dg-s" text-anchor="start"><tspan x="512" dy="0">when the path matters to the</tspan></text><text x="512" y="98" class="dg-s" text-anchor="start"><tspan x="512" dy="0">answer</tspan></text></g><path d="M0 178L760 178" class="dg-arrow" marker-end="url(#m23)"/><text x="0" y="172" class="dg-k" text-anchor="start"><tspan x="0" dy="0">tokens and latency per call</tspan></text><g data-at="4"><text x="757" y="194" class="dg-s" text-anchor="end"><tspan x="757" dy="0">reach for the lightest technique that meets the requirement</tspan></text></g></svg>
+  <ol class="caps">
+    <li>The axis first. Every rung up the ladder costs tokens and latency on every call, so the ladder is climbed, not jumped.</li>
+    <li>Zero-shot. Instruction only, no examples. The default to try first for well-specified tasks the model already handles.</li>
+    <li>Few-shot. A handful of input and output examples in the prompt, for tasks where the format or the judgement is easier to show than to describe.</li>
+    <li>Chain-of-thought. Prompt the model to reason step by step before answering, for multi-step reasoning where the path matters to the answer.</li>
+    <li>Reach for the lightest technique that meets the requirement, and re-check the pairing on every model swap.</li>
+  </ol>
+  <div class="stepbar">
+    <div class="cap"></div>
+    <div class="dots"></div>
+    <div class="nav"><button type="button" data-nav="prev" aria-label="Previous step">Prev</button><button type="button" data-nav="next" aria-label="Next step">Next</button></div>
+  </div>
+<figcaption>Step through it; arrow keys work too. Start at the bottom. Climb only when the task's structure demands it, and re-check the pairing on every model swap.</figcaption>
 </figure>
 
-<table>
-  <caption>The module's own worked calls</caption>
+<table class="predict" data-options="Zero-shot|Few-shot|Chain-of-thought" data-where="9.2 Worked calls" data-truth-prefix="">
+  <caption>The module's own worked calls. Pick the technique before the reason shows</caption>
   <thead><tr><th>Task</th><th>Technique</th><th>Why</th></tr></thead>
   <tbody>
-    <tr><td>Classify a support ticket into five named categories</td><td>Zero-shot</td><td>Well specified, categories named, classification is reliable without examples</td></tr>
-    <tr><td>Extract date, vendor and amount from receipts with wildly varying layouts</td><td>Few-shot</td><td>The extraction format is easier to demonstrate than to describe, especially across layouts</td></tr>
-    <tr><td>Decide whether a clause creates liability under three interacting conditions</td><td>Chain-of-thought</td><td>The answer depends on a sequence of conditional steps; reasoning aloud reduces skipped interactions</td></tr>
-    <tr><td>Summarise 400 words into two sentences</td><td>Zero-shot</td><td>Bounded input, standard task. Examples or reasoning add tokens with no quality gain</td></tr>
+    <tr data-truth="Zero-shot" data-name="Classify a ticket">
+      <td>Classify a support ticket into five named categories</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Well specified, categories named, classification is reliable without examples</span></td>
+    </tr>
+    <tr data-truth="Few-shot" data-name="Extract from receipts">
+      <td>Extract date, vendor and amount from receipts with wildly varying layouts</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">The extraction format is easier to demonstrate than to describe, especially across layouts</span></td>
+    </tr>
+    <tr data-truth="Chain-of-thought" data-name="Liability clause">
+      <td>Decide whether a clause creates liability under three interacting conditions</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">The answer depends on a sequence of conditional steps; reasoning aloud reduces skipped interactions</span></td>
+    </tr>
+    <tr data-truth="Zero-shot" data-name="Summarise 400 words">
+      <td>Summarise 400 words into two sentences</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Bounded input, standard task. Examples or reasoning add tokens with no quality gain</span></td>
+    </tr>
   </tbody>
 </table>
+<div class="tally"
+  data-perfect="Four of four. You climbed the ladder only where the task's structure demanded it, which is the whole rule."
+  data-good="Look at where you climbed. Two of the four calls are zero-shot; examples and reasoning are paid for on every call, so they have to buy something."
+  data-poor="Step the ladder again. Zero-shot is the default; few-shot is for a format easier to show than describe; chain-of-thought is for when the path to the answer matters."></div>
 
 <p>Two more things the module is explicit about. First, <strong>the same prompt does not
 behave identically across tiers or generations</strong>. A more capable model may need less
@@ -132,6 +179,18 @@ governed artifact.</p>
   ships as a template or a Skill.</p>
 </div>
 
+<div class="bet" data-where="9.4 Exercise"
+  data-stamp-right="You called it: a versioned Skill, because the procedure is stable, runs identically across the support org, and needs versioning and rollback."
+  data-stamp-wrong="A versioned Skill. The procedure is stable and runs identically across the whole support org, so it needs versioning, approval and rollback. A template each agent keeps locally has no central governance and drifts into slightly different versions.">
+  <span class="live-label">Place your bet before the reveal</span>
+  <p class="q">Take the third decision first. The same operation, hundreds of times a day, across the whole support organisation. Does it ship as a template or a Skill?</p>
+  <div class="opts">
+    <button type="button" data-k="A"><span class="k">A</span><span>A template each agent keeps locally. The scaffolding carries the guardrails, and each queue can tune the tone rules in its own copy.</span></button>
+    <button type="button" data-k="B"><span class="k">B</span><span>A modular prompt library. The support engineers assemble the reply prompt from shared fragments in their own code.</span></button>
+    <button type="button" data-k="C" data-right><span class="k">C</span><span>A versioned Skill. One governed artifact, run the same way everywhere, with rollback.</span></button>
+  </div>
+</div>
+<div class="bet-reveal">
 <table>
   <caption>The model answer</caption>
   <thead><tr><th>Decision</th><th>Answer</th></tr></thead>
@@ -141,6 +200,23 @@ governed artifact.</p>
     <tr><td>Packaging</td><td>A versioned Skill. Stable procedure, run identically across the support org, needing versioning and rollback. A template each agent keeps locally has no central governance and drifts into slightly different versions</td></tr>
   </tbody>
 </table>
+</div>
+
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">The support reply prompt, hundreds of times a day, and a rule that the reply never promises a refund or a timeline. <b>Where does the never-promise rule live?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="role">A sentence in the role text at the top</button>
+    <button type="button" data-v="fewshot">A few-shot example of a reply that declines to promise</button>
+    <button type="button" data-v="contract">A structural constraint in the output contract</button>
+    <button type="button" data-v="after">After the breakpoint, next to the ticket, so it is fresh every call</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. A rule stated in the role text can be drifted past; a constraint that shapes the response format cannot be quietly ignored. It sits in the output contract, inside the stable prefix, so the cache still hits.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the model answer did that. Guardrails go in the output contract as a structural constraint the format requires, not as a sentence in the role text, and they belong before the breakpoint with the rest of the fixed scaffolding.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The module puts the guardrail in the output contract, as a structural constraint the format requires. A sentence in the role text can be drifted past, an example only shows one case, and anything after the breakpoint is variable content that breaks the cache without making the rule any harder to ignore.</template>
+</section>
 
 <div class="quiz" data-answer="C">
   <p class="scenario">An analytics team reuses one prompt about 8,000 times a day. It opens
@@ -159,6 +235,25 @@ governed artifact.</p>
   the whole point. Note what the other options are: each is a real technique that is right in
   a different situation, which is how distractors are built in this domain.</div>
 </div>
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>The case is not decided here; what you stamp is your read of the section, and it travels with the file. The claims assistant's read-and-draft prompt will be built the way this section says: static before dynamic, guardrails in the output contract, packaged to be governed.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M1 &sect;10</span><span>Decision 4: entry point, and what governance rules out</span></li>
+      <li><span>M1 &sect;11</span><span>Assembly: your architecture against the module's</span></li>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="08-model-and-context.html"><span>Previous</span>08 Model and context strategy</a>
   <a class="next" href="10-entry-points.html"><span>Next</span>10 Entry points and governance</a>

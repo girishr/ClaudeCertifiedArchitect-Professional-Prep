@@ -1,0 +1,49 @@
+# .specs/architecture/api.yaml
+# meta: project=ClaudeCertifiedArchitect-Professional-Prep language=en updated=2026-09-13
+
+project: "ClaudeCertifiedArchitect-Professional-Prep"
+version: "1.0.0"
+lastUpdated: "2026-09-13"
+
+# NOT APPLICABLE — this project has no API.
+#
+# It is a static site on GitHub Pages: no server, no backend, no endpoints, and no
+# runtime network calls of its own. The question bank is inlined into index.html at
+# build time rather than fetched. The `paths` block below is intentionally empty;
+# adding endpoints here would contradict the non-goals in project/requirements.md.
+#
+# The only external references are outbound documentation links (Anthropic Partner
+# Academy, platform/code docs, the exam guide PDF) — navigation targets, not APIs.
+
+openapi: "3.0.0"
+info:
+  title: "ClaudeCertifiedArchitect-Professional-Prep"
+  version: "1.0.0"
+  description: "No API. Static site; see architecture/architecture.md for the real structure."
+
+servers: []
+
+paths: {}
+
+# Build-time data sources, in place of a data layer:
+data_sources:
+  - path: "questions.json"
+    shape: "{meta, questions[]}"
+    count: 75
+    description: "Scenario bank, inlined into index.html by tools/build_hub.py"
+  - path: "tools/build_hub.py"
+    symbol: "PLAN"
+    description: "The 21-day study plan, a Python literal inlined at build time"
+
+databases: []
+auth_strategy: "none — public site, no accounts, no login"
+realtime:
+  enabled: false
+  transports: []
+
+client_storage:
+  session_only:
+    - "quiz answers, scores and study-plan ticks (in memory; deliberately not persisted)"
+  localStorage:
+    - "theme (light/dark)"
+    - "OpenDyslexic font toggle"

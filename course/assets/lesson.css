@@ -4,14 +4,10 @@
 
 :root {
   /* Palette and type live in print.css, loaded by nav.js before this file.
-     These three are this stylesheet's own: the page and the two measures.
-
-     They are fluid, not fixed. The sheet fills the window it is given and the
-     text fills the sheet, so resizing the window or shrinking the type widens
-     the column instead of banking the difference as gutter. --page-max is the
-     one stop: past it a line gets too long to track back to the next one. */
-  /* --page-max is set in print.css, which every page of the kit loads. */
-  --page:    min(100%, var(--page-max));
+     The page width is this stylesheet's own. Every block on the sheet, prose,
+     apparatus, figures and tables alike, runs to the same column edge, so the
+     right-hand side stays one clean line. */
+  --page:    50rem;
   --measure: 100%;
   --prose:   100%;
 }
@@ -22,7 +18,7 @@ html { font-size: 17px; }
 
 body {
   margin: 0 auto;
-  padding: 4rem 2rem 8rem;
+  padding: 1.5rem 2rem 3rem;
   max-width: var(--page);
   background: var(--paper);
   color: var(--ink);
@@ -33,7 +29,7 @@ body {
 
 /* ---------- masthead ---------- */
 
-.masthead { margin-bottom: 3rem; }
+.masthead { margin-bottom: 1.5rem; }
 .eyebrow {
   font-family: var(--ui);
   font-size: .72rem;
@@ -53,7 +49,7 @@ h1 {
   font-size: 1.12rem;
   color: var(--ink-soft);
   font-style: italic;
-  margin: 0 0 1.4rem;
+  margin: 0 0 .9rem;
 }
 .meta {
   font-family: var(--ui);
@@ -72,7 +68,7 @@ h1 {
 h2 {
   font-size: 1.35rem;
   font-weight: 600;
-  margin: 3rem 0 .9rem;
+  margin: 1.9rem 0 .6rem;
   line-height: 1.25;
 }
 h2 .num {
@@ -95,8 +91,8 @@ h2 .num.n {
   font-variant-numeric: tabular-nums;
   font-weight: 650;
 }
-h3 { font-size: 1.06rem; font-weight: 600; margin: 2rem 0 .5rem; }
-p { margin: 0 0 1.1rem; }
+h3 { font-size: 1.06rem; font-weight: 600; margin: 1.3rem 0 .4rem; }
+p { margin: 0 0 .85rem; }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 strong { font-weight: 600; }
 hr { border: none; border-top: 1px solid var(--rule); margin: 3rem 0; }
@@ -239,7 +235,7 @@ pre code { background: none; padding: 0; }
 
 @media (max-width: 34rem) {
   html { font-size: 16px; }
-  body { padding: 2rem 1.1rem 5rem; }
+  body { padding: 3rem 1.1rem 3rem; }
   h1 { font-size: 1.6rem; }
   table { font-size: .78rem; }
 }
@@ -453,6 +449,10 @@ body > ol { max-width: var(--prose); }
 
 body > table { width: 100%; }
 
+@media (max-width: 64rem) {
+  :root { --page: 100%; --measure: 100%; }
+}
+
 /* ---------- learning path (course/index.html) ----------
    Laid out like Anthropic's own path page: a statement of the whole, a progress
    line, then one card per module. Our palette, their structure. */
@@ -614,6 +614,7 @@ figure.diagram figcaption {
 }
 
 .dg-box    { fill: var(--flag); stroke: var(--rule); stroke-width: 1; }
+.dg-box.hi { fill: color-mix(in srgb, var(--accent) 12%, var(--flag)); stroke: var(--accent); stroke-width: 1; }
 .dg-strip  { fill: var(--accent-dim); stroke: none; }
 .dg-window { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 3; }
 .dg-edge   { stroke: var(--ink); stroke-width: 1.5; }
@@ -680,29 +681,20 @@ details.fold table { margin-top: .4rem; }
 
 :root { --nav-w: 17rem; }
 
-/* The page clears the menu and then takes the rest of the window. It is not
-   re-centred in what is left over: that was what put a gutter on both sides. */
 @media (min-width: 64.01rem) {
   html.nav-open body {
-    margin-left: var(--nav-w);
+    margin-left: calc(var(--nav-w) + max(0px, (100vw - var(--nav-w) - var(--page)) / 2));
     margin-right: 0;
-    max-width: min(calc(100vw - var(--nav-w)), var(--page-max));
   }
 }
 @media print { html.nav-open body { margin-left: 0; } }
 
 /* ---------- dyslexia-friendly font, course-specific adjustments ----------
    The font itself and the body rules live in assets/nav.css. */
-html.font-dyslexic h1 { font-size: 2rem; letter-spacing: 0; line-height: 1.25; }
-html.font-dyslexic h2 { font-size: 1.4rem; }
+html.font-dyslexic h1 { font-size: 1.7rem; letter-spacing: 0; line-height: 1.25; }
+html.font-dyslexic h2 { font-size: 1.25rem; }
 html.font-dyslexic .standfirst { font-style: normal; }
-/* The measures are percentages now, so they no longer shrink with the type and
-   need no pinning here. Only the padding does: it is in rem, and at the smaller
-   dyslexic root the column would otherwise drift left. */
-html.font-dyslexic body { padding: 68px 34px 136px; }
-@media (max-width: 34rem) {
-  html.font-dyslexic body { padding: 34px 19px 85px; }
-}
+html.font-dyslexic p, html.font-dyslexic li { max-width: 62ch; }
 
 /* ======================================================================
    Security Print: the engraving layer.
@@ -712,11 +704,11 @@ html.font-dyslexic body { padding: 68px 34px 136px; }
 /* The masthead is printed under a plate line, the way a certificate is. */
 .masthead {
   border-top: 2px solid var(--rule-firm);
-  padding-top: 1.1rem;
+  padding-top: .7rem;
 }
 .eyebrow {
   font-family: var(--num);
-  font-size: .68rem;
+  font-size: 11.5px;
   letter-spacing: .16em;
 }
 h1 {
@@ -749,13 +741,13 @@ th {
   border-bottom: 2px solid var(--rule-firm);
 }
 td { border-bottom: 1px solid var(--rule); }
-caption { font-family: var(--num); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; }
+caption { font-family: var(--num); font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; }
 
 /* Marginal apparatus: a hairline, never a coloured bar. */
 .sidenote, .flag { border-left: 1px solid var(--rule-firm); }
 .flag .label {
   font-family: var(--num);
-  font-size: .68rem;
+  font-size: 11.5px;
   letter-spacing: .16em;
   color: var(--oxblood);
 }
@@ -769,7 +761,7 @@ caption { font-family: var(--num); font-size: .66rem; letter-spacing: .14em; tex
 .pager a { font-family: var(--ui); }
 .pill {
   font-family: var(--num);
-  font-size: .68rem;
+  font-size: 11.5px;
   letter-spacing: .14em;
   text-transform: uppercase;
   border: 1px solid var(--rule-firm);
@@ -801,13 +793,13 @@ code, pre code { font-family: var(--num); }
    rule, not a label stacked above the title. */
 .masthead .eyebrow {
   text-align: right;
-  margin: 0 0 1.4rem;
+  margin: 0 0 .7rem;
   padding-top: .1rem;
   font-size: 11.5px;
 }
 
-/* Prose runs to the same width as the headings and figures above it, so the
-   column has one right edge rather than two. */
+/* Prose holds a reading measure of its own, set for the face it is set in;
+   --measure stays the wider structural width. */
 p, ul, ol { max-width: var(--prose); }
 table p, table ul, table ol,
 .quiz p, .quiz ul, .quiz ol,
@@ -859,3 +851,14 @@ table p, table ul, table ol,
    trail below it stops at the module and does not restate it. */
 .crumb b { display: none; }
 .crumb span:last-of-type { display: none; }
+
+/* Pager labels sit on the 11px floor. */
+.pager a span { font-size: 11.5px; }
+
+/* --- tighter sheet: less white space between the apparatus --- */
+.sidenote { margin: 1.1rem 0; }
+.flag { margin: 1.2rem 0; padding: .75rem 1rem; }
+.ask { margin: 1.6rem 0 0; }
+.pager { margin-top: 2rem; }
+/* Where the column hugs the left edge, the menu toggle needs head room. */
+@media (max-width: 62rem) { body { padding-top: 3rem; } }

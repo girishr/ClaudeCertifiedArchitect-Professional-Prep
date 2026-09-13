@@ -1,0 +1,3 @@
+.specs/development/prompts*.md merge=union
+.specs/planning/tasks.md merge=union
+CHANGELOG.md merge=union

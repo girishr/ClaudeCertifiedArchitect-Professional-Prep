@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s08">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 08 of 12</p>
   <h1>Model and context strategy</h1>
@@ -19,6 +21,19 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 08 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="sonnet" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">The claims triage assistant is going to build. Claude reads each claim into a schema and drafts the adjuster's email; priority and coverage stay with the partner's systems. The team has to name a model tier before the first eval exists. <b>Which tier do you start on?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="opus">Opus. Insurance is regulated and accuracy matters</button>
+    <button type="button" data-v="sonnet">Sonnet, and move only when an eval set says so</button>
+    <button type="button" data-v="haiku">Haiku. Reading a claim into a schema is bounded work</button>
+    <button type="button" data-v="split">Opus for the read, Haiku for the draft, set per step now</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>You have a pattern and an architecture. You do not have a shippable system. Three
 decisions remain, and each one sets what the same architecture costs at production volume:
 which model, how much of the window to use, and whether context arrives progressively or
@@ -89,9 +104,22 @@ field on every response reports what actually counted.</p>
   </tbody>
 </table>
 
-<figure class="diagram wide" id="fig-context-strategies">
-<svg viewBox="0 0 760 206" role="img" aria-label="Four context strategies layered over one coding-agent session" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="0" y1="14" x2="760" y2="14" class="dg-line"/><circle cx="10" cy="14" r="7" class="dg-dot"/><text x="24" y="18" class="dg-t-b" text-anchor="start"><tspan x="24" dy="0">Session start</tspan></text><text x="0" y="44" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Task description and the</tspan><tspan x="0" dy="1.3em">files the user named</tspan></text><rect x="0" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="10" y="112" class="dg-t-b" text-anchor="start"><tspan x="10" dy="0">Monolithic prefix</tspan></text><text x="10" y="130" class="dg-s" text-anchor="start"><tspan x="10" dy="0">small, stable, cacheable</tspan></text><circle cx="204" cy="14" r="7" class="dg-dot"/><text x="218" y="18" class="dg-t-b" text-anchor="start"><tspan x="218" dy="0">Active work</tspan></text><text x="194" y="44" class="dg-s" text-anchor="start"><tspan x="194" dy="0">Each tool call appends to</tspan><tspan x="194" dy="1.3em">the working context</tspan></text><rect x="194" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="204" y="112" class="dg-t-b" text-anchor="start"><tspan x="204" dy="0">Progressive</tspan></text><text x="204" y="130" class="dg-s" text-anchor="start"><tspan x="204" dy="0">recent state is what the</tspan></text><text x="204" y="143" class="dg-s" text-anchor="start"><tspan x="204" dy="0">next step needs</tspan></text><circle cx="398" cy="14" r="7" class="dg-dot"/><text x="412" y="18" class="dg-t-b" text-anchor="start"><tspan x="412" dy="0">Discovery</tspan></text><text x="388" y="44" class="dg-s" text-anchor="start"><tspan x="388" dy="0">The agent needs a file it</tspan><tspan x="388" dy="1.3em">never loaded; searches the</tspan><tspan x="388" dy="1.3em">codebase</tspan></text><rect x="388" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="398" y="112" class="dg-t-b" text-anchor="start"><tspan x="398" dy="0">Just-in-time retrieval</tspan></text><text x="398" y="130" class="dg-s" text-anchor="start"><tspan x="398" dy="0">fetch a slice on demand</tspan></text><circle cx="592" cy="14" r="7" class="dg-dot"/><text x="606" y="18" class="dg-t-b" text-anchor="start"><tspan x="606" dy="0">Context filling</tspan></text><text x="582" y="44" class="dg-s" text-anchor="start"><tspan x="582" dy="0">Early exploration is</tspan><tspan x="582" dy="1.3em">crowding the window</tspan></text><rect x="582" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="592" y="112" class="dg-t-b" text-anchor="start"><tspan x="592" dy="0">Compaction</tspan></text><text x="592" y="130" class="dg-s" text-anchor="start"><tspan x="592" dy="0">keep what was learned,</tspan></text><text x="592" y="143" class="dg-s" text-anchor="start"><tspan x="592" dy="0">drop the transcript</tspan></text><text x="0" y="176" class="dg-t" text-anchor="start"><tspan x="0" dy="0">No single strategy carries this workload. Ask four questions: what is needed at the start, from the</tspan><tspan x="0" dy="1.3em">recent steps, on demand, and what can be compressed.</tspan></text></svg>
-<figcaption>The module's worked example: a long-running coding agent uses all four, one per phase.</figcaption>
+<figure class="stepper wide" id="fig-context-strategies">
+<svg viewBox="0 0 760 206" role="img" aria-label="Four context strategies layered over one coding-agent session" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="0" y1="14" x2="760" y2="14" class="dg-line"/><g data-at="1"><circle cx="10" cy="14" r="7" class="dg-dot"/><text x="24" y="18" class="dg-t-b" text-anchor="start"><tspan x="24" dy="0">Session start</tspan></text><text x="0" y="44" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Task description and the</tspan><tspan x="0" dy="1.3em">files the user named</tspan></text><rect x="0" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="10" y="112" class="dg-t-b" text-anchor="start"><tspan x="10" dy="0">Monolithic prefix</tspan></text><text x="10" y="130" class="dg-s" text-anchor="start"><tspan x="10" dy="0">small, stable, cacheable</tspan></text></g><g data-at="2"><circle cx="204" cy="14" r="7" class="dg-dot"/><text x="218" y="18" class="dg-t-b" text-anchor="start"><tspan x="218" dy="0">Active work</tspan></text><text x="194" y="44" class="dg-s" text-anchor="start"><tspan x="194" dy="0">Each tool call appends to</tspan><tspan x="194" dy="1.3em">the working context</tspan></text><rect x="194" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="204" y="112" class="dg-t-b" text-anchor="start"><tspan x="204" dy="0">Progressive</tspan></text><text x="204" y="130" class="dg-s" text-anchor="start"><tspan x="204" dy="0">recent state is what the</tspan></text><text x="204" y="143" class="dg-s" text-anchor="start"><tspan x="204" dy="0">next step needs</tspan></text></g><g data-at="3"><circle cx="398" cy="14" r="7" class="dg-dot"/><text x="412" y="18" class="dg-t-b" text-anchor="start"><tspan x="412" dy="0">Discovery</tspan></text><text x="388" y="44" class="dg-s" text-anchor="start"><tspan x="388" dy="0">The agent needs a file it</tspan><tspan x="388" dy="1.3em">never loaded; searches the</tspan><tspan x="388" dy="1.3em">codebase</tspan></text><rect x="388" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="398" y="112" class="dg-t-b" text-anchor="start"><tspan x="398" dy="0">Just-in-time retrieval</tspan></text><text x="398" y="130" class="dg-s" text-anchor="start"><tspan x="398" dy="0">fetch a slice on demand</tspan></text></g><g data-at="4"><circle cx="592" cy="14" r="7" class="dg-dot"/><text x="606" y="18" class="dg-t-b" text-anchor="start"><tspan x="606" dy="0">Context filling</tspan></text><text x="582" y="44" class="dg-s" text-anchor="start"><tspan x="582" dy="0">Early exploration is</tspan><tspan x="582" dy="1.3em">crowding the window</tspan></text><rect x="582" y="92" width="178" height="54" rx="6" class="dg-strip"/><text x="592" y="112" class="dg-t-b" text-anchor="start"><tspan x="592" dy="0">Compaction</tspan></text><text x="592" y="130" class="dg-s" text-anchor="start"><tspan x="592" dy="0">keep what was learned,</tspan></text><text x="592" y="143" class="dg-s" text-anchor="start"><tspan x="592" dy="0">drop the transcript</tspan></text></g><g data-at="5"><text x="0" y="176" class="dg-t" text-anchor="start"><tspan x="0" dy="0">No single strategy carries this workload. Ask four questions: what is needed at the start, from the</tspan><tspan x="0" dy="1.3em">recent steps, on demand, and what can be compressed.</tspan></text></g></svg>
+  <ol class="caps">
+    <li>One long-running coding agent session, read left to right. Four phases, and a different context strategy earns its place in each.</li>
+    <li>Session start. The task description and the files the user named go in as one prompt: a monolithic prefix, small, stable, and cacheable.</li>
+    <li>Active work. Each tool call appends to the working context, so carry forward only what the next step needs. Progressive, the production default.</li>
+    <li>Discovery. The agent needs a file it never loaded and searches the codebase for it. Just-in-time retrieval, a slice fetched on demand.</li>
+    <li>Context filling. Early exploration is crowding the window. Compaction keeps what was learned and drops the transcript.</li>
+    <li>No single strategy carries this workload. Ask four questions: what is needed at the start, from the recent steps, on demand, and what can be compressed.</li>
+  </ol>
+  <div class="stepbar">
+    <div class="cap"></div>
+    <div class="dots"></div>
+    <div class="nav"><button type="button" data-nav="prev" aria-label="Previous step">Prev</button><button type="button" data-nav="next" aria-label="Next step">Next</button></div>
+  </div>
+<figcaption>Step through it; arrow keys work too. The module's worked example: a long-running coding agent uses all four, one per phase.</figcaption>
 </figure>
 
 <div class="flag">
@@ -103,6 +131,37 @@ field on every response reports what actually counted.</p>
   separate decisions that interact but do not determine each other, and treating them as one
   is where most context designs go wrong.</p>
 </div>
+
+<table class="predict" data-options="Monolithic|Progressive|Retrieval|Compaction" data-where="8.4 Strategies" data-truth-prefix="">
+  <caption>The claims triage assistant, piece by piece. Call the strategy before the reason shows</caption>
+  <thead><tr><th>Piece of the work</th><th>Strategy</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr data-truth="Monolithic" data-name="Read the claim">
+      <td>Read one claim into the output schema. The system prompt and the schema are identical on every call; the claim is the only thing that changes</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">A bounded task with a predictable input size and a stable prefix that caches. Load it all, once. Nothing accumulates, so nothing needs carrying forward.</span></td>
+    </tr>
+    <tr data-truth="Progressive" data-name="The per-claim loop">
+      <td>The steps on one claim: read, call the rule engine for priority, call the coverage lookup, draft the email. Each step needs the last result, not the raw claim again</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">A staged workflow with narrow handoffs. Carry forward the extracted fields and the two lookups, not the transcript. The module names this the right default for most production workloads.</span></td>
+    </tr>
+    <tr data-truth="Retrieval" data-name="Policy wording in the email">
+      <td>The clause the adjuster's email quotes. Thousands of policy documents, revised by underwriting more often than the prompt is redeployed, and the email must cite its source</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">A corpus too large for the window, changing faster than a redeploy, needed one slice at a time with a citation. The coverage decision itself stays a tool call against live state, as Section 4 said; only the wording is retrieved.</span></td>
+    </tr>
+    <tr data-truth="Compaction" data-name="A claim reopened over six weeks">
+      <td>A disputed claim that reopens over six weeks: adjuster notes, three supplementary documents and two earlier drafts, all before the final email goes</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Long-running, and the full transcript is wasteful while recent state matters. Checkpoint to a summary at each reopening, and keep the load-bearing detail: claim number, amounts, the decisions already made.</span></td>
+    </tr>
+  </tbody>
+</table>
+<div class="tally"
+  data-perfect="Four of four. You layered the strategies the way the module's coding agent does: one per phase, none carrying the whole load."
+  data-good="Look for the row where you reached for one strategy to do everything. Strategy and sizing are separate decisions, and each piece of the claims work has a different answer."
+  data-poor="Go back to the four questions in the flag: what is needed at the start, from the recent steps, on demand, and what can be compressed. Each one maps to one row."></div>
 
 <h2><span class="num n">8.5</span>Extended thinking is a bill, not a mode</h2>
 
@@ -131,7 +190,7 @@ things, minimum:</p>
 </ol>
 
 <figure class="diagram wide" id="fig-eval-gate">
-<svg viewBox="0 0 760 270" role="img" aria-label="The eval gate on a model swap, with the Sonnet to Haiku worked case" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m21" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="230" height="46" rx="8" class="dg-box"/><text x="12" y="19" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Curated test set</tspan></text><text x="12" y="36" class="dg-s" text-anchor="start"><tspan x="12" dy="0">known-good outputs, stratified by type</tspan></text><path d="M233 23L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="0" y="56" width="230" height="46" rx="8" class="dg-box"/><text x="12" y="75" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Grading function</tspan></text><text x="12" y="92" class="dg-s" text-anchor="start"><tspan x="12" dy="0">rubric-graded or programmatic</tspan></text><path d="M233 79L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="0" y="112" width="230" height="46" rx="8" class="dg-box"/><text x="12" y="131" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Delta threshold</tspan></text><text x="12" y="148" class="dg-s" text-anchor="start"><tspan x="12" dy="0">set BEFORE the run</tspan></text><path d="M233 135L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="290" y="60" width="130" height="48" rx="8" class="dg-strip"/><text x="355" y="80" class="dg-t-b" text-anchor="middle"><tspan x="355" dy="0">Run both models</tspan></text><text x="355" y="97" class="dg-s" text-anchor="middle"><tspan x="355" dy="0">same set, same grader</tspan></text><path d="M423 84L470 84" class="dg-arrow" marker-end="url(#m21)"/><text x="480" y="12" class="dg-k" text-anchor="start"><tspan x="480" dy="0">Per type: Sonnet vs Haiku, line at 0.85</tspan></text><rect x="488" y="36.25" width="14" height="113.75" class="dg-fill-b"/><rect x="505" y="52.5" width="14" height="97.5" class="dg-fill-a"/><text x="503" y="164" class="dg-s" text-anchor="middle"><tspan x="503" dy="0">Type A</tspan></text><rect x="544" y="42.75" width="14" height="107.25" class="dg-fill-b"/><rect x="561" y="59" width="14" height="91" class="dg-fill-a"/><text x="559" y="164" class="dg-s" text-anchor="middle"><tspan x="559" dy="0">Type B</tspan></text><rect x="600" y="39.5" width="14" height="110.5" class="dg-fill-b"/><rect x="617" y="114.25" width="14" height="35.75" class="dg-fill-bad"/><text x="615" y="164" class="dg-s" text-anchor="middle"><tspan x="615" dy="0">Type C</tspan></text><rect x="656" y="33" width="14" height="117" class="dg-fill-b"/><rect x="673" y="104.5" width="14" height="45.5" class="dg-fill-bad"/><text x="671" y="164" class="dg-s" text-anchor="middle"><tspan x="671" dy="0">Type D</tspan></text><rect x="712" y="46" width="14" height="104" class="dg-fill-b"/><rect x="729" y="55.75" width="14" height="94.25" class="dg-fill-a"/><text x="727" y="164" class="dg-s" text-anchor="middle"><tspan x="727" dy="0">Type E</tspan></text><line x1="480" y1="68.75" x2="760" y2="68.75" class="dg-edge" stroke-dasharray="4 3"/><text x="760" y="180" class="dg-k-bad" text-anchor="end"><tspan x="760" dy="0">dashed line: 0.85, the rollback criterion</tspan></text><text x="0" y="200" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Two types crossed the line, so the migration as proposed was rejected. The salvage: route those two</tspan><tspan x="0" dy="1.3em">to Sonnet through the existing classifier, the rest to Haiku.</tspan></text><text x="0" y="238" class="dg-s" text-anchor="start"><tspan x="0" dy="0">The criterion was fixed before the data came in, so nobody negotiated with themselves. A stratified set surfaced</tspan><tspan x="0" dy="1.3em">the partial migration a single average would have hidden.</tspan></text></svg>
+<svg viewBox="0 0 760 270" role="img" aria-label="The eval gate on a model swap, with the Sonnet to Haiku worked case" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m21" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="230" height="46" rx="8" class="dg-box"/><text x="12" y="19" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Curated test set</tspan></text><text x="12" y="36" class="dg-s" text-anchor="start"><tspan x="12" dy="0">known-good outputs, stratified by type</tspan></text><path d="M233 23L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="0" y="56" width="230" height="46" rx="8" class="dg-box"/><text x="12" y="75" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Grading function</tspan></text><text x="12" y="92" class="dg-s" text-anchor="start"><tspan x="12" dy="0">rubric-graded or programmatic</tspan></text><path d="M233 79L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="0" y="112" width="230" height="46" rx="8" class="dg-box hi"/><text x="12" y="131" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Delta threshold</tspan></text><text x="12" y="148" class="dg-s" text-anchor="start"><tspan x="12" dy="0">set BEFORE the run</tspan></text><path d="M233 135L285 84" class="dg-arrow" marker-end="url(#m21)"/><rect x="290" y="60" width="130" height="48" rx="8" class="dg-strip"/><text x="355" y="80" class="dg-t-b" text-anchor="middle"><tspan x="355" dy="0">Run both models</tspan></text><text x="355" y="97" class="dg-s" text-anchor="middle"><tspan x="355" dy="0">same set, same grader</tspan></text><path d="M423 84L470 84" class="dg-arrow" marker-end="url(#m21)"/><text x="480" y="12" class="dg-k" text-anchor="start"><tspan x="480" dy="0">Per type: Sonnet vs Haiku, line at 0.85</tspan></text><rect x="488" y="36.25" width="14" height="113.75" class="dg-fill-b"/><rect x="505" y="52.5" width="14" height="97.5" class="dg-fill-a"/><text x="503" y="164" class="dg-s" text-anchor="middle"><tspan x="503" dy="0">Type A</tspan></text><rect x="544" y="42.75" width="14" height="107.25" class="dg-fill-b"/><rect x="561" y="59" width="14" height="91" class="dg-fill-a"/><text x="559" y="164" class="dg-s" text-anchor="middle"><tspan x="559" dy="0">Type B</tspan></text><rect x="600" y="39.5" width="14" height="110.5" class="dg-fill-b"/><rect x="617" y="114.25" width="14" height="35.75" class="dg-fill-bad"/><text x="615" y="164" class="dg-s" text-anchor="middle"><tspan x="615" dy="0">Type C</tspan></text><rect x="656" y="33" width="14" height="117" class="dg-fill-b"/><rect x="673" y="104.5" width="14" height="45.5" class="dg-fill-bad"/><text x="671" y="164" class="dg-s" text-anchor="middle"><tspan x="671" dy="0">Type D</tspan></text><rect x="712" y="46" width="14" height="104" class="dg-fill-b"/><rect x="729" y="55.75" width="14" height="94.25" class="dg-fill-a"/><text x="727" y="164" class="dg-s" text-anchor="middle"><tspan x="727" dy="0">Type E</tspan></text><line x1="480" y1="68.75" x2="760" y2="68.75" class="dg-edge" stroke-dasharray="4 3"/><text x="760" y="180" class="dg-k-bad" text-anchor="end"><tspan x="760" dy="0">dashed line: 0.85, the rollback criterion</tspan></text><text x="0" y="200" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Two types crossed the line, so the migration as proposed was rejected. The salvage: route those two</tspan><tspan x="0" dy="1.3em">to Sonnet through the existing classifier, the rest to Haiku.</tspan></text><text x="0" y="238" class="dg-s" text-anchor="start"><tspan x="0" dy="0">The criterion was fixed before the data came in, so nobody negotiated with themselves. A stratified set surfaced</tspan><tspan x="0" dy="1.3em">the partial migration a single average would have hidden.</tspan></text></svg>
 <figcaption>Treat a model swap as a release. Three inputs, one run, and a line you drew before you looked.</figcaption>
 </figure>
 
@@ -143,16 +202,45 @@ Satisfaction scores had not moved. Every call in the stack was Opus, because the
 no per-step model decision, because there had been no per-step eval that would have forced
 one. Extended thinking had been left on for a routing classifier that does no reasoning.</p>
 
+<div class="bet" data-where="8.7 Watch out"
+  data-stamp-right="You called it: cost fell 71 percent, latency to 940 milliseconds, and satisfaction did not move."
+  data-stamp-wrong="Cost fell 71 percent, latency to 940 milliseconds, and satisfaction did not move in either direction. Opus on every step had been paying for quality nobody had measured.">
+  <span class="live-label">Place your bet before the reveal</span>
+  <p class="q">The fix was retroactive: build the eval set, then put each step on the tier the eval said it earned. Where did cost land, and what happened to satisfaction?</p>
+  <div class="opts">
+    <button type="button" data-k="A"><span class="k">A</span><span>Cost fell by about a third. Satisfaction dipped a little on the steps that left Opus, and the partner accepted the trade.</span></button>
+    <button type="button" data-k="B" data-right><span class="k">B</span><span>Cost fell 71 percent. Satisfaction did not move at all.</span></button>
+    <button type="button" data-k="C"><span class="k">C</span><span>Cost fell 71 percent. Satisfaction rose, because the latency drop was something users could feel.</span></button>
+  </div>
+</div>
+<div class="bet-reveal">
 <p>The fix, retroactively: build the eval set, route the classifier to Haiku, mid-pipeline
 summarisation to Sonnet, keep Opus only on final response composition where the eval said it
 earned its place. Cost fell 71 percent, latency to 940 milliseconds, satisfaction
 unchanged.</p>
+</div>
 
 <div class="flag">
   <span class="label">The line worth carrying into the exam</span>
   <p>Not choosing a model tier is choosing the most expensive one. The absence of a
   deliberate choice is not neutral.</p>
 </div>
+
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">The claims triage assistant, before the first eval exists. <b>Which model tier do you start on?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="opus">Opus. Insurance is regulated and accuracy matters</button>
+    <button type="button" data-v="sonnet">Sonnet, and move only when an eval set says so</button>
+    <button type="button" data-v="haiku">Haiku. Reading a claim into a schema is bounded work</button>
+    <button type="button" data-v="split">Opus for the read, Haiku for the draft, set per step now</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. Sonnet is the default starting point. Opus is earned upward and Haiku downward by an eval set, not by an instinct about the domain or the task.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the eval gate did that. Sonnet is the starting point. A move to Opus or Haiku, per step or across the board, is a release: a test set, a grader, and a threshold drawn before the run.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The section starts on Sonnet and moves only on evidence. Opus because the domain is regulated is the Watch out at seven times the budget. Haiku because the task looks bounded, or a per-step split fixed before the first eval, is the same reflex pointing the other way.</template>
+</section>
 
 <div class="quiz" data-answer="B">
   <p class="scenario">A trading desk wants a one-line natural-language summary of each
@@ -172,6 +260,25 @@ unchanged.</p>
   Monolithic session history is the second problem and progressive context is its fix. The
   tier question comes last, and it comes with an eval set attached.</div>
 </div>
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>This section decides the claims assistant's model tier and how its context is carried, piece by piece. Your calls are stamped here and follow you into later sections.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M1 &sect;10</span><span>Decision 4: entry point, and what governance rules out</span></li>
+      <li><span>M1 &sect;11</span><span>Assembly: your architecture against the module's</span></li>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="07-rag-pipeline.html"><span>Previous</span>07 RAG pipeline design</a>
   <a class="next" href="09-prompting.html"><span>Next</span>09 Prompting as architecture</a>

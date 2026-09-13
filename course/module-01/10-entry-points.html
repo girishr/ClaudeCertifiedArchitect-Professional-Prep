@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s10">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 10 of 12</p>
   <h1>Entry points and governance</h1>
@@ -19,6 +21,19 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 10 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="app" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">The claims triage assistant reaches Decision 4. The users are adjusters, not engineers. Claude reads each claim and drafts the email; the rule engine and the coverage lookup are the insurer's own systems. The insurer runs on AWS under an enterprise agreement, and the CIO's policy is that customer data stays on the approved cloud. <b>Which entry point do you recommend?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="claudeai">Claude.ai Enterprise. Adjusters work each claim in a Project, no build cost</button>
+    <button type="button" data-v="code">Claude Code, with MCP servers for the rule engine and the coverage system</button>
+    <button type="button" data-v="cowork">Cowork on the adjusters' desktops, so Claude can act on their systems</button>
+    <button type="button" data-v="app">A custom app on the API or SDK, behind the insurer's SSO</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>The longest screen in the official module sits here, and the section looks small in the
 contents list. It is not. Three decisions, made in sequence, and the order is what prevents
 the most common architecture mistakes.</p>
@@ -31,9 +46,21 @@ the most common architecture mistakes.</p>
 
 <p>Section 3 taught the vocabulary. This is the selection work under real constraints.</p>
 
-<figure class="diagram wide" id="fig-entry-sequence">
-<svg viewBox="0 0 760 268" role="img" aria-label="Governance first, then entry point, interface and route, in sequence" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m24" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="760" height="66" rx="8" class="dg-box-bad"/><text x="14" y="22" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">0  Constraints rule options out first</tspan></text><text x="14" y="40" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Attorney-client privilege · HIPAA · GDPR and residency · FedRAMP · the partner&#x27;s approved cloud list.</tspan><tspan x="14" dy="1.3em">Name the constraint, let it eliminate before preferences do.</tspan></text><path d="M118.667 69L118.667 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="0" y="96" width="237.333" height="116" rx="8" class="dg-box"/><circle cx="20" cy="118" r="12" class="dg-dot"/><text x="20" y="122.5" class="dg-num" text-anchor="middle"><tspan x="20" dy="0">1</tspan></text><text x="40" y="122" class="dg-t-b" text-anchor="start"><tspan x="40" dy="0">Entry point</tspan></text><text x="14" y="146" class="dg-s" text-anchor="start"><tspan x="14" dy="0">chosen because it fits the</tspan><tspan x="14" dy="1.3em">work and the user</tspan></text><text x="14" y="180" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Claude.ai, Claude Code,</tspan><tspan x="14" dy="1.3em">Cowork, a custom app</tspan></text><path d="M240.333 154L258.333 154" class="dg-arrow" marker-end="url(#m24)"/><path d="M380 69L380 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="261.333" y="96" width="237.333" height="116" rx="8" class="dg-box"/><circle cx="281.333" cy="118" r="12" class="dg-dot"/><text x="281.333" y="122.5" class="dg-num" text-anchor="middle"><tspan x="281.333" dy="0">2</tspan></text><text x="301.333" y="122" class="dg-t-b" text-anchor="start"><tspan x="301.333" dy="0">Build-time interface</tspan></text><text x="275.333" y="146" class="dg-s" text-anchor="start"><tspan x="275.333" dy="0">chosen because it suits the</tspan><tspan x="275.333" dy="1.3em">team</tspan></text><text x="275.333" y="180" class="dg-s" text-anchor="start"><tspan x="275.333" dy="0">API, SDK, MCP, Agent SDK</tspan></text><path d="M501.667 154L519.667 154" class="dg-arrow" marker-end="url(#m24)"/><path d="M641.333 69L641.333 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="522.667" y="96" width="237.333" height="116" rx="8" class="dg-box"/><circle cx="542.667" cy="118" r="12" class="dg-dot"/><text x="542.667" y="122.5" class="dg-num" text-anchor="middle"><tspan x="542.667" dy="0">3</tspan></text><text x="562.667" y="122" class="dg-t-b" text-anchor="start"><tspan x="562.667" dy="0">Delivery route</tspan></text><text x="536.667" y="146" class="dg-s" text-anchor="start"><tspan x="536.667" dy="0">chosen because it fits the</tspan><tspan x="536.667" dy="1.3em">cloud commitment</tspan></text><text x="536.667" y="180" class="dg-s" text-anchor="start"><tspan x="536.667" dy="0">Anthropic, Bedrock, Vertex,</tspan><tspan x="536.667" dy="1.3em">Foundry</tspan></text><text x="0" y="238" class="dg-t" text-anchor="start"><tspan x="0" dy="0">In this order. The entry point chosen before the user is named is the most common and most avoidable</tspan><tspan x="0" dy="1.3em">error in the section.</tspan></text></svg>
-<figcaption>Three decisions, made in sequence, after the constraints have had their say.</figcaption>
+<figure class="stepper wide" id="fig-entry-sequence">
+<svg viewBox="0 0 760 268" role="img" aria-label="Governance first, then entry point, interface and route, in sequence" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m24" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="760" height="66" rx="8" class="dg-box-bad"/><text x="14" y="22" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">0  Constraints rule options out first</tspan></text><text x="14" y="40" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Attorney-client privilege · HIPAA · GDPR and residency · FedRAMP · the partner&#x27;s approved cloud list.</tspan><tspan x="14" dy="1.3em">Name the constraint, let it eliminate before preferences do.</tspan></text><g data-at="1"><path d="M118.667 69L118.667 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="0" y="96" width="237.333" height="116" rx="8" class="dg-box hi"/><circle cx="20" cy="118" r="12" class="dg-dot"/><text x="20" y="122.5" class="dg-num" text-anchor="middle"><tspan x="20" dy="0">1</tspan></text><text x="40" y="122" class="dg-t-b" text-anchor="start"><tspan x="40" dy="0">Entry point</tspan></text><text x="14" y="146" class="dg-s" text-anchor="start"><tspan x="14" dy="0">chosen because it fits the</tspan><tspan x="14" dy="1.3em">work and the user</tspan></text><text x="14" y="180" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Claude.ai, Claude Code,</tspan><tspan x="14" dy="1.3em">Cowork, a custom app</tspan></text></g><g data-at="2"><path d="M240.333 154L258.333 154" class="dg-arrow" marker-end="url(#m24)"/><path d="M380 69L380 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="261.333" y="96" width="237.333" height="116" rx="8" class="dg-box"/><circle cx="281.333" cy="118" r="12" class="dg-dot"/><text x="281.333" y="122.5" class="dg-num" text-anchor="middle"><tspan x="281.333" dy="0">2</tspan></text><text x="301.333" y="122" class="dg-t-b" text-anchor="start"><tspan x="301.333" dy="0">Build-time interface</tspan></text><text x="275.333" y="146" class="dg-s" text-anchor="start"><tspan x="275.333" dy="0">chosen because it suits the</tspan><tspan x="275.333" dy="1.3em">team</tspan></text><text x="275.333" y="180" class="dg-s" text-anchor="start"><tspan x="275.333" dy="0">API, SDK, MCP, Agent SDK</tspan></text></g><g data-at="3"><path d="M501.667 154L519.667 154" class="dg-arrow" marker-end="url(#m24)"/><path d="M641.333 69L641.333 93" class="dg-arrow" marker-end="url(#m24)"/><rect x="522.667" y="96" width="237.333" height="116" rx="8" class="dg-box"/><circle cx="542.667" cy="118" r="12" class="dg-dot"/><text x="542.667" y="122.5" class="dg-num" text-anchor="middle"><tspan x="542.667" dy="0">3</tspan></text><text x="562.667" y="122" class="dg-t-b" text-anchor="start"><tspan x="562.667" dy="0">Delivery route</tspan></text><text x="536.667" y="146" class="dg-s" text-anchor="start"><tspan x="536.667" dy="0">chosen because it fits the</tspan><tspan x="536.667" dy="1.3em">cloud commitment</tspan></text><text x="536.667" y="180" class="dg-s" text-anchor="start"><tspan x="536.667" dy="0">Anthropic, Bedrock, Vertex,</tspan><tspan x="536.667" dy="1.3em">Foundry</tspan></text></g><g data-at="4"><text x="0" y="238" class="dg-t" text-anchor="start"><tspan x="0" dy="0">In this order. The entry point chosen before the user is named is the most common and most avoidable</tspan><tspan x="0" dy="1.3em">error in the section.</tspan></text></g></svg>
+  <ol class="caps">
+    <li>Step zero, before any preference: the constraints. Privilege, HIPAA, GDPR and residency, FedRAMP, the partner's approved cloud list. Name the constraint and let it eliminate options first.</li>
+    <li>Decision 1, the entry point. Chosen because it fits the work and the user: Claude.ai, Claude Code, Cowork, or a custom app.</li>
+    <li>Decision 2, the build-time interface. Chosen because it suits the team: API, SDK, MCP, Agent SDK.</li>
+    <li>Decision 3, the delivery route. Chosen because it fits the cloud commitment: Anthropic first-party, Bedrock, Vertex, Foundry.</li>
+    <li>In this order. The entry point chosen before the user is named is the most common and most avoidable error in the section.</li>
+  </ol>
+  <div class="stepbar">
+    <div class="cap"></div>
+    <div class="dots"></div>
+    <div class="nav"><button type="button" data-nav="prev" aria-label="Previous step">Prev</button><button type="button" data-nav="next" aria-label="Next step">Next</button></div>
+  </div>
+<figcaption>Step through it; arrow keys work too. Three decisions, made in sequence, after the constraints have had their say.</figcaption>
 </figure>
 
 <h2><span class="num n">10.1</span>Entry points</h2>
@@ -152,7 +179,7 @@ partner has already committed to.</p>
 </table>
 
 <figure class="diagram wide" id="fig-delivery-routes">
-<svg viewBox="0 0 760 314" role="img" aria-label="Four delivery routes around one model" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m26" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="380" y1="120" x2="260" y2="40" class="dg-arrow"/><line x1="380" y1="120" x2="500" y2="40" class="dg-arrow"/><line x1="380" y1="120" x2="260" y2="200" class="dg-arrow"/><line x1="380" y1="120" x2="500" y2="200" class="dg-arrow"/><rect x="0" y="15" width="260" height="50" rx="8" class="dg-box"/><text x="12" y="35" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Anthropic first-party</tspan></text><text x="12" y="53" class="dg-s" text-anchor="start"><tspan x="12" dy="0">no cloud commitment, newest features first</tspan></text><rect x="500" y="15" width="260" height="50" rx="8" class="dg-box"/><text x="512" y="35" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">AWS Bedrock</tspan></text><text x="512" y="53" class="dg-s" text-anchor="start"><tspan x="512" dy="0">AWS agreement, IAM, inference profiles</tspan></text><rect x="0" y="175" width="260" height="50" rx="8" class="dg-box"/><text x="12" y="195" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">GCP Vertex AI</tspan></text><text x="12" y="213" class="dg-s" text-anchor="start"><tspan x="12" dy="0">GCP project, Model Garden, one audit trail</tspan></text><rect x="500" y="175" width="260" height="50" rx="8" class="dg-box"/><text x="512" y="195" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">Microsoft Foundry</tspan></text><text x="512" y="213" class="dg-s" text-anchor="start"><tspan x="512" dy="0">Azure, Entra ID, verify the hosting form</tspan></text><circle cx="380" cy="120" r="54" class="dg-box"/><text x="380" y="116" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Same model</tspan></text><text x="380" y="134" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">same behaviour</tspan></text><text x="0" y="250" class="dg-s" text-anchor="start"><tspan x="0" dy="0">What changes: whose account the spend lands in, which identity system, which region, which contract. What does</tspan><tspan x="0" dy="1.3em">not: prompting, evals, tool use, context behaviour.</tspan></text><text x="0" y="284" class="dg-s" text-anchor="start"><tspan x="0" dy="0">CSP routes lag the first-party API on new features by weeks. The rule is what the partner has already committed</tspan><tspan x="0" dy="1.3em">to, not technical capability.</tspan></text></svg>
+<svg viewBox="0 0 760 314" role="img" aria-label="Four delivery routes around one model" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m26" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="380" y1="120" x2="260" y2="40" class="dg-arrow"/><line x1="380" y1="120" x2="500" y2="40" class="dg-arrow"/><line x1="380" y1="120" x2="260" y2="200" class="dg-arrow"/><line x1="380" y1="120" x2="500" y2="200" class="dg-arrow"/><rect x="0" y="15" width="260" height="50" rx="8" class="dg-box"/><text x="12" y="35" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Anthropic first-party</tspan></text><text x="12" y="53" class="dg-s" text-anchor="start"><tspan x="12" dy="0">no cloud commitment, newest features first</tspan></text><rect x="500" y="15" width="260" height="50" rx="8" class="dg-box"/><text x="512" y="35" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">AWS Bedrock</tspan></text><text x="512" y="53" class="dg-s" text-anchor="start"><tspan x="512" dy="0">AWS agreement, IAM, inference profiles</tspan></text><rect x="0" y="175" width="260" height="50" rx="8" class="dg-box"/><text x="12" y="195" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">GCP Vertex AI</tspan></text><text x="12" y="213" class="dg-s" text-anchor="start"><tspan x="12" dy="0">GCP project, Model Garden, one audit trail</tspan></text><rect x="500" y="175" width="260" height="50" rx="8" class="dg-box"/><text x="512" y="195" class="dg-t-b" text-anchor="start"><tspan x="512" dy="0">Microsoft Foundry</tspan></text><text x="512" y="213" class="dg-s" text-anchor="start"><tspan x="512" dy="0">Azure, Entra ID, verify the hosting form</tspan></text><circle cx="380" cy="120" r="54" class="dg-box hi"/><text x="380" y="116" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">Same model</tspan></text><text x="380" y="134" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">same behaviour</tspan></text><text x="0" y="250" class="dg-s" text-anchor="start"><tspan x="0" dy="0">What changes: whose account the spend lands in, which identity system, which region, which contract. What does</tspan><tspan x="0" dy="1.3em">not: prompting, evals, tool use, context behaviour.</tspan></text><text x="0" y="284" class="dg-s" text-anchor="start"><tspan x="0" dy="0">CSP routes lag the first-party API on new features by weeks. The rule is what the partner has already committed</tspan><tspan x="0" dy="1.3em">to, not technical capability.</tspan></text></svg>
 <figcaption>The decision is procurement, not engineering.</figcaption>
 </figure>
 
@@ -176,6 +203,42 @@ preferences do.</p>
   </tbody>
 </table>
 
+<table class="predict" data-options="Ruled out|Survives" data-where="10.5 Constraints" data-truth-prefix="">
+  <caption>The claims triage assistant against its constraints. Adjusters as users, AWS under an enterprise agreement, customer data on the approved cloud. Call each proposal before the reason shows</caption>
+  <thead><tr><th>Proposal</th><th>Call</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr data-truth="Ruled out" data-name="Claude.ai consumer tier">
+      <td>Claude.ai on a consumer tier. Adjusters paste each claim into a chat and copy the draft email out</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Customer data on a surface the insurer cannot audit end to end, outside the approved cloud, with nothing to call the rule engine or the coverage lookup. Zero build cost buys zero integration.</span></td>
+    </tr>
+    <tr data-truth="Ruled out" data-name="Claude Code on adjusters' laptops">
+      <td>Claude Code on the adjusters' laptops, with MCP servers for the rule engine and the coverage system</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Adjusters do not run terminals; the entry point was chosen before the user was named. And with no other Claude client in the insurer, MCP is a protocol layer paying integration cost for nothing.</span></td>
+    </tr>
+    <tr data-truth="Survives" data-name="Custom app, SDK, SSO, Bedrock">
+      <td>A custom claims application on the API or SDK, behind the insurer's SSO, routed through Bedrock on the existing AWS account</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">The route on the approved CSP, with identity, networking and audit inherited from the account the insurer already runs. The approval above threshold becomes a deterministic gate in server-side code, and tool calls are audited at the server boundary.</span></td>
+    </tr>
+    <tr data-truth="Survives" data-name="Plain tool use, not MCP">
+      <td>The same application, with the rule engine and the coverage lookup wired in as API tool use rather than as MCP servers</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Pick raw tool use when the tools live inside one product. MCP earns its place when one tool entry point must be reachable from multiple clients, and there is one client here.</span></td>
+    </tr>
+    <tr data-truth="Ruled out" data-name="First-party API for newest features">
+      <td>The same application on the Anthropic first-party API instead, because it gets new features the day they ship</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">A route outside the approved cloud vendor list is out whatever its technical capability. This is procurement, not engineering: the right route is the one the CIO has already cleared.</span></td>
+    </tr>
+  </tbody>
+</table>
+<div class="tally"
+  data-perfect="Five of five. You let the constraints eliminate first and picked the entry point for the user, which is the order this section exists to teach."
+  data-good="Look at what you let survive. Every proposal here is technically capable; the ones that fall are ruled out by who the user is and by what the CIO has already cleared, not by what Claude can do."
+  data-poor="Go back to step zero of the figure. Name the constraint, let it eliminate, then choose the entry point for the user, the interface for the team, and the route for the cloud commitment."></div>
+
 <h2><span class="num n">10.6</span>Watch out: Claude Code outside engineering</h2>
 
 <p>A regional bank proposed an operations assistant for branch staff: look up balances,
@@ -183,6 +246,18 @@ schedule appointments, answer policy questions. The design was Claude Code on br
 laptops with a per-branch CLAUDE.md, MCP servers for the customer database, appointment
 system and policy corpus, and subagents running compliance checks on every interaction.</p>
 
+<div class="bet" data-where="10.6 Watch out"
+  data-stamp-right="You called it: the entry point was chosen before the user was named. Branch staff do not run terminals."
+  data-stamp-wrong="The module puts the entry point first: it was chosen before the user was named, and branch staff do not run terminals. That constraint should have decided the entry point before anything else.">
+  <span class="live-label">Place your bet before the reveal</span>
+  <p class="q">The module finds three failures in that proposal. Which one does it put first?</p>
+  <div class="opts">
+    <button type="button" data-k="A"><span class="k">A</span><span>MCP carried forward from a previous project as a default, with no second Claude client anywhere in the bank to justify it.</span></button>
+    <button type="button" data-k="B" data-right><span class="k">B</span><span>The entry point was chosen before the user was named. Branch staff do not run terminals.</span></button>
+    <button type="button" data-k="C"><span class="k">C</span><span>Compliance, the highest-consequence path, handed to subagents, the weakest deterministic guarantee in the design.</span></button>
+  </div>
+</div>
+<div class="bet-reveal">
 <p>Three failures, each visible in the proposal:</p>
 
 <ul>
@@ -200,6 +275,23 @@ system and policy corpus, and subagents running compliance checks on every inter
 <p>The architecture that fits: a custom web application calling the API directly,
 compliance in deterministic server-side code, the UI authenticated through the bank's SSO
 and shaped like a banking workflow, and tool calls audited at the server boundary.</p>
+</div>
+
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">The claims triage assistant: adjusters as users, the insurer's own rule engine and coverage lookup, AWS under an enterprise agreement, customer data on the approved cloud. <b>Which entry point?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="claudeai">Claude.ai Enterprise. Adjusters work each claim in a Project, no build cost</button>
+    <button type="button" data-v="code">Claude Code, with MCP servers for the rule engine and the coverage system</button>
+    <button type="button" data-v="cowork">Cowork on the adjusters' desktops, so Claude can act on their systems</button>
+    <button type="button" data-v="app">A custom app on the API or SDK, behind the insurer's SSO</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. The users are adjusters working a claims workflow, not a chat, so the entry point is a custom application on the API or SDK behind the insurer's SSO. The route follows the cloud commitment, Bedrock on the AWS account, and the CIO's policy rules the rest out before cost or ergonomics get a say.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the order of the three decisions did that. Name the user first: adjusters do not run terminals and do not need a chat product, they need claims work done inside their own workflow. A custom app on the API or SDK, SSO in front, Bedrock underneath because that is the approved cloud.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The section chooses the entry point after naming the user and after governance has eliminated options. Adjusters do not run terminals, so Claude Code is the Watch out. Claude.ai cannot be embedded in the claims workflow or call the rule engine. Cowork acts on one desktop, where the approval gate cannot be deterministic server-side code. A custom app on the API or SDK, behind SSO, on the approved cloud.</template>
+</section>
 
 <div class="quiz" data-answer="B">
   <p class="scenario">A healthcare network wants a clinical documentation assistant that
@@ -218,6 +310,24 @@ and shaped like a banking workflow, and tool calls audited at the server boundar
   the scenario states the BAA already covers Bedrock. That is a constraint that has already
   eliminated options, and it outranks every preference in the room.</div>
 </div>
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>This section decides the claims assistant's entry point and delivery route, and what the insurer's governance rules out before any preference gets a say. Your calls are stamped here and follow you into later sections.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M1 &sect;11</span><span>Assembly: your architecture against the module's</span></li>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="09-prompting.html"><span>Previous</span>09 Prompting as architecture</a>
   <a class="next" href="11-assembly.html"><span>Next</span>11 Assembly</a>

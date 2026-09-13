@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s03">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 03 of 12</p>
   <h1>Platform map and primitives</h1>
@@ -19,12 +21,25 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 03 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="entry" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">A proposal puts Claude Code in front of bank branch staff, on the grounds that <em>it is all Claude.</em> <b>Where is the mistake?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="none">Nowhere. The same model sits under every product</button>
+    <button type="button" data-v="entry">The entry point. The wrapper was built for developers</button>
+    <button type="button" data-v="build">The build-time interface. Branch staff need an app on the Agent SDK</button>
+    <button type="button" data-v="route">The delivery route. A bank's compliance posture rules it out</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>Three words get used as if they were alternatives to each other. They are not. Every
 deployment involves all three, and collapsing them is the most common source of muddled
 architecture conversations. Learn the names here; the choosing happens in section 10.</p>
 
 <figure class="diagram wide" id="fig-three-layers">
-<svg viewBox="0 0 760 350" role="img" aria-label="The three layers of the platform, top to bottom" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="760" height="98" rx="8" class="dg-box"/><text x="16" y="26" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Entry points</tspan></text><text x="16" y="46" class="dg-s" text-anchor="start"><tspan x="16" dy="0">What a person or system directly touches. Chosen for the user and the work</tspan></text><text x="16" y="84" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Claude.ai · Claude Code · Cowork · a custom app on the API</tspan></text><text x="744" y="26" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: The user</tspan></text><rect x="0" y="108" width="760" height="98" rx="8" class="dg-box"/><text x="16" y="134" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Build-time interfaces</tspan></text><text x="16" y="154" class="dg-s" text-anchor="start"><tspan x="16" dy="0">What the partner&#x27;s code is written against. Chosen for the engineering team</tspan></text><text x="16" y="192" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Direct API · SDKs · MCP · Agent SDK</tspan></text><text x="744" y="134" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: The engineer</tspan></text><rect x="0" y="216" width="760" height="98" rx="8" class="dg-box"/><text x="16" y="242" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Delivery routes</tspan></text><text x="16" y="262" class="dg-s" text-anchor="start"><tspan x="16" dy="0">Where the traffic terminates and whose infrastructure runs it. Chosen for</tspan><tspan x="16" dy="1.3em">cloud commitments and compliance</tspan></text><text x="16" y="300" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Anthropic · AWS Bedrock · GCP Vertex AI · Microsoft Foundry</tspan></text><text x="744" y="242" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: Procurement and compliance</tspan></text><text x="380" y="338" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">Not alternatives. Every deployment has all three, and a decision in one rarely dictates the others.</tspan></text></svg>
+<svg viewBox="0 0 760 350" role="img" aria-label="The three layers of the platform, top to bottom" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="760" height="98" rx="8" class="dg-box hi"/><text x="16" y="26" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Entry points</tspan></text><text x="16" y="46" class="dg-s" text-anchor="start"><tspan x="16" dy="0">What a person or system directly touches. Chosen for the user and the work</tspan></text><text x="16" y="84" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Claude.ai · Claude Code · Cowork · a custom app on the API</tspan></text><text x="744" y="26" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: The user</tspan></text><rect x="0" y="108" width="760" height="98" rx="8" class="dg-box"/><text x="16" y="134" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Build-time interfaces</tspan></text><text x="16" y="154" class="dg-s" text-anchor="start"><tspan x="16" dy="0">What the partner&#x27;s code is written against. Chosen for the engineering team</tspan></text><text x="16" y="192" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Direct API · SDKs · MCP · Agent SDK</tspan></text><text x="744" y="134" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: The engineer</tspan></text><rect x="0" y="216" width="760" height="98" rx="8" class="dg-box"/><text x="16" y="242" class="dg-t-b" text-anchor="start"><tspan x="16" dy="0">Delivery routes</tspan></text><text x="16" y="262" class="dg-s" text-anchor="start"><tspan x="16" dy="0">Where the traffic terminates and whose infrastructure runs it. Chosen for</tspan><tspan x="16" dy="1.3em">cloud commitments and compliance</tspan></text><text x="16" y="300" class="dg-code" text-anchor="start"><tspan x="16" dy="0">Anthropic · AWS Bedrock · GCP Vertex AI · Microsoft Foundry</tspan></text><text x="744" y="242" class="dg-tag" text-anchor="end"><tspan x="744" dy="0">Decided by: Procurement and compliance</tspan></text><text x="380" y="338" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">Not alternatives. Every deployment has all three, and a decision in one rarely dictates the others.</tspan></text></svg>
 <figcaption>Three layers, three different conversations with three different stakeholders.</figcaption>
 </figure>
 
@@ -70,9 +85,22 @@ distinction that should have ruled the choice out in the first minute.</p>
 of these seven. Being able to name the primitive a scenario needs is a separate skill from
 naming the pattern, and the module tests it separately.</p>
 
-<figure class="diagram wide" id="fig-seven-primitives">
-<svg viewBox="0 0 760 246" role="img" aria-label="The seven primitives and their one-word jobs, and the patterns as assemblies of them" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="12" y="26" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Tools</tspan></text><text x="12" y="46" class="dg-tag" text-anchor="start"><tspan x="12" dy="0">Act</tspan></text><rect x="193.5" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="205.5" y="26" class="dg-t-b" text-anchor="start"><tspan x="205.5" dy="0">MCP</tspan></text><text x="205.5" y="46" class="dg-tag" text-anchor="start"><tspan x="205.5" dy="0">Connect</tspan></text><rect x="387" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="399" y="26" class="dg-t-b" text-anchor="start"><tspan x="399" dy="0">Subagents</tspan></text><text x="399" y="46" class="dg-tag" text-anchor="start"><tspan x="399" dy="0">Isolate, parallelise</tspan></text><rect x="580.5" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="592.5" y="26" class="dg-t-b" text-anchor="start"><tspan x="592.5" dy="0">Hooks</tspan></text><text x="592.5" y="46" class="dg-tag" text-anchor="start"><tspan x="592.5" dy="0">Guarantee</tspan></text><rect x="0" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="12" y="104" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Skills</tspan></text><text x="12" y="124" class="dg-tag" text-anchor="start"><tspan x="12" dy="0">Package a procedure</tspan></text><rect x="193.5" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="205.5" y="104" class="dg-t-b" text-anchor="start"><tspan x="205.5" dy="0">Agent Teams</tspan></text><text x="205.5" y="124" class="dg-tag" text-anchor="start"><tspan x="205.5" dy="0">Coordinate peers</tspan></text><rect x="387" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="399" y="104" class="dg-t-b" text-anchor="start"><tspan x="399" dy="0">Dynamic Workflows</tspan></text><text x="399" y="124" class="dg-tag" text-anchor="start"><tspan x="399" dy="0">Compose at runtime</tspan></text><text x="0" y="174" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Patterns are assemblies of these parts</tspan></text><rect x="0" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="10" y="204" class="dg-t-b" text-anchor="start"><tspan x="10" dy="0">Augmented call</tspan></text><text x="10" y="222" class="dg-s" text-anchor="start"><tspan x="10" dy="0">model + tools</tspan></text><rect x="193.5" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="203.5" y="204" class="dg-t-b" text-anchor="start"><tspan x="203.5" dy="0">Workflow</tspan></text><text x="203.5" y="222" class="dg-s" text-anchor="start"><tspan x="203.5" dy="0">primitives wired in your code</tspan></text><rect x="387" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="397" y="204" class="dg-t-b" text-anchor="start"><tspan x="397" dy="0">Agent</tspan></text><text x="397" y="222" class="dg-s" text-anchor="start"><tspan x="397" dy="0">model chooses its tool calls</tspan></text><rect x="580.5" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="590.5" y="204" class="dg-t-b" text-anchor="start"><tspan x="590.5" dy="0">Multi-agent</tspan></text><text x="590.5" y="222" class="dg-s" text-anchor="start"><tspan x="590.5" dy="0">orchestrator + subagents</tspan></text></svg>
-<figcaption>Name the primitive a scenario needs before you name the pattern. The module tests the two separately.</figcaption>
+<figure class="stepper wide" id="fig-seven-primitives">
+<svg viewBox="0 0 760 246" role="img" aria-label="The seven primitives and their one-word jobs, and the patterns as assemblies of them" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="12" y="26" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Tools</tspan></text><text x="12" y="46" class="dg-tag" text-anchor="start"><tspan x="12" dy="0">Act</tspan></text><rect x="193.5" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="205.5" y="26" class="dg-t-b" text-anchor="start"><tspan x="205.5" dy="0">MCP</tspan></text><text x="205.5" y="46" class="dg-tag" text-anchor="start"><tspan x="205.5" dy="0">Connect</tspan></text><rect x="387" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="399" y="26" class="dg-t-b" text-anchor="start"><tspan x="399" dy="0">Subagents</tspan></text><text x="399" y="46" class="dg-tag" text-anchor="start"><tspan x="399" dy="0">Isolate, parallelise</tspan></text><rect x="580.5" y="0" width="179.5" height="64" rx="8" class="dg-box"/><text x="592.5" y="26" class="dg-t-b" text-anchor="start"><tspan x="592.5" dy="0">Hooks</tspan></text><text x="592.5" y="46" class="dg-tag" text-anchor="start"><tspan x="592.5" dy="0">Guarantee</tspan></text><rect x="0" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="12" y="104" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Skills</tspan></text><text x="12" y="124" class="dg-tag" text-anchor="start"><tspan x="12" dy="0">Package a procedure</tspan></text><rect x="193.5" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="205.5" y="104" class="dg-t-b" text-anchor="start"><tspan x="205.5" dy="0">Agent Teams</tspan></text><text x="205.5" y="124" class="dg-tag" text-anchor="start"><tspan x="205.5" dy="0">Coordinate peers</tspan></text><rect x="387" y="78" width="179.5" height="64" rx="8" class="dg-box"/><text x="399" y="104" class="dg-t-b" text-anchor="start"><tspan x="399" dy="0">Dynamic Workflows</tspan></text><text x="399" y="124" class="dg-tag" text-anchor="start"><tspan x="399" dy="0">Compose at runtime</tspan></text><g data-at="1"><text x="0" y="174" class="dg-k" text-anchor="start"><tspan x="0" dy="0">Patterns are assemblies of these parts</tspan></text></g><g data-at="2"><rect x="0" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="10" y="204" class="dg-t-b" text-anchor="start"><tspan x="10" dy="0">Augmented call</tspan></text><text x="10" y="222" class="dg-s" text-anchor="start"><tspan x="10" dy="0">model + tools</tspan></text></g><g data-at="3"><rect x="193.5" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="203.5" y="204" class="dg-t-b" text-anchor="start"><tspan x="203.5" dy="0">Workflow</tspan></text><text x="203.5" y="222" class="dg-s" text-anchor="start"><tspan x="203.5" dy="0">primitives wired in your code</tspan></text></g><g data-at="4"><rect x="387" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="397" y="204" class="dg-t-b" text-anchor="start"><tspan x="397" dy="0">Agent</tspan></text><text x="397" y="222" class="dg-s" text-anchor="start"><tspan x="397" dy="0">model chooses its tool calls</tspan></text></g><g data-at="5"><rect x="580.5" y="184" width="179.5" height="50" rx="6" class="dg-strip"/><text x="590.5" y="204" class="dg-t-b" text-anchor="start"><tspan x="590.5" dy="0">Multi-agent</tspan></text><text x="590.5" y="222" class="dg-s" text-anchor="start"><tspan x="590.5" dy="0">orchestrator + subagents</tspan></text></g></svg>
+  <ol class="caps">
+    <li>The seven parts, each with a one-word job. Tools act, MCP connects, subagents isolate or parallelise, hooks guarantee, skills package a procedure, agent teams coordinate peers, dynamic workflows compose at runtime.</li>
+    <li>Every pattern in section 5 is an assembly of these parts. Nothing new gets introduced; the parts get wired differently.</li>
+    <li>Augmented call: the model plus tools. One call, and the tool is how it acts or fetches.</li>
+    <li>Workflow: primitives wired together in your code. Your code decides the sequence; the model does the steps.</li>
+    <li>Agent: the model chooses its own sequence of tool calls. Same primitives, and the sequencing has moved from your code into the model.</li>
+    <li>Multi-agent: an orchestrator delegating to subagents. The isolate-or-parallelise primitive doing the structural work.</li>
+  </ol>
+  <div class="stepbar">
+    <div class="cap"></div>
+    <div class="dots"></div>
+    <div class="nav"><button type="button" data-nav="prev" aria-label="Previous step">Prev</button><button type="button" data-nav="next" aria-label="Next step">Next</button></div>
+  </div>
+<figcaption>Step through it; arrow keys work too. Name the primitive a scenario needs before you name the pattern. The module tests the two separately.</figcaption>
 </figure>
 
 <details class="fold">
@@ -97,6 +125,18 @@ together in your code. An agent is the model choosing its own sequence of tool c
 multi-agent system is an orchestrator delegating to subagents. Once the primitives are
 named, every pattern in section 5 is a combination of things you already recognise.</div>
 
+<div class="bet" data-where="3.1 Vocabulary failure"
+  data-stamp-right="You called it: five people, five architectures, one word. Twenty minutes before anyone noticed."
+  data-stamp-wrong="Five people heard five different things: a tool-using model, a multi-step workflow, a team of subagents, Claude Code, and a chatbot. Twenty minutes went by before anyone noticed.">
+  <span class="live-label">Place your bet before the reveal</span>
+  <p class="q">In one architecture review someone said <em>we will use an agent</em>, and the conversation carried on. How many different architectures were the people in the room picturing?</p>
+  <div class="opts">
+    <button type="button" data-k="A"><span class="k">A</span><span>Two. A single tool-using model, or a multi-step workflow. That is the usual split.</span></button>
+    <button type="button" data-k="B"><span class="k">B</span><span>Three. The three shapes from section 5: augmented call, workflow, agent.</span></button>
+    <button type="button" data-k="C" data-right><span class="k">C</span><span>Five. Including Claude Code and a chatbot, and it took twenty minutes for anyone to notice.</span></button>
+  </div>
+</div>
+<div class="bet-reveal">
 <div class="flag">
   <span class="label">The vocabulary failure</span>
   <p>In one architecture review, someone said <em>we will use an agent</em>. Five people
@@ -104,6 +144,23 @@ named, every pattern in section 5 is a combination of things you already recogni
   subagents, Claude Code, and a chatbot. Twenty minutes went by before anyone noticed they
   were describing different architectures with the same word.</p>
 </div>
+</div>
+
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">Claude Code in front of bank branch staff, because <em>it is all Claude.</em> <b>Where is the mistake?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="none">Nowhere. The same model sits under every product</button>
+    <button type="button" data-v="entry">The entry point. The wrapper was built for developers</button>
+    <button type="button" data-v="build">The build-time interface. Branch staff need an app on the Agent SDK</button>
+    <button type="button" data-v="route">The delivery route. A bank's compliance posture rules it out</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. The entry point is the wrapper a person directly touches, and Claude Code is a wrapper built for developers in a terminal. The same model under every entry point does not make every entry point fit every user.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the three layers did that. It is all Claude in that one model sits under every product, but the entry point is the wrapper, and this one was built for developers in a terminal. Treating the three layers as one erased the distinction that should have ruled it out in the first minute.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The section puts the mistake at the entry point: what a person directly touches, chosen for the user and the work. Claude Code is a wrapper built for developers in a terminal, and branch staff are not that user. The build-time interface and the delivery route are separate conversations with separate stakeholders, and neither is what went wrong here.</template>
+</section>
 
 <div class="quiz" data-answer="A,C">
   <p class="scenario">A team needs two things in the same design. First, a rule that a
@@ -122,6 +179,29 @@ named, every pattern in section 5 is a combination of things you already recogni
   those tools, MCP would be paying integration cost for reusability nobody needs, and direct
   tool use would be the better answer. The second client is what earns it.</div>
 </div>
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>The case is not decided here; what you stamp is your read of the section, and it travels with the file. Section 10 picks the claims assistant's entry point and delivery route from the three layers named here.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M1 &sect;4</span><span>Decision 1: who owns each of the six pieces of work</span></li>
+      <li><span>M1 &sect;5</span><span>Decision 2: augmented call, workflow or agent</span></li>
+      <li><span>M1 &sect;6</span><span>Decision 3: which reference architecture</span></li>
+      <li><span>M1 &sect;8</span><span>Decision 4: model tier and the context budget</span></li>
+      <li><span>M1 &sect;10</span><span>Decision 4: entry point, and what governance rules out</span></li>
+      <li><span>M1 &sect;11</span><span>Assembly: your architecture against the module's</span></li>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="02-how-claude-behaves.html"><span>Previous</span>02 How Claude behaves</a>
   <a class="next" href="04-decomposition.html"><span>Next</span>04 Decomposition</a>

@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s12">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 12 of 12</p>
   <h1>Recap and what is next</h1>
@@ -19,6 +21,19 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 12 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="decompose" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">Module 1 closes with five takeaways. <b>Which one does it put first, so that every later choice inherits it?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="shape">Reach for a tested reference architecture before inventing one</button>
+    <button type="button" data-v="decompose">Split the work between Claude, existing systems and humans before designing</button>
+    <button type="button" data-v="sonnet">Start with Sonnet and treat every model swap as a release</button>
+    <button type="button" data-v="entry">Pick the entry point by the work, not by what is on the shelf</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>The module closes with five takeaways. Notice how much of it is restraint: decompose
 before designing, use the known shape, start at the middle tier, choose by the work.</p>
 
@@ -64,6 +79,22 @@ and the vocabulary the other five domains are written in.</p>
 <figcaption>This module is done. The next one is the heaviest.</figcaption>
 </figure>
 
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">Five takeaways. <b>Which one comes first, so that every later choice inherits it?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="shape">Reach for a tested reference architecture before inventing one</button>
+    <button type="button" data-v="decompose">Split the work between Claude, existing systems and humans before designing</button>
+    <button type="button" data-v="sonnet">Start with Sonnet and treat every model swap as a release</button>
+    <button type="button" data-v="entry">Pick the entry point by the work, not by what is on the shelf</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. Decomposition comes before architecture: split the work into Claude, existing systems and humans first, because a design that skips it forces Claude into work another system does cheaper, or asks it to work without context a colleague would have been given.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the order of the table did that. The known shape, the Sonnet default and the entry point are all restraint, but each acts on work you have already decided Claude owns. Decomposition is the decision the other four inherit.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The module puts decomposition first: Claude, existing systems and humans, before any architecture. Yours is a real takeaway, but it acts on work already assigned to Claude, and if that assignment was wrong the takeaway is polishing a mistake.</template>
+</section>
+
 <div class="flag">
   <span class="label">Next</span>
   <p><a href="../module-02/index.html"><strong>Module 2, Enterprise Integration &amp; Production</strong></a> takes the designed solution to
@@ -71,6 +102,24 @@ and the vocabulary the other five domains are written in.</p>
   heaviest module on the exam at 35 percent across two domains, and it is where the
   evaluation work this module kept pointing forward to actually lives.</p>
 </div>
+
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>The case is not decided here; the module is closing. What you stamp is your read of the recap, and it travels with the file into Module 2, where the assembled claims assistant gets integrated, governed and taken to production.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">Where the case goes next</span>
+    <ol>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="11-assembly.html"><span>Previous</span>11 Assembly</a>
   

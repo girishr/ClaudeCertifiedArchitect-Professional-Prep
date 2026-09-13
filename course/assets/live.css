@@ -1,0 +1,279 @@
+/* Live reading: the four mechanics that turn a section from reading into
+ * predicting. Cold open, steppable figure, predict-then-reveal, and the case
+ * file that carries one client through the path. Driven by live.js; a page
+ * opts in by linking this file and loading that script.
+ *
+ * Everything reads the palette from print.css. Nothing here has its own colour.
+ */
+
+/* ---- shared: a row of choices ------------------------------------------ */
+
+.live-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.live-chips button {
+  font-family: var(--ui);
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--sheet);
+  border: 1px solid var(--rule-firm);
+  border-radius: 0;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.live-chips button:hover { border-color: var(--tint); color: var(--tint); }
+.live-chips button[aria-pressed="true"] { background: var(--ink-fill); border-color: var(--ink-fill); color: var(--ink-fill-t); font-weight: 600; }
+.live-chips button:disabled { cursor: default; }
+.live-chips button.wrong, .live-chips button.wrong[aria-pressed="true"] { border-color: var(--bad); background: var(--bad); color: var(--sheet); text-decoration: line-through; font-weight: 600; }
+.live-chips button.truth, .live-chips button.truth[aria-pressed="true"] { border-color: var(--mark); background: var(--mark); color: var(--sheet); font-weight: 600; }
+.live-chips button.wrong::before { content: "\2715\00a0"; text-decoration: none; display: inline-block; }
+.live-chips button.truth::before { content: "\2713\00a0"; display: inline-block; }
+
+/* the verdict badge: one word, filled, before the explanation */
+.vd {
+  display: inline-block; vertical-align: 1px;
+  font-family: var(--num); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-style: normal;
+  padding: 2px 7px; margin-right: 8px; color: var(--sheet);
+}
+.vd.ok { background: var(--mark); }
+.vd.no { background: var(--bad); }
+.verdict-line { margin: 10px 0 0; font-family: var(--ui); font-size: .9rem; line-height: 1.5; max-width: none; }
+.verdict-line b { font-weight: 650; }
+
+.live-label {
+  font-family: var(--num);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: 7px;
+}
+
+/* ---- 1. cold open ------------------------------------------------------ */
+
+.cold {
+  border: 1px solid var(--rule-firm);
+  background: var(--sheet);
+  padding: 12px 14px;
+  margin: 1rem 0 1.2rem;
+  max-width: var(--measure);
+}
+.cold .q { font-family: var(--ui); font-size: 1rem; line-height: 1.5; color: var(--ink); margin: 0 0 10px; max-width: none; }
+.cold .q b { font-weight: 650; }
+.cold .locked { margin: 10px 0 0; font-family: var(--ui); font-size: .82rem; color: var(--ink-faint); display: none; max-width: none; }
+.cold.done .locked { display: block; }
+.cold.done .live-chips button:not([aria-pressed="true"]) { opacity: .45; }
+
+/* ---- re-ask, the cold open's other half -------------------------------- */
+
+.reask {
+  border: 1px solid var(--rule-firm);
+  background: var(--sheet);
+  padding: 12px 14px;
+  margin: 1.4rem 0 1rem;
+  max-width: var(--measure);
+}
+.reask .q { font-family: var(--ui); font-size: 1rem; margin: 0 0 10px; max-width: none; }
+.reask.done .live-chips button:not([aria-pressed="true"]):not(.truth) { opacity: .45; }
+.reask .q b { font-weight: 650; }
+.reask .verdict {
+  display: none;
+  margin-top: 12px;
+  border-top: 1px solid var(--rule);
+  padding-top: 10px;
+  font-family: var(--ui);
+  font-size: .9rem;
+  line-height: 1.55;
+  max-width: none;
+}
+.reask.done .verdict { display: block; }
+.reask .verdict b { font-weight: 650; }
+.reask template { display: none; }
+
+/* ---- 2. steppable figure ----------------------------------------------- */
+
+figure.stepper {
+  margin: 1rem 0 .4rem;
+  border: 1px solid var(--rule);
+  background: var(--sheet);
+  padding: 12px 12px 10px;
+  max-width: var(--measure);
+}
+figure.stepper [data-at] { opacity: .22; transition: opacity .35s ease-out, border-color .35s, background .35s; }
+figure.stepper [data-at].on { opacity: 1; }
+figure.stepper [data-hi].hi { border-color: var(--tint) !important; background: var(--accent-dim) !important; }
+figure.stepper .stepbar {
+  display: flex; align-items: center; gap: 14px;
+  border-top: 1px solid var(--rule);
+  padding-top: 9px; margin-top: 10px;
+}
+figure.stepper .cap { flex: 1; font-family: var(--ui); font-size: .84rem; line-height: 1.45; color: var(--ink-soft); min-height: 2.6em; }
+figure.stepper .dots { display: flex; gap: 6px; }
+figure.stepper .dots i { width: 7px; height: 7px; background: var(--rule-firm); display: block; }
+figure.stepper .dots i.on { background: var(--tint); }
+figure.stepper .nav { display: flex; gap: 6px; }
+figure.stepper .nav button {
+  font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  background: transparent; border: 1px solid var(--rule-firm); border-radius: 0; color: var(--ink);
+  padding: 6px 11px; cursor: pointer;
+}
+figure.stepper .nav button:hover { border-color: var(--tint); color: var(--tint); }
+figure.stepper .nav button:disabled { opacity: .35; cursor: default; }
+figure.stepper ol.caps { display: none; }
+figure.stepper figcaption { margin-top: 7px; font-family: var(--ui); font-size: .78rem; line-height: 1.45; color: var(--ink-faint); max-width: none; }
+
+/* the "row of decisions" figure shape */
+.steps-row { display: grid; grid-template-columns: repeat(4, 1fr); align-items: stretch; }
+.steps-row .step {
+  border: 1px solid var(--rule); background: var(--flag);
+  padding: 12px 12px 10px; position: relative;
+}
+.steps-row .step + .step { margin-left: 22px; }
+.steps-row .step + .step::before {
+  content: ""; position: absolute; left: -22px; top: 50%; width: 22px; height: 1px;
+  background: var(--rule-firm); opacity: 0; transition: opacity .3s;
+}
+.steps-row .step + .step::after {
+  content: ""; position: absolute; left: -6px; top: calc(50% - 4px);
+  border: 4px solid transparent; border-left-color: var(--rule-firm); opacity: 0; transition: opacity .3s;
+}
+.steps-row .step.on + .step.on::before, .steps-row .step.on + .step.on::after { opacity: 1; }
+.steps-row .step .k { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.steps-row .step .k i {
+  width: 22px; height: 22px; display: grid; place-content: center;
+  background: var(--ink-fill); color: var(--ink-fill-t);
+  font-family: var(--num); font-size: .72rem; font-weight: 600; font-style: normal;
+}
+.steps-row .step .k span { font-family: var(--num); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+.steps-row .step b { display: block; font-family: var(--ui); font-size: .86rem; line-height: 1.35; margin-bottom: 6px; }
+.steps-row .step small { display: block; font-family: var(--ui); font-size: 12.5px; line-height: 1.4; color: var(--ink-soft); }
+.steps-row .step .tag { display: block; margin-top: 10px; font-family: var(--num); font-size: 11px; letter-spacing: .02em; color: var(--tint); opacity: 0; transition: opacity .35s; }
+figure.stepper.tags-on .steps-row .step .tag { opacity: 1; }
+figure.stepper .inherit { margin: 10px 0 0; font-family: var(--ui); font-size: .82rem; color: var(--ink-soft); text-align: center; opacity: 0; transition: opacity .4s; max-width: none; }
+figure.stepper .inherit.on { opacity: 1; }
+@media (max-width: 40rem) {
+  .steps-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .steps-row .step + .step { margin-left: 0; }
+  .steps-row .step + .step::before, .steps-row .step + .step::after { display: none; }
+}
+
+/* ---- 3. predict then reveal ------------------------------------------- */
+
+table.predict td.call .live-chips { gap: 6px; }
+table.predict td.call .live-chips button { font-size: .76rem; padding: 5px 10px; min-width: 34px; justify-content: center; }
+table.predict td.why { color: var(--ink-soft); }
+table.predict td.why .hidden { color: var(--ink-faint); font-style: italic; }
+table.predict tr.revealed td.why { color: var(--ink); }
+.tally {
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+  font-family: var(--ui); font-size: .84rem; color: var(--ink-soft);
+  margin: 6px 0 1rem; max-width: none;
+}
+.tally b { font-family: var(--num); font-weight: 600; color: var(--ink); white-space: nowrap; }
+.tally b.ok { color: var(--mark); } .tally b.no { color: var(--bad); }
+table.predict td.why .vd { margin-right: 6px; }
+
+/* the bet: one question, a few causes, commit before the reveal */
+.bet {
+  border: 1px solid var(--rule-firm); background: var(--sheet);
+  padding: 12px 14px; margin: 1rem 0; max-width: var(--measure);
+}
+.bet .q { font-family: var(--ui); font-size: 1rem; margin: 0; max-width: none; }
+.bet .opts { display: grid; gap: 6px; margin-top: 10px; }
+.bet .opts button {
+  text-align: left; font-family: var(--ui); font-size: .9rem; line-height: 1.45;
+  background: var(--sheet); border: 1px solid var(--rule); border-radius: 0; padding: 8px 12px; color: var(--ink);
+  display: grid; grid-template-columns: 22px 1fr; gap: 10px; cursor: pointer; transition: border-color .15s, background .15s, color .15s;
+}
+.bet .opts button:hover { border-color: var(--rule-firm); }
+.bet .opts button .k { font-family: var(--num); font-size: 12px; font-weight: 600; color: var(--ink-faint); }
+.bet .opts button.right { border-color: var(--mark); background: var(--mark); color: var(--sheet); }
+.bet .opts button.right .k { color: var(--sheet); }
+.bet .opts button.right .k::before { content: "\2713 "; }
+.bet .opts button.wrong { border-color: var(--bad); background: var(--bad); color: var(--sheet); }
+.bet .opts button.wrong .k { color: var(--sheet); }
+.bet .opts button.wrong .k::before { content: "\2715 "; }
+.bet .opts button.right .k, .bet .opts button.wrong .k { font-size: 11px; }
+.bet .opts button:disabled { cursor: default; }
+.bet.done .opts button:not(.right):not(.wrong) { opacity: .5; }
+.bet-reveal { display: none; }
+.bet-reveal.on { display: block; }
+
+/* a proportion strip that draws on reveal */
+.strip { margin: 10px 0 4px; max-width: var(--measure); }
+.strip .track { display: flex; height: 34px; border: 1px solid var(--rule-firm); overflow: hidden; }
+.strip .seg {
+  width: 0; transition: width .9s cubic-bezier(.2, .8, .2, 1);
+  display: grid; place-content: center; font-family: var(--num); font-size: 11.5px; color: #fff; white-space: nowrap; overflow: hidden;
+}
+.strip .seg.a { background: var(--mark); } .strip .seg.b { background: var(--tint); }
+.strip .seg.c { background: var(--bad); } .strip .seg.d { background: var(--gap); }
+.strip .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; font-family: var(--ui); font-size: .78rem; color: var(--ink-soft); }
+.strip .legend i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: -1px; }
+.strip .legend i.a { background: var(--mark); } .strip .legend i.b { background: var(--tint); }
+.strip .legend i.c { background: var(--bad); } .strip .legend i.d { background: var(--gap); }
+
+/* ---- 4. the case file --------------------------------------------------- */
+
+.casefile {
+  border: 1px solid var(--rule-firm); background: var(--sheet);
+  margin: 1.6rem 0 1rem; max-width: var(--measure);
+  font-family: var(--ui);
+}
+.casefile header { padding: 9px 12px 8px; border-bottom: 2px solid var(--rule-firm); }
+.casefile header .live-label { margin-bottom: 2px; }
+.casefile header b { font-size: .92rem; font-weight: 700; display: block; }
+.casefile header small { font-size: .76rem; line-height: 1.4; color: var(--ink-soft); display: block; margin-top: 1px; }
+.casefile .stamps { list-style: none; margin: 0; padding: 2px 0; font-size: .8rem; }
+.casefile .stamps li { display: grid; grid-template-columns: 16px 1fr; gap: 7px; padding: 5px 12px; line-height: 1.35; border-bottom: 1px solid var(--rule); margin: 0; }
+.casefile .stamps li:last-child { border-bottom: 0; }
+.casefile .stamps .mk { font-family: var(--num); font-size: 11.5px; font-weight: 700; color: var(--ink-faint); padding-top: 1px; }
+.casefile .stamps li.ok .mk { color: var(--mark); }
+.casefile .stamps li.no .mk { color: var(--bad); }
+.casefile .stamps li.grp { font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); background: var(--flag); padding: 3px 12px; border-bottom: 1px solid var(--rule); }
+.casefile .stamps li.grp.here { color: var(--tint); border-top: 2px solid var(--rule-firm); }
+.casefile .stamps li.prev { font-size: .76rem; color: var(--ink-soft); }
+.casefile .stamps li.prev .where { display: none; }
+.casefile .stamps .vw { font-weight: 650; }
+.casefile .stamps li.ok .vw { color: var(--mark); }
+.casefile .stamps li.no .vw { color: var(--bad); }
+.casefile .stamps .where { display: block; font-family: var(--num); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1px; }
+.casefile .stamps li.empty { color: var(--ink-faint); font-style: italic; font-family: var(--read); }
+.casefile .stamps li.new { animation: live-stamp .45s ease-out; }
+@keyframes live-stamp { from { background: var(--accent-dim); } to { background: transparent; } }
+.casefile .upcoming { border-top: 2px solid var(--rule-firm); padding: 7px 12px 8px; }
+.casefile .upcoming .live-label { margin-bottom: 4px; }
+.casefile .upcoming ol { list-style: none; margin: 0; padding: 0; font-size: .76rem; line-height: 1.35; color: var(--ink-faint); }
+.casefile .upcoming li { display: grid; grid-template-columns: 52px 1fr; gap: 8px; padding: 2px 0; margin: 0; }
+.casefile .upcoming li span:first-child { font-family: var(--num); font-size: 11px; letter-spacing: .06em; padding-top: 1px; }
+.casefile footer { border-top: 1px solid var(--rule); padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; }
+.casefile footer .count { font-family: var(--num); font-size: 11.5px; color: var(--ink-faint); }
+.casefile footer button {
+  font-family: var(--num); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  background: transparent; border: 1px solid var(--rule); border-radius: 0; color: var(--ink-faint); padding: 5px 9px; cursor: pointer;
+}
+.casefile footer button:hover { border-color: var(--tint); color: var(--tint); }
+
+/* From a laptop width up, the case file rides alongside the text as a fixed
+   rail on the right, the way the prototype had it. The page makes room for it
+   by reserving the rail's width on the root, so the reading column recentres
+   in what is left and never runs under the panel. */
+@media (min-width: 78rem) {
+  html.has-casefile { padding-right: 344px; }
+  html.has-casefile .casefile {
+    position: fixed; right: 26px; top: 26px; width: 292px; margin: 0;
+    max-height: calc(100vh - 52px); overflow: auto;
+    scrollbar-width: thin;
+  }
+}
+@media (min-width: 78rem) and (max-width: 96rem) {
+  /* With the menu open there is less to share; let the column narrow a little. */
+  html.has-casefile.nav-open body { max-width: none; margin-left: var(--nav-w, 17rem); padding-left: 2rem; padding-right: 2rem; }
+}
+
+@media print {
+  .cold, .reask, .bet, .casefile, figure.stepper .stepbar { display: none; }
+  figure.stepper [data-at], .steps-row .step .tag, figure.stepper .inherit { opacity: 1 !important; }
+  .bet-reveal, table.predict td.why .text { display: block !important; }
+}

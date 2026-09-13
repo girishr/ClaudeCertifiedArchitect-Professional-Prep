@@ -667,7 +667,7 @@ The hub is one centred column, `max-width: 68rem`, padded `24px 20px 96px`, with
 Spacing on the workbench is a 4px-based px rhythm (4 / 8 / 12 / 16 / 18 / 20 / 22 / 24 / 34), with plates padded `20px 22px` and rows `16px 2px`. The reading sheet uses a rem rhythm instead (0.35 / 0.55 / 0.7 / 1.1 / 1.6 / 2.5 / 4rem). Breakpoints as shipped: 560px and 760px on the hub, 34rem and 64rem on the sheet, 720px for the rosette row, 64.01rem for the nav shift.
 
 ### Named Rules
-**The Two Measures Rule.** Two widths, owned solely by `lesson.css`: `--prose` (28rem) is the reading measure and constrains body-level `p`, `ul`, `ol`; `--measure` (40rem) is the wider structural width for figures, tables, callouts, apparatus and pager. Table, quiz, sidenote, flag, figure, toc, pager, crumb and nav contents are explicitly released from `--prose`. Separating the two was a deliberate fix — do not collapse them, and do not redefine either outside `lesson.css`.
+**The One Edge Rule.** The lesson column is `--page` (50rem), owned solely by `lesson.css`. Every block on the sheet runs to the same column edge: `--prose` and `--measure` both resolve to 100%, so prose, figures, tables, callouts, apparatus, the pager and the live-reading blocks share one right-hand line. The two tokens remain as hooks and are still referenced by the selectors, but reintroducing a narrower value for either brings back the ragged right edge that was removed on 13 Sep 2026. Do not redefine them outside `lesson.css`.
 
 **The Ledger Rule.** Three or more sibling items are ruled rows in one index sharing column tracks — `2px` top, `1px` between, `1px` bottom. If a design reaches for a grid of equal cards, it has left this world.
 
@@ -742,7 +742,7 @@ A 600px canvas on a 1px `rule-firm` plate, drawn live from the published domain 
 - **Do** use exactly two rule weights: 1px `rule` between peers, 2px `rule-firm` to open or close a structure.
 - **Do** set anything that labels or numbers in mono, uppercase, tracked `0.14em`, in `ink-faint`.
 - **Do** put three or more siblings in one ruled ledger sharing column tracks.
-- **Do** hold body-level prose to `--prose` (28rem) and figures, tables and apparatus to `--measure` (40rem), and define both only in `lesson.css`.
+- **Do** let every block run to the column edge (`--prose` and `--measure` at 100%), and define both only in `lesson.css`.
 - **Do** print a count where a progress bar is tempting.
 - **Do** build tone from line density at 0.6px, and keep an empty state as unengraved plate.
 - **Do** self-host any new face under `course/assets/fonts/` with its licence file, and keep the OpenDyslexic reading option working.

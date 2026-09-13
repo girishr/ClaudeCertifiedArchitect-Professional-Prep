@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s06">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 06 of 12</p>
   <h1>Reference architectures</h1>
@@ -19,6 +21,19 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 06 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="triage" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">Section 5 made the claims triage assistant a workflow: Claude reads the claim, a rule engine sets priority, coverage is fetched live, Claude drafts the adjuster's email, a person approves above the threshold. <b>Which of the five reference architectures do you adapt?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="agent">Agent: a claim is a case, and the model works out which tools to call</button>
+    <button type="button" data-v="rag">Retrieval-augmented generation over the policy documents</button>
+    <button type="button" data-v="docpipe">Document processing pipeline: extract the claim against a schema, validate, route exceptions</button>
+    <button type="button" data-v="triage">Customer service and ticket triage: classify, then route to retrieval, a live API or a human</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>Patterns give you the shape. Reference architectures give you the wiring: documented
 ways to assemble an LLM application for a recurring class of problem, already proven in
 the Claude ecosystem.</p>
@@ -61,7 +76,7 @@ problem draws on more than one.</p>
 </table>
 
 <figure class="diagram wide" id="fig-triage-routing">
-<svg viewBox="0 0 760 206" role="img" aria-label="The customer-service routing reference architecture" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m16" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="60" width="150" height="50" rx="8" class="dg-box"/><text x="75" y="80" class="dg-t-b" text-anchor="middle"><tspan x="75" dy="0">Intent classifier</tspan></text><text x="75" y="98" class="dg-s" text-anchor="middle"><tspan x="75" dy="0">a Claude call</tspan></text><path d="M153 85L205 34" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="22" class="dg-k" text-anchor="start"><tspan x="210" dy="0">Documentation question</tspan></text><rect x="210" y="28" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="50" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Retrieval over the manual corpus</tspan></text><path d="M543 45L600 85" class="dg-arrow" marker-end="url(#m16)"/><path d="M153 85L205 94" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="82" class="dg-k" text-anchor="start"><tspan x="210" dy="0">Live-state query</tspan></text><rect x="210" y="88" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="110" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Transactional API: order status, account</tspan></text><path d="M543 105L600 85" class="dg-arrow" marker-end="url(#m16)"/><path d="M153 85L205 154" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="142" class="dg-k" text-anchor="start"><tspan x="210" dy="0">High-consequence action</tspan></text><rect x="210" y="148" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="170" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Human approval layer: refund, cancel</tspan></text><path d="M543 165L600 85" class="dg-arrow" marker-end="url(#m16)"/><rect x="604" y="60" width="156" height="50" rx="8" class="dg-box"/><text x="682" y="80" class="dg-t-b" text-anchor="middle"><tspan x="682" dy="0">Response composer</tspan></text><text x="682" y="98" class="dg-s" text-anchor="middle"><tspan x="682" dy="0">a Claude call</tspan></text><text x="0" y="196" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Where it goes wrong: retrieval on the live-state lane, no human lane at all, or an agent variant shipped before this was measured.</tspan></text></svg>
+<svg viewBox="0 0 760 206" role="img" aria-label="The customer-service routing reference architecture" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m16" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="60" width="150" height="50" rx="8" class="dg-box hi"/><text x="75" y="80" class="dg-t-b" text-anchor="middle"><tspan x="75" dy="0">Intent classifier</tspan></text><text x="75" y="98" class="dg-s" text-anchor="middle"><tspan x="75" dy="0">a Claude call</tspan></text><path d="M153 85L205 34" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="22" class="dg-k" text-anchor="start"><tspan x="210" dy="0">Documentation question</tspan></text><rect x="210" y="28" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="50" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Retrieval over the manual corpus</tspan></text><path d="M543 45L600 85" class="dg-arrow" marker-end="url(#m16)"/><path d="M153 85L205 94" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="82" class="dg-k" text-anchor="start"><tspan x="210" dy="0">Live-state query</tspan></text><rect x="210" y="88" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="110" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Transactional API: order status, account</tspan></text><path d="M543 105L600 85" class="dg-arrow" marker-end="url(#m16)"/><path d="M153 85L205 154" class="dg-arrow" marker-end="url(#m16)"/><text x="210" y="142" class="dg-k" text-anchor="start"><tspan x="210" dy="0">High-consequence action</tspan></text><rect x="210" y="148" width="330" height="34" rx="8" class="dg-box"/><text x="222" y="170" class="dg-t" text-anchor="start"><tspan x="222" dy="0">Human approval layer: refund, cancel</tspan></text><path d="M543 165L600 85" class="dg-arrow" marker-end="url(#m16)"/><rect x="604" y="60" width="156" height="50" rx="8" class="dg-box"/><text x="682" y="80" class="dg-t-b" text-anchor="middle"><tspan x="682" dy="0">Response composer</tspan></text><text x="682" y="98" class="dg-s" text-anchor="middle"><tspan x="682" dy="0">a Claude call</tspan></text><text x="0" y="196" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Where it goes wrong: retrieval on the live-state lane, no human lane at all, or an agent variant shipped before this was measured.</tspan></text></svg>
 <figcaption>Classify, then route by what the answer needs. Three lanes, three mechanisms.</figcaption>
 </figure>
 
@@ -79,12 +94,38 @@ decision you are deferring, not a pattern you are applying.</p>
 
 <h2><span class="num n">6.2</span>The mistake the module calls the most common</h2>
 
+<div class="bet" data-where="6.2 Most common mistake"
+  data-stamp-right="You called it: retrieval used where a tool call belongs is the mistake the module calls the most common, and the highest-frequency distractor shape in the domain."
+  data-stamp-wrong="The module names retrieval used where a tool call belongs as the most common reference-architecture mistake, and the highest-frequency distractor shape in this whole domain.">
+  <span class="live-label">Place your bet before the reveal</span>
+  <p class="q">Five shapes, each with a Wrong column. The module singles out one mistake as the most common across all of them. Which is it?</p>
+  <div class="opts">
+    <button type="button" data-k="A"><span class="k">A</span><span>An agent holding state-changing tools with no human review and no turn limit.</span></button>
+    <button type="button" data-k="B"><span class="k">B</span><span>A pipeline with no exception path, so low-confidence extractions flow through like clean ones.</span></button>
+    <button type="button" data-k="C" data-right><span class="k">C</span><span>Retrieval used where a tool call belongs.</span></button>
+  </div>
+</div>
+<div class="bet-reveal">
 <p>Retrieval used where a tool call belongs. This one is worth over-learning, because it
 is the highest-frequency distractor shape in this whole domain.</p>
+</div>
 
-<figure class="diagram wide" id="fig-knowledge-vs-state">
-<svg viewBox="0 0 760 356" role="img" aria-label="Stable knowledge goes to retrieval, live state goes to a tool call" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m15" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="230" y="0" width="300" height="44" rx="8" class="dg-box"/><text x="380" y="19" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">What kind of data does the answer need?</tspan></text><text x="380" y="35" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">the question the module says architects skip</tspan></text><path d="M320 47L170 97" class="dg-arrow" marker-end="url(#m15)"/><path d="M440 47L590 97" class="dg-arrow" marker-end="url(#m15)"/><rect x="0" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="14" y="124" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Stable knowledge</tspan></text><text x="14" y="146" class="dg-s" text-anchor="start"><tspan x="14" dy="0">True yesterday, true tomorrow: manuals,</tspan><tspan x="14" dy="1.3em">policies, FAQs, regulatory text</tspan></text><rect x="10" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="20" y="200" class="dg-t" text-anchor="start"><tspan x="20" dy="0">Retrieval over an index</tspan></text><rect x="420" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="434" y="124" class="dg-t-b" text-anchor="start"><tspan x="434" dy="0">Live state</tspan></text><text x="434" y="146" class="dg-s" text-anchor="start"><tspan x="434" dy="0">Changes independently of any index: order</tspan><tspan x="434" dy="1.3em">status, inventory, balances, availability</tspan></text><rect x="430" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="440" y="200" class="dg-t" text-anchor="start"><tspan x="440" dy="0">A tool call to the system of record</tspan></text><text x="0" y="240" class="dg-k" text-anchor="start"><tspan x="0" dy="0">The trace: &quot;Where is my order?&quot;</tspan></text><text x="0" y="260" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Chunk 1, similarity 0.78: shipped on the 12th, tracking AB123. Chunk 2, similarity 0.74: being processed,</tspan><tspan x="0" dy="1.3em">dispatch within 24 hours.</tspan></text><text x="0" y="292" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Both were true once. Neither is true now: returned to depot, awaiting re-dispatch. That state is in no chunk.</tspan><tspan x="0" dy="1.3em">The order-status tool was never called.</tspan></text><text x="0" y="330" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Similarity is not truth. The fix is a tool call, not a better chunker, a shorter refresh, or a</tspan><tspan x="0" dy="1.3em">higher threshold.</tspan></text></svg>
-<figcaption>The most common reference-architecture mistake, and the one question that prevents it.</figcaption>
+<figure class="stepper wide" id="fig-knowledge-vs-state">
+<svg viewBox="0 0 760 356" role="img" aria-label="Stable knowledge goes to retrieval, live state goes to a tool call" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m15" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><g data-at="0"><rect x="230" y="0" width="300" height="44" rx="8" class="dg-box hi"/><text x="380" y="19" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">What kind of data does the answer need?</tspan></text><text x="380" y="35" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">the question the module says architects skip</tspan></text></g><g data-at="1"><path d="M320 47L170 97" class="dg-arrow" marker-end="url(#m15)"/><rect x="0" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="14" y="124" class="dg-t-b" text-anchor="start"><tspan x="14" dy="0">Stable knowledge</tspan></text><text x="14" y="146" class="dg-s" text-anchor="start"><tspan x="14" dy="0">True yesterday, true tomorrow: manuals,</tspan><tspan x="14" dy="1.3em">policies, FAQs, regulatory text</tspan></text><rect x="10" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="20" y="200" class="dg-t" text-anchor="start"><tspan x="20" dy="0">Retrieval over an index</tspan></text></g><g data-at="2"><path d="M440 47L590 97" class="dg-arrow" marker-end="url(#m15)"/><rect x="420" y="100" width="340" height="118" rx="8" class="dg-box"/><text x="434" y="124" class="dg-t-b" text-anchor="start"><tspan x="434" dy="0">Live state</tspan></text><text x="434" y="146" class="dg-s" text-anchor="start"><tspan x="434" dy="0">Changes independently of any index: order</tspan><tspan x="434" dy="1.3em">status, inventory, balances, availability</tspan></text><rect x="430" y="182" width="320" height="28" rx="6" class="dg-strip"/><text x="440" y="200" class="dg-t" text-anchor="start"><tspan x="440" dy="0">A tool call to the system of record</tspan></text></g><g data-at="3"><text x="0" y="240" class="dg-k" text-anchor="start"><tspan x="0" dy="0">The trace: &quot;Where is my order?&quot;</tspan></text><text x="0" y="260" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Chunk 1, similarity 0.78: shipped on the 12th, tracking AB123. Chunk 2, similarity 0.74: being processed,</tspan><tspan x="0" dy="1.3em">dispatch within 24 hours.</tspan></text></g><g data-at="4"><text x="0" y="292" class="dg-s" text-anchor="start"><tspan x="0" dy="0">Both were true once. Neither is true now: returned to depot, awaiting re-dispatch. That state is in no chunk.</tspan><tspan x="0" dy="1.3em">The order-status tool was never called.</tspan></text></g><g data-at="5"><text x="0" y="330" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Similarity is not truth. The fix is a tool call, not a better chunker, a shorter refresh, or a</tspan><tspan x="0" dy="1.3em">higher threshold.</tspan></text></g></svg>
+  <ol class="caps">
+    <li>The question the module says architects skip: what kind of data does the answer need? Everything else in this figure follows from it.</li>
+    <li>Stable knowledge. True yesterday, true tomorrow: manuals, policies, FAQs, regulatory text. This is what retrieval over an index is for.</li>
+    <li>Live state. Order status, inventory, balances, availability. It changes independently of any index, so the answer has to come from a tool call to the system of record.</li>
+    <li>The trace. Where is my order? Retrieval returns two chunks, similarity 0.78 and 0.74, one saying shipped, one saying being processed. Before you step on: which one is right?</li>
+    <li>Neither. Both were true once. The order is back at the depot awaiting re-dispatch, and that state is in no chunk. The order-status tool was never called.</li>
+    <li>Similarity is not truth. The fix is a tool call, not a better chunker, a shorter refresh or a higher threshold.</li>
+  </ol>
+  <div class="stepbar">
+    <div class="cap"></div>
+    <div class="dots"></div>
+    <div class="nav"><button type="button" data-nav="prev" aria-label="Previous step">Prev</button><button type="button" data-nav="next" aria-label="Next step">Next</button></div>
+  </div>
+<figcaption>Step through it; arrow keys work too. The most common reference-architecture mistake, and the one question that prevents it.</figcaption>
 </figure>
 
 <table>
@@ -106,6 +147,22 @@ is the highest-frequency distractor shape in this whole domain.</p>
   or availability is testing this.</p>
 </div>
 
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">The claims triage assistant, a workflow: Claude reads the claim, a rule engine sets priority, coverage is fetched live, Claude drafts the email, a person approves above the threshold. <b>Which of the five reference architectures do you adapt?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="agent">Agent: a claim is a case, and the model works out which tools to call</button>
+    <button type="button" data-v="rag">Retrieval-augmented generation over the policy documents</button>
+    <button type="button" data-v="docpipe">Document processing pipeline: extract the claim against a schema, validate, route exceptions</button>
+    <button type="button" data-v="triage">Customer service and ticket triage: classify, then route to retrieval, a live API or a human</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. Classify, then route by what the answer needs: the coverage lookup is live state and goes to a transactional API, the approval above the threshold is a high-consequence action and goes to a human lane, and Claude sits at the classifier and the composer. The claims assistant is ticket triage with different nouns.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the three lanes did that. The claims work has a classifier at the front, a live-state lookup that must be a tool call, a human approval layer above the threshold and a Claude composer drafting the email. That is the ticket triage architecture, adapted. If claims arrive as scanned forms, the document pipeline is the second shape you reach for at intake, and you can name why.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The section's answer is customer service and ticket triage: classify, then route to retrieval, a live API or a human by what the answer needs. The agent row lists complex case triage, but Section 5 found this path enumerable, and the module warns against an agent variant before the routed workflow has been measured. Retrieval alone cannot answer coverage, which is live state. A document pipeline may sit at intake if claims arrive as scans, but it is the second shape, not the frame.</template>
+</section>
+
 <div class="quiz" data-answer="A,C">
   <p class="scenario">A draft customer-service architecture: (1) an intent classifier, a
   Claude call, then two branches, (2) retrieval over an <em>Order Status Index</em> and
@@ -126,6 +183,26 @@ is the highest-frequency distractor shape in this whole domain.</p>
   against the order service, the second with a human approval layer on anything that moves
   money.</div>
 </div>
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>This section decides which reference architecture the claims triage assistant adapts. Your call is stamped here and follows you into later sections.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M1 &sect;8</span><span>Decision 4: model tier and the context budget</span></li>
+      <li><span>M1 &sect;10</span><span>Decision 4: entry point, and what governance rules out</span></li>
+      <li><span>M1 &sect;11</span><span>Assembly: your architecture against the module's</span></li>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="05-pattern-selection.html"><span>Previous</span>05 Pattern selection</a>
   <a class="next" href="07-rag-pipeline.html"><span>Next</span>07 RAG pipeline design</a>

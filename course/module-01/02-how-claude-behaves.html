@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s02">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 02 of 12</p>
   <h1>How Claude behaves</h1>
@@ -19,6 +21,19 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 02 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="nexttoken" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">A partner shows you a Claude output on a well-covered topic. It cites a regulation by section number and effective date, in confident prose. <b>Which of the four model properties tells you to check that citation before it ships?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="knowledge">Knowledge</button>
+    <button type="button" data-v="nexttoken">Next-token prediction</button>
+    <button type="button" data-v="memory">Working memory</button>
+    <button type="button" data-v="steer">Steerability</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>This is the frame for everything after it. Four properties of the model, each treated
 as a force to design around rather than a defect to fix, the way a structural engineer
 designs around what steel and concrete actually do. Read it slowly. It is one screen in
@@ -82,7 +97,7 @@ two failures that are easy to conflate.</p>
 certification runs on.</p>
 
 <figure class="diagram wide" id="fig-property-chain">
-<svg viewBox="0 0 760 336" role="img" aria-label="Each property, the consequence it forces, and where the course pays it off" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="4" width="150" height="70" rx="8" class="dg-box"/><text x="12" y="32" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Non-determinism</tspan></text><path d="M153 39L182 39" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="4" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="26" class="dg-s" text-anchor="start"><tspan x="197" dy="0">Same input, different output. You cannot</tspan><tspan x="197" dy="1.3em">certify behaviour you saw once</tspan></text><path d="M458 39L487 39" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="4" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="25" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why evaluation frameworks exist</tspan></text><text x="502" y="65" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Module 2</tspan></text><rect x="0" y="88" width="150" height="70" rx="8" class="dg-box"/><text x="12" y="116" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Context is</tspan><tspan x="12" dy="1.3em">finite</tspan></text><path d="M153 123L182 123" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="88" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="110" class="dg-s" text-anchor="start"><tspan x="197" dy="0">The window is a budget you spend, not a</tspan><tspan x="197" dy="1.3em">container you fill</tspan></text><path d="M458 123L487 123" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="88" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="109" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why context strategy is a design</tspan><tspan x="502" dy="1.3em">decision</tspan></text><text x="502" y="149" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Section 8</tspan></text><rect x="0" y="172" width="150" height="70" rx="8" class="dg-box"/><text x="12" y="200" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Confidence is</tspan><tspan x="12" dy="1.3em">not validity</tspan></text><path d="M153 207L182 207" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="172" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="194" class="dg-s" text-anchor="start"><tspan x="197" dy="0">Fluent and wrong looks exactly like</tspan><tspan x="197" dy="1.3em">fluent and right</tspan></text><path d="M458 207L487 207" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="172" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="193" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why human-in-the-loop placement is</tspan><tspan x="502" dy="1.3em">architecture</tspan></text><text x="502" y="233" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Module 3</tspan></text><rect x="0" y="256" width="150" height="70" rx="8" class="dg-box"/><text x="12" y="284" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Knowledge</tspan><tspan x="12" dy="1.3em">boundary</tspan></text><path d="M153 291L182 291" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="256" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="278" class="dg-s" text-anchor="start"><tspan x="197" dy="0">The model does not know what it was</tspan><tspan x="197" dy="1.3em">never given, and will not say so</tspan></text><path d="M458 291L487 291" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="256" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="277" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why retrieval and tools exist</tspan></text><text x="502" y="317" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Sections 6 and 7</tspan></text></svg>
+<svg viewBox="0 0 760 336" role="img" aria-label="Each property, the consequence it forces, and where the course pays it off" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="4" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="32" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Non-determinism</tspan></text><path d="M153 39L182 39" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="4" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="26" class="dg-s" text-anchor="start"><tspan x="197" dy="0">Same input, different output. You cannot</tspan><tspan x="197" dy="1.3em">certify behaviour you saw once</tspan></text><path d="M458 39L487 39" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="4" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="25" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why evaluation frameworks exist</tspan></text><text x="502" y="65" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Module 2</tspan></text><rect x="0" y="88" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="116" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Context is</tspan><tspan x="12" dy="1.3em">finite</tspan></text><path d="M153 123L182 123" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="88" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="110" class="dg-s" text-anchor="start"><tspan x="197" dy="0">The window is a budget you spend, not a</tspan><tspan x="197" dy="1.3em">container you fill</tspan></text><path d="M458 123L487 123" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="88" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="109" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why context strategy is a design</tspan><tspan x="502" dy="1.3em">decision</tspan></text><text x="502" y="149" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Section 8</tspan></text><rect x="0" y="172" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="200" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Confidence is</tspan><tspan x="12" dy="1.3em">not validity</tspan></text><path d="M153 207L182 207" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="172" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="194" class="dg-s" text-anchor="start"><tspan x="197" dy="0">Fluent and wrong looks exactly like</tspan><tspan x="197" dy="1.3em">fluent and right</tspan></text><path d="M458 207L487 207" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="172" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="193" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why human-in-the-loop placement is</tspan><tspan x="502" dy="1.3em">architecture</tspan></text><text x="502" y="233" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Module 3</tspan></text><rect x="0" y="256" width="150" height="70" rx="8" class="dg-box hi"/><text x="12" y="284" class="dg-t-b" text-anchor="start"><tspan x="12" dy="0">Knowledge</tspan><tspan x="12" dy="1.3em">boundary</tspan></text><path d="M153 291L182 291" class="dg-arrow" marker-end="url(#m5)"/><rect x="185" y="256" width="270" height="70" rx="8" class="dg-box"/><text x="197" y="278" class="dg-s" text-anchor="start"><tspan x="197" dy="0">The model does not know what it was</tspan><tspan x="197" dy="1.3em">never given, and will not say so</tspan></text><path d="M458 291L487 291" class="dg-arrow" marker-end="url(#m5)"/><rect x="490" y="256" width="270" height="70" rx="8" class="dg-strip"/><text x="502" y="277" class="dg-t" text-anchor="start"><tspan x="502" dy="0">Why retrieval and tools exist</tspan></text><text x="502" y="317" class="dg-tag" text-anchor="start"><tspan x="502" dy="0">Paid off in Sections 6 and 7</tspan></text></svg>
 <figcaption>Property, then the consequence, then the practice that exists because of it. When an exam option proposes a control, ask which property it mitigates.</figcaption>
 </figure>
 
@@ -96,14 +111,57 @@ certification runs on.</p>
 
 <h2><span class="num n">2.3</span>The failure that began with a misread property</h2>
 
-<figure class="diagram wide" id="fig-failure-timeline">
-<svg viewBox="0 0 760 172" role="img" aria-label="Timeline of the reconciliation pipeline failure" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="75" y1="44" x2="685" y2="44" class="dg-line"/><circle cx="75" cy="44" r="9" class="dg-dot"/><text x="75" y="24" class="dg-k" text-anchor="middle"><tspan x="75" dy="0">Demo</tspan></text><text x="75" y="74" class="dg-s" text-anchor="middle"><tspan x="75" dy="0">Five clean runs in a</tspan><tspan x="75" dy="1.3em">row</tspan></text><circle cx="227.5" cy="44" r="9" class="dg-dot"/><text x="227.5" y="24" class="dg-k" text-anchor="middle"><tspan x="227.5" dy="0">Conclusion</tspan></text><text x="227.5" y="74" class="dg-s" text-anchor="middle"><tspan x="227.5" dy="0">&quot;It is</tspan><tspan x="227.5" dy="1.3em">deterministic&quot;</tspan></text><circle cx="380" cy="44" r="9" class="dg-dot"/><text x="380" y="24" class="dg-k" text-anchor="middle"><tspan x="380" dy="0">Ship</tspan></text><text x="380" y="74" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">Reconciliation</tspan><tspan x="380" dy="1.3em">pipeline, no checks</tspan><tspan x="380" dy="1.3em">around outputs</tspan></text><circle cx="532.5" cy="44" r="9" class="dg-dot-bad"/><text x="532.5" y="24" class="dg-k" text-anchor="middle"><tspan x="532.5" dy="0">Week 2</tspan></text><text x="532.5" y="74" class="dg-s" text-anchor="middle"><tspan x="532.5" dy="0">Same statement, re-</tspan><tspan x="532.5" dy="1.3em">run, different</tspan><tspan x="532.5" dy="1.3em">category</tspan></text><circle cx="685" cy="44" r="9" class="dg-dot-bad"/><text x="685" y="24" class="dg-k" text-anchor="middle"><tspan x="685" dy="0">Found</tspan></text><text x="685" y="74" class="dg-s" text-anchor="middle"><tspan x="685" dy="0">By chance. An</tspan><tspan x="685" dy="1.3em">analyst happened to</tspan><tspan x="685" dy="1.3em">re-run a batch</tspan></text><text x="380" y="140" class="dg-t" text-anchor="middle"><tspan x="380" dy="0">Nothing in the input changed. The architecture assumed a property the model does not have.</tspan></text><text x="380" y="160" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">A demo is not evidence of determinism.</tspan></text></svg>
-<figcaption>The failure that began with a misread property.</figcaption>
+<div class="bet" data-where="2.3 Watch out"
+  data-stamp-right="You called it: found by chance, when an analyst happened to re-run a batch. Nothing around the outputs was looking."
+  data-stamp-wrong="It was found by chance: an analyst happened to re-run a batch. There were no checks around the outputs, so nothing in the architecture could have caught it.">
+  <span class="live-label">Place your bet before the reveal</span>
+  <p class="q">A reconciliation pipeline ran five clean demo runs on the same statements, so the team shipped it with no checks around the outputs. In week two the same statement, re-run, landed in a different category. How did the team find out?</p>
+  <div class="opts">
+    <button type="button" data-k="A"><span class="k">A</span><span>A monitoring alert fired on the category distribution drifting between runs.</span></button>
+    <button type="button" data-k="B"><span class="k">B</span><span>A downstream team complained about a statement that had been reconciled twice, two different ways.</span></button>
+    <button type="button" data-k="C" data-right><span class="k">C</span><span>By chance. An analyst happened to re-run a batch and noticed.</span></button>
+  </div>
+</div>
+<div class="bet-reveal">
+<figure class="stepper wide" id="fig-failure-timeline">
+<svg viewBox="0 0 760 172" role="img" aria-label="Timeline of the reconciliation pipeline failure" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><line x1="75" y1="44" x2="685" y2="44" class="dg-line"/><g data-at="0"><circle cx="75" cy="44" r="9" class="dg-dot"/><text x="75" y="24" class="dg-k" text-anchor="middle"><tspan x="75" dy="0">Demo</tspan></text><text x="75" y="74" class="dg-s" text-anchor="middle"><tspan x="75" dy="0">Five clean runs in a</tspan><tspan x="75" dy="1.3em">row</tspan></text></g><g data-at="1"><circle cx="227.5" cy="44" r="9" class="dg-dot"/><text x="227.5" y="24" class="dg-k" text-anchor="middle"><tspan x="227.5" dy="0">Conclusion</tspan></text><text x="227.5" y="74" class="dg-s" text-anchor="middle"><tspan x="227.5" dy="0">&quot;It is</tspan><tspan x="227.5" dy="1.3em">deterministic&quot;</tspan></text></g><g data-at="2"><circle cx="380" cy="44" r="9" class="dg-dot"/><text x="380" y="24" class="dg-k" text-anchor="middle"><tspan x="380" dy="0">Ship</tspan></text><text x="380" y="74" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">Reconciliation</tspan><tspan x="380" dy="1.3em">pipeline, no checks</tspan><tspan x="380" dy="1.3em">around outputs</tspan></text></g><g data-at="3"><circle cx="532.5" cy="44" r="9" class="dg-dot-bad"/><text x="532.5" y="24" class="dg-k" text-anchor="middle"><tspan x="532.5" dy="0">Week 2</tspan></text><text x="532.5" y="74" class="dg-s" text-anchor="middle"><tspan x="532.5" dy="0">Same statement, re-</tspan><tspan x="532.5" dy="1.3em">run, different</tspan><tspan x="532.5" dy="1.3em">category</tspan></text></g><g data-at="4"><circle cx="685" cy="44" r="9" class="dg-dot-bad"/><text x="685" y="24" class="dg-k" text-anchor="middle"><tspan x="685" dy="0">Found</tspan></text><text x="685" y="74" class="dg-s" text-anchor="middle"><tspan x="685" dy="0">By chance. An</tspan><tspan x="685" dy="1.3em">analyst happened to</tspan><tspan x="685" dy="1.3em">re-run a batch</tspan></text></g><g data-at="5"><text x="380" y="140" class="dg-t" text-anchor="middle"><tspan x="380" dy="0">Nothing in the input changed. The architecture assumed a property the model does not have.</tspan></text><text x="380" y="160" class="dg-t-b" text-anchor="middle"><tspan x="380" dy="0">A demo is not evidence of determinism.</tspan></text></g></svg>
+  <ol class="caps">
+    <li>The demo. Five clean runs in a row on the same statements, and every output matched.</li>
+    <li>The conclusion drawn from it: the model is deterministic on this work. Five samples, one inference.</li>
+    <li>Ship. A reconciliation pipeline with no checks around the outputs, because the outputs had been the same every time anyone looked.</li>
+    <li>Week two. The same statement, re-run, lands in a different category. Nothing in the input changed.</li>
+    <li>Found by chance. An analyst happened to re-run a batch. Nothing in the architecture was looking, so nothing in the architecture could have caught it.</li>
+    <li>The architecture assumed a property the model does not have. A demo is not evidence of determinism.</li>
+  </ol>
+  <div class="stepbar">
+    <div class="cap"></div>
+    <div class="dots"></div>
+    <div class="nav"><button type="button" data-nav="prev" aria-label="Previous step">Prev</button><button type="button" data-nav="next" aria-label="Next step">Next</button></div>
+  </div>
+<figcaption>Step through it; arrow keys work too. The failure that began with a misread property.</figcaption>
 </figure>
 
 <p>The lesson is not that the model is unreliable. It is that a demo is not evidence of
 determinism, and the four properties are present whether or not your architecture
 acknowledges them.</p>
+</div>
+
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q">A confident Claude output cites a regulation by section number and effective date, on a well-covered topic. <b>Which property tells you to check the citation?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="knowledge">Knowledge</button>
+    <button type="button" data-v="nexttoken">Next-token prediction</button>
+    <button type="button" data-v="memory">Working memory</button>
+    <button type="button" data-v="steer">Steerability</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. Next-token prediction is good at common patterns and fails at precision on specifics: names, dates, citations, statistics. The output looks accurate and is not, so a fact like that goes through a tool call, not the model's recall.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the first figure did that. The topic is well covered, so the knowledge boundary is not the binding problem. Next-token prediction is: it produces output that looks accurate and is not, concentrated around names, dates, citations and statistics. Route the lookup through a tool call.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The section puts this under next-token prediction, which fails at precision on specifics: names, dates, citations, statistics, delivered in the same tone as the settled material around them. Knowledge is the neighbouring property, but it is about rare or fast-changing topics the weights never saw, and this topic was well covered. The mitigation is a tool call for the fact, not the model's recall.</template>
+</section>
+
 
 <div class="quiz" data-answer="C">
   <p class="scenario">A pricing team wants Claude to apply a published discount schedule:
@@ -123,6 +181,29 @@ acknowledges them.</p>
   next-token prediction for what it is good at and leaves the guarantee where guarantees
   belong.</div>
 </div>
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>The case is not decided here; what you stamp is your read of the section, and it travels with the file. The four properties are the lens Section 4 uses to split the claims work between Claude, an existing system and a person.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M1 &sect;4</span><span>Decision 1: who owns each of the six pieces of work</span></li>
+      <li><span>M1 &sect;5</span><span>Decision 2: augmented call, workflow or agent</span></li>
+      <li><span>M1 &sect;6</span><span>Decision 3: which reference architecture</span></li>
+      <li><span>M1 &sect;8</span><span>Decision 4: model tier and the context budget</span></li>
+      <li><span>M1 &sect;10</span><span>Decision 4: entry point, and what governance rules out</span></li>
+      <li><span>M1 &sect;11</span><span>Assembly: your architecture against the module's</span></li>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   <a class="prev" href="01-introduction.html"><span>Previous</span>01 Module introduction</a>
   <a class="next" href="03-platform-map.html"><span>Next</span>03 Platform map and primitives</a>

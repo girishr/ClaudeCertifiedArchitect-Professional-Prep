@@ -60,6 +60,38 @@ Module 1 was done, and replace these rather than editing them to match.
 
 `index.html` at the workspace root is the front door and every section links back to it.
 
+## Live reading (added 13 Sep 2026)
+
+Four mechanics that turn a section from reading into predicting, built once as
+`course/assets/live.css` and `course/assets/live.js` and applied to a page by markup
+alone. All twelve sections of Module 1 are converted; Section 01 is the reference.
+
+- **Cold open**: a scenario and one committed choice before any teaching, locked once
+  made, asked again at the end with a verdict on whether the reader held or changed.
+- **Steppable figure**: HTML boxes with `data-at` / `data-hi`, Prev/Next and arrow keys,
+  replacing a static SVG where the figure is a sequence.
+- **Predict-then-reveal**: a table whose answer column is hidden behind chips until the
+  reader commits; the Why column reveals with it. Also the "bet" for a Watch Out.
+- **Case file**: one client, the claims triage assistant, carried through the path. Every
+  call the reader makes is stamped and the panel lists where the case comes back.
+
+State is per page in localStorage (`ccarp-live-<key>`). Each page also files its stamps
+under one module key (`ccarp-case-m1`), so a later section's case file shows this
+section's stamps first and every earlier section's beneath them. On a laptop or wider the
+case file is a fixed rail on the right; below that it sits inline at the end.
+
+Right and wrong are said out loud: picked chips fill red or olive with a cross or tick,
+each row, bet and re-ask carries a RIGHT / WRONG badge, and the case file prefixes every
+stamp with Right. or Wrong.
+
+The full markup contract is the header comment in `live.js`. Rules when converting
+further pages: the mechanic has to be earned by the material (a cold open needs a
+question whose instinctive answer is wrong or premature; a stepper needs a sequence;
+predict-then-reveal needs a mapping the reader can call), and no page gets all four just
+because the first one did. `node tools/check_live.js <page.html>` checks the contract,
+clicks every control and fails on script errors or em dashes; run it on every converted
+page.
+
 ## Open questions to revisit
 
 - Mission assumes an early-September sitting. Confirm once the Partner Network

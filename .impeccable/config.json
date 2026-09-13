@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "course/assets/live.css"
+        ],
+        "createdAt": "2026-09-13T15:11:46.064Z",
+        "reason": "Agent: proportion strip draws once on reveal; four small segments animate width, no layout thrash"
+      }
+    ]
+  }
+}

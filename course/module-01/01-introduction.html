@@ -7,9 +7,11 @@
 <link rel="icon" type="image/png" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/badge-180.png">
 <link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="../assets/live.css">
 <script src="../assets/nav.js"></script>
+<script src="../assets/live.js" defer></script>
 </head>
-<body>
+<body data-live="m1s01">
 <header class="masthead">
   <p class="eyebrow">Module 1 &middot; Section 01 of 12</p>
   <h1>Module introduction</h1>
@@ -19,12 +21,44 @@
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">CCAR-P course</a> <span>/</span> <a href="index.html">Module 1</a> <span>/</span> <b>Section 01 of 12</b>
 </nav>
+<!-- Cold open: commit before you read. -->
+<section class="cold" data-right="owns" data-where="Cold open">
+  <span class="live-label">Before you read</span>
+  <p class="q">A partner says: <em>we want an AI agent that handles our insurance claims.</em> <b>What is the first decision the architect makes?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call">
+    <button type="button" data-v="model">Which model to use</button>
+    <button type="button" data-v="owns">What part of the work Claude should own</button>
+    <button type="button" data-v="shape">Whether it is an agent or a workflow</button>
+    <button type="button" data-v="entry">Which entry point: API, Claude Code, Agent SDK</button>
+  </div>
+  <p class="locked">Locked in. The section will not tell you whether you were right until the end.</p>
+</section>
+
 <p>Anthropic's Module 1 opens by naming four decisions. They happen before a line of
 code exists, they are made in order, and every later choice inherits them.</p>
 
-<figure class="diagram wide" id="fig-four-decisions">
-<svg viewBox="0 0 760 202" role="img" aria-label="The four decisions, in order, and the sections that train each" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><rect x="0" y="8" width="169" height="118" rx="8" class="dg-box"/><circle cx="22" cy="32" r="13" class="dg-dot"/><text x="22" y="36.5" class="dg-num" text-anchor="middle"><tspan x="22" dy="0">1</tspan></text><text x="44" y="36" class="dg-k" text-anchor="start"><tspan x="44" dy="0">Decision</tspan></text><text x="14" y="64" class="dg-t" text-anchor="start"><tspan x="14" dy="0">What part of the work</tspan><tspan x="14" dy="1.3em">should Claude own?</tspan></text><text x="14" y="104" class="dg-s" text-anchor="start"><tspan x="14" dy="0">Claude, an existing</tspan><tspan x="14" dy="1.3em">system, or a person</tspan></text><text x="84.5" y="156" class="dg-tag" text-anchor="middle"><tspan x="84.5" dy="0">Trained in Section 4</tspan></text><path d="M172 67L194 67" class="dg-arrow" marker-end="url(#m1)"/><rect x="197" y="8" width="169" height="118" rx="8" class="dg-box"/><circle cx="219" cy="32" r="13" class="dg-dot"/><text x="219" y="36.5" class="dg-num" text-anchor="middle"><tspan x="219" dy="0">2</tspan></text><text x="241" y="36" class="dg-k" text-anchor="start"><tspan x="241" dy="0">Decision</tspan></text><text x="211" y="64" class="dg-t" text-anchor="start"><tspan x="211" dy="0">What shape is the</tspan><tspan x="211" dy="1.3em">work?</tspan></text><text x="211" y="104" class="dg-s" text-anchor="start"><tspan x="211" dy="0">Augmented call, workflow,</tspan><tspan x="211" dy="1.3em">or agent</tspan></text><text x="281.5" y="156" class="dg-tag" text-anchor="middle"><tspan x="281.5" dy="0">Trained in Section 5</tspan></text><path d="M369 67L391 67" class="dg-arrow" marker-end="url(#m1)"/><rect x="394" y="8" width="169" height="118" rx="8" class="dg-box"/><circle cx="416" cy="32" r="13" class="dg-dot"/><text x="416" y="36.5" class="dg-num" text-anchor="middle"><tspan x="416" dy="0">3</tspan></text><text x="438" y="36" class="dg-k" text-anchor="start"><tspan x="438" dy="0">Decision</tspan></text><text x="408" y="64" class="dg-t" text-anchor="start"><tspan x="408" dy="0">Which reference</tspan><tspan x="408" dy="1.3em">architecture?</tspan></text><text x="408" y="104" class="dg-s" text-anchor="start"><tspan x="408" dy="0">A known shape, adapted,</tspan><tspan x="408" dy="1.3em">not invented</tspan></text><text x="478.5" y="156" class="dg-tag" text-anchor="middle"><tspan x="478.5" dy="0">Trained in Sections 6 and 7</tspan></text><path d="M566 67L588 67" class="dg-arrow" marker-end="url(#m1)"/><rect x="591" y="8" width="169" height="118" rx="8" class="dg-box"/><circle cx="613" cy="32" r="13" class="dg-dot"/><text x="613" y="36.5" class="dg-num" text-anchor="middle"><tspan x="613" dy="0">4</tspan></text><text x="635" y="36" class="dg-k" text-anchor="start"><tspan x="635" dy="0">Decision</tspan></text><text x="605" y="64" class="dg-t" text-anchor="start"><tspan x="605" dy="0">Where does it touch</tspan><tspan x="605" dy="1.3em">Claude?</tspan></text><text x="605" y="104" class="dg-s" text-anchor="start"><tspan x="605" dy="0">Entry point, model,</tspan><tspan x="605" dy="1.3em">context, route</tspan></text><text x="675.5" y="156" class="dg-tag" text-anchor="middle"><tspan x="675.5" dy="0">Trained in Sections 8 to 10</tspan></text><text x="380" y="188" class="dg-s" text-anchor="middle"><tspan x="380" dy="0">Made in this order. Each one inherits the ones before it.</tspan></text></svg>
-<figcaption>The four decisions the module is built around, in the order they are made, and where each is trained.</figcaption>
+<figure class="stepper" id="fig-four-decisions" data-tags-at="5">
+  <div class="steps-row">
+    <div class="step" data-at="1" data-hi="1"><div class="k"><i>1</i><span>Decision</span></div><b>What part of the work should Claude own?</b><small>Claude, an existing system, or a person</small><span class="tag">Trained in Section 4</span></div>
+    <div class="step" data-at="2" data-hi="2"><div class="k"><i>2</i><span>Decision</span></div><b>What shape is the work?</b><small>Augmented call, workflow, or agent</small><span class="tag">Trained in Section 5</span></div>
+    <div class="step" data-at="3" data-hi="3"><div class="k"><i>3</i><span>Decision</span></div><b>Which reference architecture?</b><small>A known shape, adapted, not invented</small><span class="tag">Trained in Sections 6 and 7</span></div>
+    <div class="step" data-at="4" data-hi="4"><div class="k"><i>4</i><span>Decision</span></div><b>Where does it touch Claude?</b><small>Entry point, model, context, route</small><span class="tag">Trained in Sections 8 to 10</span></div>
+  </div>
+  <p class="inherit" data-at="5">Made in this order. Each one inherits the ones before it.</p>
+  <ol class="caps">
+    <li>Four decisions, made in order, before a line of code exists.</li>
+    <li>First: what part of the work should Claude own at all. Everything after this inherits the answer.</li>
+    <li>Second: the shape of the work Claude does own. An augmented call, a workflow, or an agent.</li>
+    <li>Third: which known architecture fits that shape. Adapted, not invented.</li>
+    <li>Fourth: where the system touches Claude. Entry point, model, context, delivery route.</li>
+    <li>Each decision is trained in its own sections. The order is the lesson: get one wrong and every later choice inherits the mistake.</li>
+  </ol>
+  <div class="stepbar">
+    <div class="cap"></div>
+    <div class="dots"></div>
+    <div class="nav"><button type="button" data-nav="prev" aria-label="Previous step">Prev</button><button type="button" data-nav="next" aria-label="Next step">Next</button></div>
+  </div>
+  <figcaption>Step through it; arrow keys work too. The four decisions the module is built around, in the order they are made, and where each is trained.</figcaption>
 </figure>
 
 <p>The module is not asking you to memorise these as stages. It is training you to
@@ -33,17 +67,49 @@ move. The instinct that serves you in decomposition is the wrong instinct when y
 picking an entry point.</p>
 
 <h2><span class="num n">1.1</span>What the module says you will be able to do</h2>
+<p>Six objectives, in the module's own framing, compressed. Before you read which decision
+each one trains, call it: which of the four decisions does the objective serve?</p>
 
-<p>Six objectives, in the module's own framing, compressed:</p>
-
-<ol>
-  <li>Break a partner request into Claude work, system work and human work, using the four model properties as the lens.</li>
-  <li>Choose between an augmented call, a workflow and an agent by naming what each choice costs.</li>
-  <li>Pick a reference architecture for the problem shape, and spot retrieval doing a job that live state should own.</li>
-  <li>Make defensible model, context-window and context-strategy calls, with evaluation as the gate on any model swap.</li>
-  <li>Place each platform entry point, and know what customisation belongs at which layer.</li>
-  <li>Keep entry points, build-time interfaces and delivery routes distinct, and let governance rule options out before any other tradeoff applies.</li>
-</ol>
+<table class="predict" data-options="1|2|3|4" data-where="1.1 Objectives" data-truth-prefix="decision ">
+  <caption>Six objectives, four decisions. The mapping is hidden until you commit</caption>
+  <thead><tr><th>Objective</th><th>Decision</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr data-truth="1" data-name="Objective 1">
+      <td>Break a partner request into Claude work, system work and human work, using the four model properties as the lens.</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">This is decomposition itself, decision 1. The four properties are the lens; the three owners are the output.</span></td>
+    </tr>
+    <tr data-truth="2" data-name="Objective 2">
+      <td>Choose between an augmented call, a workflow and an agent by naming what each choice costs.</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">The shape of the work, decision 2. Note the phrasing: by naming what each choice costs, not by picking the cleverest one.</span></td>
+    </tr>
+    <tr data-truth="3" data-name="Objective 3">
+      <td>Pick a reference architecture for the problem shape, and spot retrieval doing a job that live state should own.</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Decision 3. The second clause is the recurring mistake the module returns to: retrieval standing in for live state.</span></td>
+    </tr>
+    <tr data-truth="4" data-name="Objective 4">
+      <td>Make defensible model, context-window and context-strategy calls, with evaluation as the gate on any model swap.</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Decision 4, the model and context half of it. The eval gate on a swap is the operative detail.</span></td>
+    </tr>
+    <tr data-truth="4" data-name="Objective 5">
+      <td>Place each platform entry point, and know what customisation belongs at which layer.</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Decision 4 again, the entry-point half. Three of the six objectives land here, which tells you where the module's weight sits.</span></td>
+    </tr>
+    <tr data-truth="4" data-name="Objective 6">
+      <td>Keep entry points, build-time interfaces and delivery routes distinct, and let governance rule options out before any other tradeoff applies.</td>
+      <td class="call"></td>
+      <td class="why"><span class="hidden">Make your call first.</span><span class="text">Decision 4, the governance edge of it. Governance eliminates options before cost or latency get a say.</span></td>
+    </tr>
+  </tbody>
+</table>
+<div class="tally"
+  data-perfect="All six. You already read the module's structure the way it wants to be read."
+  data-good="Half the objectives sit under decision 4. If that is where you slipped, sections 8 to 10 are the ones to budget for."
+  data-poor="The map is the point of this section. Step the figure again, then redo the calls."></div>
 
 <div class="flag">
   <span class="label">The role being trained</span>
@@ -55,20 +121,80 @@ picking an entry point.</p>
 </div>
 
 <h2><span class="num n">1.2</span>How this version maps to the official one</h2>
-
 <p>The official module is 34 screens across 12 sections, 238 minutes of reading, with 11
 checkpoints and 2 exercises. This course keeps the same 12 sections in the same order, so
 you can move between the two without losing your place. Every section here names the
 screens it covers.</p>
 
-<figure class="diagram" id="fig-screen-mix">
-<svg viewBox="0 0 760 138" role="img" aria-label="The 34 screens by type" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-head"/></marker></defs><text x="0" y="16" class="dg-k" text-anchor="start"><tspan x="0" dy="0">34 screens in the official module, by type</tspan></text><rect x="0" y="30" width="355.647" height="34" class="dg-fill-a"/><text x="177.824" y="52" class="dg-onfill" text-anchor="middle"><tspan x="177.824" dy="0">Teaching 16</tspan></text><rect x="357.647" y="30" width="243.882" height="34" class="dg-fill-b"/><text x="479.588" y="52" class="dg-onfill" text-anchor="middle"><tspan x="479.588" dy="0">Checkpoint 11</tspan></text><rect x="603.529" y="30" width="109.765" height="34" class="dg-fill-c"/><text x="658.412" y="52" class="dg-onfill" text-anchor="middle"><tspan x="658.412" dy="0">Watch Out 5</tspan></text><rect x="715.294" y="30" width="42.7059" height="34" class="dg-fill-d"/><text x="736.647" y="52" class="dg-onfill" text-anchor="middle"><tspan x="736.647" dy="0">2</tspan></text><text x="0" y="90" class="dg-t" text-anchor="start"><tspan x="0" dy="0">Sixteen teach. Eleven checkpoints, five Watch Outs and two exercises ask you to decide.</tspan></text><text x="0" y="110" class="dg-s" text-anchor="start"><tspan x="0" dy="0">The five Watch Out screens are a real architecture that failed, traced back to the decision that caused it.</tspan></text><text x="0" y="126" class="dg-s" text-anchor="start"><tspan x="0" dy="0">That is the shape of an exam distractor. They are folded into sections 4, 5, 6, 8 and 10 here.</tspan></text></svg>
-<figcaption>What the official module is made of. Sixteen teaching screens carry the content; eighteen ask for a decision.</figcaption>
-</figure>
+<div class="bet" data-where="1.2 Screen mix"
+  data-stamp-right="You called it: 18 of 34 screens ask you to decide."
+  data-stamp-wrong="In fact 18 of 34 screens ask you to decide.">
+  <span class="live-label">Place your bet before the reveal</span>
+  <p class="q">Of the 34 screens, how many teach, and how many ask you to decide something?</p>
+  <div class="opts">
+    <button type="button" data-k="A"><span class="k">A</span><span>Mostly teaching. Around 25 screens explain, the rest check.</span></button>
+    <button type="button" data-k="B"><span class="k">B</span><span>About even, with teaching slightly ahead.</span></button>
+    <button type="button" data-k="C" data-right><span class="k">C</span><span>More screens ask you to decide than teach.</span></button>
+  </div>
+</div>
+<div class="bet-reveal">
+  <div class="strip" id="fig-screen-mix" role="img" aria-label="34 screens in the official module by type: 16 teaching, 11 checkpoint, 5 Watch Out, 2 exercise">
+    <div class="track">
+      <div class="seg a" data-w="47.06">Teaching 16</div>
+      <div class="seg b" data-w="32.35">Checkpoint 11</div>
+      <div class="seg c" data-w="14.71">Watch Out 5</div>
+      <div class="seg d" data-w="5.88">2</div>
+    </div>
+    <div class="legend"><span><i class="a"></i>Teaching</span><span><i class="b"></i>Checkpoint</span><span><i class="c"></i>Watch Out</span><span><i class="d"></i>Exercise</span></div>
+  </div>
+  <p>Sixteen teach. Eleven checkpoints, five Watch Outs and two exercises ask you to decide.
+  The five Watch Out screens are a real architecture that failed, traced back to the decision
+  that caused it. That is the shape of an exam distractor. They are folded into sections 4,
+  5, 6, 8 and 10 here.</p>
+  <p>The text is not Anthropic's. It is written from the module, not copied from it, and the
+  drills are my own. If a distinction matters to the exam, it is here. If a paragraph exists
+  in the original only to introduce the next paragraph, it is not.</p>
+</div>
 
-<p>The text is not Anthropic's. It is written from the module, not copied from it, and the
-drills are my own. If a distinction matters to the exam, it is here. If a paragraph exists
-in the original only to introduce the next paragraph, it is not.</p>
+<!-- The cold open, asked again. -->
+<section class="reask" data-where="After reading">
+  <span class="live-label">Same question, after the section</span>
+  <p class="q"><em>We want an AI agent that handles our insurance claims.</em> <b>What is the first decision?</b></p>
+  <div class="live-chips" role="group" aria-label="Your call now">
+    <button type="button" data-v="model">Which model to use</button>
+    <button type="button" data-v="owns">What part of the work Claude should own</button>
+    <button type="button" data-v="shape">Whether it is an agent or a workflow</button>
+    <button type="button" data-v="entry">Which entry point: API, Claude Code, Agent SDK</button>
+  </div>
+  <div class="verdict"></div>
+  <template data-v="held-right">Before reading you said {cold}. Now you say {now}. You held, and you were right both times. Model, shape and entry point all come later; the first question is which of the work Claude should own at all.</template>
+  <template data-v="changed-right">Before reading you said {cold}. Now you say {now}. You changed your mind, and the figure did that. Model, shape and entry point are decisions 2 to 4. Decision 1 is what Claude owns, and the other three inherit it.</template>
+  <template data-v="wrong">Before reading you said {cold}. Now you say {now}. The module puts decision 1 first: what part of the work Claude should own. Yours is a later decision, and starting there is how an agent gets built for work a rule engine already did.</template>
+</section>
+
+<!-- The running case: one client, carried through the path. -->
+<aside class="casefile" aria-label="Case file">
+  <header>
+    <span class="live-label">Case file</span>
+    <b>Claims triage assistant</b>
+    <small>Opened here and carried through the path. The partner's ask, as it arrived: <em>an AI agent that handles our insurance claims.</em> Every decision you make about it is stamped and follows you into later sections.</small>
+  </header>
+  <ul class="stamps"></ul>
+  <div class="upcoming">
+    <span class="live-label">This case comes back in</span>
+    <ol>
+      <li><span>M1 &sect;4</span><span>Decision 1: who owns each of the six pieces of work</span></li>
+      <li><span>M1 &sect;5</span><span>Decision 2: augmented call, workflow or agent</span></li>
+      <li><span>M1 &sect;6</span><span>Decision 3: which reference architecture</span></li>
+      <li><span>M1 &sect;8</span><span>Decision 4: model tier and the context budget</span></li>
+      <li><span>M1 &sect;10</span><span>Decision 4: entry point, and what governance rules out</span></li>
+      <li><span>M1 &sect;11</span><span>Assembly: your architecture against the module's</span></li>
+      <li><span>M2 to M5</span><span>Integrated, governed, sold, and handed over</span></li>
+    </ol>
+  </div>
+  <footer><span class="count"></span><button type="button" data-reset>Reset case</button></footer>
+</aside>
+
 <nav class="pager">
   
   <a class="next" href="02-how-claude-behaves.html"><span>Next</span>02 How Claude behaves</a>
