@@ -453,7 +453,8 @@ body > table { width: 100%; }
   :root { --page: 100%; --measure: 100%; }
 }
 
-/* A module landing page is a contents table, not prose. It gets a wider column. */
+/* A module landing page is a contents table, not prose, so its few paragraphs
+   run to the sheet rather than being held to a reading measure. */
 body.wide { max-width: none; margin-left: 0; }
 
 /* ---------- learning path (course/index.html) ----------
@@ -685,12 +686,20 @@ details.fold table { margin-top: .4rem; }
 :root { --nav-w: 17rem; }
 
 @media (min-width: 64.01rem) {
+  /* The page fills the window rather than sitting in a fixed column within it.
+     A capped column left a margin that grew with the viewport, on the left when
+     it was centred and on the right once it was not. Prose keeps its own
+     reading measure through --prose, so widening the sheet does not widen the
+     line; it only stops the empty space accumulating at one edge. */
+  body { max-width: none; }
+  /* The sheet is as wide as the window now, so the line length has to be held
+     here rather than by the sheet. Apparatus, figures and tables are unaffected
+     and still run to the sheet's edge. */
+  :root { --prose: 46rem; }
   html.nav-open body {
-    margin-left: calc(var(--nav-w) + max(0px, (100vw - var(--nav-w) - var(--page)) / 2));
+    margin-left: var(--nav-w);
     margin-right: 0;
   }
-  /* A wide page sits against the menu rather than being centred beside it. */
-  html.nav-open body.wide { margin-left: var(--nav-w); }
 }
 @media print { html.nav-open body { margin-left: 0; } }
 

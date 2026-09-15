@@ -267,8 +267,10 @@ table.predict td.why .vd { margin-right: 6px; }
     scrollbar-width: thin;
   }
 }
-@media (min-width: 78rem) and (max-width: 96rem) {
-  /* With the menu open there is less to share; let the column narrow a little. */
+@media (min-width: 78rem) {
+  /* The reading column fills what is left between the menu and the rail. The
+     rail is fixed to the right edge, so capping the column here would open a
+     gap beside it that grows with the window, or with zooming out. */
   html.has-casefile.nav-open body { max-width: none; margin-left: var(--nav-w, 17rem); padding-left: 2rem; padding-right: 2rem; }
 }
 
